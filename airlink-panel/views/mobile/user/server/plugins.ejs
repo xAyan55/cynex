@@ -1,0 +1,93 @@
+<%- include('../../components/header', { title: 'Plugin Manager' }) %>
+<link rel="stylesheet" href="/styles/plugin-manager.css">
+
+<main class="min-h-screen m-auto text-neutral-800 dark:text-white plugin-manager-page">
+  <%- include('../../components/template') %>
+
+  <section id="page-content" class="p-4 pt-16">
+    <%- include('../../components/serverHeader') %>
+
+    <%- include('../../components/installHeader') %>
+    <%- include('../../components/serverTemplate', { features: ['plugins'] }) %>
+
+    <div id="pmRestartBanner" class="hidden mt-4 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-500/20 px-3 py-3">
+      <p class="text-sm text-amber-700 dark:text-amber-300 font-medium">Restart required for plugin changes.</p>
+      <div class="flex gap-2 mt-2">
+        <button id="pmRestartLaterBtn" type="button" class="pm-btn-secondary text-xs flex-1">Later</button>
+        <button id="pmRestartBtn" type="button" class="pm-btn-primary text-xs flex-1">Restart</button>
+      </div>
+    </div>
+
+    <div class="mt-4 flex gap-2">
+      <button data-pm-tab="installed" class="pm-tab active flex-1">Installed</button>
+      <button data-pm-tab="browse" class="pm-tab flex-1">Browse</button>
+    </div>
+
+    <div id="pmInstalledPanel" class="pm-panel mt-4">
+      <input id="pmInstalledSearch" type="search" placeholder="Search installed..." class="pm-input w-full mb-3">
+      <div id="pmInstalledList" class="space-y-3"></div>
+      <div id="pmInstalledEmpty" class="hidden pm-empty">No plugins installed.</div>
+    </div>
+
+    <div id="pmBrowsePanel" class="pm-panel hidden mt-4">
+      <input id="pmBrowseSearch" type="search" placeholder="Search Modrinth..." class="pm-input w-full mb-2">
+      <select id="pmBrowseSort" class="pm-select w-full mb-2">
+        <option value="relevance">Relevance</option>
+        <option value="downloads">Downloads</option>
+        <option value="updated">Updated</option>
+        <option value="newest">Newest</option>
+      </select>
+      <button id="pmBrowseSearchBtn" type="button" class="pm-btn-primary w-full mb-3">Search</button>
+      <div id="pmBrowseResults" class="space-y-3"></div>
+      <button id="pmBrowseMoreBtn" type="button" class="pm-btn-secondary w-full mt-3 hidden">Load More</button>
+    </div>
+
+    <label class="pm-btn-primary w-full mt-4 cursor-pointer block text-center">
+      Upload Plugin
+      <input id="pmUploadInput" type="file" accept=".jar" class="hidden">
+    </label>
+    <button id="pmUpdateAllBtn" type="button" class="pm-btn-secondary w-full mt-2">Update All</button>
+  </section>
+</main>
+
+<div id="pmDetailModal" class="pm-modal hidden">
+  <div class="pm-modal-backdrop" data-pm-close></div>
+  <div class="pm-modal-content">
+    <button type="button" class="pm-icon-btn absolute top-3 right-3" data-pm-close aria-label="Close">
+      <%- icon('x', { class: 'size-5' }) %>
+    </button>
+    <h2 id="pmDetailTitle" class="text-base font-semibold pr-8"></h2>
+    <p id="pmDetailMeta" class="text-xs text-neutral-500 mt-1"></p>
+    <div id="pmDetailBody" class="text-sm text-neutral-600 dark:text-neutral-300 mt-3 max-h-40 overflow-y-auto"></div>
+    <div id="pmDetailVersions" class="mt-3 space-y-2"></div>
+    <div id="pmDetailActions" class="mt-4 flex flex-col gap-2"></div>
+  </div>
+</div>
+
+<div id="pmProgressModal" class="pm-modal hidden">
+  <div class="pm-modal-backdrop"></div>
+  <div class="pm-modal-content max-w-sm">
+    <h3 id="pmProgressTitle" class="text-sm font-semibold">Installing plugin</h3>
+    <p id="pmProgressStage" class="text-xs text-neutral-500 mt-1">Initializing...</p>
+    <div class="h-2 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden mt-3">
+      <div id="pmProgressBar" class="h-full bg-neutral-900 dark:bg-white transition-all duration-300" style="width:0%"></div>
+    </div>
+  </div>
+</div>
+
+<script nonce="<%- nonce %>">
+  window.PLUGIN_MANAGER = {
+    serverId: <%- JSON.stringify(server.UUID) %>,
+    apiBase: <%- JSON.stringify('/server/' + server.UUID + '/plugins/api') %>,
+    wsBase: <%- JSON.stringify((req.protocol === 'https' ? 'wss://' : 'ws://') + req.get('host') + '/server/' + server.UUID + '/plugins/ws/progress') %>,
+    loader: <%- JSON.stringify(loader || null) %>,
+    minecraftVersion: <%- JSON.stringify(minecraftVersion || null) %>,
+    csrfToken: <%- JSON.stringify(typeof csrfToken !== 'undefined' ? csrfToken : '') %>,
+    isAdmin: <%- JSON.stringify(Boolean(user && user.isAdmin)) %>,
+    daemonOnline: <%- JSON.stringify(Boolean(daemonOnline)) %>,
+    mobile: true
+  };
+</script>
+<script src="/javascript/plugin-manager.js" nonce="<%- nonce %>"></script>
+
+<%- include('../../components/footer') %>

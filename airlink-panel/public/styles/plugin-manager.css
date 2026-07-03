@@ -1,0 +1,191 @@
+.plugin-manager-page .pm-btn-primary,
+.plugin-manager-page .pm-btn-secondary,
+.plugin-manager-page .pm-tab,
+.plugin-manager-page .pm-input,
+.plugin-manager-page .pm-select {
+  border-radius: 0.75rem;
+  font-size: 0.875rem;
+  transition: all 0.2s ease;
+}
+
+.plugin-manager-page .pm-btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  background: rgb(23 23 23);
+  color: white;
+  border: 1px solid transparent;
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.08);
+}
+
+.dark .plugin-manager-page .pm-btn-primary {
+  background: white;
+  color: rgb(23 23 23);
+}
+
+.plugin-manager-page .pm-btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  background: white;
+  color: rgb(64 64 64);
+  border: 1px solid rgb(229 229 229);
+}
+
+.dark .plugin-manager-page .pm-btn-secondary {
+  background: rgb(255 255 255 / 0.05);
+  color: rgb(212 212 212);
+  border-color: rgb(255 255 255 / 0.08);
+}
+
+.plugin-manager-page .pm-tab {
+  padding: 0.5rem 1rem;
+  border: 1px solid rgb(229 229 229);
+  background: white;
+  color: rgb(82 82 82);
+}
+
+.dark .plugin-manager-page .pm-tab {
+  background: rgb(255 255 255 / 0.05);
+  border-color: rgb(255 255 255 / 0.08);
+  color: rgb(212 212 212);
+}
+
+.plugin-manager-page .pm-tab.active {
+  background: rgb(245 245 245);
+  color: rgb(23 23 23);
+  border-color: rgb(212 212 212);
+}
+
+.dark .plugin-manager-page .pm-tab.active {
+  background: rgb(255 255 255 / 0.1);
+  color: white;
+}
+
+.plugin-manager-page .pm-input,
+.plugin-manager-page .pm-select {
+  padding: 0.625rem 0.875rem;
+  border: 1px solid rgb(229 229 229);
+  background: white;
+  color: rgb(23 23 23);
+  outline: none;
+}
+
+.dark .plugin-manager-page .pm-input,
+.dark .plugin-manager-page .pm-select {
+  background: rgb(23 23 23);
+  border-color: rgb(64 64 64);
+  color: white;
+}
+
+.plugin-manager-page .pm-card {
+  border-radius: 0.875rem;
+  border: 1px solid rgb(229 229 229);
+  background: rgb(250 250 250);
+  padding: 1rem;
+}
+
+.dark .plugin-manager-page .pm-card {
+  background: rgb(255 255 255 / 0.05);
+  border-color: rgb(255 255 255 / 0.08);
+}
+
+.plugin-manager-page .pm-empty {
+  padding: 3rem 1rem;
+  text-align: center;
+  color: rgb(115 115 115);
+  border: 1px dashed rgb(212 212 212);
+  border-radius: 0.875rem;
+}
+
+.plugin-manager-page .pm-skeleton-grid {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.plugin-manager-page .pm-skeleton-grid::before,
+.plugin-manager-page .pm-skeleton-grid::after {
+  content: '';
+  display: block;
+  height: 5rem;
+  border-radius: 0.875rem;
+  background: linear-gradient(90deg, rgb(245 245 245), rgb(229 229 229), rgb(245 245 245));
+  background-size: 200% 100%;
+  animation: pm-shimmer 1.4s infinite;
+}
+
+.dark .plugin-manager-page .pm-skeleton-grid::before,
+.dark .plugin-manager-page .pm-skeleton-grid::after {
+  background: linear-gradient(90deg, rgb(38 38 38), rgb(64 64 64), rgb(38 38 38));
+}
+
+@keyframes pm-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+.plugin-manager-page .pm-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.plugin-manager-page .pm-modal.hidden {
+  display: none;
+}
+
+.plugin-manager-page .pm-modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgb(0 0 0 / 0.45);
+  backdrop-filter: blur(4px);
+}
+
+.plugin-manager-page .pm-modal-content {
+  position: relative;
+  width: min(100%, 42rem);
+  max-height: calc(100vh - 2rem);
+  overflow-y: auto;
+  border-radius: 1rem;
+  border: 1px solid rgb(229 229 229);
+  background: white;
+  padding: 1.25rem;
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+}
+
+.dark .plugin-manager-page .pm-modal-content {
+  background: rgb(23 23 23);
+  border-color: rgb(64 64 64);
+}
+
+.plugin-manager-page .pm-icon-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 0.625rem;
+  color: rgb(115 115 115);
+}
+
+.plugin-manager-page .pm-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.6875rem;
+  font-weight: 500;
+  background: rgb(245 245 245);
+  color: rgb(82 82 82);
+}
+
+.dark .plugin-manager-page .pm-badge {
+  background: rgb(255 255 255 / 0.08);
+  color: rgb(212 212 212);
+}

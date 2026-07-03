@@ -1,0 +1,11 @@
+node_modules/
+dist/
+.pnpm-store/
+*.db
+*.db-journal
+.env
+storage/dev.db
+storage/addons/modrinth/node_modules/
+storage/addons/modrinth/dist/
+.DS_Store
+Thumbs.db

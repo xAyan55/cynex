@@ -1,0 +1,132 @@
+<%- include('../../components/header', { title: 'Plugin Manager' }) %>
+<link rel="stylesheet" href="/styles/plugin-manager.css">
+
+<main class="h-screen m-auto text-neutral-800 dark:text-white plugin-manager-page">
+  <div class="flex h-screen">
+    <aside class="w-60 h-full">
+      <%- include('../../components/template') %>
+    </aside>
+
+    <section id="page-content" class="flex-1 p-6 overflow-y-auto pt-16">
+      <header class="sm:flex sm:items-center px-8 pt-4">
+        <%- include('../../components/serverHeader') %>
+        <div class="mt-4 sm:ml-16 sm:mt-0 sm:flex gap-2.5">
+          <button id="pmUpdateAllBtn" type="button" class="pm-btn-secondary">
+            <%- icon('refresh-cw', { class: 'size-4 inline-flex mr-1 mb-0.5' }) %>
+            Update All
+          </button>
+          <label class="pm-btn-primary cursor-pointer">
+            <%- icon('upload', { class: 'size-4 inline-flex mr-1 mb-0.5' }) %>
+            Upload Plugin
+            <input id="pmUploadInput" type="file" accept=".jar" class="hidden">
+          </label>
+        </div>
+      </header>
+
+      <%- include('../../components/installHeader') %>
+      <%- include('../../components/serverTemplate', { features: ['plugins'] }) %>
+
+      <div id="pmRestartBanner" class="hidden mx-8 mt-4 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-500/20 px-4 py-3 flex items-center justify-between gap-3">
+        <div class="flex items-center gap-3">
+          <%- icon('alert-triangle', { class: 'size-4 text-amber-500' }) %>
+          <span class="text-sm text-amber-700 dark:text-amber-300 font-medium">Restart Required — plugin changes need a server restart to take effect.</span>
+        </div>
+        <div class="flex gap-2">
+          <button id="pmRestartLaterBtn" type="button" class="pm-btn-secondary text-xs">Later</button>
+          <button id="pmRestartBtn" type="button" class="pm-btn-primary text-xs">Restart Server</button>
+        </div>
+      </div>
+
+      <% if (!daemonOnline) { %>
+      <div class="mx-8 mt-4 rounded-xl bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-500/20 px-4 py-3 text-sm text-red-700 dark:text-red-300">
+        The node daemon is offline. Plugin operations are unavailable until the daemon reconnects.
+      </div>
+      <% } %>
+
+      <div class="px-8 mt-6">
+        <div class="flex gap-2 mb-5">
+          <button data-pm-tab="installed" class="pm-tab active">Installed</button>
+          <button data-pm-tab="browse" class="pm-tab">Browse</button>
+        </div>
+
+        <div id="pmInstalledPanel" class="pm-panel">
+          <div class="flex items-center gap-3 mb-4">
+            <input id="pmInstalledSearch" type="search" placeholder="Search installed plugins..." class="pm-input flex-1 max-w-md">
+            <span id="pmInstalledCount" class="text-xs text-neutral-500"></span>
+          </div>
+          <div id="pmInstalledLoading" class="pm-skeleton-grid"></div>
+          <div id="pmInstalledEmpty" class="hidden pm-empty">No plugins installed yet. Browse Modrinth or upload a JAR file.</div>
+          <div id="pmInstalledList" class="grid grid-cols-1 xl:grid-cols-2 gap-3"></div>
+        </div>
+
+        <div id="pmBrowsePanel" class="pm-panel hidden">
+          <div class="flex flex-wrap items-center gap-3 mb-4">
+            <input id="pmBrowseSearch" type="search" placeholder="Search plugins on Modrinth..." class="pm-input flex-1 min-w-[240px] max-w-lg">
+            <select id="pmBrowseSort" class="pm-select">
+              <option value="relevance">Relevance</option>
+              <option value="downloads">Downloads</option>
+              <option value="updated">Updated</option>
+              <option value="newest">Newest</option>
+            </select>
+            <button id="pmBrowseSearchBtn" type="button" class="pm-btn-primary">Search</button>
+          </div>
+          <div id="pmBrowseLoading" class="pm-skeleton-grid"></div>
+          <div id="pmBrowseEmpty" class="hidden pm-empty">No plugins matched your search.</div>
+          <div id="pmBrowseResults" class="grid grid-cols-1 xl:grid-cols-2 gap-3"></div>
+          <div class="flex justify-center mt-6">
+            <button id="pmBrowseMoreBtn" type="button" class="pm-btn-secondary hidden">Load More</button>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</main>
+
+<div id="pmDetailModal" class="pm-modal hidden">
+  <div class="pm-modal-backdrop" data-pm-close></div>
+  <div class="pm-modal-content">
+    <div class="flex items-start justify-between gap-4 mb-4">
+      <div class="flex items-start gap-3 min-w-0">
+        <img id="pmDetailIcon" alt="" class="size-12 rounded-xl object-cover hidden">
+        <div class="min-w-0">
+          <h2 id="pmDetailTitle" class="text-lg font-semibold truncate"></h2>
+          <p id="pmDetailMeta" class="text-sm text-neutral-500 mt-1"></p>
+        </div>
+      </div>
+      <button type="button" class="pm-icon-btn" data-pm-close aria-label="Close">
+        <%- icon('x', { class: 'size-5' }) %>
+      </button>
+    </div>
+    <div id="pmDetailBody" class="prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-300"></div>
+    <div id="pmDetailVersions" class="mt-4 space-y-2"></div>
+    <div id="pmDetailActions" class="mt-6 flex flex-wrap gap-2"></div>
+  </div>
+</div>
+
+<div id="pmProgressModal" class="pm-modal hidden">
+  <div class="pm-modal-backdrop"></div>
+  <div class="pm-modal-content max-w-md">
+    <h3 id="pmProgressTitle" class="text-base font-semibold mb-2">Installing plugin</h3>
+    <p id="pmProgressStage" class="text-sm text-neutral-500 mb-4">Initializing...</p>
+    <div class="h-2 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
+      <div id="pmProgressBar" class="h-full bg-neutral-900 dark:bg-white transition-all duration-300" style="width:0%"></div>
+    </div>
+    <ul id="pmProgressWarnings" class="mt-4 text-xs text-amber-600 dark:text-amber-400 space-y-1"></ul>
+  </div>
+</div>
+
+<script nonce="<%- nonce %>">
+  window.PLUGIN_MANAGER = {
+    serverId: <%- JSON.stringify(server.UUID) %>,
+    apiBase: <%- JSON.stringify('/server/' + server.UUID + '/plugins/api') %>,
+    wsBase: <%- JSON.stringify((req.protocol === 'https' ? 'wss://' : 'ws://') + req.get('host') + '/server/' + server.UUID + '/plugins/ws/progress') %>,
+    loader: <%- JSON.stringify(loader || null) %>,
+    minecraftVersion: <%- JSON.stringify(minecraftVersion || null) %>,
+    csrfToken: <%- JSON.stringify(typeof csrfToken !== 'undefined' ? csrfToken : '') %>,
+    isAdmin: <%- JSON.stringify(Boolean(user && user.isAdmin)) %>,
+    daemonOnline: <%- JSON.stringify(Boolean(daemonOnline)) %>
+  };
+</script>
+<script src="/javascript/plugin-manager.js" nonce="<%- nonce %>"></script>
+
+<%- include('../../components/footer') %>
