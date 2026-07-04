@@ -1149,8 +1149,13 @@ phase_daemon_download() {
 
     echo "Fetching latest daemon release info..."
     local release_json
-    release_json=$(curl -fsSL --max-time 30 "${DAEMON_RELEASE_API}" 2>/dev/null) \
-        || die "Failed to fetch daemon release info from GitHub"
+    release_json=$(curl -fsSL --max-time 30 "${DAEMON_RELEASE_API}" 2>/dev/null)
+    
+    if [[ $? -ne 0 ]] || [[ -z "$release_json" ]]; then
+        log "WARN: Failed to fetch daemon release from CynexGP repo. Falling back to Airlink daemon releases."
+        release_json=$(curl -fsSL --max-time 30 "https://api.github.com/repos/airlinklabs/daemon/releases/latest" 2>/dev/null) \
+            || die "Failed to fetch daemon release info from GitHub"
+    fi
 
     # extract tag name for logging
     local tag
@@ -1161,7 +1166,7 @@ print(d.get('tag_name', 'unknown'))
 " 2>/dev/null) || tag="unknown"
     log "Latest daemon release: $tag"
 
-    # find the matching asset URL — name format: cynexgpd-{platform}-{arch}-{version}.zip
+    # find the matching asset URL — name format: cynexgpd-{platform}-{arch}-{version}.zip or airlinkd-{platform}-{arch}-{version}.zip
     local asset_url
     asset_url=$(echo "$release_json" | python3 -c "
 import json, sys
@@ -1169,12 +1174,22 @@ platform = sys.argv[1]
 arch     = sys.argv[2]
 d = json.load(sys.stdin)
 assets = d.get('assets', [])
-needle = 'cynexgpd-' + platform + '-' + arch + '-'
+needle1 = 'cynexgpd-' + platform + '-' + arch + '-'
+needle2 = 'airlinkd-' + platform + '-' + arch + '-'
+url = None
 for a in assets:
     name = a.get('name', '')
-    if name.startswith(needle) and name.endswith('.zip'):
-        print(a['browser_download_url'])
+    if name.startswith(needle1) and name.endswith('.zip'):
+        url = a['browser_download_url']
         break
+if not url:
+    for a in assets:
+        name = a.get('name', '')
+        if name.startswith(needle2) and name.endswith('.zip'):
+            url = a['browser_download_url']
+            break
+if url:
+    print(url)
 " "$DAEMON_PLATFORM" "$DAEMON_ARCH" 2>/dev/null) || true
 
     [[ -z "$asset_url" ]] && die "No daemon binary found for ${DAEMON_PLATFORM}-${DAEMON_ARCH} in release ${tag}"
