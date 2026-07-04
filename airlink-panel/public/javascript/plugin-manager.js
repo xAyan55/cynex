@@ -154,7 +154,7 @@
 
   async function loadInstalled(query) {
     if (!els.installedList) return;
-    if (els.installedLoading) els.installedLoading.classList.remove('hidden');
+    if (els.installedLoading) els.installedLoading.style.display = 'grid';
     if (els.installedEmpty) els.installedEmpty.classList.add('hidden');
     els.installedList.innerHTML = '';
     try {
@@ -165,13 +165,13 @@
       if (els.installedCount) els.installedCount.textContent = `${plugins.length} plugin${plugins.length === 1 ? '' : 's'}`;
       plugins.forEach((plugin) => els.installedList.appendChild(renderInstalledCard(plugin)));
     } finally {
-      if (els.installedLoading) els.installedLoading.classList.add('hidden');
+      if (els.installedLoading) els.installedLoading.style.display = 'none';
     }
   }
 
   async function loadBrowse(append) {
     if (!els.browseResults) return;
-    if (els.browseLoading) els.browseLoading.classList.remove('hidden');
+    if (els.browseLoading) els.browseLoading.style.display = 'grid';
     if (els.browseEmpty) els.browseEmpty.classList.add('hidden');
     if (!append) {
       els.browseResults.innerHTML = '';
@@ -194,7 +194,7 @@
         els.browseMoreBtn.classList.toggle('hidden', loaded >= state.browseTotal);
       }
     } finally {
-      if (els.browseLoading) els.browseLoading.classList.add('hidden');
+      if (els.browseLoading) els.browseLoading.style.display = 'none';
     }
   }
 
