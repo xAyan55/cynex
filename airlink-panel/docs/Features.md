@@ -8,7 +8,7 @@ This is a reference for everything in the CynexGP Panel. It covers the admin sid
 
 ### Quick install
 ```bash
-bash <(curl -s https://raw.githubusercontent.com/xAyan55/cynex/refs/heads/main/installer.sh)
+bash <(curl -s https://raw.githubusercontent.com/xAyan55/cynex/main/installer.sh)
 ```
 
 The installer is interactive. It walks you through database setup, admin account creation, and optional addon selection.
