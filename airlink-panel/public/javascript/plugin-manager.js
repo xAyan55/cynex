@@ -376,36 +376,6 @@
         </div>
 
         <div id="pmModalTabContent-versions" class="pm-modal-tab-panel ${defaultTab === 'versions' ? '' : 'hidden'}">
-          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div class="md:col-span-2 prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-300 max-h-96 overflow-y-auto pr-2" style="white-space: pre-wrap;">${escapeHtml(project.body || project.description || 'No description available.')}</div>
-            <div class="space-y-4 bg-neutral-50 dark:bg-white/[0.02] p-4 rounded-xl border border-neutral-200 dark:border-white/5 text-sm h-fit">
-              <div>
-                <h4 class="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Followers</h4>
-                <p class="font-medium mt-0.5">${project.followers?.toLocaleString() || 0}</p>
-              </div>
-              <div>
-                <h4 class="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">License</h4>
-                <p class="font-medium mt-0.5">${escapeHtml(project.license?.name || 'Unknown')}</p>
-              </div>
-              <div>
-                <h4 class="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Categories</h4>
-                <div class="flex flex-wrap gap-1 mt-1">
-                  ${(project.categories || []).map(cat => `<span class="pm-badge">${escapeHtml(cat)}</span>`).join('')}
-                </div>
-              </div>
-              <div>
-                <h4 class="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Links</h4>
-                <div class="flex flex-col gap-1.5 mt-2.5">
-                  ${project.source_url ? `<a href="${escapeAttr(project.source_url)}" target="_blank" class="text-emerald-500 hover:underline flex items-center gap-1">Source Code</a>` : ''}
-                  ${project.issues_url ? `<a href="${escapeAttr(project.issues_url)}" target="_blank" class="text-emerald-500 hover:underline flex items-center gap-1">Issue Tracker</a>` : ''}
-                  ${project.wiki_url ? `<a href="${escapeAttr(project.wiki_url)}" target="_blank" class="text-emerald-500 hover:underline flex items-center gap-1">Wiki</a>` : ''}
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div id="pmModalTabContent-versions" class="pm-modal-tab-panel hidden">
           <div class="flex flex-wrap gap-2 mb-4 bg-neutral-50 dark:bg-white/[0.02] p-3 rounded-xl border border-neutral-200 dark:border-white/5">
             <div class="flex-1 min-w-[120px]">
               <label class="text-xs font-semibold text-neutral-400 dark:text-neutral-500">Game Version</label>

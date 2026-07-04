@@ -127,6 +127,6 @@
     daemonOnline: <%- JSON.stringify(Boolean(daemonOnline)) %>
   };
 </script>
-<script src="/javascript/plugin-manager.js" nonce="<%- nonce %>"></script>
+<script src="/javascript/plugin-manager.js?v=<%- Date.now() %>" nonce="<%- nonce %>"></script>
 
 <%- include('../../components/footer') %>
