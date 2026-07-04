@@ -129,20 +129,54 @@
     if (hit.author && hit.project_id) {
       projectAuthors.set(hit.project_id, hit.author);
     }
-    const card = document.createElement('button');
-    card.type = 'button';
-    card.className = 'pm-card text-left w-full hover:border-neutral-300 dark:hover:border-white/20';
+    
+    const installed = installedPluginsMap.get(hit.project_id);
+    let buttonText = 'Install';
+    let buttonClass = 'pm-btn-primary';
+    if (installed) {
+      if (installed.updateAvailable) {
+        buttonText = 'Update';
+        buttonClass = 'pm-btn-primary !bg-amber-500 hover:!bg-amber-600 !text-white';
+      } else {
+        buttonText = 'Installed';
+        buttonClass = 'pm-btn-secondary !cursor-default opacity-80';
+      }
+    }
+
+    const card = document.createElement('div');
+    card.className = 'pm-card flex flex-col justify-between border border-neutral-200 dark:border-white/5 hover:border-neutral-300 dark:hover:border-white/10 transition p-5 h-full';
+    
+    const versionsList = hit.versions || [];
+    const formattedVersions = versionsList.slice(0, 3).join(', ') + (versionsList.length > 3 ? '...' : '');
+
     card.innerHTML = `
-      <div class="flex items-start gap-3">
-        ${hit.icon_url ? `<img src="${escapeAttr(hit.icon_url)}" alt="" class="size-10 rounded-lg object-cover shrink-0">` : '<div class="size-10 rounded-lg bg-neutral-200 dark:bg-neutral-800 shrink-0"></div>'}
+      <div class="flex items-start gap-4 flex-1">
+        ${hit.icon_url ? `<img src="${escapeAttr(hit.icon_url)}" alt="" class="size-12 rounded-xl object-cover shrink-0 border border-neutral-200 dark:border-white/5">` : '<div class="size-12 rounded-xl bg-neutral-200 dark:bg-neutral-800 shrink-0 border border-neutral-200 dark:border-white/5"></div>'}
         <div class="min-w-0 flex-1">
-          <h3 class="font-medium truncate">${escapeHtml(hit.title)}</h3>
-          <p class="text-xs text-neutral-500 mt-1 line-clamp-2">${escapeHtml(hit.description || '')}</p>
-          <p class="text-xs text-neutral-400 mt-2">${Number(hit.downloads || 0).toLocaleString()} downloads</p>
+          <h3 class="font-bold text-sm truncate">${escapeHtml(hit.title)}</h3>
+          <p class="text-xs text-neutral-400 dark:text-neutral-500 mt-0.5">by <span class="font-medium text-neutral-600 dark:text-neutral-300">${escapeHtml(hit.author || 'Unknown')}</span></p>
+          <div class="flex flex-wrap gap-x-2 gap-y-1 mt-2 text-[10px] text-neutral-500">
+            <span class="bg-neutral-100 dark:bg-white/5 px-2 py-0.5 rounded-full">${Number(hit.downloads || 0).toLocaleString()} downloads</span>
+            ${formattedVersions ? `<span class="bg-neutral-100 dark:bg-white/5 px-2 py-0.5 rounded-full truncate max-w-[150px]">MC: ${escapeHtml(formattedVersions)}</span>` : ''}
+          </div>
         </div>
       </div>
+      <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-4 line-clamp-2 leading-relaxed flex-1">${escapeHtml(hit.description || '')}</p>
+      <div class="flex gap-2 mt-5 pt-3 border-t border-neutral-100 dark:border-white/5 shrink-0">
+        <button type="button" class="pm-btn-secondary text-xs flex-1 py-2 px-3 text-center rounded-lg" data-action="details" data-project-id="${escapeAttr(hit.project_id)}">Details</button>
+        <button type="button" class="${buttonClass} text-xs flex-1 py-2 px-3 text-center rounded-lg font-semibold" data-action="install-shortcut" data-project-id="${escapeAttr(hit.project_id)}">${buttonText}</button>
+      </div>
     `;
-    card.addEventListener('click', () => openProjectDetails(hit.project_id));
+    
+    card.querySelector('[data-action="details"]').addEventListener('click', () => openProjectDetails(hit.project_id, 'about'));
+    
+    const instBtn = card.querySelector('[data-action="install-shortcut"]');
+    if (installed && !installed.updateAvailable) {
+      instBtn.addEventListener('click', () => openProjectDetails(hit.project_id, 'versions'));
+    } else {
+      instBtn.addEventListener('click', () => openProjectDetails(hit.project_id, 'versions'));
+    }
+
     return card;
   }
 
@@ -289,7 +323,7 @@
     }).join('');
   }
 
-  function renderProjectModal(container, project, versions, authorName) {
+  function renderProjectModal(container, project, versions, authorName, defaultTab = 'about') {
     container.innerHTML = `
       <div class="flex items-start justify-between gap-4 mb-4">
         <div class="flex items-start gap-3 min-w-0">
@@ -305,13 +339,43 @@
       </div>
 
       <div class="flex gap-2 border-b border-neutral-200 dark:border-white/5 pb-2 mb-4">
-        <button data-pm-modal-tab="about" class="pm-modal-tab active px-3 py-1.5 text-xs font-semibold rounded-lg bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-neutral-900 dark:text-white transition">About</button>
-        <button data-pm-modal-tab="versions" class="pm-modal-tab px-3 py-1.5 text-xs font-semibold rounded-lg text-neutral-500 hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition">Versions</button>
-        ${project.gallery && project.gallery.length > 0 ? `<button data-pm-modal-tab="gallery" class="pm-modal-tab px-3 py-1.5 text-xs font-semibold rounded-lg text-neutral-500 hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition">Gallery</button>` : ''}
+        <button data-pm-modal-tab="about" class="pm-modal-tab ${defaultTab === 'about' ? 'active bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-neutral-900 dark:text-white' : 'text-neutral-500 hover:bg-neutral-50 dark:hover:bg-white/[0.02]'} px-3 py-1.5 text-xs font-semibold rounded-lg transition">About</button>
+        <button data-pm-modal-tab="versions" class="pm-modal-tab ${defaultTab === 'versions' ? 'active bg-neutral-100 dark:bg-white/5 border border-neutral-200 dark:border-white/10 text-neutral-900 dark:text-white' : 'text-neutral-500 hover:bg-neutral-50 dark:hover:bg-white/[0.02]'} px-3 py-1.5 text-xs font-semibold rounded-lg transition">Versions</button>
+        ${project.gallery && project.gallery.length > 0 ? `<button data-pm-modal-tab="gallery" class="pm-modal-tab text-neutral-500 hover:bg-neutral-50 dark:hover:bg-white/[0.02] px-3 py-1.5 text-xs font-semibold rounded-lg transition">Gallery</button>` : ''}
       </div>
 
       <div id="pmModalTabContent">
-        <div id="pmModalTabContent-about" class="pm-modal-tab-panel">
+        <div id="pmModalTabContent-about" class="pm-modal-tab-panel ${defaultTab === 'about' ? '' : 'hidden'}">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="md:col-span-2 prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-300 max-h-96 overflow-y-auto pr-2" style="white-space: pre-wrap;">${escapeHtml(project.body || project.description || 'No description available.')}</div>
+            <div class="space-y-4 bg-neutral-50 dark:bg-white/[0.02] p-4 rounded-xl border border-neutral-200 dark:border-white/5 text-sm h-fit">
+              <div>
+                <h4 class="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Followers</h4>
+                <p class="font-medium mt-0.5">${project.followers?.toLocaleString() || 0}</p>
+              </div>
+              <div>
+                <h4 class="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">License</h4>
+                <p class="font-medium mt-0.5">${escapeHtml(project.license?.name || 'Unknown')}</p>
+              </div>
+              <div>
+                <h4 class="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Categories</h4>
+                <div class="flex flex-wrap gap-1 mt-1">
+                  ${(project.categories || []).map(cat => `<span class="pm-badge">${escapeHtml(cat)}</span>`).join('')}
+                </div>
+              </div>
+              <div>
+                <h4 class="text-xs font-semibold text-neutral-400 dark:text-neutral-500 uppercase tracking-wider">Links</h4>
+                <div class="flex flex-col gap-1.5 mt-2.5">
+                  ${project.source_url ? `<a href="${escapeAttr(project.source_url)}" target="_blank" class="text-emerald-500 hover:underline flex items-center gap-1">Source Code</a>` : ''}
+                  ${project.issues_url ? `<a href="${escapeAttr(project.issues_url)}" target="_blank" class="text-emerald-500 hover:underline flex items-center gap-1">Issue Tracker</a>` : ''}
+                  ${project.wiki_url ? `<a href="${escapeAttr(project.wiki_url)}" target="_blank" class="text-emerald-500 hover:underline flex items-center gap-1">Wiki</a>` : ''}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="pmModalTabContent-versions" class="pm-modal-tab-panel ${defaultTab === 'versions' ? '' : 'hidden'}">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <div class="md:col-span-2 prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-300 max-h-96 overflow-y-auto pr-2" style="white-space: pre-wrap;">${escapeHtml(project.body || project.description || 'No description available.')}</div>
             <div class="space-y-4 bg-neutral-50 dark:bg-white/[0.02] p-4 rounded-xl border border-neutral-200 dark:border-white/5 text-sm h-fit">
@@ -447,7 +511,7 @@
     onFilterChange();
   }
 
-  async function openProjectDetails(projectId) {
+  async function openProjectDetails(projectId, defaultTab = 'about') {
     const response = await api(`/project/${encodeURIComponent(projectId)}`);
     const { project, versions } = response.data;
     state.selectedProject = project;
@@ -456,7 +520,7 @@
     const modalContent = document.querySelector('#pmDetailModal .pm-modal-content');
     if (!modalContent) return;
 
-    renderProjectModal(modalContent, project, versions, authorName);
+    renderProjectModal(modalContent, project, versions, authorName, defaultTab);
     openModal(els.detailModal);
   }
 

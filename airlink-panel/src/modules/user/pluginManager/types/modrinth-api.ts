@@ -72,6 +72,7 @@ export const ModrinthSearchHitSchema = z.object({
   latest_version: z.string().optional(),
   license: z.string().optional(),
   gallery: z.array(z.string()).optional().default([]),
+  versions: z.array(z.string()).optional().default([]),
 });
 
 export type ModrinthSearchHit = z.infer<typeof ModrinthSearchHitSchema>;
