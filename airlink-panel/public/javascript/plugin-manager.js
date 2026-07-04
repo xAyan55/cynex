@@ -49,22 +49,29 @@
   };
 
   function api(path, options) {
+    const url = `${cfg.apiBase}${path}`;
+    console.log('[PM] api() calling:', url, 'options:', options);
     const headers = {
       Accept: 'application/json',
       ...(options && options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
     };
     if (cfg.csrfToken) headers['x-csrf-token'] = cfg.csrfToken;
 
-    return fetch(`${cfg.apiBase}${path}`, {
+    return fetch(url, {
       credentials: 'same-origin',
       ...options,
       headers: { ...headers, ...(options && options.headers ? options.headers : {}) },
     }).then(async (response) => {
+      console.log('[PM] fetch response:', response.status, response.url);
       const data = await response.json().catch(() => ({}));
+      console.log('[PM] response data:', data);
       if (!response.ok) {
         throw new Error(data.error || 'Request failed');
       }
       return data;
+    }).catch((err) => {
+      console.log('[PM] fetch error:', err);
+      throw err;
     });
   }
 
@@ -176,9 +183,11 @@
     });
     
     const instBtn = card.querySelector('[data-action="install-shortcut"]');
-    instBtn.addEventListener('click', () => {
+    console.log('[PM] renderBrowseCard for', hit.project_id, 'instBtn:', instBtn, 'exists:', !!instBtn);
+    instBtn.addEventListener('click', (e) => {
+      console.log('[PM] INSTALL-SHORTCUT CLICKED! project_id:', hit.project_id);
       openProjectDetails(hit.project_id, 'versions').catch((error) => {
-        console.error('Failed to open project details:', error);
+        console.error('[PM] Failed to open project details:', error);
         window.alert(error.message || 'Failed to load details');
       });
     });
@@ -488,16 +497,24 @@
   }
 
   async function openProjectDetails(projectId, defaultTab = 'about') {
+    console.log('[PM] openProjectDetails called. projectId:', projectId, 'tab:', defaultTab);
     const response = await api(`/project/${encodeURIComponent(projectId)}`);
+    console.log('[PM] API response received:', response);
     const { project, versions } = response.data;
     state.selectedProject = project;
+    console.log('[PM] Project loaded:', project?.title, 'versions:', versions?.length);
     
     const authorName = projectAuthors.get(projectId) || 'Unknown';
     const modalContent = document.querySelector('#pmDetailModal .pm-modal-content');
-    if (!modalContent) return;
+    console.log('[PM] modalContent element:', modalContent);
+    if (!modalContent) {
+      console.log('[PM] FATAL: #pmDetailModal .pm-modal-content not found!');
+      return;
+    }
 
     renderProjectModal(modalContent, project, versions, authorName, defaultTab);
     openModal(els.detailModal);
+    console.log('[PM] Modal opened');
   }
 
   function showProgress(title, stage, progress, warnings) {

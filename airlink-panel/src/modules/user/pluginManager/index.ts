@@ -112,10 +112,12 @@ const pluginManagerModule: Module = {
       },
     );
 
+    console.log('[PM MODULE] Registering API routes...');
     router.use('/server/:id/plugins/api/search', isAuthenticatedForServer('id'), createSearchRoutes(modrinthClient));
     router.use('/server/:id/plugins/api/project', isAuthenticatedForServer('id'), createProjectRoutes(modrinthClient));
     router.use('/server/:id/plugins/api/install', isAuthenticatedForServer('id'), createInstallRoutes(installer, modrinthClient, compatibilityChecker, dependencyResolver));
     router.use('/server/:id/plugins/api', isAuthenticatedForServer('id'), createManageRoutes(scanner, installer, prisma));
+    console.log('[PM MODULE] API routes registered');
 
     if (applyWs) {
       applyWs(router);
