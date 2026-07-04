@@ -112,13 +112,10 @@ const pluginManagerModule: Module = {
       },
     );
 
-    const apiRouter = Router({ mergeParams: true });
-    apiRouter.use('/search', createSearchRoutes(modrinthClient));
-    apiRouter.use('/project', createProjectRoutes(modrinthClient));
-    apiRouter.use('/install', createInstallRoutes(installer, modrinthClient, compatibilityChecker, dependencyResolver));
-    apiRouter.use('/', createManageRoutes(scanner, installer, prisma));
-
-    router.use('/server/:id/plugins/api', isAuthenticatedForServer('id'), apiRouter);
+    router.use('/server/:id/plugins/api/search', isAuthenticatedForServer('id'), createSearchRoutes(modrinthClient));
+    router.use('/server/:id/plugins/api/project', isAuthenticatedForServer('id'), createProjectRoutes(modrinthClient));
+    router.use('/server/:id/plugins/api/install', isAuthenticatedForServer('id'), createInstallRoutes(installer, modrinthClient, compatibilityChecker, dependencyResolver));
+    router.use('/server/:id/plugins/api', isAuthenticatedForServer('id'), createManageRoutes(scanner, installer, prisma));
 
     if (applyWs) {
       applyWs(router);

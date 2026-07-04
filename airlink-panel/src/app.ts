@@ -63,18 +63,8 @@ const name = process.env.NAME || 'CynexGP';
 const cynexgpVersion = config.meta.version;
 
 // Trust proxy when the panel is behind a reverse proxy (Nginx, Caddy, etc).
-// Reads from DB at startup — affects req.ip used by rate limiting and IP banning.
+// Reads from DB at startup - affects req.ip used by rate limiting and IP banning.
 // We set this before any middleware so the correct client IP flows through.
-(async () => {
-  try {
-    const s = await prisma.settings.findUnique({ where: { id: 1 } });
-    if (s?.behindReverseProxy) {
-      app.set('trust proxy', 1);
-    }
-  } catch {
-    // DB not ready yet — leave default (no trust proxy)
-  }
-})();
 
 // Load websocket
 const expressWsInstance = expressWs(app);
@@ -530,6 +520,15 @@ app.use(errorPageHandler);
 (async () => {
   try {
     await databaseLoader();
+    try {
+      const s = await prisma.settings.findUnique({ where: { id: 1 } });
+      if (s?.behindReverseProxy) {
+        app.set('trust proxy', 1);
+        logger.info('Trust proxy enabled (behind reverse proxy)');
+      }
+    } catch (err) {
+      logger.warn('Failed to load trust proxy setting:', err);
+    }
     await settingsLoader();
     // Install HMAC signing interceptor for all panel→daemon requests
     installDaemonRequestInterceptor();

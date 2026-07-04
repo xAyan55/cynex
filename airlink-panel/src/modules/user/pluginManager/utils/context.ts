@@ -20,17 +20,30 @@ export type LoadedPluginContext =
 export async function loadPluginServerContext(req: Request, serverId: unknown): Promise<LoadedPluginContext> {
   console.log('[DEBUG-PM] loadPluginServerContext called with serverId:', serverId, typeof serverId);
   console.log('[DEBUG-PM] req.params:', req.params);
+  console.log('[DEBUG-PM] req.originalUrl:', req.originalUrl);
+
   const userId = req.session?.user?.id;
   if (!userId) {
     return { status: 'missing-user', message: 'Authentication required.' };
   }
 
-  if (typeof serverId !== 'string' || !serverId.trim()) {
+  let resolvedId = typeof serverId === 'string' ? serverId.trim() : '';
+  if (!resolvedId) {
+    const parts = req.originalUrl.split('/');
+    const serverIdx = parts.indexOf('server');
+    if (serverIdx !== -1 && parts[serverIdx + 1]) {
+      resolvedId = parts[serverIdx + 1];
+    }
+  }
+
+  console.log('[DEBUG-PM] resolvedId:', resolvedId);
+
+  if (!resolvedId) {
     return { status: 'missing-server', message: 'Server not found.' };
   }
 
   const server = await prisma.server.findUnique({
-    where: { UUID: serverId },
+    where: { UUID: resolvedId },
     include: serverInclude,
   });
   console.log('[DEBUG-PM] server query result:', server ? server.UUID : null);
