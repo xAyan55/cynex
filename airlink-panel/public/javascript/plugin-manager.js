@@ -41,6 +41,8 @@
     progressStage: document.getElementById('pmProgressStage'),
     progressBar: document.getElementById('pmProgressBar'),
     progressWarnings: document.getElementById('pmProgressWarnings'),
+    installedLoading: document.getElementById('pmInstalledLoading'),
+    browseLoading: document.getElementById('pmBrowseLoading'),
   };
 
   function api(path, options) {
@@ -152,35 +154,47 @@
 
   async function loadInstalled(query) {
     if (!els.installedList) return;
-    const params = query ? `?q=${encodeURIComponent(query)}` : '';
-    const response = await api(`/installed${params}`);
-    const plugins = response.data || [];
+    if (els.installedLoading) els.installedLoading.classList.remove('hidden');
+    if (els.installedEmpty) els.installedEmpty.classList.add('hidden');
     els.installedList.innerHTML = '';
-    if (els.installedEmpty) els.installedEmpty.classList.toggle('hidden', plugins.length > 0);
-    if (els.installedCount) els.installedCount.textContent = `${plugins.length} plugin${plugins.length === 1 ? '' : 's'}`;
-    plugins.forEach((plugin) => els.installedList.appendChild(renderInstalledCard(plugin)));
+    try {
+      const params = query ? `?q=${encodeURIComponent(query)}` : '';
+      const response = await api(`/installed${params}`);
+      const plugins = response.data || [];
+      if (els.installedEmpty) els.installedEmpty.classList.toggle('hidden', plugins.length > 0);
+      if (els.installedCount) els.installedCount.textContent = `${plugins.length} plugin${plugins.length === 1 ? '' : 's'}`;
+      plugins.forEach((plugin) => els.installedList.appendChild(renderInstalledCard(plugin)));
+    } finally {
+      if (els.installedLoading) els.installedLoading.classList.add('hidden');
+    }
   }
 
   async function loadBrowse(append) {
     if (!els.browseResults) return;
+    if (els.browseLoading) els.browseLoading.classList.remove('hidden');
+    if (els.browseEmpty) els.browseEmpty.classList.add('hidden');
     if (!append) {
       els.browseResults.innerHTML = '';
       state.browsePage = 1;
     }
-    const params = new URLSearchParams({
-      q: state.browseQuery,
-      page: String(state.browsePage),
-      sort: state.browseSort,
-    });
-    const response = await api(`/search?${params.toString()}`);
-    const results = response.data || { hits: [], total_hits: 0 };
-    state.browseTotal = results.total_hits || 0;
-    const hits = results.hits || [];
-    if (els.browseEmpty) els.browseEmpty.classList.toggle('hidden', hits.length > 0 || append);
-    hits.forEach((hit) => els.browseResults.appendChild(renderBrowseCard(hit)));
-    if (els.browseMoreBtn) {
-      const loaded = els.browseResults.children.length;
-      els.browseMoreBtn.classList.toggle('hidden', loaded >= state.browseTotal);
+    try {
+      const params = new URLSearchParams({
+        q: state.browseQuery,
+        page: String(state.browsePage),
+        sort: state.browseSort,
+      });
+      const response = await api(`/search?${params.toString()}`);
+      const results = response.data || { hits: [], total_hits: 0 };
+      state.browseTotal = results.total_hits || 0;
+      const hits = results.hits || [];
+      if (els.browseEmpty) els.browseEmpty.classList.toggle('hidden', hits.length > 0 || append);
+      hits.forEach((hit) => els.browseResults.appendChild(renderBrowseCard(hit)));
+      if (els.browseMoreBtn) {
+        const loaded = els.browseResults.children.length;
+        els.browseMoreBtn.classList.toggle('hidden', loaded >= state.browseTotal);
+      }
+    } finally {
+      if (els.browseLoading) els.browseLoading.classList.add('hidden');
     }
   }
 

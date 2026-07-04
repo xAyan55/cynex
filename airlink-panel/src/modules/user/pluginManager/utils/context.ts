@@ -18,10 +18,6 @@ export type LoadedPluginContext =
   | { status: 'unsupported'; message: string };
 
 export async function loadPluginServerContext(req: Request, serverId: unknown): Promise<LoadedPluginContext> {
-  console.log('[DEBUG-PM] loadPluginServerContext called with serverId:', serverId, typeof serverId);
-  console.log('[DEBUG-PM] req.params:', req.params);
-  console.log('[DEBUG-PM] req.originalUrl:', req.originalUrl);
-
   const userId = req.session?.user?.id;
   if (!userId) {
     return { status: 'missing-user', message: 'Authentication required.' };
@@ -36,8 +32,6 @@ export async function loadPluginServerContext(req: Request, serverId: unknown): 
     }
   }
 
-  console.log('[DEBUG-PM] resolvedId:', resolvedId);
-
   if (!resolvedId) {
     return { status: 'missing-server', message: 'Server not found.' };
   }
@@ -46,7 +40,6 @@ export async function loadPluginServerContext(req: Request, serverId: unknown): 
     where: { UUID: resolvedId },
     include: serverInclude,
   });
-  console.log('[DEBUG-PM] server query result:', server ? server.UUID : null);
 
   if (!server) {
     return { status: 'missing-server', message: 'Server not found.' };
