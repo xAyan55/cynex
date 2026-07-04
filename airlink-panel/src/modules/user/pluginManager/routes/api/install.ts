@@ -13,7 +13,7 @@ export function createInstallRoutes(
   compatibilityChecker: CompatibilityChecker,
   dependencyResolver: DependencyResolver,
 ): Router {
-  const router = Router();
+  const router = Router({ mergeParams: true });
   const activeInstallations = new Map<string, boolean>();
 
   router.post('/check', async (req: Request, res: Response) => {

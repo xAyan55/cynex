@@ -3,7 +3,7 @@ import { ModrinthClient } from '../../services/modrinth-client';
 import { validateProjectId } from '../../utils/validation';
 
 export function createProjectRoutes(modrinthClient: ModrinthClient): Router {
-  const router = Router();
+  const router = Router({ mergeParams: true });
 
   router.get('/:projectId', async (req: Request, res: Response) => {
     try {

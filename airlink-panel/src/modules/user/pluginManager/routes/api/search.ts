@@ -11,7 +11,7 @@ const searchLimiter = rateLimit({
 });
 
 export function createSearchRoutes(modrinthClient: ModrinthClient): Router {
-  const router = Router();
+  const router = Router({ mergeParams: true });
 
   router.get('/', searchLimiter, async (req: Request, res: Response) => {
     try {

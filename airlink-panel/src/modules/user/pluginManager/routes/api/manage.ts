@@ -17,7 +17,7 @@ export function createManageRoutes(
   installer: PluginInstaller,
   prisma: { $executeRaw: Function; $queryRaw: Function },
 ): Router {
-  const router = Router();
+  const router = Router({ mergeParams: true });
 
   router.get('/installed', async (req: Request, res: Response) => {
     try {
