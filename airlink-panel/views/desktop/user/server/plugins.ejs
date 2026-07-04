@@ -80,40 +80,41 @@
       </div>
     </section>
   </div>
-</main>
 
-<div id="pmDetailModal" class="pm-modal hidden">
-  <div class="pm-modal-backdrop" data-pm-close></div>
-  <div class="pm-modal-content">
-    <div class="flex items-start justify-between gap-4 mb-4">
-      <div class="flex items-start gap-3 min-w-0">
-        <img id="pmDetailIcon" alt="" class="size-12 rounded-xl object-cover hidden">
-        <div class="min-w-0">
-          <h2 id="pmDetailTitle" class="text-lg font-semibold truncate"></h2>
-          <p id="pmDetailMeta" class="text-sm text-neutral-500 mt-1"></p>
+  <div id="pmDetailModal" class="pm-modal hidden">
+    <div class="pm-modal-backdrop" data-pm-close></div>
+    <div class="pm-modal-content">
+      <div class="flex items-start justify-between gap-4 mb-4">
+        <div class="flex items-start gap-3 min-w-0">
+          <img id="pmDetailIcon" alt="" class="size-12 rounded-xl object-cover hidden">
+          <div class="min-w-0">
+            <h2 id="pmDetailTitle" class="text-lg font-semibold truncate"></h2>
+            <p id="pmDetailMeta" class="text-sm text-neutral-500 mt-1"></p>
+          </div>
         </div>
+        <button type="button" class="pm-icon-btn" data-pm-close aria-label="Close">
+          <%- icon('x', { class: 'size-5' }) %>
+        </button>
       </div>
-      <button type="button" class="pm-icon-btn" data-pm-close aria-label="Close">
-        <%- icon('x', { class: 'size-5' }) %>
-      </button>
+      <div id="pmDetailBody" class="prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-300"></div>
+      <div id="pmDetailVersions" class="mt-4 space-y-2"></div>
+      <div id="pmDetailActions" class="mt-6 flex flex-wrap gap-2"></div>
     </div>
-    <div id="pmDetailBody" class="prose prose-sm dark:prose-invert max-w-none text-neutral-600 dark:text-neutral-300"></div>
-    <div id="pmDetailVersions" class="mt-4 space-y-2"></div>
-    <div id="pmDetailActions" class="mt-6 flex flex-wrap gap-2"></div>
   </div>
-</div>
 
-<div id="pmProgressModal" class="pm-modal hidden">
-  <div class="pm-modal-backdrop"></div>
-  <div class="pm-modal-content max-w-md">
-    <h3 id="pmProgressTitle" class="text-base font-semibold mb-2">Installing plugin</h3>
-    <p id="pmProgressStage" class="text-sm text-neutral-500 mb-4">Initializing...</p>
-    <div class="h-2 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
-      <div id="pmProgressBar" class="h-full bg-neutral-900 dark:bg-white transition-all duration-300" style="width:0%"></div>
+  <div id="pmProgressModal" class="pm-modal hidden">
+    <div class="pm-modal-backdrop"></div>
+    <div class="pm-modal-content max-w-md">
+      <h3 id="pmProgressTitle" class="text-base font-semibold mb-2">Installing plugin</h3>
+      <p id="pmProgressStage" class="text-sm text-neutral-500 mb-4">Initializing...</p>
+      <div class="h-2 rounded-full bg-neutral-200 dark:bg-neutral-800 overflow-hidden">
+        <div id="pmProgressBar" class="h-full bg-neutral-900 dark:bg-white transition-all duration-300" style="width:0%"></div>
+      </div>
+      <ul id="pmProgressWarnings" class="mt-4 text-xs text-amber-600 dark:text-amber-400 space-y-1"></ul>
     </div>
-    <ul id="pmProgressWarnings" class="mt-4 text-xs text-amber-600 dark:text-amber-400 space-y-1"></ul>
   </div>
-</div>
+
+</main>
 
 <script nonce="<%- nonce %>">
   window.PLUGIN_MANAGER = {
