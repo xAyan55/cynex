@@ -36,7 +36,7 @@ CynexGP Panel is a web-based control center for deploying, monitoring, and manag
 
 ```bash
 sudo su
-bash <(curl -s https://raw.githubusercontent.com/xAyan55/cynex/main/installer.sh)
+bash <(curl -s https://raw.githubusercontent.com/xAyan55/cynex/main/airlink-panel/installer.sh)
 ```
 
 Manage with systemd:
