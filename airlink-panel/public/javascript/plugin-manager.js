@@ -168,14 +168,20 @@
       </div>
     `;
     
-    card.querySelector('[data-action="details"]').addEventListener('click', () => openProjectDetails(hit.project_id, 'about'));
+    card.querySelector('[data-action="details"]').addEventListener('click', () => {
+      openProjectDetails(hit.project_id, 'about').catch((error) => {
+        console.error('Failed to open project details:', error);
+        window.alert(error.message || 'Failed to load details');
+      });
+    });
     
     const instBtn = card.querySelector('[data-action="install-shortcut"]');
-    if (installed && !installed.updateAvailable) {
-      instBtn.addEventListener('click', () => openProjectDetails(hit.project_id, 'versions'));
-    } else {
-      instBtn.addEventListener('click', () => openProjectDetails(hit.project_id, 'versions'));
-    }
+    instBtn.addEventListener('click', () => {
+      openProjectDetails(hit.project_id, 'versions').catch((error) => {
+        console.error('Failed to open project details:', error);
+        window.alert(error.message || 'Failed to load details');
+      });
+    });
 
     return card;
   }
