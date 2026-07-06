@@ -1192,6 +1192,7 @@ const dashboardModule: Module = {
               installed: await checkForServerInstallation(getParamAsString(serverId)),
               players: [],
               server,
+              serverIsOnline: false,
               req,
               settings: await prisma.settings.findUnique({ where: { id: 1 } }),
             });
