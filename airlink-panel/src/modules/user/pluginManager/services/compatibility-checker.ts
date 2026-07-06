@@ -7,6 +7,26 @@ import {
 import { ModrinthVersion } from '../types/modrinth-api';
 import type { CompatibilityResult } from '../types/modrinth-api';
 
+function mcVersionMatch(serverVersion: string, gameVersion: string): boolean {
+  if (!serverVersion || !gameVersion) return false;
+  gameVersion = gameVersion.replace(/\.x$/i, '');
+  const parseMc = (v: string) => {
+    const parts = v.split('.').map(Number);
+    return { major: parts[0] || 0, minor: parts[1] ?? 0, patch: parts[2] };
+  };
+  const sv = parseMc(serverVersion);
+  const gv = parseMc(gameVersion);
+  if (sv.major !== gv.major) return false;
+  if (sv.minor !== gv.minor) return false;
+  if (gv.patch === undefined) return true;
+  return (sv.patch ?? 0) >= gv.patch;
+}
+
+function serverVersionMatch(serverVersion: string, gameVersions: string[]): boolean {
+  if (!serverVersion || !gameVersions || !gameVersions.length) return false;
+  return gameVersions.some((gv) => mcVersionMatch(serverVersion, gv));
+}
+
 export class CompatibilityChecker {
   check(
     image: Images,
@@ -29,7 +49,7 @@ export class CompatibilityChecker {
     }
 
     if (minecraftVersion && version.game_versions.length > 0) {
-      const matches = version.game_versions.some((entry) => entry === minecraftVersion);
+      const matches = serverVersionMatch(minecraftVersion, version.game_versions);
       if (!matches) {
         const message = `Plugin version does not list Minecraft ${minecraftVersion} as supported.`;
         if (isAdmin) warnings.push(message);

@@ -56,8 +56,8 @@
 
   function renderVersionsTab(project, versions, filters) {
     const filtered = versions.filter(v => {
-      if (filters.game !== 'all' && cfg.minecraftVersion) {
-        if (!v.game_versions.includes(cfg.minecraftVersion)) return false;
+      if (filters.game === 'server' && cfg.minecraftVersion) {
+        if (!U.serverVersionMatch(cfg.minecraftVersion, v.game_versions || [])) return false;
       }
       if (filters.loader !== 'all' && cfg.loader) {
         if (!v.loaders.some(l => l.toLowerCase() === cfg.loader.toLowerCase())) return false;
@@ -72,7 +72,7 @@
     }
 
     return filtered.map(v => {
-      const matchesMC = !cfg.minecraftVersion || v.game_versions.includes(cfg.minecraftVersion);
+      const matchesMC = !cfg.minecraftVersion || U.serverVersionMatch(cfg.minecraftVersion, v.game_versions || []);
       const matchesLoader = !cfg.loader || v.loaders.some(l => l.toLowerCase() === cfg.loader.toLowerCase());
       const isCompatible = matchesMC && matchesLoader;
 

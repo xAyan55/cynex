@@ -20,7 +20,7 @@
 
   function versionIsCompatible(v) {
     if (!v) return false;
-    const mcOk = !cfg.minecraftVersion || (v.game_versions || []).includes(cfg.minecraftVersion);
+    const mcOk = !cfg.minecraftVersion || U.serverVersionMatch(cfg.minecraftVersion, v.game_versions || []);
     const loaderOk = !cfg.loader || (v.loaders || []).some(l => l.toLowerCase() === cfg.loader.toLowerCase());
     return mcOk && loaderOk;
   }
