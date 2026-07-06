@@ -9,6 +9,7 @@ import { pluginProgressTracker } from './progress-tracker';
 import { PLUGIN_MANAGER_CONFIG } from '../config';
 import { sanitizeFilename } from '../utils/validation';
 import { ResolvedDependency } from './dependency-resolver';
+import { PLUGIN_SERVER_LOADERS } from '../../../../handlers/utils/server/pluginServer';
 
 interface ServerRecord {
   UUID: string;
@@ -48,20 +49,19 @@ export class PluginInstaller {
       dependencyIds?: string[];
     },
   ): Promise<void> {
-    pluginProgressTracker.initialize(server.UUID, operationId, projectId, projectId);
-
     try {
-      pluginProgressTracker.updateStage(server.UUID, operationId, 'initializing', 'Fetching plugin metadata...');
+      pluginProgressTracker.initialize(server.UUID, operationId, projectId, '');
 
       const [project, version] = await Promise.all([
         this.modrinthClient.getProject(projectId),
         this.modrinthClient.getVersion(versionId),
       ]);
 
-      const pluginLoaders = ['paper', 'purpur', 'spigot', 'bukkit', 'folia'];
-      const isPluginVersion = version.loaders.some(l => pluginLoaders.includes(l.toLowerCase()));
+      const loaderNames = PLUGIN_SERVER_LOADERS as readonly string[];
+      const isPluginVersion = version.loaders.some(l => loaderNames.includes(l.toLowerCase()));
       if (!isPluginVersion) {
-        throw new Error('Selected version does not support any known plugin server loader (Paper, Purpur, Spigot, Bukkit, or Folia).');
+        const supported = Array.from(loaderNames).map(l => l.charAt(0).toUpperCase() + l.slice(1)).join(', ');
+        throw new Error(`Selected version does not support any known server loader (${supported}).`);
       }
 
       pluginProgressTracker.initialize(server.UUID, operationId, projectId, project.title);

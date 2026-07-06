@@ -1,21 +1,15 @@
+import type { Images } from '../../../../generated/prisma/client';
 import { PluginDaemonClient } from './daemon-client';
 import { UpdateChecker } from './update-checker';
 import { InstalledPlugin } from '../types/modrinth-api';
 import { PLUGIN_MANAGER_CONFIG } from '../config';
 import { isNewerVersion } from '../utils/semver';
+import { detectPluginLoader, getMinecraftVersionFromImage } from '../../../../handlers/utils/server/pluginServer';
 
 interface ServerWithNode {
   UUID: string;
   Variables: string | null;
-  image: {
-    info: string | null;
-    variables?: string | null;
-    name: string | null;
-    dockerImages: string | null;
-    startup: string | null;
-    meta: string | null;
-    description: string | null;
-  };
+  image: Images;
   node: {
     address: string;
     port: number;
@@ -75,12 +69,14 @@ export class PluginScanner {
 
       if (installation?.projectId) {
         try {
+          const loader = detectPluginLoader(server.image);
+          const mcVersion = getMinecraftVersionFromImage(server.image) ?? undefined;
           const update = await this.updateChecker.checkProjectUpdate(
             installation.projectId,
             installation.versionId,
             installation.versionNumber,
-            null,
-            null,
+            loader,
+            mcVersion,
           );
           if (update?.updateAvailable) {
             updateAvailable = true;

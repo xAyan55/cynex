@@ -38,13 +38,6 @@ export class PluginBackupService {
   }
 
   async rollback(server: ServerWithNode, backupPath: string, targetFilename: string): Promise<void> {
-    await this.daemon.deletePath(server, `${PLUGIN_MANAGER_CONFIG.PLUGINS_DIRECTORY}/${targetFilename}`);
-    await this.daemon.uploadFile(
-      server,
-      PLUGIN_MANAGER_CONFIG.PLUGINS_DIRECTORY,
-      targetFilename,
-      Buffer.from(''),
-    );
-    await this.daemon.createBackupZip(server, backupPath.replace('.zip', ''), `${PLUGIN_MANAGER_CONFIG.PLUGINS_DIRECTORY}/${targetFilename}`);
+    throw new Error('Rollback is not supported. The daemon does not provide file extraction endpoints.');
   }
 }
