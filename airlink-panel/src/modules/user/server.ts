@@ -1276,8 +1276,11 @@ const dashboardModule: Module = {
           }
 
           const settings = await prisma.settings.findUnique({ where: { id: 1 } });
-          const hasError = hadFetchError && !serverIsOnline;
           const serverStatus = await getServerStatus(getServerStatusInput(server));
+
+          // If Minecraft ping failed but container is running, trust container status
+          const isOnline = serverIsOnline || serverStatus.online;
+          const hasError = hadFetchError && !isOnline;
 
           return res.render('user/server/players', {
             errorMessage: hasError
@@ -1286,7 +1289,7 @@ const dashboardModule: Module = {
                     'Unable to fetch players. The server may be offline or not responding.',
               }
               : {},
-            serverIsOnline,
+            serverIsOnline: isOnline,
             user,
             players,
             serverInfo,
