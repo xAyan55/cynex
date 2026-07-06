@@ -62,16 +62,19 @@
   }
 
   function connectProgressSocket(operationId, onComplete) {
+    console.log(`[PM] WebSocket connect for ${operationId}`);
     const socket = new WebSocket(`${cfg.wsBase}/${encodeURIComponent(operationId)}`);
     socket.addEventListener('message', (event) => {
       try {
         const payload = JSON.parse(event.data);
+        console.log(`[PM] WS message:`, payload);
         if (payload.type === 'progress') {
           showProgress('Installing plugin', payload.stageMessage || payload.stage, payload.overallProgress, payload.warnings);
         }
       } catch { /* ignore */ }
     });
     socket.addEventListener('close', () => {
+      console.log(`[PM] WS closed`);
       closeModal(els.progressModal);
       if (onComplete) onComplete();
     });
@@ -79,6 +82,14 @@
   }
 
   async function installPlugin(projectId, versionId, force, installDependencies, dependencyIds) {
+    console.log(`[PM] installPlugin()`);
+    console.log(`[PM]   projectId=${projectId}`);
+    console.log(`[PM]   versionId=${versionId}`);
+    console.log(`[PM]   force=${force}`);
+    console.log(`[PM]   installDependencies=${installDependencies}`);
+    console.log(`[PM]   dependencyIds=`, dependencyIds);
+    console.log(`[PM]   daemonOnline=${cfg.daemonOnline}`);
+
     if (!cfg.daemonOnline) throw new Error('Daemon is offline.');
     const body = {
       projectId,
@@ -88,6 +99,7 @@
       dependencyIds: Array.isArray(dependencyIds) ? dependencyIds : [],
     };
 
+    console.log(`[PM] POST ${cfg.apiBase}/install body=`, body);
     const response = await fetch(`${cfg.apiBase}/install`, {
       method: 'POST',
       credentials: 'same-origin',
@@ -98,8 +110,10 @@
       body: JSON.stringify(body),
     });
 
+    console.log(`[PM] POST /install status=${response.status} ${response.statusText}`);
     if (!response.ok) {
       const data = await response.json().catch(() => ({}));
+      console.log(`[PM] POST /install error response:`, data);
       throw new Error(data.error || 'Installation failed');
     }
 
@@ -108,9 +122,13 @@
     let buffer = '';
     let operationId = null;
 
+    console.log(`[PM] SSE stream started, reading events...`);
     while (true) {
       const { value, done } = await reader.read();
-      if (done) break;
+      if (done) {
+        console.log(`[PM] SSE stream ended`);
+        break;
+      }
       buffer += decoder.decode(value, { stream: true });
       const chunks = buffer.split('\n\n');
       buffer = chunks.pop() || '';
@@ -118,21 +136,25 @@
         const line = chunk.split('\n').find((entry) => entry.startsWith('data: '));
         if (!line) continue;
         const payload = JSON.parse(line.slice(6));
+        console.log(`[PM] SSE event:`, payload);
         if (payload.operationId) operationId = payload.operationId;
         if (payload.type === 'progress') {
           showProgress('Installing plugin', payload.stageMessage || payload.stage, payload.overallProgress, payload.warnings);
         }
         if (payload.type === 'complete') {
+          console.log(`[PM] Install COMPLETE`);
           closeModal(els.progressModal);
           showRestartBanner();
           await Browser.loadInstalled(els.installedSearch ? els.installedSearch.value : '');
           return;
         }
         if (payload.type === 'error') {
+          console.log(`[PM] Install ERROR: ${payload.message}`);
           throw new Error(payload.message || 'Installation failed');
         }
       }
     }
+    console.log(`[PM] SSE finished, operationId=${operationId}`);
     if (operationId) connectProgressSocket(operationId, () => Browser.loadInstalled(els.installedSearch ? els.installedSearch.value : ''));
   }
 
@@ -143,13 +165,21 @@
     const modal = button.closest('.pm-modal');
     const isInstallModal = modal && modal.id === 'pmInstallModal';
 
+    console.log(`[PM] ===== Install button clicked =====`);
+    console.log(`[PM] projectId=${projectId}`);
+    console.log(`[PM] versionId=${versionId}`);
+    console.log(`[PM] force=${force}`);
+    console.log(`[PM] isInstallModal=${isInstallModal}`);
+
     try {
       const origText = button.textContent;
       button.textContent = 'Checking...';
       button.disabled = true;
       let checkRes;
       try {
+        console.log(`[PM] POST /install/check { versionId: ${versionId} }`);
         checkRes = await Api.post('/install/check', { versionId });
+        console.log(`[PM] /install/check response:`, checkRes);
       } finally {
         button.textContent = origText;
         button.disabled = false;
@@ -157,13 +187,21 @@
 
       const { compatibility, dependencies } = checkRes.data;
 
+      console.log(`[PM] Compatibility:`, compatibility);
+      console.log(`[PM] Dependencies:`, dependencies);
+
       if (compatibility.errors.length > 0 && !compatibility.forceAllowed) {
+        console.log(`[PM] Incompatible (errors present, not admin): ${compatibility.errors.join(' ')}`);
         throw new Error(`Incompatible: ${compatibility.errors.join(' ')}`);
       }
 
       let finalForce = force;
       if (compatibility.errors.length > 0 && compatibility.forceAllowed && !force) {
-        if (!window.confirm(`Compatibility Warnings:\n${compatibility.errors.join('\n')}\n\nForce install anyway?`)) return;
+        console.log(`[PM] Admin, showing force install confirm dialog`);
+        if (!window.confirm(`Compatibility Warnings:\n${compatibility.errors.join('\n')}\n\nForce install anyway?`)) {
+          console.log(`[PM] User cancelled force install`);
+          return;
+        }
         finalForce = true;
       }
 
@@ -175,6 +213,7 @@
         : document.getElementById('pmDependencyList');
 
       if (dependencies && dependencies.length > 0 && depContainer && depList) {
+        console.log(`[PM] Showing dependency picker for ${dependencies.length} deps`);
         depList.innerHTML = dependencies.map(dep => `
           <li class="flex items-center justify-between p-2 rounded-lg bg-neutral-50 dark:bg-white/[0.02] border border-neutral-200 dark:border-white/5">
             <label class="flex items-center gap-2 cursor-pointer min-w-0 flex-1">
@@ -197,6 +236,7 @@
         const cancelBtnId = isInstallModal ? 'pmInstallCancelDeps' : 'pmCancelInstallBtn';
         const confirmBtnId = isInstallModal ? 'pmInstallConfirmDeps' : 'pmConfirmInstallBtn';
         document.getElementById(cancelBtnId).onclick = () => {
+          console.log(`[PM] Dependency cancel clicked`);
           depContainer.classList.add('hidden');
           if (isInstallModal) {
             const av = document.getElementById('pmInstallAllVersions');
@@ -207,6 +247,7 @@
           }
         };
         document.getElementById(confirmBtnId).onclick = async () => {
+          console.log(`[PM] Dependency confirm clicked`);
           depContainer.classList.add('hidden');
           closeModal(isInstallModal ? els.installModal : els.detailModal);
 
@@ -214,17 +255,22 @@
           depList.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
             selectedDeps.push(input.dataset.depProjectId);
           });
+          console.log(`[PM] Selected dependencies:`, selectedDeps);
           try {
             await installPlugin(projectId, versionId, finalForce, true, selectedDeps);
           } catch (err) {
+            console.log(`[PM] installPlugin with deps failed: ${err.message}`);
             window.alert(err.message || 'Installation failed');
           }
         };
       } else {
+        console.log(`[PM] No dependencies, proceeding directly to install`);
         closeModal(isInstallModal ? els.installModal : els.detailModal);
         await installPlugin(projectId, versionId, finalForce, false, []);
       }
     } catch (error) {
+      console.log(`[PM] handleModalInstall ERROR: ${error.message}`);
+      console.log(`[PM] Stack: ${error.stack}`);
       window.alert(error.message || 'Check failed');
     }
   }
@@ -248,169 +294,148 @@
       } else if (action === 'details') {
         await DetailsModal.open(btn.dataset.projectId);
       }
+
     } catch (error) {
       window.alert(error.message || 'Action failed');
     }
   }
 
-  async function uploadPlugin(file) {
+  async function handleUpdateAll() {
+    if (!els.installedList) return;
+    const outdated = els.installedList.querySelectorAll('[data-action="update"]');
+    for (const btn of outdated) {
+      try {
+        await installPlugin(btn.dataset.projectId, btn.dataset.versionId, false, false, []);
+      } catch {
+        continue;
+      }
+    }
+  }
+
+  async function handleUpload(file) {
     if (!file || !file.name.toLowerCase().endsWith('.jar')) {
-      window.alert('Only .jar files are supported.');
+      window.alert('Please select a .jar file.');
       return;
     }
-    const formData = new FormData();
-    formData.append('plugin', file);
-    showProgress('Uploading plugin', 'Uploading...', 15, []);
-    try {
-      const response = await fetch(`${cfg.apiBase}/upload`, {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: cfg.csrfToken ? { 'x-csrf-token': cfg.csrfToken } : {},
-        body: formData,
-      });
-      const data = await response.json().catch(() => ({}));
-      if (!response.ok) throw new Error(data.error || 'Upload failed');
-    } finally {
-      closeModal(els.progressModal);
-    }
-    showRestartBanner();
-    await Browser.loadInstalled();
-  }
-
-  // ---- Event wiring ----
-
-  els.tabs.forEach((tab) => {
-    tab.addEventListener('click', () => {
-      Api.cancelAll();
-      setActiveTab(tab.dataset.pmTab);
-      if (tab.dataset.pmTab === 'browse' && els.browseResults && !els.browseResults.children.length) {
-        Browser.setQuery('');
-        Browser.resetPage();
-        Browser.loadBrowse(false).catch(() => {});
-      }
-    });
-  });
-
-  if (els.installedSearch) {
-    let timer;
-    els.installedSearch.addEventListener('input', () => {
-      clearTimeout(timer);
-      timer = setTimeout(() => Browser.loadInstalled(els.installedSearch.value).catch(() => {}), 250);
-    });
-  }
-
-  if (els.browseSearchBtn) {
-    els.browseSearchBtn.addEventListener('click', () => {
-      Api.cancelAll();
-      Browser.setQuery(els.browseSearch ? els.browseSearch.value : '');
-      Browser.setSort(document.getElementById('pmBrowseSort') ? document.getElementById('pmBrowseSort').value : 'relevance');
-      Browser.resetPage();
-      Browser.loadBrowse(false).catch(() => {});
-    });
-  }
-
-  if (els.browseMoreBtn) {
-    els.browseMoreBtn.addEventListener('click', () => {
-      Browser.nextPage();
-      Browser.loadBrowse(true).catch(() => {});
-    });
-  }
-
-  // Installed list actions
-  if (els.installedList) els.installedList.addEventListener('click', handleInstalledAction);
-
-  // Modal event delegations
-  if (els.detailModal) {
-    els.detailModal.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-action]');
-      if (!btn) return;
-      const action = btn.dataset.action;
-      if (action === 'install') handleModalInstall(btn);
-    });
-  }
-
-  if (els.installModal) {
-    els.installModal.addEventListener('click', (e) => {
-      const btn = e.target.closest('[data-action]');
-      if (!btn) return;
-      const action = btn.dataset.action;
-      if (action === 'install') handleModalInstall(btn);
-      if (action === 'open-install') {
-        InstallModal.open(btn.dataset.projectId).catch((err) => window.alert(err.message));
-      }
-    });
-    // Close on backdrop click
-    els.installModal.addEventListener('click', (e) => {
-      if (e.target === els.installModal || e.target.classList.contains('pm-modal-backdrop')) {
-        InstallModal.close();
-      }
-    });
-  }
-
-  // Browse card actions (details + open-install)
-  if (els.browseResults) {
-    els.browseResults.addEventListener('click', async (e) => {
-      const btn = e.target.closest('[data-action]');
-      if (!btn) return;
-      const action = btn.dataset.action;
-      const projectId = btn.dataset.projectId;
+    const reader = new FileReader();
+    reader.onload = async (e) => {
       try {
-        if (action === 'details') {
-          await DetailsModal.open(projectId);
-        } else if (action === 'open-install') {
-          if (btn.disabled) return;
-          await InstallModal.open(projectId);
+        const arrayBuffer = e.target.result;
+        const uint8Array = new Uint8Array(arrayBuffer);
+        let binary = '';
+        for (let i = 0; i < uint8Array.length; i++) {
+          binary += String.fromCharCode(uint8Array[i]);
         }
-      } catch (err) {
-        window.alert(err.message);
-      }
-    });
-  }
+        const base64 = btoa(binary);
 
-  // Direct close buttons on modals
-  if (els.detailModal) {
-    els.detailModal.addEventListener('click', (e) => {
-      if (e.target === els.detailModal || e.target.classList.contains('pm-modal-backdrop') || e.target.closest('[data-pm-close]')) {
-        DetailsModal.close();
-      }
-    });
-  }
+        await Api.post('/upload', {
+          filename: file.name,
+          content: base64,
+          fileSize: file.size,
+        });
 
-  if (els.uploadInput) {
-    els.uploadInput.addEventListener('change', () => {
-      const file = els.uploadInput.files && els.uploadInput.files[0];
-      uploadPlugin(file).catch((err) => {
-        closeModal(els.progressModal);
-        window.alert(err.message || 'Upload failed');
-      }).finally(() => { els.uploadInput.value = ''; });
-    });
-  }
-
-  if (els.updateAllBtn) {
-    els.updateAllBtn.addEventListener('click', () => {
-      Api.post('/update-all', {}).then((response) => {
         showRestartBanner();
-        window.alert(`Started ${response.data.updated} plugin update(s).`);
-        return Browser.loadInstalled();
-      }).catch((err) => window.alert(err.message || 'Update all failed'));
-    });
+        await Browser.loadInstalled(els.installedSearch ? els.installedSearch.value : '');
+      } catch (error) {
+        window.alert(error.message || 'Upload failed');
+      }
+    };
+    reader.readAsArrayBuffer(file);
   }
 
-  if (els.restartBtn) {
-    els.restartBtn.addEventListener('click', () => {
-      fetch(`/server/${cfg.serverId}/power/restart`, {
-        method: 'POST',
-        credentials: 'same-origin',
-        headers: cfg.csrfToken ? { 'x-csrf-token': cfg.csrfToken } : {},
-      }).then(() => {
+  function init() {
+    if (els.browseSearchBtn) {
+      els.browseSearchBtn.addEventListener('click', () => {
+        if (els.browseSearch) Browser.loadBrowse(els.browseSearch.value);
+      });
+    }
+
+    if (els.browseSearch) {
+      els.browseSearch.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') Browser.loadBrowse(els.browseSearch.value);
+      });
+    }
+
+    if (els.browseMoreBtn) {
+      els.browseMoreBtn.addEventListener('click', () => Browser.loadMore());
+    }
+
+    if (els.installedSearch) {
+      els.installedSearch.addEventListener('input', Utils.debounce(() => {
+        Browser.loadInstalled(els.installedSearch.value);
+      }, 300));
+    }
+
+    if (els.uploadInput) {
+      els.uploadInput.addEventListener('change', (e) => {
+        if (e.target.files?.[0]) handleUpload(e.target.files[0]);
+        e.target.value = '';
+      });
+    }
+
+    els.tabs.forEach((btn) => {
+      btn.addEventListener('click', () => setActiveTab(btn.dataset.pmTab));
+    });
+
+    if (els.updateAllBtn) {
+      els.updateAllBtn.addEventListener('click', handleUpdateAll);
+    }
+
+    if (els.restartBtn) {
+      els.restartBtn.addEventListener('click', () => {
+        fetch('/server/' + cfg.serverId + '/restart', { method: 'POST', headers: { 'x-csrf-token': cfg.csrfToken } });
+      });
+    }
+
+    if (els.restartLaterBtn) {
+      els.restartLaterBtn.addEventListener('click', () => {
         if (els.restartBanner) els.restartBanner.classList.add('hidden');
-      }).catch(() => window.alert('Failed to restart server.'));
+      });
+    }
+
+    // Event delegation for all dynamic content
+    document.addEventListener('click', (event) => {
+      const btn = event.target.closest('[data-action]');
+      if (!btn) return;
+
+      const action = btn.dataset.action;
+
+      // Detail modal install buttons
+      if (action === 'install' && btn.closest('#pmDetailModal')) {
+        console.log(`[PM] Detail modal install clicked`);
+        handleModalInstall(btn);
+        return;
+      }
+
+      // Install modal install buttons
+      if (action === 'install' && btn.closest('#pmInstallModal')) {
+        console.log(`[PM] Install modal install clicked`);
+        handleModalInstall(btn);
+        return;
+      }
+
+      // Open install modal from browse card
+      if (action === 'open-install') {
+        console.log(`[PM] Open install modal for ${btn.dataset.projectId}`);
+        InstallModal.open(btn.dataset.projectId);
+        return;
+      }
+
+      // Legacy detail modal actions
+      if (action === 'install' || action === 'details' || action === 'update' || action === 'delete' || action === 'toggle') {
+        if (btn.closest('#pmInstalledList')) {
+          handleInstalledAction(event);
+        }
+      }
     });
+
+    Browser.loadBrowse('');
+    Browser.loadInstalled('');
   }
 
-  if (els.restartLaterBtn && els.restartBanner) {
-    els.restartLaterBtn.addEventListener('click', () => els.restartBanner.classList.add('hidden'));
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
   }
-
-  Browser.loadInstalled().catch(() => {});
 })();

@@ -73,11 +73,24 @@ export function getGroupLoaders(group: LoaderGroup | null): string[] {
 }
 
 export function isCompatibleLoader(serverLoader: string | null, versionLoaders: string[]): boolean {
-  if (!serverLoader || !versionLoaders || !versionLoaders.length) return false;
-  const group = getLoaderGroup(serverLoader);
-  if (!group) return false;
-  const groupLoaders = getGroupLoaders(group);
-  return versionLoaders.some((l) => groupLoaders.includes(l.toLowerCase()));
+  if (!serverLoader) return false;
+  if (!versionLoaders || versionLoaders.length === 0) return true;
+
+  const serverGroup = getLoaderGroup(serverLoader);
+  if (!serverGroup) return true;
+
+  const serverGroupLoaders = getGroupLoaders(serverGroup);
+
+  let hasKnownDifferentGroup = false;
+  for (const l of versionLoaders) {
+    const loader = l.toLowerCase();
+    if (serverGroupLoaders.includes(loader)) return true;
+    const lGroup = getLoaderGroup(loader);
+    if (lGroup === null) return true;
+    if (lGroup !== serverGroup) hasKnownDifferentGroup = true;
+  }
+
+  return hasKnownDifferentGroup ? false : true;
 }
 
 function mcVersionMatch(serverVersion: string, gameVersion: string): boolean {
@@ -101,14 +114,8 @@ export function isCompatibleMinecraftVersion(serverVersion: string | null, gameV
 }
 
 export function filterVersionsByGroup(versions: ModrinthVersion[], serverLoader: string | null): ModrinthVersion[] {
-  const group = getLoaderGroup(serverLoader);
-  if (!group) return [];
-  const groupLoaders = getGroupLoaders(group);
-
-  return versions.filter((v) => {
-    const loaderMatch = v.loaders.some((l) => groupLoaders.includes(l.toLowerCase()));
-    return loaderMatch;
-  });
+  if (!serverLoader) return versions;
+  return versions.filter((v) => isCompatibleLoader(serverLoader, v.loaders));
 }
 
 export function sortVersions(versions: ModrinthVersion[]): ModrinthVersion[] {
@@ -139,20 +146,63 @@ export interface VersionDebugInfo {
   mcAccepted: boolean;
   mcReason: string;
   overallAccepted: boolean;
+  score: number;
+}
+
+function classifyLoaders(versionLoaders: string[], serverGroup: LoaderGroup | null): { hasGroupLoader: boolean; allFromKnownDifferentGroup: boolean; hasUnknown: boolean } {
+  let hasGroupLoader = false;
+  let hasUnknown = false;
+  let hasKnownDifferent = false;
+
+  const groupLoaders = serverGroup ? getGroupLoaders(serverGroup) : [];
+
+  for (const l of versionLoaders) {
+    const loader = l.toLowerCase();
+    if (serverGroup && groupLoaders.includes(loader)) {
+      hasGroupLoader = true;
+    } else {
+      const lGroup = getLoaderGroup(loader);
+      if (lGroup === null) {
+        hasUnknown = true;
+      } else if (lGroup !== serverGroup) {
+        hasKnownDifferent = true;
+      }
+    }
+  }
+
+  const allFromKnownDifferentGroup = !hasGroupLoader && !hasUnknown && hasKnownDifferent;
+
+  return { hasGroupLoader, allFromKnownDifferentGroup, hasUnknown };
 }
 
 export function debugVersion(version: ModrinthVersion, serverLoader: string | null, minecraftVersion: string | null): VersionDebugInfo {
   const group = getLoaderGroup(serverLoader);
   const groupLoaders = group ? getGroupLoaders(group) : [];
 
-  const loaderMatch = serverLoader
-    ? version.loaders.some((l) => groupLoaders.includes(l.toLowerCase()))
-    : false;
-  const loaderReason = serverLoader
-    ? (loaderMatch
-      ? `Loader ${version.loaders.filter((l) => groupLoaders.includes(l.toLowerCase())).join(', ')} is in group ${group || 'N/A'}`
-      : `Loader group mismatch. Server group: ${group || 'N/A'} (${groupLoaders.join(', ')}), version loaders: ${version.loaders.join(', ')}`)
-    : 'No server loader detected';
+  let loaderAccepted: boolean;
+  let loaderReason: string;
+
+  if (!serverLoader || !group) {
+    loaderAccepted = false;
+    loaderReason = !serverLoader ? 'No server loader detected' : 'Unknown server type';
+  } else if (version.loaders.length === 0) {
+    loaderAccepted = true;
+    loaderReason = 'No loader metadata - cannot positively reject';
+  } else {
+    const { hasGroupLoader, allFromKnownDifferentGroup, hasUnknown } = classifyLoaders(version.loaders, group);
+
+    if (hasGroupLoader) {
+      loaderAccepted = true;
+      loaderReason = `Loader ${version.loaders.filter((l) => groupLoaders.includes(l.toLowerCase())).join(', ')} is in group ${group}`;
+    } else if (allFromKnownDifferentGroup) {
+      loaderAccepted = false;
+      loaderReason = `All loaders (${version.loaders.join(', ')}) belong to a different ecosystem (${group})`;
+    } else {
+      loaderAccepted = true;
+      const unknownLabel = hasUnknown ? ' with unknown loaders' : '';
+      loaderReason = `Cannot positively reject${unknownLabel} (loaders: ${version.loaders.join(', ')})`;
+    }
+  }
 
   const mcMatch = minecraftVersion
     ? isCompatibleMinecraftVersion(minecraftVersion, version.game_versions)
@@ -163,6 +213,8 @@ export function debugVersion(version: ModrinthVersion, serverLoader: string | nu
       : `Minecraft ${minecraftVersion} does not match any of ${version.game_versions.join(', ')}`)
     : 'No server MC version detected';
 
+  const score = scoreVersion(version, serverLoader, minecraftVersion);
+
   return {
     versionId: version.id,
     versionName: version.name || version.version_number,
@@ -172,12 +224,33 @@ export function debugVersion(version: ModrinthVersion, serverLoader: string | nu
     gameVersions: version.game_versions,
     serverLoader,
     serverLoaderGroup: group,
-    loaderAccepted: loaderMatch,
+    loaderAccepted,
     loaderReason,
     mcAccepted: mcMatch,
     mcReason,
-    overallAccepted: loaderMatch && (mcMatch || !minecraftVersion),
+    overallAccepted: loaderAccepted && (mcMatch || !minecraftVersion),
+    score,
   };
+}
+
+export function scoreVersion(version: ModrinthVersion, serverLoader: string | null, minecraftVersion: string | null): number {
+  let score = 0;
+
+  if (minecraftVersion && isCompatibleMinecraftVersion(minecraftVersion, version.game_versions)) {
+    score += 50;
+  }
+
+  if (serverLoader && version.loaders.length > 0) {
+    const serverGroup = getLoaderGroup(serverLoader);
+    if (serverGroup) {
+      const groupLoaders = getGroupLoaders(serverGroup);
+      if (version.loaders.some((l) => groupLoaders.includes(l.toLowerCase()))) {
+        score += 20;
+      }
+    }
+  }
+
+  return score;
 }
 
 export function selectBestVersion(
@@ -187,10 +260,16 @@ export function selectBestVersion(
 ): ModrinthVersion | null {
   const sorted = sortVersions(versions);
 
+  let best: ModrinthVersion | null = null;
+  let bestScore = -1;
+
   for (const v of sorted) {
-    const info = debugVersion(v, serverLoader, minecraftVersion);
-    if (info.overallAccepted) return v;
+    const s = scoreVersion(v, serverLoader, minecraftVersion);
+    if (s > bestScore) {
+      bestScore = s;
+      best = v;
+    }
   }
 
-  return null;
+  return best;
 }

@@ -59,9 +59,14 @@ export class ModrinthClient {
   ): Promise<T> {
     const cacheKey = this.buildCacheKey(endpoint, params);
     const cached = await this.cache.get(cacheKey);
-    if (cached !== null) return cached as T;
+    if (cached !== null) {
+      console.log(`[MODRINTH] CACHE HIT: ${endpoint}`);
+      return cached as T;
+    }
+    console.log(`[MODRINTH] CACHE MISS: ${endpoint}`);
 
     if (this.inFlight.has(cacheKey)) {
+      console.log(`[MODRINTH] DEDUP (in-flight): ${endpoint}`);
       return this.inFlight.get(cacheKey)! as Promise<T>;
     }
 
@@ -81,36 +86,44 @@ export class ModrinthClient {
     validator?: (data: unknown) => T,
   ): Promise<T> {
     let lastError: Error | null = null;
+    console.log(`[MODRINTH] REQUEST: GET ${endpoint} params=${JSON.stringify(params || {})}`);
 
     for (let attempt = 0; attempt < this.config.retryAttempts; attempt += 1) {
       try {
         const response = await this.http.get(endpoint, { params });
+        console.log(`[MODRINTH] RESPONSE: ${endpoint} status=${response.status}`);
 
         if (response.status === 429) {
           const retryAfter = Number.parseInt(String(response.headers['retry-after'] || '5'), 10);
+          console.log(`[MODRINTH] RATE LIMITED (429), retrying in ${retryAfter}s`);
           await new Promise((resolve) => setTimeout(resolve, retryAfter * 1000));
           continue;
         }
 
         if (response.status >= 400) {
+          console.log(`[MODRINTH] ERROR: ${endpoint} returned ${response.status}`);
           throw new Error(`Modrinth API returned ${response.status}: ${response.statusText}`);
         }
 
         const data = validator ? validator(response.data) : (response.data as T);
         await this.cache.set(cacheKey, data, this.config.cacheDuration);
+        console.log(`[MODRINTH] REQUEST OK: ${endpoint} (cached)`);
         return data;
       } catch (error) {
         lastError = error instanceof Error ? error : new Error(String(error));
         if (axios.isAxiosError(error) && error.response?.status && error.response.status >= 400 && error.response.status < 500) {
+          console.log(`[MODRINTH] CLIENT ERROR: ${endpoint} status=${error.response.status} ${error.response.statusText}`);
           throw lastError;
         }
         if (attempt < this.config.retryAttempts - 1) {
           const delay = this.config.retryDelay * 2 ** attempt;
+          console.log(`[MODRINTH] RETRY ${attempt + 1}/${this.config.retryAttempts} after ${delay}ms: ${endpoint}`);
           await new Promise((resolve) => setTimeout(resolve, delay));
         }
       }
     }
 
+    console.log(`[MODRINTH] ALL RETRIES EXHAUSTED: ${endpoint}`);
     throw lastError ?? new Error('Modrinth request failed');
   }
 
@@ -147,19 +160,29 @@ export class ModrinthClient {
   }
 
   async getProject(projectId: string): Promise<ModrinthProject> {
+    console.log(`[MODRINTH] getProject: ${projectId}`);
     return this.requestWithRetry(
       `/project/${encodeURIComponent(projectId.trim())}`,
       undefined,
-      (data) => ModrinthProjectSchema.parse(data),
+      (data) => {
+        const project = ModrinthProjectSchema.parse(data);
+        console.log(`[MODRINTH] getProject: "${project.title}" type=${project.project_type}`);
+        return project;
+      },
     );
   }
 
   async getProjectVersions(projectId: string): Promise<ModrinthVersion[]> {
+    console.log(`[MODRINTH] getProjectVersions: ${projectId}`);
     const versions = await this.requestWithRetry<ModrinthVersion[]>(
       `/project/${encodeURIComponent(projectId.trim())}/version`,
       undefined,
       (data) => {
-        if (!Array.isArray(data)) return [];
+        if (!Array.isArray(data)) {
+          console.log(`[MODRINTH] getProjectVersions: not an array, got ${typeof data}`);
+          return [];
+        }
+        console.log(`[MODRINTH] getProjectVersions: ${data.length} versions returned`);
         return data.map((entry) => ModrinthVersionSchema.parse(entry));
       },
     );
@@ -167,10 +190,15 @@ export class ModrinthClient {
   }
 
   async getVersion(versionId: string): Promise<ModrinthVersion> {
+    console.log(`[MODRINTH] getVersion: ${versionId}`);
     return this.requestWithRetry(
       `/version/${encodeURIComponent(versionId.trim())}`,
       undefined,
-      (data) => ModrinthVersionSchema.parse(data),
+      (data) => {
+        const version = ModrinthVersionSchema.parse(data);
+        console.log(`[MODRINTH] getVersion: ${version.version_number} loaders=[${version.loaders.join(',')}] game_versions=[${version.game_versions.join(',')}]`);
+        return version;
+      },
     );
   }
 }

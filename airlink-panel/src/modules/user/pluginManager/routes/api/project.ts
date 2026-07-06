@@ -8,6 +8,7 @@ import {
   filterVersionsByGroup,
   sortVersions,
   debugVersion,
+  scoreVersion,
   selectBestVersion,
 } from '../../services/compatibility-service';
 import { resolveMinecraftVersion } from '../../../../../handlers/utils/server/pluginServer';
@@ -50,7 +51,7 @@ export function createProjectRoutes(modrinthClient: ModrinthClient): Router {
           `[COMPAT] v${info.versionNumber} (${info.versionName}) | ` +
           `type=${info.versionType} | ` +
           `loaders=${info.loaders.join(',')} | ` +
-          `group=${info.serverLoaderGroup || 'N/A'} | ` +
+          `score=${info.score} | ` +
           `loaderAccepted=${info.loaderAccepted} (${info.loaderReason}) | ` +
           `mcAccepted=${info.mcAccepted} (${info.mcReason})`
         );
@@ -62,7 +63,8 @@ export function createProjectRoutes(modrinthClient: ModrinthClient): Router {
 
       const best = selectBestVersion(versions, serverLoader, minecraftVersion);
       if (best) {
-        console.log(`[COMPAT] Best version: ${best.version_number} (${best.name})`);
+        const bestScore = scoreVersion(best, serverLoader, minecraftVersion);
+        console.log(`[COMPAT] Best version: ${best.version_number} (${best.name}) | score=${bestScore}`);
       } else {
         console.log(`[COMPAT] No compatible version found for ${serverLoader || 'unknown'} ${minecraftVersion || 'unknown'}`);
       }

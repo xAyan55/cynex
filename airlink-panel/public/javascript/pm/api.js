@@ -27,6 +27,7 @@
 
   async function request(method, path, options) {
     const url = buildUrl(path);
+    console.log(`[API] request ${method} ${url}`, options ? { body: options.body } : '');
 
     if (options && options.signal) {
       return doFetch(method, url, options);
@@ -34,6 +35,7 @@
 
     const key = dedupKey(method, path, options ? options.body : null);
     if (inFlight.has(key)) {
+      console.log(`[API] dedup hit for ${key}`);
       return inFlight.get(key);
     }
 
@@ -63,12 +65,20 @@
       setTimeout(() => controller.abort(), 30000);
     }
 
-    const response = await fetch(url, fetchOptions);
-    const data = await response.json().catch(() => ({}));
-    if (!response.ok) {
-      throw new Error(data.error || `Request failed (${response.status})`);
+    console.log(`[API] fetch ${method} ${url}`, { headers: fetchOptions.headers, body: options ? options.body : undefined });
+    try {
+      const response = await fetch(url, fetchOptions);
+      console.log(`[API] response ${method} ${url} status=${response.status}`);
+      const data = await response.json().catch(() => ({}));
+      console.log(`[API] response data:`, data);
+      if (!response.ok) {
+        throw new Error(data.error || `Request failed (${response.status})`);
+      }
+      return data;
+    } catch (error) {
+      console.log(`[API] fetch error ${method} ${url}: ${error.message}`);
+      throw error;
     }
-    return data;
   }
 
   const Api = {
