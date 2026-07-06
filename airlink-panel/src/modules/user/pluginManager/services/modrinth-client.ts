@@ -154,14 +154,10 @@ export class ModrinthClient {
     );
   }
 
-  async getProjectVersions(projectId: string, loaders?: string[]): Promise<ModrinthVersion[]> {
-    const params: Record<string, unknown> = {};
-    if (loaders && loaders.length > 0) {
-      params.loaders = loaders;
-    }
+  async getProjectVersions(projectId: string): Promise<ModrinthVersion[]> {
     const versions = await this.requestWithRetry<ModrinthVersion[]>(
       `/project/${encodeURIComponent(projectId.trim())}/version`,
-      Object.keys(params).length > 0 ? params : undefined,
+      undefined,
       (data) => {
         if (!Array.isArray(data)) return [];
         return data.map((entry) => ModrinthVersionSchema.parse(entry));

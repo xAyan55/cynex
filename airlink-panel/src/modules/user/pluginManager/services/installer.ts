@@ -9,7 +9,8 @@ import { pluginProgressTracker } from './progress-tracker';
 import { PLUGIN_MANAGER_CONFIG } from '../config';
 import { sanitizeFilename } from '../utils/validation';
 import { ResolvedDependency } from './dependency-resolver';
-import { PLUGIN_SERVER_LOADERS } from '../../../../handlers/utils/server/pluginServer';
+import { isCompatibleLoader } from './compatibility-service';
+import { detectPluginLoader } from '../../../../handlers/utils/server/pluginServer';
 
 interface ServerRecord {
   UUID: string;
@@ -57,11 +58,9 @@ export class PluginInstaller {
         this.modrinthClient.getVersion(versionId),
       ]);
 
-      const loaderNames = PLUGIN_SERVER_LOADERS as readonly string[];
-      const isPluginVersion = version.loaders.some(l => loaderNames.includes(l.toLowerCase()));
-      if (!isPluginVersion) {
-        const supported = Array.from(loaderNames).map(l => l.charAt(0).toUpperCase() + l.slice(1)).join(', ');
-        throw new Error(`Selected version does not support any known server loader (${supported}).`);
+      const serverLoader = detectPluginLoader(server.image);
+      if (!isCompatibleLoader(serverLoader, version.loaders)) {
+        throw new Error('Selected version does not support your server software.');
       }
 
       pluginProgressTracker.initialize(server.UUID, operationId, projectId, project.title);

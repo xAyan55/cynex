@@ -59,9 +59,6 @@
       if (filters.game === 'server' && cfg.minecraftVersion) {
         if (!U.serverVersionMatch(cfg.minecraftVersion, v.game_versions || [])) return false;
       }
-      if (filters.loader === 'server' && cfg.loader) {
-        if (!U.loaderIsCompatible(cfg.loader, v.loaders || [])) return false;
-      }
       if (filters.type === 'release' && v.version_type !== 'release') return false;
       if (filters.type === 'beta-alpha' && v.version_type !== 'beta' && v.version_type !== 'alpha') return false;
       return true;
@@ -72,9 +69,7 @@
     }
 
     return filtered.map(v => {
-      const matchesMC = !cfg.minecraftVersion || U.serverVersionMatch(cfg.minecraftVersion, v.game_versions || []);
-      const matchesLoader = !cfg.loader || U.loaderIsCompatible(cfg.loader, v.loaders || []);
-      const isCompatible = matchesMC && matchesLoader;
+      const isCompatible = !cfg.minecraftVersion || U.serverVersionMatch(cfg.minecraftVersion, v.game_versions || []);
 
       const badge = isCompatible
         ? '<span class="pm-badge bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Compatible</span>'
@@ -125,7 +120,7 @@
 
       authorName = authorName || window.PluginManager.Browser.authors.get(projectId) || 'Unknown';
 
-      let filters = { game: 'all', loader: 'all', type: 'all' };
+      let filters = { game: 'all', type: 'all' };
 
       content.innerHTML = `
         <div class="flex items-start justify-between gap-4 mb-4">
@@ -158,13 +153,7 @@
                   ${cfg.minecraftVersion ? `<option value="server">Compatible (${U.escapeHtml(cfg.minecraftVersion)})</option>` : ''}
                 </select>
               </div>
-              <div class="flex-1 min-w-[120px]">
-                <label class="text-xs font-semibold text-neutral-400 dark:text-neutral-500">Loader</label>
-                <select data-pm-filter="loader" class="pm-select w-full mt-1 py-1.5 px-2.5 text-xs bg-white dark:bg-neutral-800">
-                  <option value="all">All Loaders</option>
-                  ${cfg.loader ? `<option value="server">Compatible (${U.escapeHtml(cfg.loader)})</option>` : ''}
-                </select>
-              </div>
+
               <div class="flex-1 min-w-[120px]">
                 <label class="text-xs font-semibold text-neutral-400 dark:text-neutral-500">Type</label>
                 <select data-pm-filter="type" class="pm-select w-full mt-1 py-1.5 px-2.5 text-xs bg-white dark:bg-neutral-800">
@@ -221,7 +210,7 @@
       const versionList = content.querySelector('[data-pm-version-list]');
 
       function applyFilters() {
-        const f = { game: 'all', loader: 'all', type: 'all' };
+        const f = { game: 'all', type: 'all' };
         filterEls.forEach(el => { f[el.dataset.pmFilter] = el.value; });
         if (versionList && currentVersionData) {
           versionList.innerHTML = renderVersionsTab(currentVersionData.project, currentVersionData.versions, f);

@@ -20,9 +20,7 @@
 
   function versionIsCompatible(v) {
     if (!v) return false;
-    const mcOk = !cfg.minecraftVersion || U.serverVersionMatch(cfg.minecraftVersion, v.game_versions || []);
-    const loaderOk = !cfg.loader || U.loaderIsCompatible(cfg.loader, v.loaders || []);
-    return mcOk && loaderOk;
+    return !cfg.minecraftVersion || U.serverVersionMatch(cfg.minecraftVersion, v.game_versions || []);
   }
 
   function sortVersions(versions) {

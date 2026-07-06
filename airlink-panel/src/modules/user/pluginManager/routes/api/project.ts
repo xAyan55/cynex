@@ -2,8 +2,13 @@ import { Router, Request, Response } from 'express';
 import { ModrinthClient } from '../../services/modrinth-client';
 import { validateProjectId } from '../../utils/validation';
 import { loadPluginServerContext } from '../../utils/context';
-import { detectPluginLoader } from '../../../../../handlers/utils/server/pluginServer';
-import { getCompatibleLoaders } from '../../services/compatibility-checker';
+import {
+  detectServerSoftware,
+  getLoaderGroup,
+  filterVersionsByGroup,
+  sortVersions,
+  debugVersion,
+} from '../../services/compatibility-service';
 
 export function createProjectRoutes(modrinthClient: ModrinthClient): Router {
   const router = Router({ mergeParams: true });
@@ -22,13 +27,32 @@ export function createProjectRoutes(modrinthClient: ModrinthClient): Router {
         return;
       }
 
-      const loader = detectPluginLoader(context.server.image);
-      const compatibleLoaders = getCompatibleLoaders(loader);
       const projectId = String(req.params.projectId);
-      const [project, versions] = await Promise.all([
+      const [project, rawVersions] = await Promise.all([
         modrinthClient.getProject(projectId),
-        modrinthClient.getProjectVersions(projectId, compatibleLoaders),
+        modrinthClient.getProjectVersions(projectId),
       ]);
+
+      const serverLoader = detectServerSoftware(context.server.image);
+      const serverGroup = getLoaderGroup(serverLoader);
+
+      const filtered = filterVersionsByGroup(rawVersions, serverLoader);
+      const versions = sortVersions(filtered);
+
+      for (const v of rawVersions) {
+        const info = debugVersion(v, serverLoader, null);
+        console.log(
+          `[COMPAT] v${info.versionNumber} (${info.versionName}) | ` +
+          `loader=${info.loaders.join(',')} | ` +
+          `group=${info.serverLoaderGroup} | ` +
+          `accepted=${info.loaderAccepted} | ` +
+          `reason=${info.loaderReason}`
+        );
+      }
+
+      console.log(
+        `[COMPAT] ${project.title}: ${rawVersions.length} total → ${filtered.length} after group filter (${serverGroup || 'N/A'} group)`
+      );
 
       res.json({ success: true, data: { project, versions } });
     } catch (error) {

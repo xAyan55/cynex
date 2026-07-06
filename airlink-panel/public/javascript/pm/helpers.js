@@ -39,23 +39,6 @@
     return count === 1 ? singular : plural || singular + 's';
   };
 
-  Utils.BUKKIT_LOADERS = new Set(['paper', 'purpur', 'spigot', 'bukkit', 'folia']);
-  Utils.MOD_LOADERS = new Set(['fabric', 'forge', 'neoforge', 'quilt']);
-
-  Utils.getCompatibleLoaders = function (serverLoader) {
-    if (!serverLoader) return [];
-    var lower = serverLoader.toLowerCase();
-    if (Utils.BUKKIT_LOADERS.has(lower)) return Array.from(Utils.BUKKIT_LOADERS);
-    if (Utils.MOD_LOADERS.has(lower)) return [lower];
-    return [lower];
-  };
-
-  Utils.loaderIsCompatible = function (serverLoader, versionLoaders) {
-    if (!serverLoader || !versionLoaders || !versionLoaders.length) return false;
-    var compatible = Utils.getCompatibleLoaders(serverLoader);
-    return versionLoaders.some(function (l) { return compatible.indexOf(l.toLowerCase()) !== -1; });
-  };
-
   Utils.mcVersionMatch = function (serverVersion, gameVersion) {
     if (!serverVersion || !gameVersion) return false;
     gameVersion = gameVersion.replace(/\.x$/i, '');
