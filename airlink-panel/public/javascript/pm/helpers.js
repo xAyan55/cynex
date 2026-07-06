@@ -39,15 +39,32 @@
     return count === 1 ? singular : plural || singular + 's';
   };
 
+  Utils.BUKKIT_LOADERS = new Set(['paper', 'purpur', 'spigot', 'bukkit', 'folia']);
+  Utils.MOD_LOADERS = new Set(['fabric', 'forge', 'neoforge', 'quilt']);
+
+  Utils.getCompatibleLoaders = function (serverLoader) {
+    if (!serverLoader) return [];
+    var lower = serverLoader.toLowerCase();
+    if (Utils.BUKKIT_LOADERS.has(lower)) return Array.from(Utils.BUKKIT_LOADERS);
+    if (Utils.MOD_LOADERS.has(lower)) return [lower];
+    return [lower];
+  };
+
+  Utils.loaderIsCompatible = function (serverLoader, versionLoaders) {
+    if (!serverLoader || !versionLoaders || !versionLoaders.length) return false;
+    var compatible = Utils.getCompatibleLoaders(serverLoader);
+    return versionLoaders.some(function (l) { return compatible.indexOf(l.toLowerCase()) !== -1; });
+  };
+
   Utils.mcVersionMatch = function (serverVersion, gameVersion) {
     if (!serverVersion || !gameVersion) return false;
     gameVersion = gameVersion.replace(/\.x$/i, '');
-    const parseMc = function (v) {
-      const parts = v.split('.').map(Number);
+    var parseMc = function (v) {
+      var parts = v.split('.').map(Number);
       return { major: parts[0] || 0, minor: parts[1] ?? 0, patch: parts[2] };
     };
-    const sv = parseMc(serverVersion);
-    const gv = parseMc(gameVersion);
+    var sv = parseMc(serverVersion);
+    var gv = parseMc(gameVersion);
     if (sv.major !== gv.major) return false;
     if (sv.minor !== gv.minor) return false;
     if (gv.patch === undefined) return true;

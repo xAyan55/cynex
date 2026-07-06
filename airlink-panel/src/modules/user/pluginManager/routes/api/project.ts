@@ -1,32 +1,38 @@
 import { Router, Request, Response } from 'express';
 import { ModrinthClient } from '../../services/modrinth-client';
 import { validateProjectId } from '../../utils/validation';
+import { loadPluginServerContext } from '../../utils/context';
+import { detectPluginLoader } from '../../../../../handlers/utils/server/pluginServer';
+import { getCompatibleLoaders } from '../../services/compatibility-checker';
 
 export function createProjectRoutes(modrinthClient: ModrinthClient): Router {
   const router = Router({ mergeParams: true });
 
   router.get('/:projectId', async (req: Request, res: Response) => {
-    console.log('[PM ROUTE] GET /:projectId called. params:', req.params, 'originalUrl:', req.originalUrl);
     try {
       const validation = validateProjectId(String(req.params.projectId));
-      console.log('[PM ROUTE] validation:', validation);
       if (!validation.valid) {
         res.status(400).json({ success: false, error: validation.error });
         return;
       }
 
+      const context = await loadPluginServerContext(req, req.params.id);
+      if (context.status !== 'ready') {
+        res.status(context.status === 'unsupported' ? 403 : 404).json({ success: false, error: context.message });
+        return;
+      }
+
+      const loader = detectPluginLoader(context.server.image);
+      const compatibleLoaders = getCompatibleLoaders(loader);
       const projectId = String(req.params.projectId);
-      console.log('[PM ROUTE] fetching project:', projectId);
       const [project, versions] = await Promise.all([
         modrinthClient.getProject(projectId),
-        modrinthClient.getProjectVersions(projectId),
+        modrinthClient.getProjectVersions(projectId, compatibleLoaders),
       ]);
-      console.log('[PM ROUTE] got project:', project?.title, 'versions:', versions?.length);
 
       res.json({ success: true, data: { project, versions } });
     } catch (error) {
       const message = error instanceof Error ? error.message : 'Failed to load project';
-      console.error('[PM ROUTE] error:', message);
       res.status(502).json({ success: false, error: message });
     }
   });

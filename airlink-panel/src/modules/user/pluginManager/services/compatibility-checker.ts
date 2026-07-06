@@ -3,9 +3,21 @@ import {
   detectPluginLoader,
   getMinecraftVersionFromImage,
   getServerVariablesRecord,
+  PLUGIN_SERVER_LOADERS,
 } from '../../../../handlers/utils/server/pluginServer';
 import { ModrinthVersion } from '../types/modrinth-api';
 import type { CompatibilityResult } from '../types/modrinth-api';
+
+const BUKKIT_LOADERS = new Set(PLUGIN_SERVER_LOADERS.map((l) => l.toLowerCase()));
+const MOD_LOADERS = new Set(['fabric', 'forge', 'neoforge', 'quilt']);
+
+function getCompatibleLoaders(serverLoader: string | null): string[] {
+  if (!serverLoader) return [];
+  const lower = serverLoader.toLowerCase();
+  if (BUKKIT_LOADERS.has(lower)) return Array.from(BUKKIT_LOADERS);
+  if (MOD_LOADERS.has(lower)) return [lower];
+  return [lower];
+}
 
 function mcVersionMatch(serverVersion: string, gameVersion: string): boolean {
   if (!serverVersion || !gameVersion) return false;
@@ -27,6 +39,8 @@ function serverVersionMatch(serverVersion: string, gameVersions: string[]): bool
   return gameVersions.some((gv) => mcVersionMatch(serverVersion, gv));
 }
 
+export { mcVersionMatch, serverVersionMatch, getCompatibleLoaders };
+
 export class CompatibilityChecker {
   check(
     image: Images,
@@ -41,26 +55,30 @@ export class CompatibilityChecker {
       getServerVariablesRecord(serverVariablesJson).MC_VERSION ||
       null;
 
-    const warnings: string[] = [];
     const errors: string[] = [];
+    const warnings: string[] = [];
+
+    const compatibleLoaders = getCompatibleLoaders(loader);
 
     if (!loader) {
       errors.push('This server does not appear to support Bukkit-style plugins.');
     }
 
-    if (minecraftVersion && version.game_versions.length > 0) {
-      const matches = serverVersionMatch(minecraftVersion, version.game_versions);
-      if (!matches) {
-        const message = `Plugin version does not list Minecraft ${minecraftVersion} as supported.`;
+    if (loader && version.loaders.length > 0) {
+      const loaderMatches = version.loaders.some((entry) =>
+        compatibleLoaders.includes(entry.toLowerCase()),
+      );
+      if (!loaderMatches) {
+        const message = `Plugin version does not support ${loader} (supports: ${version.loaders.join(', ')}).`;
         if (isAdmin) warnings.push(message);
         else errors.push(message);
       }
     }
 
-    if (loader && version.loaders.length > 0) {
-      const loaderMatches = version.loaders.some((entry) => entry.toLowerCase() === loader.toLowerCase());
-      if (!loaderMatches) {
-        const message = `Plugin version does not list ${loader} as a supported loader.`;
+    if (minecraftVersion && version.game_versions.length > 0) {
+      const matches = serverVersionMatch(minecraftVersion, version.game_versions);
+      if (!matches) {
+        const message = `Plugin version does not list Minecraft ${minecraftVersion} as supported (supports: ${version.game_versions.join(', ')}).`;
         if (isAdmin) warnings.push(message);
         else errors.push(message);
       }

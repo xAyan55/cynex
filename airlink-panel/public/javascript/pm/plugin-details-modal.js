@@ -59,8 +59,8 @@
       if (filters.game === 'server' && cfg.minecraftVersion) {
         if (!U.serverVersionMatch(cfg.minecraftVersion, v.game_versions || [])) return false;
       }
-      if (filters.loader !== 'all' && cfg.loader) {
-        if (!v.loaders.some(l => l.toLowerCase() === cfg.loader.toLowerCase())) return false;
+      if (filters.loader === 'server' && cfg.loader) {
+        if (!U.loaderIsCompatible(cfg.loader, v.loaders || [])) return false;
       }
       if (filters.type === 'release' && v.version_type !== 'release') return false;
       if (filters.type === 'beta-alpha' && v.version_type !== 'beta' && v.version_type !== 'alpha') return false;
@@ -73,7 +73,7 @@
 
     return filtered.map(v => {
       const matchesMC = !cfg.minecraftVersion || U.serverVersionMatch(cfg.minecraftVersion, v.game_versions || []);
-      const matchesLoader = !cfg.loader || v.loaders.some(l => l.toLowerCase() === cfg.loader.toLowerCase());
+      const matchesLoader = !cfg.loader || U.loaderIsCompatible(cfg.loader, v.loaders || []);
       const isCompatible = matchesMC && matchesLoader;
 
       const badge = isCompatible
