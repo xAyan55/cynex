@@ -186,6 +186,20 @@
         return null;
       }
 
+      function isOfflineUuid(uuid) {
+        var hex = uuid.replace(/-/g, '');
+        return parseInt(hex.charAt(12), 16) === 3;
+      }
+
+      function skinUrl(uuid) {
+        return isOfflineUuid(uuid) ? 'https://crafatar.com/skins/Steve' : 'https://crafatar.com/skins/' + uuid;
+      }
+
+      function avatarUrl(uuid, size) {
+        var name = isOfflineUuid(uuid) ? 'Steve' : uuid;
+        return 'https://crafatar.com/avatars/' + name + '?size=' + (size || 80) + '&overlay';
+      }
+
       function openPlayerDetail(uuid) {
         currentPlayer = uuid;
         var player = getPlayerByUuid(uuid);
@@ -241,7 +255,7 @@
             canvas: canvas,
             width: 200,
             height: 280,
-            skin: 'https://crafatar.com/skins/' + uuid,
+            skin: skinUrl(uuid),
           });
           playerViewer.controls.enableRotate = true;
           playerViewer.controls.enableZoom = false;
@@ -254,7 +268,7 @@
         var canvas = document.getElementById('skinCanvas');
         var fallback = document.getElementById('skinFallback');
         canvas.classList.add('hidden');
-        fallback.src = 'https://crafatar.com/avatars/' + uuid + '?size=80&overlay';
+        fallback.src = avatarUrl(uuid, 80);
         fallback.classList.remove('hidden');
       }
 
