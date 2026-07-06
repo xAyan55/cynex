@@ -20,7 +20,7 @@ export interface ResolvedDependency {
 export class DependencyResolver {
   constructor(
     private readonly client: ModrinthClient,
-    private readonly logger: { warn: (message: string, ...args: unknown[]) => void },
+    private readonly logger: { warn: (message: string, ...args: unknown[]) => void; info: (message: string, ...args: unknown[]) => void },
   ) {}
 
   async resolve(
@@ -30,6 +30,8 @@ export class DependencyResolver {
     visited = new Set<string>(),
   ): Promise<ResolvedDependency[]> {
     const dependencies: ResolvedDependency[] = [];
+    const group = getLoaderGroup(loader);
+    const groupLoaders = getGroupLoaders(group);
 
     for (const dependency of version.dependencies) {
       if (!dependency.project_id) continue;
@@ -39,16 +41,25 @@ export class DependencyResolver {
       visited.add(dependency.project_id);
 
       try {
-        const [project, versions] = await Promise.all([
-          this.client.getProject(dependency.project_id),
-          this.client.getProjectVersions(dependency.project_id),
-        ]);
+        const project = await this.client.getProject(dependency.project_id);
 
-        const resolvedVersion = this.pickVersion(versions, dependency.version_id, minecraftVersion, loader);
-        if (!resolvedVersion) continue;
+        const allVersions = await this.client.getProjectVersions(dependency.project_id);
+
+        const resolvedVersion = this.pickVersion(allVersions, dependency.version_id, minecraftVersion, loader);
+        if (!resolvedVersion) {
+          this.logger.info(`[DEPS] Skipped dependency ${project.title} (${dependency.project_id}): no compatible version found for ${loader || 'unknown'} ${minecraftVersion || 'unknown'}`);
+          continue;
+        }
+
+        if (!isCompatibleLoader(loader, resolvedVersion.loaders)) {
+          this.logger.info(`[DEPS] Rejected dependency ${project.title} v${resolvedVersion.version_number}: loader mismatch (version loaders: ${resolvedVersion.loaders.join(',')}, server: ${loader || 'unknown'})`);
+          continue;
+        }
 
         const primaryFile = resolvedVersion.files.find((file) => file.primary) || resolvedVersion.files[0];
         if (!primaryFile) continue;
+
+        this.logger.info(`[DEPS] Accepted dependency ${project.title} v${resolvedVersion.version_number} (${resolvedVersion.loaders.join(',')}) — ${dependency.dependency_type}`);
 
         dependencies.push({
           projectId: project.id,
@@ -64,7 +75,7 @@ export class DependencyResolver {
         dependencies.push(...nested);
       } catch (error) {
         const message = error instanceof Error ? error.message : String(error);
-        this.logger.warn(`Failed to resolve dependency ${dependency.project_id}: ${message}`);
+        this.logger.warn(`[DEPS] Failed to resolve dependency ${dependency.project_id}: ${message}`);
       }
     }
 
