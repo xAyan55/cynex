@@ -28,7 +28,7 @@
       <p class="text-xs text-neutral-500 mt-1">Worlds appear here once they are created on the server.</p>
     </div>
 
-    <%- include('../../components/serverTemplate', { features: ['players', 'worlds'] }) %>
+    <%- include('../../components/serverTemplate', { features: features }) %>
 
     <div class="collapsible-row no-anim<% if (worlds.length > 0) { %> open<% } %>" id="serverTableRow"><div><div class="space-y-2" id="serverTable">
       <% let wIdx = 0; worlds.forEach(function(world) { %>

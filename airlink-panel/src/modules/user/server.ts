@@ -172,12 +172,17 @@ function getImageFeatures(image: any): string[] {
     if (isPluginServer(image) && !features.includes('plugins')) {
       features.push('plugins');
     }
+    // Minecraft servers always support players and worlds
+    for (const f of ['players', 'worlds']) {
+      if (!features.includes(f)) features.push(f);
+    }
     return features;
   } catch {
+    const base = ['players', 'worlds'];
     if (isPluginServer(image)) {
-      return ['plugins'];
+      base.push('plugins');
     }
-    return [];
+    return base;
   }
 }
 

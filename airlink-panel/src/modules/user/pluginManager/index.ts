@@ -93,12 +93,20 @@ const pluginManagerModule: Module = {
           }
           const daemonOnline = await daemonClient.isDaemonOnline(context.server);
 
+          const rawInfo = typeof context.server.image?.info === 'string'
+            ? JSON.parse(context.server.image.info)
+            : (context.server.image?.info || {});
+          const imageFeatures = Array.isArray(rawInfo.features) ? [...rawInfo.features] : [];
+          for (const f of ['plugins', 'players', 'worlds']) {
+            if (!imageFeatures.includes(f)) imageFeatures.push(f);
+          }
+
           return res.render('user/server/plugins', {
             user: req.session?.user,
             req,
             server: context.server,
             settings,
-            features: ['plugins'],
+            features: imageFeatures,
             loader,
             minecraftVersion,
             daemonOnline,
