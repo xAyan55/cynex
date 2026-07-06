@@ -1,7 +1,7 @@
 import type { Images } from '../../../../generated/prisma/client';
 import {
   detectPluginLoader,
-  getMinecraftVersionFromImage,
+  resolveMinecraftVersion,
   getServerVariablesRecord,
 } from '../../../../handlers/utils/server/pluginServer';
 import { ModrinthVersion } from '../types/modrinth-api';
@@ -9,8 +9,6 @@ import type { CompatibilityResult } from '../types/modrinth-api';
 import {
   isCompatibleLoader,
   isCompatibleMinecraftVersion,
-  detectServerSoftware,
-  getLoaderGroup,
 } from './compatibility-service';
 
 export class CompatibilityChecker {
@@ -21,11 +19,7 @@ export class CompatibilityChecker {
     isAdmin: boolean,
   ): CompatibilityResult {
     const loader = detectPluginLoader(image);
-    const minecraftVersion =
-      getMinecraftVersionFromImage(image) ||
-      getServerVariablesRecord(serverVariablesJson).MINECRAFT_VERSION ||
-      getServerVariablesRecord(serverVariablesJson).MC_VERSION ||
-      null;
+    const minecraftVersion = resolveMinecraftVersion(image, serverVariablesJson);
 
     const errors: string[] = [];
     const warnings: string[] = [];

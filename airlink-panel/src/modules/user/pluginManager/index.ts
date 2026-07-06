@@ -3,7 +3,7 @@ import { WebSocket } from 'ws';
 import { Module } from '../../../handlers/moduleInit';
 import { isAuthenticatedForServer } from '../../../handlers/utils/auth/serverAuthUtil';
 import { isAuthenticatedForServerWS } from '../../../handlers/utils/auth/serverAuthUtil';
-import { isPluginServer, detectPluginLoader, getMinecraftVersionFromImage } from '../../../handlers/utils/server/pluginServer';
+import { isPluginServer, detectPluginLoader, resolveMinecraftVersion } from '../../../handlers/utils/server/pluginServer';
 import logger from '../../../handlers/logger';
 import prisma from '../../../db';
 import { TwoTierCacheStore } from './services/cache-store';
@@ -87,7 +87,10 @@ const pluginManagerModule: Module = {
 
           const settings = await prisma.settings.findUnique({ where: { id: 1 } });
           const loader = detectPluginLoader(context.server.image);
-          const minecraftVersion = getMinecraftVersionFromImage(context.server.image);
+          const minecraftVersion = resolveMinecraftVersion(context.server.image, context.server.Variables);
+          if (!minecraftVersion) {
+            logger.warn(`[PM] Could not determine Minecraft version for server ${context.server.UUID}`);
+          }
           const daemonOnline = await daemonClient.isDaemonOnline(context.server);
 
           return res.render('user/server/plugins', {

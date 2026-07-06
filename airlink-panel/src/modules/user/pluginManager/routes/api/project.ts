@@ -8,7 +8,9 @@ import {
   filterVersionsByGroup,
   sortVersions,
   debugVersion,
+  selectBestVersion,
 } from '../../services/compatibility-service';
+import { resolveMinecraftVersion } from '../../../../../handlers/utils/server/pluginServer';
 
 export function createProjectRoutes(modrinthClient: ModrinthClient): Router {
   const router = Router({ mergeParams: true });
@@ -35,24 +37,35 @@ export function createProjectRoutes(modrinthClient: ModrinthClient): Router {
 
       const serverLoader = detectServerSoftware(context.server.image);
       const serverGroup = getLoaderGroup(serverLoader);
+      const minecraftVersion = resolveMinecraftVersion(context.server.image, context.server.Variables);
+
+      console.log(`[COMPAT] Server: ${serverLoader || 'unknown'} | MC version: ${minecraftVersion || 'UNRESOLVED'} | Source: ${minecraftVersion ? 'runtime' : 'fallback'}`);
 
       const filtered = filterVersionsByGroup(rawVersions, serverLoader);
       const versions = sortVersions(filtered);
 
       for (const v of rawVersions) {
-        const info = debugVersion(v, serverLoader, null);
+        const info = debugVersion(v, serverLoader, minecraftVersion);
         console.log(
           `[COMPAT] v${info.versionNumber} (${info.versionName}) | ` +
-          `loader=${info.loaders.join(',')} | ` +
-          `group=${info.serverLoaderGroup} | ` +
-          `accepted=${info.loaderAccepted} | ` +
-          `reason=${info.loaderReason}`
+          `type=${info.versionType} | ` +
+          `loaders=${info.loaders.join(',')} | ` +
+          `group=${info.serverLoaderGroup || 'N/A'} | ` +
+          `loaderAccepted=${info.loaderAccepted} (${info.loaderReason}) | ` +
+          `mcAccepted=${info.mcAccepted} (${info.mcReason})`
         );
       }
 
       console.log(
-        `[COMPAT] ${project.title}: ${rawVersions.length} total → ${filtered.length} after group filter (${serverGroup || 'N/A'} group)`
+        `[COMPAT] ${project.title}: ${rawVersions.length} total → ${filtered.length} group-filtered (${serverGroup || 'N/A'} loader group)`
       );
+
+      const best = selectBestVersion(versions, serverLoader, minecraftVersion);
+      if (best) {
+        console.log(`[COMPAT] Best version: ${best.version_number} (${best.name})`);
+      } else {
+        console.log(`[COMPAT] No compatible version found for ${serverLoader || 'unknown'} ${minecraftVersion || 'unknown'}`);
+      }
 
       res.json({ success: true, data: { project, versions } });
     } catch (error) {

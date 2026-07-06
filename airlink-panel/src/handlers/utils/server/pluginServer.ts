@@ -105,6 +105,58 @@ export function getMinecraftVersionFromImage(image: Images | null | undefined): 
   return null;
 }
 
+const DEPLOYMENT_TAGS = new Set(['latest', 'stable', 'nightly', 'rolling']);
+
+function isValidMinecraftVersion(version: string | null | undefined): version is string {
+  if (!version) return false;
+  const cleaned = version.replace(/^mc\.?/i, '').trim().toLowerCase();
+  if (DEPLOYMENT_TAGS.has(cleaned)) return false;
+  return /^\d+\.\d+(\.\d+)?$/.test(cleaned);
+}
+
+export function resolveMinecraftVersion(
+  image: Images | null | undefined,
+  runtimeVariablesJson: string | null | undefined,
+): string | null {
+  const tryVersion = (v: string | null | undefined): string | null => {
+    if (!v) return null;
+    const cleaned = String(v).replace(/^mc\.?/i, '').trim();
+    if (!isValidMinecraftVersion(cleaned)) return null;
+    return cleaned;
+  };
+
+  const fromRuntime = tryVersion(getServerVariablesRecord(runtimeVariablesJson).MINECRAFT_VERSION)
+    || tryVersion(getServerVariablesRecord(runtimeVariablesJson).MC_VERSION)
+    || tryVersion(getServerVariablesRecord(runtimeVariablesJson).SERVER_VERSION)
+    || tryVersion(getServerVariablesRecord(runtimeVariablesJson).VERSION);
+  if (fromRuntime) return fromRuntime;
+
+  const fromImage = tryVersion(getMinecraftVersionFromImage(image));
+  if (fromImage) return fromImage;
+
+  if (image?.dockerImages) {
+    try {
+      const images = JSON.parse(image.dockerImages) as Record<string, string>;
+      for (const tag of Object.values(images)) {
+        const colonIdx = tag.lastIndexOf(':');
+        if (colonIdx === -1) continue;
+        const tagValue = tag.slice(colonIdx + 1);
+        const cleaned = tryVersion(tagValue);
+        if (cleaned) return cleaned;
+      }
+    } catch {
+      // Not JSON — try raw text
+      const match = image.dockerImages.match(/:(\d+\.\d+(?:\.\d+)?)/);
+      if (match) {
+        const cleaned = tryVersion(match[1]);
+        if (cleaned) return cleaned;
+      }
+    }
+  }
+
+  return null;
+}
+
 export function getServerVariablesRecord(
   variablesJson: string | null | undefined,
 ): Record<string, string> {

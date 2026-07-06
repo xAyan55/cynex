@@ -4,7 +4,7 @@ import { UpdateChecker } from './update-checker';
 import { InstalledPlugin } from '../types/modrinth-api';
 import { PLUGIN_MANAGER_CONFIG } from '../config';
 import { isNewerVersion } from '../utils/semver';
-import { detectPluginLoader, getMinecraftVersionFromImage } from '../../../../handlers/utils/server/pluginServer';
+import { detectPluginLoader, resolveMinecraftVersion } from '../../../../handlers/utils/server/pluginServer';
 
 interface ServerWithNode {
   UUID: string;
@@ -70,7 +70,7 @@ export class PluginScanner {
       if (installation?.projectId) {
         try {
           const loader = detectPluginLoader(server.image);
-          const mcVersion = getMinecraftVersionFromImage(server.image) ?? undefined;
+          const mcVersion = resolveMinecraftVersion(server.image, server.Variables) ?? undefined;
           const update = await this.updateChecker.checkProjectUpdate(
             installation.projectId,
             installation.versionId,
