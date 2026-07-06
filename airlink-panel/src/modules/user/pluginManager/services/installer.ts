@@ -58,8 +58,10 @@ export class PluginInstaller {
         this.modrinthClient.getVersion(versionId),
       ]);
 
-      if (project.project_type !== 'plugin') {
-        throw new Error('Selected project is not a plugin.');
+      const pluginLoaders = ['paper', 'purpur', 'spigot', 'bukkit', 'folia'];
+      const isPluginVersion = version.loaders.some(l => pluginLoaders.includes(l.toLowerCase()));
+      if (!isPluginVersion) {
+        throw new Error('Selected version does not support any known plugin server loader (Paper, Purpur, Spigot, Bukkit, or Folia).');
       }
 
       pluginProgressTracker.initialize(server.UUID, operationId, projectId, project.title);

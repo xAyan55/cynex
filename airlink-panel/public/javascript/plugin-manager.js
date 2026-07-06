@@ -46,11 +46,17 @@
     progressWarnings: document.getElementById('pmProgressWarnings'),
     installedLoading: document.getElementById('pmInstalledLoading'),
     browseLoading: document.getElementById('pmBrowseLoading'),
+    installModal: document.getElementById('pmInstallModal'),
+    installTitle: document.getElementById('pmInstallTitle'),
+    installAuthor: document.getElementById('pmInstallAuthor'),
+    installIcon: document.getElementById('pmInstallIcon'),
+    installServerInfo: document.getElementById('pmInstallServerInfo'),
+    installRecommended: document.getElementById('pmInstallRecommended'),
+    installAllVersions: document.getElementById('pmInstallAllVersions'),
   };
 
   function api(path, options) {
     const url = `${cfg.apiBase}${path}`;
-    console.log('[PM] api() calling:', url, 'options:', options);
     const headers = {
       Accept: 'application/json',
       ...(options && options.body instanceof FormData ? {} : { 'Content-Type': 'application/json' }),
@@ -62,15 +68,12 @@
       ...options,
       headers: { ...headers, ...(options && options.headers ? options.headers : {}) },
     }).then(async (response) => {
-      console.log('[PM] fetch response:', response.status, response.url);
       const data = await response.json().catch(() => ({}));
-      console.log('[PM] response data:', data);
       if (!response.ok) {
         throw new Error(data.error || 'Request failed');
       }
       return data;
     }).catch((err) => {
-      console.log('[PM] fetch error:', err);
       throw err;
     });
   }
@@ -138,15 +141,15 @@
     }
     
     const installed = installedPluginsMap.get(hit.project_id);
-    let buttonText = 'Install';
-    let buttonClass = 'pm-btn-primary';
+    let installText = 'Install';
+    let installClass = 'pm-btn-primary';
     if (installed) {
       if (installed.updateAvailable) {
-        buttonText = 'Update';
-        buttonClass = 'pm-btn-primary !bg-amber-500 hover:!bg-amber-600 !text-white';
+        installText = 'Update';
+        installClass = 'pm-btn-primary !bg-amber-500 hover:!bg-amber-600 !text-white';
       } else {
-        buttonText = 'Installed';
-        buttonClass = 'pm-btn-secondary !cursor-default opacity-80';
+        installText = 'Installed';
+        installClass = 'pm-btn-secondary !cursor-default opacity-80';
       }
     }
 
@@ -171,24 +174,20 @@
       <p class="text-xs text-neutral-600 dark:text-neutral-400 mt-4 line-clamp-2 leading-relaxed flex-1">${escapeHtml(hit.description || '')}</p>
       <div class="flex gap-2 mt-5 pt-3 border-t border-neutral-100 dark:border-white/5 shrink-0">
         <button type="button" class="pm-btn-secondary text-xs flex-1 py-2 px-3 text-center rounded-lg" data-action="details" data-project-id="${escapeAttr(hit.project_id)}">Details</button>
-        <button type="button" class="${buttonClass} text-xs flex-1 py-2 px-3 text-center rounded-lg font-semibold" data-action="install-shortcut" data-project-id="${escapeAttr(hit.project_id)}">${buttonText}</button>
+        <button type="button" class="${installClass} text-xs flex-1 py-2 px-3 text-center rounded-lg font-semibold" data-action="open-install" data-project-id="${escapeAttr(hit.project_id)}">${installText}</button>
       </div>
     `;
     
     card.querySelector('[data-action="details"]').addEventListener('click', () => {
       openProjectDetails(hit.project_id, 'about').catch((error) => {
-        console.error('Failed to open project details:', error);
         window.alert(error.message || 'Failed to load details');
       });
     });
     
-    const instBtn = card.querySelector('[data-action="install-shortcut"]');
-    console.log('[PM] renderBrowseCard for', hit.project_id, 'instBtn:', instBtn, 'exists:', !!instBtn);
-    instBtn.addEventListener('click', (e) => {
-      console.log('[PM] INSTALL-SHORTCUT CLICKED! project_id:', hit.project_id);
-      openProjectDetails(hit.project_id, 'versions').catch((error) => {
-        console.error('[PM] Failed to open project details:', error);
-        window.alert(error.message || 'Failed to load details');
+    card.querySelector('[data-action="open-install"]').addEventListener('click', () => {
+      if (installed && !installed.updateAvailable) return;
+      openInstallDialog(hit.project_id).catch((error) => {
+        window.alert(error.message || 'Failed to open install dialog');
       });
     });
 
@@ -497,24 +496,120 @@
   }
 
   async function openProjectDetails(projectId, defaultTab = 'about') {
-    console.log('[PM] openProjectDetails called. projectId:', projectId, 'tab:', defaultTab);
     const response = await api(`/project/${encodeURIComponent(projectId)}`);
-    console.log('[PM] API response received:', response);
     const { project, versions } = response.data;
     state.selectedProject = project;
-    console.log('[PM] Project loaded:', project?.title, 'versions:', versions?.length);
     
     const authorName = projectAuthors.get(projectId) || 'Unknown';
     const modalContent = document.querySelector('#pmDetailModal .pm-modal-content');
-    console.log('[PM] modalContent element:', modalContent);
-    if (!modalContent) {
-      console.log('[PM] FATAL: #pmDetailModal .pm-modal-content not found!');
-      return;
-    }
+    if (!modalContent) return;
 
     renderProjectModal(modalContent, project, versions, authorName, defaultTab);
     openModal(els.detailModal);
-    console.log('[PM] Modal opened');
+  }
+
+  function versionIsCompatible(version) {
+    if (!version) return false;
+    const matchesMC = !cfg.minecraftVersion || (version.game_versions || []).includes(cfg.minecraftVersion);
+    const matchesLoader = !cfg.loader || (version.loaders || []).some(l => l.toLowerCase() === cfg.loader.toLowerCase());
+    return matchesMC && matchesLoader;
+  }
+
+  function renderInstallDialog(project, versions, authorName) {
+    const sortedVersions = [...versions].sort((a, b) => {
+      const aCompat = versionIsCompatible(a) ? 1 : 0;
+      const bCompat = versionIsCompatible(b) ? 1 : 0;
+      if (aCompat !== bCompat) return bCompat - aCompat;
+      if (a.version_type !== b.version_type) {
+        if (a.version_type === 'release') return -1;
+        if (b.version_type === 'release') return 1;
+      }
+      return new Date(b.date_published || 0) - new Date(a.date_published || 0);
+    });
+
+    const recommended = sortedVersions.find(v => versionIsCompatible(v) && v.version_type === 'release');
+
+    if (els.installTitle) els.installTitle.textContent = project.title || '';
+    if (els.installAuthor) els.installAuthor.textContent = `by ${escapeHtml(authorName)}`;
+    if (els.installIcon) {
+      if (project.icon_url) {
+        els.installIcon.src = project.icon_url;
+        els.installIcon.classList.remove('hidden');
+      } else {
+        els.installIcon.classList.add('hidden');
+      }
+    }
+
+    if (els.installServerInfo) {
+      const info = [];
+      if (cfg.loader) {
+        info.push(`<span class="pm-badge font-semibold bg-neutral-900 dark:bg-white text-white dark:text-neutral-900">Loader: ${escapeHtml(cfg.loader)}</span>`);
+      }
+      if (cfg.minecraftVersion) {
+        info.push(`<span class="pm-badge font-semibold bg-neutral-900 dark:bg-white text-white dark:text-neutral-900">MC: ${escapeHtml(cfg.minecraftVersion)}</span>`);
+      }
+      info.push(`<span class="pm-badge font-semibold ${cfg.daemonOnline ? 'bg-emerald-500/10 text-emerald-500 border border-emerald-500/20' : 'bg-red-500/10 text-red-500 border border-red-500/20'}">Daemon: ${cfg.daemonOnline ? 'Online' : 'Offline'}</span>`);
+      els.installServerInfo.innerHTML = info.join('');
+    }
+
+    if (els.installRecommended) {
+      if (recommended) {
+        els.installRecommended.innerHTML = `
+          <div class="p-4 rounded-xl border-2 border-emerald-500/30 bg-emerald-500/[0.02]">
+            <div class="flex items-center justify-between gap-3">
+              <div class="min-w-0">
+                <span class="text-xs font-bold text-emerald-500 uppercase tracking-wider">Recommended</span>
+                <p class="text-sm font-bold mt-1 truncate">${escapeHtml(recommended.name || recommended.version_number)}</p>
+                <p class="text-xs text-neutral-500 mt-0.5 truncate">${escapeHtml((recommended.game_versions || []).slice(0, 3).join(', '))} · ${escapeHtml((recommended.loaders || []).join(', '))}</p>
+              </div>
+              <button type="button" class="pm-btn-primary text-xs shrink-0" data-action="install" data-project-id="${escapeAttr(project.id)}" data-version-id="${escapeAttr(recommended.id)}" data-force="false">Install</button>
+            </div>
+          </div>`;
+      } else {
+        els.installRecommended.innerHTML = `
+          <div class="p-3 rounded-xl bg-amber-50 dark:bg-amber-900/10 border border-amber-200 dark:border-amber-500/20 text-xs text-amber-700 dark:text-amber-300">
+            No compatible release found. Versions below may not work with your server.
+          </div>`;
+      }
+    }
+
+    if (els.installAllVersions) {
+      const otherVersions = sortedVersions.filter(v => !recommended || v.id !== recommended.id);
+      if (otherVersions.length === 0) {
+        els.installAllVersions.innerHTML = '';
+        return;
+      }
+      els.installAllVersions.innerHTML = `
+        <h4 class="text-sm font-bold mb-2">All Versions</h4>
+        <div class="space-y-2 max-h-[280px] overflow-y-auto pr-1">
+          ${otherVersions.map(version => {
+            const compat = versionIsCompatible(version);
+            const badge = compat
+              ? '<span class="pm-badge bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Compatible</span>'
+              : '<span class="pm-badge bg-red-500/10 text-red-500 border border-red-500/20">Incompatible</span>';
+            return `
+              <div class="flex items-center justify-between gap-3 p-3 rounded-xl border border-neutral-200 dark:border-white/5">
+                <div class="min-w-0 flex-1">
+                  <div class="flex items-center gap-2 flex-wrap">
+                    <span class="text-sm font-semibold truncate">${escapeHtml(version.name || version.version_number)}</span>
+                    ${badge}
+                    <span class="text-[10px] text-neutral-400 uppercase border border-neutral-200 dark:border-white/5 px-1.5 py-0.5 rounded-full">${escapeHtml(version.version_type)}</span>
+                  </div>
+                  <p class="text-xs text-neutral-500 truncate mt-1">${escapeHtml((version.game_versions || []).join(', '))} · ${escapeHtml((version.loaders || []).join(', '))}</p>
+                </div>
+                <button type="button" class="pm-btn-primary text-xs shrink-0" data-action="install" data-project-id="${escapeAttr(project.id)}" data-version-id="${escapeAttr(version.id)}" data-force="${!compat}">Install</button>
+              </div>`;
+          }).join('')}
+        </div>`;
+    }
+  }
+
+  async function openInstallDialog(projectId) {
+    const response = await api(`/project/${encodeURIComponent(projectId)}`);
+    const { project, versions } = response.data;
+    const authorName = projectAuthors.get(projectId) || 'Unknown';
+    renderInstallDialog(project, versions, authorName);
+    openModal(els.installModal);
   }
 
   function showProgress(title, stage, progress, warnings) {
@@ -613,6 +708,9 @@
     const versionId = button.dataset.versionId;
     const force = button.dataset.force === 'true';
 
+    const modal = button.closest('.pm-modal');
+    const isInstallModal = modal && modal.id === 'pmInstallModal';
+
     if (action === 'install') {
       try {
         const checkBtnText = button.textContent;
@@ -642,8 +740,10 @@
           }
         }
 
-        const depContainer = document.getElementById('pmDependencyContainer');
-        const depList = document.getElementById('pmDependencyList');
+        const depContainerId = isInstallModal ? 'pmInstallDependencyContainer' : 'pmDependencyContainer';
+        const depListId = isInstallModal ? 'pmInstallDependencyList' : 'pmDependencyList';
+        const depContainer = document.getElementById(depContainerId);
+        const depList = document.getElementById(depListId);
         
         if (dependencies && dependencies.length > 0 && depContainer && depList) {
           depList.innerHTML = dependencies.map(dep => `
@@ -657,20 +757,32 @@
           `).join('');
 
           depContainer.classList.remove('hidden');
-          document.getElementById('pmModalVersionsList').classList.add('hidden');
+          if (isInstallModal) {
+            if (els.installAllVersions) els.installAllVersions.classList.add('hidden');
+          } else {
+            const vl = document.getElementById('pmModalVersionsList');
+            if (vl) vl.classList.add('hidden');
+          }
 
-          const cancelBtn = document.getElementById('pmCancelInstallBtn');
-          const confirmBtn = document.getElementById('pmConfirmInstallBtn');
+          const cancelBtnId = isInstallModal ? 'pmInstallCancelDeps' : 'pmCancelInstallBtn';
+          const confirmBtnId = isInstallModal ? 'pmInstallConfirmDeps' : 'pmConfirmInstallBtn';
+          const cancelBtn = document.getElementById(cancelBtnId);
+          const confirmBtn = document.getElementById(confirmBtnId);
 
           const cleanupListeners = () => {
             depContainer.classList.add('hidden');
-            document.getElementById('pmModalVersionsList').classList.remove('hidden');
+            if (isInstallModal) {
+              if (els.installAllVersions) els.installAllVersions.classList.remove('hidden');
+            } else {
+              const vl = document.getElementById('pmModalVersionsList');
+              if (vl) vl.classList.remove('hidden');
+            }
           };
 
           cancelBtn.onclick = cleanupListeners;
           confirmBtn.onclick = async () => {
             cleanupListeners();
-            closeModal(els.detailModal);
+            closeModal(isInstallModal ? els.installModal : els.detailModal);
 
             const selectedDeps = [];
             depList.querySelectorAll('input[type="checkbox"]:checked').forEach(input => {
@@ -684,7 +796,7 @@
             }
           };
         } else {
-          closeModal(els.detailModal);
+          closeModal(isInstallModal ? els.installModal : els.detailModal);
           await installPlugin(projectId, versionId, force, false, []);
         }
       } catch (error) {
@@ -788,6 +900,9 @@
   if (els.installedList) els.installedList.addEventListener('click', handleInstalledAction);
   if (els.detailModal) {
     els.detailModal.addEventListener('click', handleModalAction);
+  }
+  if (els.installModal) {
+    els.installModal.addEventListener('click', handleModalAction);
   }
 
   if (els.uploadInput) {
