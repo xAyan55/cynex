@@ -59,6 +59,16 @@
     return gameVersions.some(function (gv) { return Utils.mcVersionMatch(serverVersion, gv); });
   };
 
+  Utils.debounce = function (fn, delay) {
+    var timer = null;
+    return function () {
+      var context = this;
+      var args = arguments;
+      if (timer) clearTimeout(timer);
+      timer = setTimeout(function () { fn.apply(context, args); }, delay || 300);
+    };
+  };
+
   window.PluginManager = window.PluginManager || {};
   window.PluginManager.Utils = Utils;
 })();

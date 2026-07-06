@@ -126,6 +126,11 @@
       Browser.state.page += 1;
     },
 
+    loadMore() {
+      Browser.nextPage();
+      Browser.loadBrowse(true);
+    },
+
     clearAuthors() {
       projectAuthors.clear();
     },
