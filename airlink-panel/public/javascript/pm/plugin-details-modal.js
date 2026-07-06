@@ -54,10 +54,17 @@
     `;
   }
 
+  var detailNormalizedMcVersion = U.normalizeVersion(cfg.minecraftVersion);
+
+  function mcMatches(v) {
+    if (!detailNormalizedMcVersion) return true;
+    return U.serverVersionMatch(detailNormalizedMcVersion, v.game_versions || []);
+  }
+
   function renderVersionsTab(project, versions, filters) {
     const filtered = versions.filter(v => {
-      if (filters.game === 'server' && cfg.minecraftVersion) {
-        if (!U.serverVersionMatch(cfg.minecraftVersion, v.game_versions || [])) return false;
+      if (filters.game === 'server') {
+        if (!mcMatches(v)) return false;
       }
       if (filters.type === 'release' && v.version_type !== 'release') return false;
       if (filters.type === 'beta-alpha' && v.version_type !== 'beta' && v.version_type !== 'alpha') return false;
@@ -69,7 +76,7 @@
     }
 
     return filtered.map(v => {
-      const isCompatible = !cfg.minecraftVersion || U.serverVersionMatch(cfg.minecraftVersion, v.game_versions || []);
+      const isCompatible = mcMatches(v);
 
       const badge = isCompatible
         ? '<span class="pm-badge bg-emerald-500/10 text-emerald-500 border border-emerald-500/20">Compatible</span>'
@@ -150,7 +157,7 @@
                 <label class="text-xs font-semibold text-neutral-400 dark:text-neutral-500">Game Version</label>
                 <select data-pm-filter="game" class="pm-select w-full mt-1 py-1.5 px-2.5 text-xs bg-white dark:bg-neutral-800">
                   <option value="all">All Versions</option>
-                  ${cfg.minecraftVersion ? `<option value="server">Compatible (${U.escapeHtml(cfg.minecraftVersion)})</option>` : ''}
+                  ${detailNormalizedMcVersion ? `<option value="server">Compatible (${U.escapeHtml(detailNormalizedMcVersion)})</option>` : `<option value="server">Compatible (any)</option>`}
                 </select>
               </div>
 

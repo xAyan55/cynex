@@ -18,9 +18,12 @@
     if (e.key === 'Escape') close();
   }
 
+  var normalizedMcVersion = U.normalizeVersion(cfg.minecraftVersion);
+
   function versionIsCompatible(v) {
     if (!v) return false;
-    return !cfg.minecraftVersion || U.serverVersionMatch(cfg.minecraftVersion, v.game_versions || []);
+    if (!normalizedMcVersion) return true;
+    return U.serverVersionMatch(normalizedMcVersion, v.game_versions || []);
   }
 
   function sortVersions(versions) {
@@ -67,12 +70,27 @@
       const allVersions = document.getElementById('pmInstallAllVersions');
       if (!modal) return;
 
+      console.log(`[PM-INSTALL] === Opening install modal ===`);
+      console.log(`[PM-INSTALL] projectId=${projectId}`);
+      console.log(`[PM-INSTALL] cfg.loader=${cfg.loader}`);
+      console.log(`[PM-INSTALL] cfg.minecraftVersion=${cfg.minecraftVersion}`);
+      console.log(`[PM-INSTALL] normalizedMcVersion=${normalizedMcVersion}`);
+
       const response = await Api.get(`/project/${encodeURIComponent(projectId)}`);
       const { project, versions } = response.data;
       const authorName = window.PluginManager.Browser.authors.get(projectId) || 'Unknown';
 
+      console.log(`[PM-INSTALL] Project: "${project.title}" type=${project.project_type}`);
+      console.log(`[PM-INSTALL] Versions from API: ${versions.length} total`);
+
       const sorted = sortVersions(versions);
       const recommendedVersion = sorted.find(v => versionIsCompatible(v) && v.version_type === 'release');
+
+      console.log(`[PM-INSTALL] Sorted: ${sorted.length} versions`);
+      console.log(`[PM-INSTALL] Recommended: ${recommendedVersion ? recommendedVersion.version_number : 'NONE'}`);
+      sorted.forEach(function (v) {
+        console.log(`[PM-INSTALL]   version ${v.version_number} loaders=[${v.loaders.join(',')}] game=[${v.game_versions.join(',')}] type=${v.version_type} compat=${versionIsCompatible(v)}`);
+      });
 
       if (title) title.textContent = project.title || '';
       if (author) author.textContent = `by ${U.escapeHtml(authorName)}`;
@@ -117,6 +135,8 @@
           const msg = compatExist
             ? 'Compatible versions exist but none are stable releases. Select a version below.'
             : 'No compatible version found for your server.';
+
+          console.log(`[PM-INSTALL] Fallback message: "${msg}" compatExist=${compatExist} normalizedMcVersion=${normalizedMcVersion}`);
 
           if (cfg.minecraftVersion && cfg.loader) {
             recommended.innerHTML = `

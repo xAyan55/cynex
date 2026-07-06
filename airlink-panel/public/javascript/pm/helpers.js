@@ -41,22 +41,34 @@
 
   Utils.mcVersionMatch = function (serverVersion, gameVersion) {
     if (!serverVersion || !gameVersion) return false;
-    gameVersion = gameVersion.replace(/\.x$/i, '');
+    var sv = String(serverVersion).toLowerCase().trim();
+    var gv = String(gameVersion).toLowerCase().trim();
+    if (sv === 'latest' || sv === 'stable' || sv === 'nightly' || sv === 'rolling') return true;
+    sv = sv.replace(/^mc\.?/i, '').replace(/^paper[\s_-]*/i, '').replace(/^spigot[\s_-]*/i, '').replace(/^bukkit[\s_-]*/i, '').trim();
+    gv = gv.replace(/\.x$/i, '').replace(/\+$/, '');
     var parseMc = function (v) {
       var parts = v.split('.').map(Number);
       return { major: parts[0] || 0, minor: parts[1] ?? 0, patch: parts[2] };
     };
-    var sv = parseMc(serverVersion);
-    var gv = parseMc(gameVersion);
-    if (sv.major !== gv.major) return false;
-    if (sv.minor !== gv.minor) return false;
-    if (gv.patch === undefined) return true;
-    return (sv.patch ?? 0) >= gv.patch;
+    var parsedSv = parseMc(sv);
+    var parsedGv = parseMc(gv);
+    if (isNaN(parsedSv.major) || isNaN(parsedGv.major)) return false;
+    if (parsedSv.major !== parsedGv.major) return false;
+    if (parsedSv.minor !== parsedGv.minor) return false;
+    if (parsedGv.patch === undefined) return true;
+    return (parsedSv.patch ?? 0) >= parsedGv.patch;
   };
 
   Utils.serverVersionMatch = function (serverVersion, gameVersions) {
     if (!serverVersion || !gameVersions || !gameVersions.length) return false;
     return gameVersions.some(function (gv) { return Utils.mcVersionMatch(serverVersion, gv); });
+  };
+
+  Utils.normalizeVersion = function (version) {
+    if (!version) return null;
+    var v = String(version).toLowerCase().trim();
+    if (v === 'latest' || v === 'stable' || v === 'nightly' || v === 'rolling') return null;
+    return v.replace(/^mc\.?/i, '').replace(/^paper[\s_-]*/i, '').replace(/^spigot[\s_-]*/i, '').replace(/^bukkit[\s_-]*/i, '').trim();
   };
 
   Utils.debounce = function (fn, delay) {
