@@ -298,6 +298,31 @@ export async function handleFsCreateEmpty(req: Request): Promise<Response> {
   }
 }
 
+export async function handleFsMkdir(req: Request): Promise<Response> {
+  let body: { id?: string; path?: string };
+  try {
+    body = (await req.json()) as typeof body;
+  } catch {
+    return json({ error: 'invalid json body' }, 400);
+  }
+
+  const { id, path: directoryPath } = body;
+  if (!id) return json({ error: 'container ID is required' }, 400);
+  if (!validateContainerId(id)) return json({ error: 'invalid container ID' }, 400);
+  if (!directoryPath) return json({ error: 'directory path is required' }, 400);
+  if (!validatePath(directoryPath)) return json({ error: 'invalid directory path' }, 400);
+
+  try {
+    const baseDir = resolve(process.cwd(), `volumes/${id}`);
+    const fullPath = jailPath(baseDir, directoryPath);
+    mkdirSync(fullPath, { recursive: true });
+    return json({ message: 'directory successfully created', path: directoryPath });
+  } catch (err) {
+    logger.error('error creating directory', err);
+    return json({ error: err instanceof Error ? err.message : 'unknown error' }, 500);
+  }
+}
+
 export async function handleFsAppend(req: Request): Promise<Response> {
   let body: {
     id?: string;
