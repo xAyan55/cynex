@@ -250,18 +250,23 @@
           return null;
         }
 
-        function isOfflineUuid(uuid) {
-          var hex = uuid.replace(/-/g, '');
-          return parseInt(hex.charAt(12), 16) === 3;
-        }
+        var skinCache = {};
 
-        function skinUrl(uuid) {
-          return isOfflineUuid(uuid) ? 'https://crafatar.com/skins/Steve' : 'https://crafatar.com/skins/' + uuid;
-        }
-
-        function avatarUrl(uuid, size) {
-          var name = isOfflineUuid(uuid) ? 'Steve' : uuid;
-          return 'https://crafatar.com/avatars/' + name + '?size=' + (size || 100) + '&overlay';
+        function resolveSkin(uuid, cb) {
+          if (skinCache[uuid]) { cb(skinCache[uuid]); return; }
+          // Check Mojang session server — 200 = premium, anything else = cracked
+          var xhr = new XMLHttpRequest();
+          xhr.open('GET', 'https://sessionserver.mojang.com/session/minecraft/profile/' + uuid.replace(/-/g, ''));
+          xhr.timeout = 3000;
+          xhr.onload = function() {
+            skinCache[uuid] = xhr.status === 200 ? 'premium' : 'cracked';
+            cb(skinCache[uuid]);
+          };
+          xhr.onerror = xhr.ontimeout = function() {
+            skinCache[uuid] = 'premium'; // assume premium on network error (avoid unnecessary Steve)
+            cb(skinCache[uuid]);
+          };
+          xhr.send();
         }
 
         function openPlayerDetail(uuid) {
@@ -289,7 +294,16 @@
           panel.classList.remove('scale-95');
           panel.classList.add('scale-100');
 
-          initSkinViewer(player.uuid);
+          // Show loading state while resolving skin
+          var canvas = document.getElementById('skinCanvas');
+          var fallback = document.getElementById('skinFallback');
+          canvas.classList.add('hidden');
+          fallback.classList.add('hidden');
+
+          resolveSkin(player.uuid, function(type) {
+            if (currentPlayer !== player.uuid) return; // modal closed
+            initSkinViewer(player.uuid, type);
+          });
         }
 
         function closePlayerModal() {
@@ -305,36 +319,38 @@
           pendingAction = null;
         }
 
-        function initSkinViewer(uuid) {
+        function initSkinViewer(uuid, type) {
           var canvas = document.getElementById('skinCanvas');
           var fallback = document.getElementById('skinFallback');
           canvas.classList.remove('hidden');
           fallback.classList.add('hidden');
 
           if (typeof skinview3d === 'undefined') {
-            showSkinFallback(uuid);
+            showSkinFallback(uuid, type);
             return;
           }
+
+          var url = type === 'cracked' ? STEVE_SKIN : 'https://crafatar.com/skins/' + uuid;
 
           try {
             playerViewer = new skinview3d.SkinViewer({
               canvas: canvas,
               width: 300,
               height: 400,
-              skin: skinUrl(uuid),
+              skin: url,
             });
             playerViewer.controls.enableRotate = true;
             playerViewer.controls.enableZoom = false;
           } catch (e) {
-            showSkinFallback(uuid);
+            showSkinFallback(uuid, type);
           }
         }
 
-        function showSkinFallback(uuid) {
+        function showSkinFallback(uuid, type) {
           var canvas = document.getElementById('skinCanvas');
           var fallback = document.getElementById('skinFallback');
           canvas.classList.add('hidden');
-          fallback.src = avatarUrl(uuid, 100);
+          fallback.src = (type === 'cracked' ? STEVE_AVATAR : 'https://crafatar.com/avatars/' + uuid) + '?size=100&overlay';
           fallback.classList.remove('hidden');
         }
 
