@@ -339,5 +339,6 @@
   "playerSkinError": "Could not load skin preview",
   "playerReasonLabel": "Reason (optional)",
   "playerCancelLabel": "Cancel",
-  "playerConfirmLabel": "Confirm"
+  "playerConfirmLabel": "Confirm",
+  "playerCracked": "Offline account"
 }

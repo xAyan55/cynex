@@ -78,13 +78,14 @@
         <% if (players && players.length > 0) { %>
         <div id="PlayersGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
           <% players.forEach(player => { %>
+          <% var pUuid = String(player.uuid).replace(/-/g, ''); var isCracked = pUuid.length === 32 && parseInt(pUuid.charAt(12), 16) !== 4; %>
             <div class="relative p-4 bg-neutral-100 dark:bg-neutral-800 rounded-xl shadow-lg group hover:bg-neutral-200/60 dark:hover:bg-neutral-700/50 transition-all duration-200 cursor-pointer"
                  data-uuid="<%= player.uuid %>"
                  data-name="<%= player.name %>"
                  onclick="openPlayerDetail('<%= player.uuid %>')">
               <div class="flex items-center">
                 <img
-                  src="https://crafatar.com/avatars/<%= player.uuid %>?size=64&overlay"
+                  src="<%= isCracked ? '/images/default-steve-head.png' : 'https://crafatar.com/avatars/' + player.uuid + '?size=64&overlay' %>"
                   alt="<%= player.name %>'s Avatar"
                   class="rounded-lg border border-neutral-700 mr-4"
                   width="64"
@@ -92,6 +93,7 @@
                 />
                 <div>
                   <p class="text-lg font-bold text-neutral-800 dark:text-white"><%= player.name %></p>
+                  <p id="pmBadge-<%= player.uuid %>" class="text-[10px] text-neutral-400 dark:text-neutral-500 <%= isCracked ? '' : 'hidden' %>"><%= req.translations.playerCracked || 'Offline account' %></p>
                   <div class="flex items-center mt-1">
                     <span class="inline-flex h-2 w-2 rounded-full bg-green-500 mr-2"></span>
                     <span class="text-xs text-neutral-500 dark:text-neutral-400"><%= req.translations.online || 'Online' %></span>
@@ -183,6 +185,7 @@
                   <h3 id="playerModalName" class="text-lg font-bold text-neutral-800 dark:text-white"></h3>
                   <p id="playerModalUuid" class="text-xs text-neutral-500 dark:text-neutral-400 font-mono mt-0.5"></p>
                   <p id="playerModalStatus" class="text-xs mt-1"></p>
+                  <span id="playerModalCrackedBadge" class="hidden mt-1 inline-flex items-center px-2 py-0.5 rounded text-[10px] font-medium bg-amber-100 dark:bg-amber-900/30 text-amber-700 dark:text-amber-400"><%= req.translations.playerCracked || 'Offline account' %></span>
                 </div>
                 <button onclick="closePlayerModal()" class="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition">
                   <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" /></svg>
@@ -250,23 +253,9 @@
           return null;
         }
 
-        var skinCache = {};
-
-        function resolveSkin(uuid, cb) {
-          if (skinCache[uuid]) { cb(skinCache[uuid]); return; }
-          // Check Mojang session server — 200 = premium, anything else = cracked
-          var xhr = new XMLHttpRequest();
-          xhr.open('GET', 'https://sessionserver.mojang.com/session/minecraft/profile/' + uuid.replace(/-/g, ''));
-          xhr.timeout = 3000;
-          xhr.onload = function() {
-            skinCache[uuid] = xhr.status === 200 ? 'premium' : 'cracked';
-            cb(skinCache[uuid]);
-          };
-          xhr.onerror = xhr.ontimeout = function() {
-            skinCache[uuid] = 'premium'; // assume premium on network error (avoid unnecessary Steve)
-            cb(skinCache[uuid]);
-          };
-          xhr.send();
+        function isOfflineUuid(uuid) {
+          var hex = uuid.replace(/-/g, '');
+          return hex.length === 32 && parseInt(hex.charAt(12), 16) !== 4;
         }
 
         function openPlayerDetail(uuid) {
@@ -278,6 +267,8 @@
           document.getElementById('playerModalUuid').textContent = player.uuid;
           var statusEl = document.getElementById('playerModalStatus');
           statusEl.innerHTML = '<span class="inline-flex h-2 w-2 rounded-full bg-green-500 mr-1"></span> ' + TRANSLATIONS.online;
+          var badge = document.getElementById('playerModalCrackedBadge');
+          if (isOfflineUuid(player.uuid)) { badge.classList.remove('hidden'); } else { badge.classList.add('hidden'); }
 
           // Enable/disable IP ban button
           var ipBanBtn = document.getElementById('actionIpBan');
@@ -294,16 +285,7 @@
           panel.classList.remove('scale-95');
           panel.classList.add('scale-100');
 
-          // Show loading state while resolving skin
-          var canvas = document.getElementById('skinCanvas');
-          var fallback = document.getElementById('skinFallback');
-          canvas.classList.add('hidden');
-          fallback.classList.add('hidden');
-
-          resolveSkin(player.uuid, function(type) {
-            if (currentPlayer !== player.uuid) return; // modal closed
-            initSkinViewer(player.uuid, type);
-          });
+          initSkinViewer(player.uuid);
         }
 
         function closePlayerModal() {
@@ -319,18 +301,20 @@
           pendingAction = null;
         }
 
-        function initSkinViewer(uuid, type) {
+        function initSkinViewer(uuid) {
           var canvas = document.getElementById('skinCanvas');
           var fallback = document.getElementById('skinFallback');
           canvas.classList.remove('hidden');
           fallback.classList.add('hidden');
 
+          var offline = isOfflineUuid(uuid);
+
           if (typeof skinview3d === 'undefined') {
-            showSkinFallback(uuid, type);
+            showSkinFallback(uuid, offline);
             return;
           }
 
-          var url = type === 'cracked' ? STEVE_SKIN : 'https://crafatar.com/skins/' + uuid;
+          var url = offline ? '/images/default-steve-skin.png' : 'https://crafatar.com/skins/' + uuid;
 
           try {
             playerViewer = new skinview3d.SkinViewer({
@@ -342,15 +326,15 @@
             playerViewer.controls.enableRotate = true;
             playerViewer.controls.enableZoom = false;
           } catch (e) {
-            showSkinFallback(uuid, type);
+            showSkinFallback(uuid, offline);
           }
         }
 
-        function showSkinFallback(uuid, type) {
+        function showSkinFallback(uuid, offline) {
           var canvas = document.getElementById('skinCanvas');
           var fallback = document.getElementById('skinFallback');
           canvas.classList.add('hidden');
-          fallback.src = (type === 'cracked' ? STEVE_AVATAR : 'https://crafatar.com/avatars/' + uuid) + '?size=100&overlay';
+          fallback.src = offline ? '/images/default-steve-head.png' : 'https://crafatar.com/avatars/' + uuid + '?size=100&overlay';
           fallback.classList.remove('hidden');
         }
 
