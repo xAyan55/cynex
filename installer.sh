@@ -1,6 +1,6 @@
 #!/bin/bash
 ############################################################################
-# Copyright (C) 2026 thavanish
+# Copyright (C) 2026 voidflamer
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -886,7 +886,7 @@ detect_os() {
 pkg_install() {
     case "$PKG" in
         apt)
-            DEBIAN_FRONTEND=noninteractive apt-get update -qq
+            DEBIAN_FRONTEND=noninteractive apt-get update --allow-releaseinfo-change -qq || true
             DEBIAN_FRONTEND=noninteractive apt-get install -y -qq "$@"
             ;;
         dnf|yum) $PKG install -y -q "$@" ;;
@@ -1021,6 +1021,9 @@ setup_docker() {
     fi
 
     log "Installing Docker..."
+    if [[ "$FAM" == "debian" ]]; then
+        DEBIAN_FRONTEND=noninteractive apt-get update --allow-releaseinfo-change -y || true
+    fi
     case "$FAM" in
         debian|redhat) curl -fsSL https://get.docker.com | sh ;;
         arch)   pacman -Sy --noconfirm --needed docker docker-compose ;;
