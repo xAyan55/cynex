@@ -28,11 +28,6 @@ const dashboardModule: Module = {
 
     router.get('/', async (req: Request, res: Response) => {
       try {
-        const userCount = await prisma.users.count();
-        if (userCount === 0) {
-          return res.redirect('/register');
-        }
-
         const settings = await prisma.settings.findUnique({ where: { id: 1 } });
         const userId = req.session?.user?.id;
         if (userId) {
