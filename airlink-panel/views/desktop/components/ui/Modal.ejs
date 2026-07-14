@@ -1,0 +1,16 @@
+<%
+  const var_id = typeof id !== 'undefined' ? id : 'modal-' + Math.random().toString(36).substr(2, 9);
+  const var_title = typeof title !== 'undefined' ? title : '';
+  const var_class = typeof class_name !== 'undefined' ? class_name : (typeof class !== 'undefined' ? class : '');
+%>
+<div id="<%= var_id %>" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-all duration-300">
+  <div class="cynex-glass rounded-2xl w-full max-w-xl overflow-hidden flex flex-col shadow-2xl border border-white/10 animate-scale <%= var_class %>">
+    <div class="flex justify-between items-center px-6 py-5 border-b border-white/5 bg-white/[0.01]">
+      <h3 class="text-lg font-bold text-white"><%- var_title %></h3>
+      <button class="text-neutral-400 hover:text-white transition-colors cursor-pointer" onclick="document.getElementById('<%= var_id %>').classList.add('hidden')">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" />
+        </svg>
+      </button>
+    </div>
+    <div class="p-6 overflow-y-auto max-h-[75vh]">

@@ -1,0 +1,80 @@
+<%
+  const var_server = typeof server !== 'undefined' ? server : null;
+  if (var_server) {
+    let ipPort = 'Connecting...';
+    try {
+      const ports = JSON.parse(var_server.Ports);
+      const primary = ports.find(p => p.primary) || ports[0];
+      if (primary) {
+        ipPort = `${var_server.node.address}:${primary.externalPort}`;
+      }
+    } catch {
+      ipPort = var_server.node.address;
+    }
+%>
+<%- include('./Card', { hover: true, class: 'relative overflow-hidden group flex flex-col justify-between h-[280px]' }) %>
+  <div>
+    <!-- Header -->
+    <div class="flex items-start justify-between mb-4">
+      <div class="min-w-0 flex-1 pr-3">
+        <h3 class="text-sm font-bold text-white truncate"><%= var_server.name %></h3>
+        <% if (var_server.description) { %>
+          <p class="text-xs text-neutral-400 mt-1 truncate"><%= var_server.description %></p>
+        <% } else { %>
+          <p class="text-[11px] text-neutral-500 mt-1 truncate italic">No description</p>
+        <% } %>
+      </div>
+      <%- include('./Badge', { status: var_server.status, label: var_server.status === 'running' ? 'Online' : 'Offline' }) %>
+    </div>
+
+    <!-- Connection Info -->
+    <div class="flex items-center gap-1.5 text-xs text-neutral-400 font-semibold mb-5 bg-white/[0.02] border border-white/5 px-3 py-1.5 rounded-xl w-fit">
+      <span class="w-1.5 h-1.5 rounded-full bg-brand-green"></span>
+      <%= ipPort %>
+    </div>
+
+    <!-- Stats Section -->
+    <div class="grid grid-cols-3 gap-2.5 mb-4">
+      <div class="bg-white/[0.02] border border-white/5 rounded-xl p-2.5">
+        <p class="text-[10px] font-bold text-neutral-500 uppercase">CPU</p>
+        <p class="text-xs font-semibold text-neutral-300 mt-1"><%= Math.round(Number(var_server.cpuUsage || 0)) %>%</p>
+      </div>
+      <div class="bg-white/[0.02] border border-white/5 rounded-xl p-2.5">
+        <p class="text-[10px] font-bold text-neutral-500 uppercase">RAM</p>
+        <p class="text-xs font-semibold text-neutral-300 mt-1"><%= Math.round(Number(var_server.ramUsage || 0)) %>%</p>
+      </div>
+      <div class="bg-white/[0.02] border border-white/5 rounded-xl p-2.5">
+        <p class="text-[10px] font-bold text-neutral-500 uppercase">Memory</p>
+        <p class="text-xs font-semibold text-neutral-300 mt-1 truncate"><%= var_server.ramUsed || '0MB' %></p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Actions & Owner -->
+  <div class="flex items-center justify-between pt-3.5 border-t border-white/5 mt-auto">
+    <div class="flex items-center gap-2">
+      <img class="h-5 w-5 rounded-full object-cover border border-white/5" src="<%= var_server.owner && var_server.owner.avatar ? var_server.owner.avatar : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' + encodeURIComponent(var_server.owner ? var_server.owner.username : 'owner') %>" alt="">
+      <span class="text-xs font-semibold text-neutral-400 truncate max-w-[80px]"><%= var_server.owner ? var_server.owner.username : 'Owner' %></span>
+    </div>
+    
+    <div class="flex items-center gap-2 relative z-20">
+      <!-- Quick Start button -->
+      <button onclick="handleQuickPower(event, '<%= var_server.UUID %>', 'start')" class="p-1.5 bg-brand-green/10 border border-brand-green/20 hover:bg-brand-green hover:text-black rounded-lg text-brand-green transition-all cursor-pointer" title="Start Server">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M8 5v14l11-7z"/>
+        </svg>
+      </button>
+      <!-- Quick Stop button -->
+      <button onclick="handleQuickPower(event, '<%= var_server.UUID %>', 'stop')" class="p-1.5 bg-red-500/10 border border-red-500/20 hover:bg-red-500 hover:text-white rounded-lg text-red-400 transition-all cursor-pointer" title="Stop Server">
+        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M6 6h12v12H6z"/>
+        </svg>
+      </button>
+      
+      <a href="/server/<%= var_server.UUID %>" class="px-2.5 py-1.5 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white rounded-lg text-[11px] font-semibold text-neutral-300 transition-all" title="Manage Server">
+        Manage
+      </a>
+    </div>
+  </div>
+</div>
+<% } %>

@@ -14,25 +14,26 @@
         top: 0;
         width: 100% !important;
         height: 100% !important;
+        opacity: 0.15;
     }
 
     #terminal {
         height: 420px;
-        background: var(--theme-bg-card, #141414);
+        background: #08080c;
     }
 
     #terminal .xterm {
-        padding: 8px;
+        padding: 16px;
         height: 100%;
     }
 
     #terminal .xterm-viewport {
-        background: var(--theme-bg-card, #141414) !important;
+        background: #08080c !important;
         border-radius: 0;
     }
 
     #terminal .xterm-screen {
-        background: var(--theme-bg-card, #141414);
+        background: #08080c;
     }
 
     .console-wrap {
@@ -45,54 +46,54 @@
     }
 </style>
 
-<main class="h-screen m-auto text-neutral-800 dark:text-white">
+<main class="h-screen m-auto bg-[#07070a] text-white">
   <div class="flex h-screen">
     <!-- Sidebar -->
-    <div class="w-60 h-full">
+    <div class="w-60 h-full shrink-0">
       <%- include('../../components/template') %>
     </div>
 
     <!-- Content -->
     <div id="page-content" class="flex-1 min-w-0 overflow-y-auto pt-16">
       <!-- Page Header: title + meta left, buttons right -->
-      <div class="px-8 pt-4">
-        <div class="flex items-start justify-between gap-4">
+      <div class="px-8 pt-6">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6 bg-white/[0.01] border border-white/5 p-6 rounded-2xl">
           <div class="flex-1 min-w-0">
             <%- include('../../components/serverHeader') %>
             <!-- Server meta: image · node · id -->
             <div class="flex items-center gap-3 mt-1.5 flex-wrap">
               <div class="flex items-center gap-1.5">
-                <%- icon('box', { class: 'h-3 w-3 text-neutral-400 shrink-0' }) %>
-                <span class="text-[11px] text-neutral-500 dark:text-neutral-400 truncate max-w-[140px]"><%= server.image.name %></span>
+                <%- icon('box', { class: 'h-3.5 w-3.5 text-neutral-400 shrink-0' }) %>
+                <span class="text-xs text-neutral-400 truncate max-w-[140px] font-semibold"><%= server.image.name %></span>
               </div>
-              <span class="text-neutral-300 dark:text-neutral-600 text-[11px]">·</span>
+              <span class="text-neutral-600 text-[11px] font-bold">·</span>
               <div class="flex items-center gap-1.5">
-                <%- icon('server', { class: 'h-3 w-3 text-neutral-400 shrink-0' }) %>
-                <span class="text-[11px] text-neutral-500 dark:text-neutral-400 truncate max-w-[100px]"><%= server.node.name %></span>
+                <%- icon('server', { class: 'h-3.5 w-3.5 text-neutral-400 shrink-0' }) %>
+                <span class="text-xs text-neutral-400 truncate max-w-[100px] font-semibold"><%= server.node.name %></span>
               </div>
-              <span class="text-neutral-300 dark:text-neutral-600 text-[11px]">·</span>
+              <span class="text-neutral-600 text-[11px] font-bold">·</span>
               <div class="flex items-center gap-1.5">
-                <%- icon('hash', { class: 'h-3 w-3 text-neutral-400 shrink-0' }) %>
-                <span class="text-[11px] font-mono text-neutral-500 dark:text-neutral-400"><%= server.UUID.split('-')[0] %></span>
+                <%- icon('hash', { class: 'h-3.5 w-3.5 text-neutral-400 shrink-0' }) %>
+                <span class="text-xs font-mono text-neutral-400 font-semibold"><%= server.UUID.split('-')[0] %></span>
               </div>
             </div>
           </div>
 
           <!-- Control buttons -->
-          <div class="flex gap-2 shrink-0">
+          <div class="flex gap-2.5 shrink-0 w-full sm:w-auto">
             <button id="startButton" type="button"
-              class="rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-2 text-sm font-medium shadow-sm transition <%= server.Suspended ? 'opacity-50 cursor-not-allowed' : '' %>" <%= server.Suspended ? 'disabled' : '' %>>
-              <%- icon('play', { class: 'size-4 inline-flex mr-1 text-emerald-100 mb-0.5' }) %>
+              class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-green px-4 py-2.5 text-xs font-bold text-black hover:bg-brand-green-hover transition-all cursor-pointer <%= server.Suspended ? 'opacity-50 cursor-not-allowed' : '' %>" <%= server.Suspended ? 'disabled' : '' %>>
+              <%- icon('play', { class: 'size-4 text-black' }) %>
               <%= req.translations.start %>
             </button>
             <button id="restartButton" type="button"
-              class="rounded-xl bg-neutral-800 dark:bg-neutral-600 hover:bg-neutral-700 dark:hover:bg-neutral-500 text-white px-3 py-2 text-sm font-medium shadow-sm transition <%= server.Suspended ? 'opacity-50 cursor-not-allowed' : '' %>" <%= server.Suspended ? 'disabled' : '' %>>
-              <%- icon('refresh-cw', { class: 'size-4 inline-flex mr-1 text-white mb-0.5' }) %>
+              class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 rounded-xl bg-brand-purple px-4 py-2.5 text-xs font-bold text-white hover:bg-brand-purple-hover transition-all cursor-pointer <%= server.Suspended ? 'opacity-50 cursor-not-allowed' : '' %>" <%= server.Suspended ? 'disabled' : '' %>>
+              <%- icon('refresh-cw', { class: 'size-4 text-white' }) %>
               <%= req.translations.restart %>
             </button>
             <button id="stopButton" type="button"
-              class="rounded-xl bg-red-600 hover:bg-red-500 text-white px-3 py-2 text-sm font-medium shadow-sm transition <%= server.Suspended ? 'opacity-50 cursor-not-allowed' : '' %>" <%= server.Suspended ? 'disabled' : '' %>>
-              <%- icon('square', { class: 'size-4 inline-flex mr-1 text-red-100 mb-0.5' }) %>
+              class="flex-1 sm:flex-none inline-flex items-center justify-center gap-1.5 rounded-xl bg-red-600 px-4 py-2.5 text-xs font-bold text-white hover:bg-red-500 transition-all cursor-pointer <%= server.Suspended ? 'opacity-50 cursor-not-allowed' : '' %>" <%= server.Suspended ? 'disabled' : '' %>>
+              <%- icon('square', { class: 'size-4 text-white' }) %>
               <%= req.translations.stop %>
             </button>
           </div>
@@ -100,113 +101,110 @@
 
         <!-- Server Suspended Warning -->
         <% if (server.Suspended) { %>
-        <div class="mt-3 bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 flex items-center gap-3">
+        <div class="mt-4 bg-red-500/10 border border-red-500/20 rounded-xl px-5 py-4 flex items-center gap-3">
           <%- icon('triangle-alert', { class: 'h-5 w-5 shrink-0 text-red-500' }) %>
           <div>
-            <p class="text-sm font-medium text-red-500"><%= req.translations.serverSuspended || "This server's been grounded. Reach out to your admin if you think that's a mistake." %></p>
-            <p class="text-xs text-red-400"><%= req.translations.serverSuspendedDesc || 'This server has been suspended by an administrator.' %></p>
+            <p class="text-sm font-semibold text-red-500"><%= req.translations.serverSuspended || "This server has been suspended by an administrator." %></p>
+            <p class="text-xs text-neutral-400 mt-1"><%= req.translations.serverSuspendedDesc || 'Reach out to your billing administrator to verify resource boundaries.' %></p>
           </div>
         </div>
         <% } %>
 
-        <!-- Daemon Offline Warning — hidden by default, shown by JS when daemon unreachable -->
-        <div id="daemonOfflineWarningRow" class="<% if (typeof serverStatus === 'undefined' || !serverStatus.daemonOffline) { %>hidden<% } %> mt-3">
-          <div id="daemonOfflineWarning" class="bg-red-500/10 border border-red-500/20 rounded-xl px-4 py-3 flex items-center gap-3">
-            <%- icon('triangle-alert', { class: 'h-5 w-5 shrink-0 text-red-500' }) %>
-            <div class="flex-1 min-w-0">
-              <p class="text-sm font-medium text-red-500"><%= (typeof serverStatus !== 'undefined' && serverStatus.error) ? serverStatus.error : 'This node isn\'t talking to us right now. Check the daemon — it might just need a nudge.' %></p>
+        <!-- Daemon Offline Warning -->
+        <div id="daemonOfflineWarningRow" class="<% if (typeof serverStatus === 'undefined' || !serverStatus.daemonOffline) { %>hidden<% } %> mt-4">
+          <div id="daemonOfflineWarning" class="bg-red-500/10 border border-red-500/20 rounded-xl px-5 py-4 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3">
+              <%- icon('triangle-alert', { class: 'h-5 w-5 shrink-0 text-red-500' }) %>
+              <p class="text-sm font-semibold text-red-500"><%= (typeof serverStatus !== 'undefined' && serverStatus.error) ? serverStatus.error : 'Connection lost to the node daemon.' %></p>
             </div>
-            <button onclick="window.location.reload()" class="shrink-0 px-3 py-1.5 bg-red-600 hover:bg-red-500 text-white text-xs font-medium rounded-lg transition">
+            <button onclick="window.location.reload()" class="px-4 py-2 bg-red-600 hover:bg-red-500 text-white text-xs font-bold rounded-xl transition cursor-pointer">
               Retry Connection
             </button>
           </div>
         </div>
       </div>
 
-
-
       <%- include('../../components/serverTemplate') %>
-
       <%- include('../../components/installHeader') %>
 
-      <div id="server-page-body" class="flex flex-col lg:flex-row px-8 mt-4">
+      <div id="server-page-body" class="flex flex-col lg:flex-row px-8 mt-6 gap-6">
 
-<!-- Left side: Console -->
-<div class="w-full lg:w-2/3 lg:pr-5 flex flex-col min-w-0">
-    <div class="flex flex-col rounded-xl overflow-hidden border border-neutral-800 shadow-lg flex-1 console-wrap">
-        <!-- Console chrome bar -->
-        <div class="flex items-center gap-2 px-3 py-2 bg-[#1c1c1c] border-b border-neutral-800 shrink-0">
-            <span class="text-[11px] font-medium text-neutral-600 select-none tracking-wide">console</span>
-        </div>
-        <div class="bg-[#141414] flex-1 relative">
-            <div id="terminal"></div>
-        </div>
-    </div>
-    <div class="relative">
-        <div class="relative">
-            <input id="input" type="text" autocomplete="off" placeholder="<%= req.translations.typeACommand || 'Type a command...' %>"
-                class="w-full px-4 py-3 bg-neutral-200 dark:bg-neutral-600/20 text-neutral-800 dark:text-white rounded-b-xl text-sm border-t border-neutral-600/20 focus:ring-1 focus:ring-neutral-500/50 dark:focus:ring-neutral-100/20 focus:border-transparent placeholder:font-medium placeholder:text-neutral-600 dark:placeholder:text-neutral-500"
-                style="background: transparent; position: relative; z-index: 1;">
-            <div id="ghost-text-bg" class="absolute inset-0 px-4 py-3 text-sm pointer-events-none rounded-b-xl overflow-hidden bg-neutral-200 dark:bg-neutral-600/20 border-t border-neutral-600/20" style="z-index: 0;">
-                <span id="ghost-typed" class="invisible"></span><span id="ghost-suggestion" class="text-neutral-400 dark:text-neutral-500"></span>
+        <!-- Left side: Console -->
+        <div class="w-full lg:w-2/3 flex flex-col min-w-0">
+          <div class="flex flex-col rounded-t-2xl overflow-hidden border border-white/5 bg-[#08080c] flex-1 console-wrap">
+            <!-- Console chrome bar -->
+            <div class="flex items-center gap-2 px-4 py-3 bg-[#0c0c14] border-b border-white/5 shrink-0">
+              <span class="text-[10px] font-bold text-neutral-500 select-none tracking-widest uppercase">server console</span>
             </div>
+            <div class="bg-[#08080c] flex-1 relative border-b border-white/5">
+              <div id="terminal"></div>
+            </div>
+          </div>
+          <div class="relative">
+            <div class="relative">
+              <input id="input" type="text" autocomplete="off" placeholder="<%= req.translations.typeACommand || 'Type a command...' %>"
+                class="w-full px-5 py-3.5 bg-white/[0.02] text-white rounded-b-2xl text-sm border border-t-0 border-white/5 focus:border-brand-green/20 outline-none placeholder:text-neutral-600"
+                style="position: relative; z-index: 1;">
+              <div id="ghost-text-bg" class="absolute inset-0 px-5 py-3.5 text-sm pointer-events-none rounded-b-2xl overflow-hidden bg-white/[0.02] border border-t-0 border-white/5" style="z-index: 0;">
+                <span id="ghost-typed" class="invisible"></span><span id="ghost-suggestion" class="text-neutral-500"></span>
+              </div>
+            </div>
+          </div>
         </div>
-    </div>
-</div>
 
         <!-- Right side: Stats Cards -->
-        <div class="w-full lg:w-1/3 mt-4 lg:mt-0 space-y-4 flex flex-col">
+        <div class="w-full lg:w-1/3 space-y-4 flex flex-col">
 
-            <!-- IP Address Card -->
-            <div class="stats-card overflow-hidden bg-white dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700/30 rounded-xl px-4 py-4 shadow-sm hover:shadow-md transition-shadow duration-200 hover:bg-neutral-50 dark:hover:bg-neutral-700/30 group flex-1" style="--i:0">
-                <div class="relative z-10 flex items-start justify-between gap-2">
-                    <div class="min-w-0">
-                        <h2 class="text-sm font-medium text-neutral-500 dark:text-neutral-400"><%= req.translations.addressIP %>:</h2>
-                        <p id="server-ip-text" class="mt-1 text-sm font-medium font-mono tracking-tight text-neutral-800 dark:text-white break-all"><%= server.node.address %>:<%= server.Ports ? JSON.parse(server.Ports).filter(Port => Port.primary).map(Port => Port.externalPort || String(Port.Port || '').split(':')[0]).pop() : '' %></p>
-                    </div>
-                    <button id="copy-ip-btn" onclick="copyServerIP()" title="Copy" class="shrink-0 mt-1 rounded-lg p-1.5 bg-neutral-100 dark:bg-neutral-700/50 hover:bg-neutral-200 dark:hover:bg-neutral-600/50 transition-colors">
-                        <span id="copy-icon"><%- icon('copy', { class: 'h-3.5 w-3.5 text-neutral-500' }) %></span>
-                        <span id="check-icon" class="hidden"><%- icon('check', { class: 'h-3.5 w-3.5 text-emerald-500', strokeWidth: 2.5 }) %></span>
-                    </button>
-                </div>
-            </div>
-
-            <!-- Status Card -->
-            <div class="stats-card overflow-hidden bg-white dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700/30 rounded-xl px-4 py-4 shadow-sm hover:shadow-md transition-shadow duration-200 hover:bg-neutral-50 dark:hover:bg-neutral-700/30 group flex-1" style="--i:1">
-                <canvas id="statusChart" class="absolute inset-0 w-full h-full"></canvas>
-                <div class="relative z-10">
-                  <h2 class="text-sm font-medium text-neutral-500 dark:text-neutral-400"><%= req.translations.Status %>:</h2>
-                  <p id="status" class="mt-1 text-lg font-medium tracking-tight text-neutral-800 dark:text-white leading-snug">-</p>
-                  <p id="status-msg" class="text-xs font-medium mt-0.5 leading-snug transition-all duration-300 opacity-0 translate-y-1 pointer-events-none"></p>
-                </div>
+          <!-- IP Address Card -->
+          <div class="stats-card relative overflow-hidden cynex-glass border border-white/5 rounded-2xl px-5 py-4 group" style="--i:0">
+            <div class="relative z-10 flex items-start justify-between gap-2">
+              <div class="min-w-0">
+                <h2 class="text-xs font-bold text-neutral-500 uppercase tracking-wider"><%= req.translations.addressIP || 'Connection Address' %></h2>
+                <p id="server-ip-text" class="mt-1 text-sm font-bold font-mono tracking-tight text-white break-all"><%= server.node.address %>:<%= server.Ports ? JSON.parse(server.Ports).filter(Port => Port.primary).map(Port => Port.externalPort || String(Port.Port || '').split(':')[0]).pop() : '' %></p>
               </div>
-
-            <!-- RAM Usage Card -->
-            <div class="stats-card overflow-hidden bg-white dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700/30 rounded-xl px-4 py-4 shadow-sm hover:shadow-md transition-shadow duration-200 hover:bg-neutral-50 dark:hover:bg-neutral-700/30 group flex-1" style="--i:2">
-                <canvas id="ramChart" class="absolute inset-0 w-full h-full"></canvas>
-                <div class="relative z-10">
-                    <h2 class="text-sm font-medium text-neutral-500 dark:text-neutral-400"><%= req.translations.ramUsage %>:</h2>
-                    <p id="ramUsage" class="mt-1 text-lg font-medium tracking-tight text-neutral-800 dark:text-white">0% (0 MB / 0 MB)</p>
-                </div>
+              <button id="copy-ip-btn" onclick="copyServerIP()" title="Copy Connection IP" class="shrink-0 mt-1 rounded-xl p-2 bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white transition cursor-pointer">
+                <span id="copy-icon"><%- icon('copy', { class: 'h-4 w-4 text-neutral-400' }) %></span>
+                <span id="check-icon" class="hidden"><%- icon('check', { class: 'h-4 w-4 text-brand-green' }) %></span>
+              </button>
             </div>
+          </div>
 
-            <!-- CPU Usage Card -->
-            <div class="stats-card overflow-hidden bg-white dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700/30 rounded-xl px-4 py-4 shadow-sm hover:shadow-md transition-shadow duration-200 hover:bg-neutral-50 dark:hover:bg-neutral-700/30 group flex-1" style="--i:3">
-                <canvas id="cpuChart" class="absolute inset-0 w-full h-full"></canvas>
-                <div class="relative z-10">
-                    <h2 class="text-sm font-medium text-neutral-500 dark:text-neutral-400"><%= req.translations.cpuUsage %>:</h2>
-                    <p id="cpuUsage" class="mt-1 text-lg font-medium tracking-tight text-neutral-800 dark:text-white">0%</p>
-                </div>
+          <!-- Status Card -->
+          <div class="stats-card relative overflow-hidden cynex-glass border border-white/5 rounded-2xl px-5 py-4 group" style="--i:1">
+            <canvas id="statusChart" class="absolute inset-0 w-full h-full"></canvas>
+            <div class="relative z-10">
+              <h2 class="text-xs font-bold text-neutral-500 uppercase tracking-wider"><%= req.translations.Status || 'Active Status' %></h2>
+              <p id="status" class="mt-1 text-lg font-extrabold text-white leading-snug">-</p>
+              <p id="status-msg" class="text-xs font-medium mt-0.5 leading-snug transition-all duration-300 opacity-0 translate-y-1 pointer-events-none"></p>
             </div>
+          </div>
 
-            <!-- Disk Usage Card -->
-            <div class="stats-card overflow-hidden bg-white dark:bg-neutral-800/50 backdrop-blur-sm border border-neutral-200 dark:border-neutral-700/30 rounded-xl px-4 py-4 shadow-sm hover:shadow-md transition-shadow duration-200 hover:bg-neutral-50 dark:hover:bg-neutral-700/30 group flex-1" style="--i:4">
-                <canvas id="diskChart" class="absolute inset-0 w-full h-full hidden"></canvas>
-                <div class="relative z-10">
-                    <h2 class="text-sm font-medium text-neutral-500 dark:text-neutral-400"><%= req.translations.diskUsage %>:</h2>
-                    <p id="diskUsage" class="mt-1 text-lg font-medium tracking-tight text-neutral-800 dark:text-white">-</p>
-                </div>
+          <!-- RAM Usage Card -->
+          <div class="stats-card relative overflow-hidden cynex-glass border border-white/5 rounded-2xl px-5 py-4 group" style="--i:2">
+            <canvas id="ramChart" class="absolute inset-0 w-full h-full"></canvas>
+            <div class="relative z-10">
+              <h2 class="text-xs font-bold text-neutral-500 uppercase tracking-wider"><%= req.translations.ramUsage || 'Memory Allocation' %></h2>
+              <p id="ramUsage" class="mt-1 text-lg font-extrabold text-white">0% (0 MB / 0 MB)</p>
             </div>
+          </div>
+
+          <!-- CPU Usage Card -->
+          <div class="stats-card relative overflow-hidden cynex-glass border border-white/5 rounded-2xl px-5 py-4 group" style="--i:3">
+            <canvas id="cpuChart" class="absolute inset-0 w-full h-full"></canvas>
+            <div class="relative z-10">
+              <h2 class="text-xs font-bold text-neutral-500 uppercase tracking-wider"><%= req.translations.cpuUsage || 'Processor Load' %></h2>
+              <p id="cpuUsage" class="mt-1 text-lg font-extrabold text-white">0%</p>
+            </div>
+          </div>
+
+          <!-- Disk Usage Card -->
+          <div class="stats-card relative overflow-hidden cynex-glass border border-white/5 rounded-2xl px-5 py-4 group" style="--i:4">
+            <canvas id="diskChart" class="absolute inset-0 w-full h-full hidden"></canvas>
+            <div class="relative z-10">
+              <h2 class="text-xs font-bold text-neutral-500 uppercase tracking-wider"><%= req.translations.diskUsage || 'Storage Capacity' %></h2>
+              <p id="diskUsage" class="mt-1 text-lg font-extrabold text-white">-</p>
+            </div>
+          </div>
         </div>
 
       </div>
@@ -222,7 +220,7 @@
 <script nonce="<%- nonce %>">
 const termTheme = {
   foreground: '#c5c9d1',
-  background: '#141414',
+  background: '#08080c',
   selectionBackground: '#5DA5D580',
   black: '#1E1E1D',
   brightBlack: '#262625',

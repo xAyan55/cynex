@@ -1,0 +1,152 @@
+import prisma from '../db';
+import logger from '../handlers/logger';
+import { NodeAllocator } from './NodeAllocator';
+import { QueueManager } from './QueueManager';
+import {
+  getUsedExternalPorts,
+  parseImagePortRequirements,
+  serializeServerPorts,
+} from '../handlers/utils/server/ports';
+
+function pickAvailablePorts(allocatedPorts: number[], usedPorts: number[], count: number): number[] {
+  const picked: number[] = [];
+  for (const port of allocatedPorts) {
+    if (!usedPorts.includes(port)) picked.push(port);
+    if (picked.length === count) return picked;
+  }
+  return picked;
+}
+
+export interface ProvisionOptions {
+  name: string;
+  description?: string;
+  nodeId?: number;
+  imageId: number;
+  dockerImage: string;
+  planType: 'free' | 'premium';
+  memory?: number;
+  cpu?: number;
+  storage?: number;
+}
+
+export class ServerProvisioner {
+  static async provisionServer(userId: number, options: ProvisionOptions) {
+    const settings = await prisma.settings.findUnique({ where: { id: 1 } });
+    const user = await prisma.users.findUnique({ where: { id: userId } });
+
+    if (!user) throw new Error('User not found.');
+
+    // 1. Resolve limits based on Plan Type
+    let memory = 1024; // Free Plan default: 1GB
+    let cpu = 100;    // Free Plan default: 1 Core
+    let storage = 5120; // Free Plan default: 5GB
+
+    if (options.planType === 'premium') {
+      const maxMem = user.maxMemory || settings?.defaultMaxMemory || 2048;
+      const maxCpu = user.maxCpu || settings?.defaultMaxCpu || 200;
+      const maxStor = user.maxStorage || settings?.defaultMaxStorage || 10240;
+
+      memory = Math.min(options.memory || 2048, maxMem);
+      cpu = Math.min(options.cpu || 200, maxCpu);
+      storage = Math.min(options.storage || 10240, maxStor);
+    }
+
+    // 2. Resolve Node
+    let node: any = null;
+    if (options.nodeId) {
+      node = await prisma.node.findUnique({ where: { id: options.nodeId } });
+    } else {
+      node = await NodeAllocator.findBestNode(memory, storage);
+    }
+
+    if (!node) {
+      throw new Error('No suitable node available for deployment.');
+    }
+
+    // 3. Resolve Ports
+    const image = await prisma.images.findUnique({ where: { id: options.imageId } });
+    if (!image) throw new Error('Selected server software image was not found.');
+
+    let allocatedPorts: number[] = [];
+    try {
+      if (node.allocatedPorts) allocatedPorts = JSON.parse(node.allocatedPorts);
+    } catch {
+      throw new Error('Node port configuration is corrupt.');
+    }
+
+    const portRequirements = parseImagePortRequirements(image.portRequirements);
+    const requiredPortCount = Math.max(1, portRequirements.length);
+    const existingServers = await prisma.server.findMany({ where: { nodeId: node.id } });
+    const assignedPorts = pickAvailablePorts(allocatedPorts, getUsedExternalPorts(existingServers), requiredPortCount);
+
+    if (assignedPorts.length < requiredPortCount) {
+      throw new Error(`Insufficient available ports on node ${node.name}. Need ${requiredPortCount}.`);
+    }
+
+    const portsJson = serializeServerPorts(assignedPorts.map((externalPort, index) => {
+      const requirement = portRequirements[index];
+      return {
+        name: requirement?.name || `Port ${index + 1}`,
+        internalPort: requirement?.internalPort || externalPort,
+        externalPort,
+        primary: index === 0,
+      };
+    }));
+
+    // 4. Resolve variables and command
+    let dockerImages: any[] = [];
+    try {
+      dockerImages = JSON.parse(image.dockerImages || '[]');
+    } catch {
+      throw new Error('Image docker images configuration is invalid.');
+    }
+
+    const imageDocker = dockerImages.find((img: any) => Object.keys(img).includes(options.dockerImage));
+    if (!imageDocker) throw new Error('Requested Docker image variant not found.');
+
+    const startCommand = image.startup;
+    if (!startCommand) throw new Error('Selected image has no startup command template.');
+
+    let imageVariables: any[] = [];
+    try {
+      imageVariables = JSON.parse(image.variables || '[]');
+    } catch {
+      imageVariables = [];
+    }
+
+    // 5. Create Server Record
+    const isQueued = options.planType === 'free';
+    const server = await prisma.server.create({
+      data: {
+        name: options.name.trim(),
+        description: options.description?.trim() || null,
+        ownerId: user.id,
+        nodeId: node.id,
+        imageId: image.id,
+        Ports: portsJson,
+        Memory: memory,
+        Cpu: cpu,
+        Storage: storage,
+        Variables: JSON.stringify(imageVariables),
+        StartCommand: startCommand,
+        dockerImage: JSON.stringify(imageDocker),
+        Installing: true,
+        Queued: isQueued, // Queued for Free Plan, Premium installs immediately
+      },
+    });
+
+    // 6. Handle Queue Trigger
+    if (isQueued) {
+      logger.info(`ServerProvisioner: Queued free server ${server.UUID} for installation.`);
+      // Run in background through QueueManager
+      QueueManager.triggerDeployment(server.UUID, assignedPorts);
+    } else {
+      logger.info(`ServerProvisioner: Direct deployment for premium server ${server.UUID}.`);
+      // Deploy instantly
+      await prisma.server.update({ where: { id: server.id }, data: { Queued: true } });
+      QueueManager.triggerDeployment(server.UUID, assignedPorts);
+    }
+
+    return server;
+  }
+}

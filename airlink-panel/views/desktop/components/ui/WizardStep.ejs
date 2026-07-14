@@ -1,0 +1,24 @@
+<%
+  const var_active = typeof active !== 'undefined' ? Number(active) : 1;
+  const steps = [
+    { num: 1, name: 'Software' },
+    { num: 2, name: 'Plan & Tier' },
+    { num: 3, name: 'Resources' },
+    { num: 4, name: 'Deployment' }
+  ];
+%>
+<div class="flex items-center justify-between max-w-3xl mx-auto mb-12 select-none">
+  <% steps.forEach((step, index) => { %>
+    <div class="flex items-center gap-2.5 relative z-10">
+      <div data-step-indicator="<%= step.num %>" class="w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs transition-all duration-300 <%= var_active === step.num ? 'bg-brand-green text-black shadow-[0_0_15px_rgba(34,197,94,0.4)]' : (var_active > step.num ? 'bg-brand-green/20 text-brand-green border border-brand-green/30' : 'bg-white/5 text-neutral-500 border border-white/5') %>">
+        <%= step.num %>
+      </div>
+      <span data-step-text="<%= step.num %>" class="text-xs font-semibold uppercase tracking-wider transition-all duration-300 <%= var_active === step.num ? 'text-white' : 'text-neutral-500' %>">
+        <%= step.name %>
+      </span>
+    </div>
+    <% if (index < steps.length - 1) { %>
+      <div data-step-line="<%= step.num %>" class="flex-1 h-[1px] mx-4 transition-all duration-300 <%= var_active > step.num ? 'bg-brand-green/20' : 'bg-white/5' %>"></div>
+    <% } %>
+  <% }); %>
+</div>

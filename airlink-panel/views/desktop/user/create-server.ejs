@@ -3,278 +3,548 @@
 <style>
   ::-webkit-scrollbar { display: none; }
 
-  /* ── Custom select (same as admin/servers/create) ───────── */
+  /* ── Custom select design overloads for dark theme ───────── */
   .custom-select { position: relative; user-select: none; }
   .cs-trigger {
     display: flex; align-items: center; justify-content: space-between;
-    width: 100%; padding: 9px 14px; border-radius: 10px; cursor: pointer;
-    font-size: 14px; border: 1px solid var(--theme-border, #e5e5e5);
-    background: var(--theme-bg-secondary, #f5f5f5); color: var(--theme-text-strong, #171717);
-    transition: background 0.15s, border-color 0.15s;
+    width: 100%; padding: 12px 16px; border-radius: 12px; cursor: pointer;
+    font-size: 14px; border: 1px solid rgba(255, 255, 255, 0.05);
+    background: rgba(255, 255, 255, 0.02); color: #e5e5e5;
+    transition: all 0.2s ease;
   }
-  .dark .cs-trigger { background: var(--theme-bg-secondary, rgba(255,255,255,0.06)); color: var(--theme-text, #e5e5e5); border-color: var(--theme-border-subtle, rgba(255,255,255,0.08)); }
-  .cs-trigger:hover { background: var(--theme-bg-hover, #ebebeb); border-color: var(--theme-border, #d4d4d4); }
-  .dark .cs-trigger:hover { background: var(--theme-bg-hover, rgba(255,255,255,0.09)); }
-  .cs-trigger.open { border-color: var(--theme-border, #a3a3a3); }
-  .dark .cs-trigger.open { border-color: var(--theme-border, rgba(255,255,255,0.2)); }
-  .cs-trigger svg { width: 14px; height: 14px; opacity: 0.4; transition: transform 0.18s; flex-shrink: 0; }
+  .cs-trigger:hover { background: rgba(255, 255, 255, 0.06); border-color: rgba(34, 197, 94, 0.2); }
+  .cs-trigger.open { border-color: rgba(34, 197, 94, 0.3); box-shadow: 0 0 12px rgba(34, 197, 94, 0.1); }
+  .cs-trigger svg { width: 14px; height: 14px; opacity: 0.45; transition: transform 0.2s; flex-shrink: 0; }
   .cs-trigger.open svg { transform: rotate(180deg); }
   .cs-placeholder { opacity: 0.45; }
   .cs-dropdown {
     position: absolute; top: calc(100% + 5px); left: 0; right: 0; z-index: 9999;
-    background: var(--theme-bg-card, #fff); border: 1px solid var(--theme-border, #e5e5e5); border-radius: 10px;
-    box-shadow: 0 8px 24px rgba(0,0,0,0.1); overflow: hidden;
+    background: #0c0c14; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5); overflow: hidden;
     max-height: 200px; overflow-y: auto;
-    animation: cs-open 0.14s cubic-bezier(0.16,1,0.3,1);
   }
-  .dark .cs-dropdown { background: var(--theme-bg-card, #1e1e1e); border-color: var(--theme-border-subtle, rgba(255,255,255,0.08)); box-shadow: 0 8px 24px rgba(0,0,0,0.4); }
-  @keyframes cs-open { from { opacity:0; transform:translateY(-4px); } to { opacity:1; transform:translateY(0); } }
-  .cs-option { padding: 9px 14px; font-size: 13px; cursor: pointer; color: var(--theme-text-strong, #171717); transition: background 0.1s; }
-  .dark .cs-option { color: var(--theme-text, #e5e5e5); }
-  .cs-option:hover { background: rgba(0,0,0,0.05); }
-  .dark .cs-option:hover { background: rgba(255,255,255,0.06); }
-  .cs-option.selected { background: rgba(0,0,0,0.06); font-weight: 500; }
-  .dark .cs-option.selected { background: rgba(255,255,255,0.08); }
-  .cs-option.disabled { opacity: 0.35; cursor: default; pointer-events: none; }
+  .cs-option { padding: 10px 16px; font-size: 13px; cursor: pointer; color: #d4d4d4; transition: background 0.1s; }
+  .cs-option:hover { background: rgba(255, 255, 255, 0.05); color: white; }
+  .cs-option.selected { background: rgba(34, 197, 94, 0.1); color: #22c55e; font-weight: 600; }
+  .cs-option.disabled { opacity: 0.3; cursor: default; pointer-events: none; }
 
-  /* ── Form field ──────────────────────────────────────────── */
+  /* ── Input styling ────────────────────────────────────────── */
   .form-input {
-    width: 100%; padding: 9px 14px; border-radius: 10px;
-    border: 1px solid var(--theme-border, #e5e5e5); background: var(--theme-bg-secondary, #f5f5f5);
-    font-size: 14px; color: var(--theme-text-strong, #171717); outline: none;
-    transition: border-color 0.15s, box-shadow 0.15s;
+    width: 100%; padding: 12px 16px; border-radius: 12px;
+    border: 1px solid rgba(255, 255, 255, 0.05); background: rgba(255, 255, 255, 0.02);
+    font-size: 14px; color: white; outline: none;
+    transition: all 0.2s ease;
     box-sizing: border-box; font-family: inherit;
   }
-  .dark .form-input { background: var(--theme-bg-secondary, rgba(255,255,255,0.06)); border-color: var(--theme-border-subtle, rgba(255,255,255,0.08)); color: var(--theme-text, #e5e5e5); }
-  .form-input:focus { border-color: var(--theme-border, #a3a3a3); box-shadow: 0 0 0 3px var(--theme-border-subtle, rgba(0,0,0,0.05)); }
-  .dark .form-input:focus { border-color: var(--theme-border, rgba(255,255,255,0.2)); box-shadow: 0 0 0 3px var(--theme-border-subtle, rgba(255,255,255,0.04)); }
-  .form-input::placeholder { color: var(--theme-text-placeholder, #a3a3a3); }
-  .form-input.invalid { border-color: var(--theme-danger, #f87171); }
+  .form-input:focus { border-color: rgba(34, 197, 94, 0.3); box-shadow: 0 0 12px rgba(34, 197, 94, 0.1); }
+  .form-input::placeholder { color: #52525b; }
+  .form-label { display: block; font-size: 12px; font-weight: 700; uppercase: true; tracking: 0.05em; color: #a1a1aa; margin-bottom: 8px; }
 
-  .form-label { display: block; font-size: 13px; font-weight: 500; color: var(--theme-text-muted, #525252); margin-bottom: 6px; }
-  .dark .form-label { color: var(--theme-text, #a3a3a3); }
-
-  /* ── Resource stepper ────────────────────────────────────── */
-  .stepper { display: flex; align-items: center; gap: 0; border: 1px solid var(--theme-border, #e5e5e5); border-radius: 10px; overflow: hidden; background: var(--theme-bg-secondary, #f5f5f5); }
-  .dark .stepper { border-color: var(--theme-border-subtle, rgba(255,255,255,0.08)); background: var(--theme-bg-secondary, rgba(255,255,255,0.06)); }
+  /* ── Resource steppers ────────────────────────────────────── */
+  .stepper { display: flex; align-items: center; border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; overflow: hidden; background: rgba(255, 255, 255, 0.02); }
   .stepper-btn {
-    padding: 9px 13px; background: none; border: none; cursor: pointer;
-    font-size: 16px; color: var(--theme-text-muted, #525252); transition: background 0.1s;
+    padding: 10px 16px; background: none; border: none; cursor: pointer;
+    font-size: 16px; color: #a1a1aa; transition: background 0.2s;
     flex-shrink: 0; line-height: 1;
   }
-  .dark .stepper-btn { color: var(--theme-text, #a3a3a3); }
-  .stepper-btn:hover { background: var(--theme-bg-hover, rgba(0,0,0,0.06)); }
-  .dark .stepper-btn:hover { background: var(--theme-bg-hover, rgba(255,255,255,0.07)); }
+  .stepper-btn:hover { background: rgba(255, 255, 255, 0.06); color: white; }
   .stepper-input {
     flex: 1; text-align: center; border: none; background: none; outline: none;
-    font-size: 14px; font-weight: 500; color: var(--theme-text-strong, #171717); padding: 9px 4px;
+    font-size: 14px; font-weight: 600; color: white; padding: 10px 4px;
     font-family: inherit; min-width: 0;
   }
-  .dark .stepper-input { color: var(--theme-text, #e5e5e5); }
 
-  /* ── Confirm dialog ──────────────────────────────────────── */
+  /* ── Select Unit overloads ────────────────────────── */
+  .select-unit {
+    border-radius: 0 12px 12px 0; font-size: 12px; font-weight: 600; padding: 0 12px;
+    background: rgba(255, 255, 255, 0.04); border: 1px solid rgba(255, 255, 255, 0.05);
+    border-left: none; color: white; cursor: pointer; outline: none;
+  }
+  .select-unit:focus { border-color: rgba(34, 197, 94, 0.2); }
+
+  /* ── Confirmation overlay ────────────────────────────────── */
   .confirm-overlay {
-    position: fixed; inset: 0; z-index: 100;
-    background: var(--theme-overlay, rgba(0,0,0,0.45)); backdrop-filter: blur(4px);
+    position: fixed; inset: 0; z-index: 150;
+    background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(8px);
     display: flex; align-items: center; justify-content: center; padding: 16px;
-    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+    opacity: 0; pointer-events: none; transition: opacity 0.25s ease;
   }
   .confirm-overlay.open { opacity: 1; pointer-events: auto; }
   .confirm-box {
-    background: var(--theme-bg-card, white); border: 1px solid var(--theme-border, #e5e5e5); border-radius: 14px;
-    width: 100%; max-width: 360px; padding: 22px;
+    background: #0c0c14; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px;
+    width: 100%; max-w: 440px; padding: 24px; shadow: 2xl;
     transform: scale(0.96); opacity: 0;
-    transition: transform 0.2s cubic-bezier(0.16,1,0.3,1), opacity 0.2s;
+    transition: transform 0.25s cubic-bezier(0.16,1,0.3,1), opacity 0.25s;
   }
-  .dark .confirm-box { background: var(--theme-bg-card, #1c1c1c); border-color: var(--theme-border-subtle, rgba(255,255,255,0.08)); }
   .confirm-overlay.open .confirm-box { transform: scale(1); opacity: 1; }
 </style>
 
-<main class="h-screen m-auto">
+<main class="h-screen m-auto bg-[#07070a] text-white">
   <div class="flex h-screen">
     <div class="w-60 h-full"><%- include('../components/template') %></div>
 
     <div id="page-content" class="flex-1 overflow-y-auto pt-16">
-      <div class="px-8 lg:px-12 pt-6 pb-12 max-w-5xl">
+      <div class="px-12 pt-8 pb-12 max-w-4xl space-y-8">
 
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-7">
+        <!-- Wizard header -->
+        <div class="flex justify-between items-center border-b border-white/5 pb-5">
           <div>
-            <h1 class="text-base font-semibold text-neutral-900 dark:text-white">Create a server</h1>
-            <p class="text-sm text-neutral-500 mt-0.5"><%= currentCount %> of <%= serverLimit %> servers used</p>
+            <h1 class="text-xl font-bold tracking-tight text-white">Configure Server Setup</h1>
+            <p class="text-sm text-neutral-400 mt-1"><%= currentCount %> of <%= serverLimit %> active server slots used</p>
           </div>
-          <a href="/" class="text-sm text-neutral-500 hover:text-neutral-800 dark:hover:text-neutral-300 transition">Cancel</a>
+          <a href="/dashboard" class="text-xs font-semibold text-neutral-400 hover:text-white transition">Cancel Setup</a>
         </div>
 
-        <div class="space-y-5">
+        <!-- Wizard Step Indicators -->
+        <div id="wizard-steps-container">
+          <%- include('../components/ui/WizardStep', { active: 1 }) %>
+        </div>
 
-          <!-- Top row: Details + Node & Image side by side on desktop -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
-
-          <!-- Details -->
-          <div class="bg-neutral-50 dark:bg-neutral-800/20 rounded-xl border border-neutral-200 dark:border-white/5">
-            <div class="px-5 py-3.5 border-b border-neutral-200 dark:border-white/5">
-              <p class="text-sm font-medium text-neutral-800 dark:text-white">Details</p>
+        <!-- WIZARD STEP 1: SOFTWARE & VERSION -->
+        <div class="wizard-pane space-y-6" data-step="1">
+          <%- include('../components/ui/Card', { hover: false, class: 'p-6 border border-white/5 space-y-6' }) %>
+            <div>
+              <h2 class="text-base font-bold text-white">Choose Server Software</h2>
+              <p class="text-xs text-neutral-400 mt-0.5">Select a software jar package and matching Docker runtime environment.</p>
             </div>
-            <div class="p-5 space-y-4">
-              <div>
-                <label class="form-label" for="serverName">Name</label>
-                <input id="serverName" type="text" placeholder="My server" maxlength="64" class="form-input">
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+              <div class="space-y-2">
+                <label class="form-label">Software Image</label>
+                <select id="imageId" class="hidden">
+                  <option value="" disabled selected>Select software type</option>
+                  <% images.forEach(image => { %>
+                    <option value="<%= image.id %>" data-docker="<%= image.dockerImages %>" data-port-requirements='<%= image.portRequirements || "[]" %>'><%= image.name %></option>
+                  <% }); %>
+                </select>
+                <div class="custom-select" data-for="imageId"></div>
               </div>
-              <div>
-                <label class="form-label" for="serverDescription">Description <span class="text-neutral-400 font-normal">(optional)</span></label>
-                <input id="serverDescription" type="text" placeholder="What is this for?" maxlength="128" class="form-input">
+
+              <div class="space-y-2">
+                <label class="form-label">Version / Docker Image</label>
+                <select id="dockerImage" class="hidden">
+                  <option value="" disabled selected>Select software first</option>
+                </select>
+                <div class="custom-select" data-for="dockerImage"></div>
               </div>
+            </div>
+
+            <div class="pt-4 border-t border-white/5 flex justify-end">
+              <button onclick="nextStep(2)" class="px-5 py-2.5 rounded-xl bg-brand-green text-black hover:bg-brand-green-hover text-xs font-bold transition cursor-pointer">
+                Continue to Plan
+              </button>
             </div>
           </div>
+        </div>
 
-          <!-- Node & Image -->
-          <div class="bg-neutral-50 dark:bg-neutral-800/20 rounded-xl border border-neutral-200 dark:border-white/5">
-            <div class="px-5 py-3.5 border-b border-neutral-200 dark:border-white/5">
-              <p class="text-sm font-medium text-neutral-800 dark:text-white">Node & image</p>
+        <!-- WIZARD STEP 2: PLAN & LOCATION -->
+        <div class="wizard-pane space-y-6 hidden" data-step="2">
+          <%- include('../components/ui/Card', { hover: false, class: 'p-6 border border-white/5 space-y-6' }) %>
+            <div>
+              <h2 class="text-base font-bold text-white">Select Hosting Slot Plan</h2>
+              <p class="text-xs text-neutral-400 mt-0.5">Free tiers are queued during high server loads, while Paid tiers deploy instantly.</p>
             </div>
-            <div class="p-5 space-y-4">
+
+            <!-- Custom Plan Select Cards -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <!-- Free Selector -->
+              <div onclick="selectPlan('free')" id="plan-card-free" class="cynex-glass rounded-xl p-5 border border-brand-green/20 bg-brand-green/[0.02] cursor-pointer hover:border-brand-green/40 transition duration-200">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="font-bold text-white text-sm">Free Hosting Slot</h3>
+                    <p class="text-[11px] text-neutral-400 mt-1">Capped at 1GB RAM, includes queueing.</p>
+                  </div>
+                  <span class="w-4 h-4 rounded-full border-2 border-brand-green flex items-center justify-center">
+                    <span id="plan-dot-free" class="w-2 h-2 rounded-full bg-brand-green"></span>
+                  </span>
+                </div>
+              </div>
+
+              <!-- Premium Selector -->
+              <div onclick="selectPlan('premium')" id="plan-card-premium" class="cynex-glass rounded-xl p-5 border border-white/5 cursor-pointer hover:border-brand-green/20 transition duration-200">
+                <div class="flex justify-between items-start">
+                  <div>
+                    <h3 class="font-bold text-white text-sm">Premium Hosting Slot</h3>
+                    <p class="text-[11px] text-neutral-400 mt-1">Allocate maximum limits, instant deployment.</p>
+                  </div>
+                  <span class="w-4 h-4 rounded-full border-2 border-white/10 flex items-center justify-center">
+                    <span id="plan-dot-premium" class="w-2 h-2 rounded-full bg-transparent"></span>
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <div class="space-y-4 pt-4 border-t border-white/5">
               <div>
-                <label class="form-label">Node</label>
+                <h2 class="text-sm font-bold text-white">Choose Deploy Region</h2>
+                <p class="text-xs text-neutral-400 mt-0.5">Select the closest geographic zone for minimal latency.</p>
+              </div>
+
+              <div class="space-y-2 max-w-sm">
+                <label class="form-label">Server Node Address</label>
                 <select id="nodeId" class="hidden">
-                  <option value="" disabled selected>Select a node</option>
+                  <option value="" disabled selected>Select geographic node</option>
                   <% nodes.forEach(node => { %>
-                  <option value="<%= node.id %>"><%= node.name %> — <%= node.address %></option>
+                    <option value="<%= node.id %>"><%= node.name %> — <%= node.address %></option>
                   <% }); %>
                 </select>
                 <div class="custom-select" data-for="nodeId"></div>
               </div>
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label class="form-label">Image</label>
-                  <select id="imageId" class="hidden">
-                    <option value="" disabled selected>Select an image</option>
-                    <% images.forEach(image => { %>
-                    <option value="<%= image.id %>" data-docker="<%= image.dockerImages %>" data-port-requirements='<%= image.portRequirements || "[]" %>'><%= image.name %></option>
-                    <% }); %>
+            </div>
+
+            <div class="pt-4 border-t border-white/5 flex justify-between">
+              <button onclick="prevStep(1)" class="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-neutral-300 hover:bg-white/10 text-xs font-bold transition cursor-pointer">Back</button>
+              <button onclick="nextStep(3)" class="px-5 py-2.5 rounded-xl bg-brand-green text-black hover:bg-brand-green-hover text-xs font-bold transition cursor-pointer">Continue to Resources</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- WIZARD STEP 3: RESOURCES -->
+        <div class="wizard-pane space-y-6 hidden" data-step="3">
+          <%- include('../components/ui/Card', { hover: false, class: 'p-6 border border-white/5 space-y-6' }) %>
+            <div>
+              <h2 class="text-base font-bold text-white">Adjust Resource Cappings</h2>
+              <p class="text-xs text-neutral-400 mt-0.5">Configure hardware memory bounds, CPU allocations, and storage size limits.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 pt-2">
+              <!-- Memory (RAM) -->
+              <div class="space-y-2">
+                <label class="form-label flex items-center gap-1.5 text-neutral-300">
+                  <%- icon('server', { width: 14, height: 14 }) %>
+                  RAM (Memory)
+                </label>
+                <input type="hidden" id="Memory" value="1024">
+                <div class="flex items-stretch">
+                  <button type="button" class="stepper-btn border border-r-0 border-white/10 rounded-l-xl bg-white/5" data-action="dec" data-target="MemoryDisplay" data-step="128" data-min="128">−</button>
+                  <input id="MemoryDisplay" type="number" value="1024" min="128" class="stepper-input border-y border-white/10">
+                  <button type="button" class="stepper-btn border-y border-white/10 bg-white/5" data-action="inc" data-target="MemoryDisplay" data-step="128">+</button>
+                  <select id="MemoryUnit" class="select-unit">
+                    <option value="1" selected>MB</option>
+                    <option value="1024">GB</option>
                   </select>
-                  <div class="custom-select" data-for="imageId"></div>
                 </div>
-                <div>
-                  <label class="form-label">Docker variant</label>
-                  <select id="dockerImage" class="hidden">
-                    <option value="" disabled selected>Select an image first</option>
+                <p id="max-ram-label" class="text-[10px] text-neutral-500 font-semibold">Max Free Allocation: 1024 MB</p>
+              </div>
+
+              <!-- CPU -->
+              <div class="space-y-2">
+                <label class="form-label flex items-center gap-1.5 text-neutral-300">
+                  <%- icon('cpu', { width: 14, height: 14 }) %>
+                  CPU Cores (%)
+                </label>
+                <div class="stepper">
+                  <button type="button" class="stepper-btn" data-action="dec" data-target="Cpu" data-step="50" data-min="50">−</button>
+                  <input id="Cpu" type="number" value="100" min="50" max="100" class="stepper-input">
+                  <button type="button" class="stepper-btn" data-action="inc" data-target="Cpu" data-step="50" data-max="100">+</button>
+                </div>
+                <p id="max-cpu-label" class="text-[10px] text-neutral-500 font-semibold">Max Free Allocation: 100% (1 Core)</p>
+              </div>
+
+              <!-- Storage -->
+              <div class="space-y-2">
+                <label class="form-label flex items-center gap-1.5 text-neutral-300">
+                  <%- icon('hard-drive', { width: 14, height: 14 }) %>
+                  Disk Space (Storage)
+                </label>
+                <input type="hidden" id="Storage" value="5120">
+                <div class="flex items-stretch">
+                  <button type="button" class="stepper-btn border border-r-0 border-white/10 rounded-l-xl bg-white/5" data-action="dec" data-target="StorageDisplay" data-step="1" data-min="1">−</button>
+                  <input id="StorageDisplay" type="number" value="5" min="1" class="stepper-input border-y border-white/10">
+                  <button type="button" class="stepper-btn border-y border-white/10 bg-white/5" data-action="inc" data-target="StorageDisplay" data-step="1">+</button>
+                  <select id="StorageUnit" class="select-unit">
+                    <option value="1">MB</option>
+                    <option value="1024" selected>GB</option>
                   </select>
-                  <div class="custom-select" data-for="dockerImage"></div>
+                </div>
+                <p id="max-disk-label" class="text-[10px] text-neutral-500 font-semibold">Max Free Allocation: 5 GB</p>
+              </div>
+            </div>
+
+            <!-- Custom Port requirements indicator -->
+            <div class="pt-2">
+              <label class="form-label">Port Requirements</label>
+              <button type="button" id="assignPortsBtn" class="cs-trigger bg-white/5 border border-white/10 hover:bg-white/10">
+                <span id="assignPortsLabel">Inspect required ports</span>
+              </button>
+            </div>
+
+            <div class="pt-4 border-t border-white/5 flex justify-between">
+              <button onclick="prevStep(2)" class="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-neutral-300 hover:bg-white/10 text-xs font-bold transition cursor-pointer">Back</button>
+              <button onclick="nextStep(4)" class="px-5 py-2.5 rounded-xl bg-brand-green text-black hover:bg-brand-green-hover text-xs font-bold transition cursor-pointer">Continue to Summary</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- WIZARD STEP 4: SUMMARY & LAUNCH -->
+        <div class="wizard-pane space-y-6 hidden" data-step="4">
+          <div class="grid grid-cols-1 md:grid-cols-12 gap-6">
+            
+            <!-- Details fields -->
+            <div class="md:col-span-7 space-y-6">
+              <%- include('../components/ui/Card', { hover: false, class: 'p-6 border border-white/5 space-y-4' }) %>
+                <div>
+                  <h2 class="text-sm font-bold text-white">General Server Settings</h2>
+                  <p class="text-xs text-neutral-400 mt-0.5">Label your server so you can identify it in the panel dashboard.</p>
+                </div>
+                
+                <div class="space-y-4">
+                  <div class="space-y-1">
+                    <label class="form-label" for="serverName">Server Name</label>
+                    <input id="serverName" type="text" placeholder="My Minecraft World" maxlength="64" class="form-input">
+                  </div>
+                  <div class="space-y-1">
+                    <label class="form-label" for="serverDescription">Description <span class="text-neutral-500">(optional)</span></label>
+                    <input id="serverDescription" type="text" placeholder="Play with friends!" maxlength="128" class="form-input">
+                  </div>
                 </div>
               </div>
-              <div>
-                <label class="form-label">Ports</label>
-                <button type="button" id="assignPortsBtn" class="cs-trigger">
-                  <span id="assignPortsLabel">Assign ports</span>
+            </div>
+
+            <!-- Summary panel -->
+            <div class="md:col-span-5">
+              <%- include('../components/ui/Card', { hover: false, class: 'p-6 border border-brand-green/20 shadow-[0_0_20px_rgba(34,197,94,0.05)] space-y-6' }) %>
+                <div>
+                  <h3 class="text-xs font-bold uppercase tracking-widest text-brand-green">Launch Summary</h3>
+                  <h2 class="text-xl font-bold text-white mt-1">Ready for Deploy</h2>
+                </div>
+
+                <div class="space-y-3.5 text-xs text-neutral-300">
+                  <div class="flex justify-between">
+                    <span class="text-neutral-500">Plan Slot</span>
+                    <span class="text-white font-bold" id="summaryPlan">Free Plan</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-neutral-500">Node Location</span>
+                    <span class="text-white font-bold" id="summaryNode">Not Chosen</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-neutral-500">Memory Limit</span>
+                    <span class="text-white font-bold" id="summaryRAM">1024 MB</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-neutral-500">CPU Allocation</span>
+                    <span class="text-white font-bold" id="summaryCPU">100%</span>
+                  </div>
+                  <div class="flex justify-between">
+                    <span class="text-neutral-500">Deploy Duration</span>
+                    <span class="text-brand-green font-bold" id="summaryDeployTime">~15 seconds</span>
+                  </div>
+                </div>
+
+                <!-- Submit trigger -->
+                <button type="button" id="createBtn"
+                  class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-brand-green px-4 py-2.5 text-sm font-bold text-black hover:bg-brand-green-hover hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(34,197,94,0.35)] active:scale-95 transition-all duration-200 cursor-pointer">
+                  <span id="createBtnText">Launch Server</span>
+                  <span id="createBtnSpinner" class="hidden w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin"></span>
                 </button>
               </div>
             </div>
           </div>
 
-          </div><!-- /top grid -->
-
-          <!-- Resources -->
-          <div class="bg-neutral-50 dark:bg-neutral-800/20 rounded-xl border border-neutral-200 dark:border-white/5 overflow-hidden">
-            <div class="px-5 py-3.5 border-b border-neutral-200 dark:border-white/5">
-              <p class="text-sm font-medium text-neutral-800 dark:text-white">Resources</p>
-            </div>
-            <div class="p-5 grid grid-cols-3 gap-4">
-              <div>
-                <label class="form-label flex items-center gap-1.5">
-                  <%- icon('server', { width: 14, height: 14 }) %>
-                  RAM
-                </label>
-                <!-- hidden field always holds MB -->
-                <input type="hidden" id="Memory" value="512">
-                <div class="flex items-stretch gap-0">
-                  <button type="button" class="stepper-btn rounded-l-xl" data-action="dec" data-target="MemoryDisplay" data-step="128" data-min="1">−</button>
-                  <input id="MemoryDisplay" type="number" value="512" min="1" class="stepper-input flex-1">
-                  <button type="button" class="stepper-btn" data-action="inc" data-target="MemoryDisplay" data-step="128">+</button>
-                  <select id="MemoryUnit" class="rounded-r-xl text-xs px-2 py-1 bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-white border border-l-0 border-neutral-200 dark:border-white/10 cursor-pointer">
-                    <option value="1" selected>MB</option>
-                    <option value="1024">GB</option>
-                  </select>
-                </div>
-                <p class="text-[11px] text-neutral-400 mt-1.5">Max <%= resourceLimits.maxMemory %> MB</p>
-              </div>
-              <div>
-                <label class="form-label flex items-center gap-1.5">
-                  <%- icon('cpu', { width: 14, height: 14 }) %>
-                  CPU <span class="text-neutral-400 font-normal">(%)</span>
-                </label>
-                <div class="stepper">
-                  <button type="button" class="stepper-btn" data-action="dec" data-target="Cpu" data-step="50" data-min="50">−</button>
-                  <input id="Cpu" type="number" value="100" min="50" max="<%= resourceLimits.maxCpu %>" class="stepper-input">
-                  <button type="button" class="stepper-btn" data-action="inc" data-target="Cpu" data-step="50" data-max="<%= resourceLimits.maxCpu %>">+</button>
-                </div>
-                <p class="text-[11px] text-neutral-400 mt-1.5">50% = half a core. Max <%= resourceLimits.maxCpu %>%</p>
-              </div>
-              <div>
-                <label class="form-label flex items-center gap-1.5">
-                  <%- icon('hard-drive', { width: 14, height: 14 }) %>
-                  Storage
-                </label>
-                <!-- hidden field always holds MB -->
-                <input type="hidden" id="Storage" value="5120">
-                <div class="flex items-stretch gap-0">
-                  <button type="button" class="stepper-btn rounded-l-xl" data-action="dec" data-target="StorageDisplay" data-step="1" data-min="1">−</button>
-                  <input id="StorageDisplay" type="number" value="5" min="1" class="stepper-input flex-1">
-                  <button type="button" class="stepper-btn" data-action="inc" data-target="StorageDisplay" data-step="1">+</button>
-                  <select id="StorageUnit" class="rounded-r-xl text-xs px-2 py-1 bg-neutral-200 dark:bg-neutral-700 text-neutral-700 dark:text-white border border-l-0 border-neutral-200 dark:border-white/10 cursor-pointer">
-                    <option value="1">MB</option>
-                    <option value="1024" selected>GB</option>
-                  </select>
-                </div>
-                <p class="text-[11px] text-neutral-400 mt-1.5">Max <%= resourceLimits.maxStorage %> MB</p>
-              </div>
-            </div>
+          <!-- Error Banner -->
+          <div id="errorMsg" class="hidden rounded-xl bg-red-500/10 border border-red-500/20 px-5 py-4">
+            <p class="text-sm font-semibold text-red-400" id="errorText"></p>
           </div>
 
-          <!-- Error -->
-          <div id="errorMsg" class="hidden rounded-xl bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/20 px-4 py-3">
-            <p class="text-sm text-red-600 dark:text-red-400" id="errorText"></p>
+          <!-- Back button -->
+          <div class="flex">
+            <button onclick="prevStep(3)" class="px-5 py-2.5 rounded-xl bg-white/5 border border-white/10 text-neutral-300 hover:bg-white/10 text-xs font-bold transition cursor-pointer">Back</button>
           </div>
-
-          <!-- Submit -->
-          <div class="flex justify-end pt-1">
-            <button type="button" id="createBtn"
-              class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-6 py-2.5 text-sm font-medium shadow-sm transition flex items-center gap-2">
-              <span id="createBtnText">Create server</span>
-              <span id="createBtnSpinner" class="hidden w-4 h-4 border-2 border-white/30 dark:border-neutral-900/30 border-t-white dark:border-t-neutral-900 rounded-full animate-spin"></span>
-            </button>
-          </div>
-
         </div>
+
       </div>
     </div>
   </div>
 </main>
 
+<!-- Ports Inspection Modal -->
 <div class="confirm-overlay" id="portsOverlay">
-  <div class="confirm-box max-w-lg">
-    <p class="text-sm font-semibold text-neutral-800 dark:text-white mb-3">Assign ports</p>
+  <div class="confirm-box">
+    <div class="flex justify-between items-center pb-3 border-b border-white/5 mb-4">
+      <h3 class="text-sm font-bold text-white">Required Connection Ports</h3>
+      <button class="text-neutral-400 hover:text-white" onclick="document.getElementById('portsOverlay').classList.remove('open')">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>
+      </button>
+    </div>
     <div id="requiredPortsList" class="space-y-2"></div>
-    <div class="flex justify-end mt-4">
-      <button id="portsOk" class="px-4 py-2 rounded-lg text-sm font-medium bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 transition">OK</button>
+    <div class="flex justify-end mt-6">
+      <button id="portsOk" class="px-4 py-2 rounded-xl text-xs font-bold bg-white/5 border border-white/10 text-white hover:bg-white/10 transition cursor-pointer">Dismiss</button>
     </div>
   </div>
 </div>
 
-<!-- Custom confirm dialog -->
+<!-- Custom confirmation Modal -->
 <div class="confirm-overlay" id="confirmOverlay">
   <div class="confirm-box">
-    <p class="text-sm font-semibold text-neutral-800 dark:text-white mb-1" id="confirmTitle"></p>
-    <p class="text-xs text-neutral-500 mb-4" id="confirmBody"></p>
-    <div class="flex gap-2 justify-end">
-      <button id="confirmCancel" class="px-4 py-2 rounded-lg text-sm font-medium border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-400 bg-transparent hover:bg-neutral-100 dark:hover:bg-neutral-800 transition">Cancel</button>
-      <button id="confirmOk" class="px-4 py-2 rounded-lg text-sm font-medium bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 hover:bg-neutral-700 dark:hover:bg-neutral-200 transition">OK</button>
+    <h3 class="text-sm font-bold text-white mb-2" id="confirmTitle">Confirm</h3>
+    <p class="text-xs text-neutral-400 leading-relaxed mb-6" id="confirmBody"></p>
+    <div class="flex gap-2.5 justify-end">
+      <button id="confirmCancel" class="px-4 py-2 rounded-xl text-xs font-bold bg-transparent text-neutral-400 border border-white/10 hover:bg-white/5 cursor-pointer">Cancel</button>
+      <button id="confirmOk" class="px-4 py-2 rounded-xl text-xs font-bold bg-brand-green text-black hover:bg-brand-green-hover cursor-pointer">Confirm</button>
     </div>
   </div>
 </div>
 
 <%- include('../components/toast') %>
 <%- include('../components/loadingPopup') %>
+
+<script nonce="<%- nonce %>">
+  let activeWizardStep = 1;
+  window.activePlan = 'free';
+
+  // Resource ceilings based on Plan
+  const LIMITS = {
+    free: {
+      maxMemory: 1024,
+      maxCpu: 100,
+      maxStorage: 5, // in GB
+    },
+    premium: {
+      maxMemory: <%= resourceLimits.maxMemory %>,
+      maxCpu: <%= resourceLimits.maxCpu %>,
+      maxStorage: <%= Math.round(resourceLimits.maxStorage / 1024) %>,
+    }
+  };
+
+  function selectPlan(plan) {
+    window.activePlan = plan;
+    
+    // Toggle selector cards UI
+    const cardFree = document.getElementById('plan-card-free');
+    const cardPrem = document.getElementById('plan-card-premium');
+    const dotFree = document.getElementById('plan-dot-free');
+    const dotPrem = document.getElementById('plan-dot-premium');
+
+    if (plan === 'free') {
+      cardFree.classList.add('border-brand-green/20', 'bg-brand-green/[0.02]');
+      cardPrem.classList.remove('border-brand-green/20', 'bg-brand-green/[0.02]');
+      cardPrem.classList.add('border-white/5');
+      dotFree.classList.remove('bg-transparent');
+      dotFree.classList.add('bg-brand-green');
+      dotPrem.classList.remove('bg-brand-green');
+      dotPrem.classList.add('bg-transparent');
+
+      // Adjust slider values to Free caps
+      document.getElementById('Cpu').value = 100;
+      document.getElementById('Cpu').max = 100;
+      document.getElementById('MemoryDisplay').value = 1024;
+      document.getElementById('MemoryUnit').value = 1;
+      document.getElementById('Memory').value = 1024;
+      document.getElementById('StorageDisplay').value = 5;
+      document.getElementById('StorageUnit').value = 1024;
+      document.getElementById('Storage').value = 5120;
+    } else {
+      cardPrem.classList.add('border-brand-green/20', 'bg-brand-green/[0.02]');
+      cardFree.classList.remove('border-brand-green/20', 'bg-brand-green/[0.02]');
+      cardFree.classList.add('border-white/5');
+      dotPrem.classList.remove('bg-transparent');
+      dotPrem.classList.add('bg-brand-green');
+      dotFree.classList.remove('bg-brand-green');
+      dotFree.classList.add('bg-transparent');
+
+      // Adjust slider values to Premium caps
+      document.getElementById('Cpu').max = LIMITS.premium.maxCpu;
+      document.getElementById('Cpu').value = Math.min(200, LIMITS.premium.maxCpu);
+    }
+
+    // Update resource sub-labels
+    document.getElementById('max-ram-label').textContent = 'Max Allocation: ' + LIMITS[plan].maxMemory + ' MB';
+    document.getElementById('max-cpu-label').textContent = 'Max Allocation: ' + LIMITS[plan].maxCpu + '%';
+    document.getElementById('max-disk-label').textContent = 'Max Allocation: ' + LIMITS[plan].maxStorage + ' GB';
+  }
+
+  function nextStep(step) {
+    // Basic validation before shifting step
+    if (step === 2) {
+      const img = document.getElementById('imageId').value;
+      const variant = document.getElementById('dockerImage').value;
+      if (!img || !variant) {
+        if (typeof showToast === 'function') {
+          showToast('Please select software image and version first.', 'error');
+        }
+        return;
+      }
+    }
+    
+    if (step === 3) {
+      const node = document.getElementById('nodeId').value;
+      if (!node) {
+        if (typeof showToast === 'function') {
+          showToast('Please choose a node location for deployment.', 'error');
+        }
+        return;
+      }
+    }
+
+    if (step === 4) {
+      // Compile final launch summary
+      const planName = activePlan === 'free' ? 'Free Slot Plan' : 'Premium Dedicated Plan';
+      const nodeSelect = document.getElementById('nodeId');
+      const nodeName = nodeSelect.options[nodeSelect.selectedIndex]?.text || 'Not chosen';
+      const ramVal = document.getElementById('Memory').value + ' MB';
+      const cpuVal = document.getElementById('Cpu').value + '%';
+      const deployTime = activePlan === 'free' ? '~15 seconds (queued)' : '~2 seconds (direct)';
+
+      document.getElementById('summaryPlan').textContent = planName;
+      document.getElementById('summaryNode').textContent = nodeName;
+      document.getElementById('summaryRAM').textContent = ramVal;
+      document.getElementById('summaryCPU').textContent = cpuVal;
+      document.getElementById('summaryDeployTime').textContent = deployTime;
+    }
+
+    // Hide all panes
+    document.querySelectorAll('.wizard-pane').forEach(p => p.classList.add('hidden'));
+    
+    // Show target step
+    document.querySelector('.wizard-pane[data-step="' + step + '"]').classList.remove('hidden');
+    
+    // Update WizardStep indicators
+    updateWizardStepsUI(step);
+      
+    activeWizardStep = step;
+  }
+
+  function prevStep(step) {
+    document.querySelectorAll('.wizard-pane').forEach(p => p.classList.add('hidden'));
+    document.querySelector('.wizard-pane[data-step="' + step + '"]').classList.remove('hidden');
+    
+    // Update WizardStep indicators
+    updateWizardStepsUI(step);
+
+    activeWizardStep = step;
+  }
+
+  function updateWizardStepsUI(step) {
+    const stepNumbers = [1, 2, 3, 4];
+    stepNumbers.forEach(num => {
+      const el = document.querySelector('[data-step-indicator="' + num + '"]');
+      const text = document.querySelector('[data-step-text="' + num + '"]');
+      const line = document.querySelector('[data-step-line="' + num + '"]');
+      
+      if (!el) return;
+
+      if (step === num) {
+        el.className = "w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs bg-brand-green text-black shadow-[0_0_15px_rgba(34,197,94,0.4)] transition-all duration-300";
+        if(text) text.className = "text-xs font-semibold uppercase tracking-wider text-white transition-all duration-300";
+      } else if (step > num) {
+        el.className = "w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs bg-brand-green/20 text-brand-green border border-brand-green/30 transition-all duration-300";
+        if(text) text.className = "text-xs font-semibold uppercase tracking-wider text-neutral-500 transition-all duration-300";
+      } else {
+        el.className = "w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs bg-white/5 text-neutral-500 border border-white/5 transition-all duration-300";
+        if(text) text.className = "text-xs font-semibold uppercase tracking-wider text-neutral-500 transition-all duration-300";
+      }
+
+      if (line) {
+        if (step > num) {
+          line.className = "flex-1 h-[1px] mx-4 bg-brand-green/20 transition-all duration-300";
+        } else {
+          line.className = "flex-1 h-[1px] mx-4 bg-white/5 transition-all duration-300";
+        }
+      }
+    });
+  }
+</script>
 
 <script nonce="<%- nonce %>" src="/javascript/create-server.js"></script>
 

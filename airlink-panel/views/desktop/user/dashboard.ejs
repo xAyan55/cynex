@@ -1,233 +1,202 @@
-<%- include('../components/header', { title: 'Servers' }) %>
+<%- include('../components/header', { title: 'Dashboard' }) %>
 
 <style>
   ::-webkit-scrollbar { display: none; }
   @keyframes al-view-in { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:translateY(0); } }
-  .vt-active { background: var(--theme-bg-input, white); color: var(--theme-text-strong, #171717); box-shadow: 0 1px 3px var(--theme-border-subtle, rgba(0,0,0,0.08)); }
-  .dark .vt-active { background: var(--theme-bg-active-nav, rgba(255,255,255,0.08)); color: var(--theme-text-strong, white); }
-  .fc-fc-drag-over { border-color: var(--theme-warning, #f59e0b) !important; background: var(--theme-warning-bg, rgba(245,158,11,0.06)) !important; box-shadow: 0 0 0 2px var(--theme-warning-bg, rgba(245,158,11,0.25)) !important; }
-  .dark .fc-fc-drag-over { border-color: var(--theme-warning, #f59e0b) !important; background: var(--theme-warning-bg, rgba(245,158,11,0.08)) !important; }
-  .sc-dragging { opacity: 0.4; transform: scale(0.97); box-shadow: none !important; }
+  .vt-active { background: rgba(255, 255, 255, 0.08) !important; color: white !important; }
+  .fc-fc-drag-over { border-color: #22c55e !important; background: rgba(34, 197, 94, 0.08) !important; box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.2) !important; }
+  .sc-dragging { opacity: 0.45; transform: scale(0.97); box-shadow: none !important; }
   .ov-open { opacity: 1 !important; pointer-events: auto !important; }
-  .pop-transform { transform: scale(1); opacity: 1; }
 </style>
 
-<main class="h-screen m-auto">
+<main class="h-screen m-auto bg-[#07070a] text-white">
   <div class="flex h-screen">
     <div class="w-60 h-full"><%- include('../components/template') %></div>
 
     <div id="page-content" class="flex-1 overflow-y-auto pt-16">
-      <div class="px-12 pt-6 pb-8">
+      <div class="px-12 pt-8 pb-12 space-y-8">
 
-        <!-- Header -->
-        <div class="flex items-center justify-between mb-6">
+        <!-- Top Overview Stats Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <% 
+            const totalCount = servers.length;
+            const onlineCount = servers.filter(s => s.status === 'running').length;
+            const totalMemoryAllocated = servers.reduce((sum, s) => sum + s.Memory, 0);
+            const ramText = totalMemoryAllocated >= 1024 ? `${(totalMemoryAllocated/1024).toFixed(1)} GB` : `${totalMemoryAllocated} MB`;
+          %>
+          <%- include('../components/ui/StatCard', { title: 'Total Servers', value: totalCount, icon: 'server', color: 'green' }) %>
+          <%- include('../components/ui/StatCard', { title: 'Online Servers', value: onlineCount, icon: 'activity', color: 'purple' }) %>
+          <%- include('../components/ui/StatCard', { title: 'Memory Allocated', value: ramText, icon: 'cpu', color: 'blue' }) %>
+        </div>
+
+        <!-- Header Controls Row -->
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/[0.01] border border-white/5 p-6 rounded-2xl">
           <div>
-            <h1 class="text-base font-medium text-neutral-800 dark:text-white"><%= req.translations.userDashboardTitle %></h1>
-            <p class="text-sm text-neutral-500 mt-0.5"><%= req.translations.userDashboardText %></p>
+            <h1 class="text-xl font-bold tracking-tight text-white"><%= req.translations.userDashboardTitle || "My Servers" %></h1>
+            <p class="text-sm text-neutral-400 mt-1"><%= req.translations.userDashboardText || "Provision, access, and manage your servers." %></p>
           </div>
-          <div class="flex items-center gap-2">
+          
+          <div class="flex items-center gap-3 w-full sm:w-auto">
             <% if (canCreateServer) { %>
-            <a href="/create-server" class="flex min-h-10 items-center gap-1.5 px-3 py-2 rounded-xl bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 text-sm font-medium hover:bg-neutral-700 dark:hover:bg-neutral-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-900 dark:focus-visible:ring-white focus-visible:ring-offset-2 dark:focus-visible:ring-offset-neutral-950 transition">
-              <%- icon('plus', { class: 'h-4 w-4' }) %>
-              New server
-            </a>
+              <%- include('../components/ui/Button', { variant: 'primary', label: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Create Server', href: '/create-server' }) %>
             <% } %>
-            <button id="newFolderBtn" class="flex min-h-10 items-center gap-1.5 px-3 py-2 rounded-xl border border-neutral-200 dark:border-neutral-700 text-neutral-600 dark:text-neutral-300 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-800 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-neutral-950 transition">
-              <%- icon('folder-plus', { class: 'h-4 w-4', strokeWidth: 1.5 }) %>
-              New folder
+            
+            <button id="newFolderBtn" class="inline-flex items-center gap-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 hover:text-white px-4 py-2.5 text-sm font-semibold transition-all cursor-pointer">
+              <svg class="w-4 h-4 text-neutral-400" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6m-9 1V4a2 2 0 012-2h6l2 2h7a2 2 0 012 2v10a2 2 0 01-2 2H5a2 2 0 01-2-2z"/></svg>
+              New Folder
             </button>
+
             <% if (servers && servers.length > 0) { %>
-            <div class="flex items-center gap-1 bg-neutral-100 dark:bg-neutral-800/60 p-1 rounded-xl border border-neutral-200 dark:border-white/5">
-              <button id="gridViewBtn" class="vt-active min-h-9 px-3 py-1.5 text-sm font-medium rounded-lg flex items-center gap-1.5 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-white/5 hover:text-neutral-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 transition-colors">
-                <%- icon('grid-2x2', { class: 'h-4 w-4' }) %>
-                Grid
-              </button>
-              <button id="listViewBtn" class="min-h-9 px-3 py-1.5 text-sm font-medium rounded-lg flex items-center gap-1.5 text-neutral-500 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-white/5 hover:text-neutral-900 dark:hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500 transition-colors">
-                <%- icon('list', { class: 'h-4 w-4' }) %>
-                List
-              </button>
-            </div>
+              <div class="flex items-center gap-1 bg-white/5 p-1 rounded-xl border border-white/5">
+                <button id="gridViewBtn" class="vt-active p-1.5 rounded-lg text-neutral-400 hover:text-white transition duration-200 cursor-pointer" title="Grid View">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                </button>
+                <button id="listViewBtn" class="p-1.5 rounded-lg text-neutral-400 hover:text-white transition duration-200 cursor-pointer" title="List View">
+                  <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16"/></svg>
+                </button>
+              </div>
             <% } %>
           </div>
         </div>
 
-        <!-- Alerts -->
+        <!-- Alert notifications -->
         <% if (req.query.err === 'NOTACTIVEYET') { %>
-        <div class="rounded-xl bg-amber-50 dark:bg-amber-800/10 border border-amber-200 dark:border-amber-500/20 px-4 py-3 mb-5">
-          <p class="text-sm font-medium text-amber-700 dark:text-amber-400"><%= req.translations.awaitingInstallation || "This server's still getting its act together. Check back in a moment." %></p>
-          <p class="text-xs text-amber-600 dark:text-amber-400/60 mt-0.5"><%= req.translations.awaitingInstallationDesc || "The server isn't installed yet or is in a failed state." %></p>
-        </div>
+          <div class="rounded-xl bg-amber-500/10 border border-amber-500/20 px-5 py-4">
+            <p class="text-sm font-semibold text-amber-400">Server is currently deploying.</p>
+            <p class="text-xs text-neutral-400 mt-1">This server is pulling the Docker configuration. It will be online shortly.</p>
+          </div>
         <% } %>
         <% if (req.query.err === 'SERVER_LIMIT_REACHED') { %>
-        <div class="rounded-xl bg-amber-50 dark:bg-amber-800/10 border border-amber-200 dark:border-amber-500/20 px-4 py-3 mb-5">
-          <p class="text-sm font-medium text-amber-700 dark:text-amber-400">You've hit your server limit — talk to your admin if you need more room.</p>
-          <p class="text-xs text-amber-600 dark:text-amber-400/60 mt-0.5">You have reached the maximum number of servers allowed.</p>
-        </div>
+          <div class="rounded-xl bg-red-500/10 border border-red-500/20 px-5 py-4">
+            <p class="text-sm font-semibold text-red-400">Server Limit Reached.</p>
+            <p class="text-xs text-neutral-400 mt-1">You have reached the server creation slots allowed for this plan tier. Upgrade to gain more slots.</p>
+          </div>
         <% } %>
         <% if (typeof daemonOffline !== 'undefined' && daemonOffline) { %>
-        <div class="rounded-xl bg-red-50 dark:bg-red-800/10 border border-red-200 dark:border-red-500/20 px-4 py-3 mb-5">
-          <p class="text-sm font-medium text-red-700 dark:text-red-400"><%= req.translations.connectionError || 'Connection Error' %></p>
-          <p class="text-xs text-red-600 dark:text-red-400/60 mt-0.5"><%= req.translations.connectionErrorDesc || 'One or more nodes are offline.' %></p>
-          <button onclick="window.location.reload()" class="mt-2 px-3 py-1 bg-red-600 text-white text-xs rounded-lg transition-colors"><%= req.translations.retry || 'Retry' %></button>
-        </div>
+          <div class="rounded-xl bg-red-500/10 border border-red-500/20 px-5 py-4 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
+            <div>
+              <p class="text-sm font-semibold text-red-400">Node Connectivity Warning</p>
+              <p class="text-xs text-neutral-400 mt-1">One or more of the server nodes are unreachable. Some metrics may temporarily fail to load.</p>
+            </div>
+            <button onclick="window.location.reload()" class="px-4 py-2 bg-red-500 hover:bg-red-600 text-black text-xs font-bold rounded-xl transition cursor-pointer">Retry Connection</button>
+          </div>
         <% } %>
 
         <% if (servers.length === 0 && (!folders || folders.length === 0)) { %>
-        <div class="flex flex-col items-center justify-center mt-32 text-center">
-          <%- icon('server', { class: 'h-16 w-16 text-neutral-200 dark:text-neutral-700 mb-4' }) %>
-          <h2 class="text-base font-medium text-neutral-800 dark:text-white"><%= req.translations.noServersYet || "It's quiet here — suspiciously quiet." %></h2>
-          <p class="text-sm text-neutral-500 mt-1">
-            <% if (user.isAdmin) { %><a href="/admin/servers/create" class="text-blue-500"><%= req.translations.createOneNow || 'Create one now' %></a>
-            <% } else if (canCreateServer) { %><a href="/create-server" class="text-blue-500">Create your first server</a>
-            <% } else { %>An admin will assign one to you.<% } %>
-          </p>
-        </div>
+          <div class="flex flex-col items-center justify-center py-20 text-center cynex-glass rounded-2xl border border-white/5">
+            <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+              <%- icon('server', { class: 'h-8 w-8 text-neutral-400' }) %>
+            </div>
+            <h2 class="text-base font-bold text-white">No Minecraft Servers Found</h2>
+            <p class="text-sm text-neutral-400 mt-2 max-w-sm">
+              Deploy your first free server slot instantly or ask your panel administrator to allocate one for you.
+            </p>
+            <% if (canCreateServer) { %>
+              <%- include('../components/ui/Button', { variant: 'primary', label: 'Create a Server Now', href: '/create-server', class: 'mt-6' }) %>
+            <% } %>
+          </div>
         <% } else { %>
 
-        <!-- ── Folders ──────────────────────────────────────── -->
-        <% if (folders && folders.length > 0) { %>
-        <div class="mb-8">
-          <p class="text-xs font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-3">Folders</p>
-          <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-3" id="folderGrid">
-            <% let folderIdx = 0; folders.forEach(folder => { %>
-            <div class="flex items-center gap-3 bg-white dark:bg-white/[0.03] border border-neutral-200 dark:border-white/[0.07] rounded-xl px-3.5 py-3 cursor-pointer relative transition-[background,border-color,box-shadow] select-none hover:bg-neutral-100 dark:hover:bg-white/[0.06] hover:border-neutral-300 dark:hover:border-white/[0.12] hover:shadow-sm group"
-              role="button"
-              tabindex="0"
-              aria-label="Open folder <%= folder.name %>"
-              style="--i:<%= folderIdx++ %>"
-              data-folder-id="<%= folder.id %>"
-              data-folder-name="<%= folder.name %>"
-              data-folder-members='<%= JSON.stringify(folder.members.map(m => m.serverUUID)) %>'>
-              <%- icon('folder', { class: 'h-5 w-5 text-amber-500 shrink-0', fill: 'currentColor' }) %>
-              <div class="min-w-0 flex-1">
-                <p class="text-sm font-medium text-neutral-800 dark:text-white truncate"><%= folder.name %></p>
-                <p class="text-xs text-neutral-400 dark:text-neutral-500 mt-0.5"><%= folder.members.length %> server<%= folder.members.length !== 1 ? 's' : '' %></p>
+          <!-- Folders list -->
+          <% if (folders && folders.length > 0) { %>
+            <div class="space-y-4">
+              <p class="text-xs font-bold uppercase tracking-wider text-neutral-500">Folders</p>
+              <div class="grid grid-cols-2 sm:grid-cols-3 xl:grid-cols-4 gap-4" id="folderGrid">
+                <% let folderIdx = 0; folders.forEach(folder => { %>
+                  <div class="flex items-center gap-4 cynex-glass border border-white/5 rounded-2xl px-5 py-4 cursor-pointer relative transition duration-300 hover:border-white/15 select-none group"
+                    role="button"
+                    tabindex="0"
+                    aria-label="Open folder <%= folder.name %>"
+                    style="--i:<%= folderIdx++ %>"
+                    data-folder-id="<%= folder.id %>"
+                    data-folder-name="<%= folder.name %>"
+                    data-folder-members='<%= JSON.stringify(folder.members.map(m => m.serverUUID)) %>'>
+                    <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400 shrink-0">
+                      <%- icon('folder', { class: 'h-5 w-5 shrink-0', fill: 'currentColor' }) %>
+                    </div>
+                    <div class="min-w-0 flex-1">
+                      <p class="text-sm font-bold text-white truncate"><%= folder.name %></p>
+                      <p class="text-xs text-neutral-400 mt-0.5"><%= folder.members.length %> Server<%= folder.members.length !== 1 ? 's' : '' %></p>
+                    </div>
+                  </div>
+                <% }); %>
               </div>
-
+              <p class="text-xs text-neutral-500">Tip: Drag and drop a server card onto a folder to organize your workspaces.</p>
             </div>
-            <% }); %>
-          </div>
-          <p class="text-xs text-neutral-400 dark:text-neutral-500 mt-2">Drag a server card onto a folder to add it</p>
-        </div>
-        <% } %>
+          <% } %>
 
-        <!-- ── Servers header ───────────────────────────────── -->
-        <p class="text-xs font-medium text-neutral-400 dark:text-neutral-500 uppercase tracking-wider mb-3">Servers</p>
+          <!-- Servers Grid view -->
+          <div class="space-y-4">
+            <p class="text-xs font-bold uppercase tracking-wider text-neutral-500">Servers</p>
+            
+            <div id="gridView" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+              <% let serverIdx = 0; servers.forEach(server => { %>
+                <%
+                  const inFolder = folders && folders.some(f => f.members.some(m => m.serverUUID === server.UUID));
+                  if (inFolder) return;
+                %>
+                <!-- Render EJS server card component -->
+                <div class="cursor-grab active:cursor-grabbing"
+                  data-server-uuid="<%= server.UUID %>"
+                  data-server-name="<%= server.name %>"
+                  style="--i:<%= serverIdx++ %>"
+                  draggable="true">
+                  <%- include('../components/ui/ServerCard', { server }) %>
+                </div>
+              <% }); %>
+            </div>
 
-        <!-- Grid view -->
-        <div id="gridView" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 mb-6">
-          <% let serverIdx = 0; servers.forEach(server => { %>
-          <%
-            const inFolder = folders && folders.some(f => f.members.some(m => m.serverUUID === server.UUID));
-            if (inFolder) return;
-          %>
-          <div class="group relative block bg-white dark:bg-neutral-800/20 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm p-4 cursor-grab hover:border-neutral-300 dark:hover:border-white/10 hover:shadow-md dark:hover:shadow-none transition-[box-shadow,transform,border-color] duration-150 active:cursor-grabbing"
-            data-server-uuid="<%= server.UUID %>"
-            data-server-name="<%= server.name %>"
-            style="--i:<%= serverIdx++ %>"
-            draggable="true">
-            <a href="../server/<%= server.UUID %>" class="block">
-              <div class="flex items-start justify-between mb-3">
-                <div class="min-w-0 flex-1 mr-3">
-                  <h3 class="text-sm font-medium text-neutral-900 dark:text-white truncate"><%= server.name %></h3>
-                  <% if (server.description) { %>
-                    <p class="text-xs text-neutral-500 dark:text-neutral-400 mt-0.5 truncate"><%= server.description %></p>
-                  <% } else { %>
-                    <p class="text-xs text-neutral-400 mt-0.5 truncate italic"><%= req.translations.noDescription || 'No description' %></p>
-                  <% } %>
-                </div>
-                <span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium rounded-md shrink-0 <%= server.status === 'running' ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30' : 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20' %>">
-                  <span class="relative flex h-1.5 w-1.5">
-                    <% if (server.status === 'running') { %>
-                      <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span>
-                    <% } else { %>
-                      <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-rose-500"></span>
-                    <% } %>
-                  </span>
-                  <%= server.status === 'running' ? 'Running' : 'Stopped' %>
-                </span>
-              </div>
-              <div class="flex gap-3 mb-3">
-                <div class="flex-1 bg-neutral-100 dark:bg-neutral-700/30 rounded-lg px-3 py-2">
-                  <p class="text-[10px] text-neutral-500 dark:text-neutral-400 mb-0.5">RAM</p>
-                  <p class="text-sm font-medium text-neutral-700 dark:text-neutral-300"><%= Math.round(server.ramUsage) %>%</p>
-                </div>
-                <div class="flex-1 bg-neutral-100 dark:bg-neutral-700/30 rounded-lg px-3 py-2">
-                  <p class="text-[10px] text-neutral-500 dark:text-neutral-400 mb-0.5">CPU</p>
-                  <p class="text-sm font-medium text-neutral-700 dark:text-neutral-300"><%= Math.round(server.cpuUsage) %>%</p>
-                </div>
-                <div class="flex-1 bg-neutral-100 dark:bg-neutral-700/30 rounded-lg px-3 py-2">
-                  <p class="text-[10px] text-neutral-500 dark:text-neutral-400 mb-0.5">Used</p>
-                  <p class="text-sm font-medium text-neutral-700 dark:text-neutral-300"><%= server.ramUsed || '0MB' %></p>
-                </div>
-              </div>
-              <div class="flex items-center justify-between pt-2 border-t border-neutral-100 dark:border-white/5">
-                <div class="flex items-center gap-1.5 min-w-0">
-                  <img class="h-4 w-4 rounded-full shrink-0" src="<%= server.owner && server.owner.avatar ? server.owner.avatar : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' + encodeURIComponent(server.owner ? server.owner.username : 'unknown') %>" alt="">
-                  <span class="text-xs text-neutral-500 dark:text-neutral-400 truncate"><%= server.owner ? server.owner.username : 'Unknown' %></span>
-                </div>
-                <% if (server.node) { %>
-                <span class="text-xs text-neutral-400 dark:text-neutral-500 shrink-0 ml-2 truncate max-w-[6rem]"><%= server.node.name || server.node.address %></span>
+            <!-- List view -->
+            <div id="listView" class="cynex-glass rounded-2xl border border-white/5 overflow-hidden shadow-2xl hidden">
+              <table class="min-w-full divide-y divide-white/5">
+                <thead class="bg-white/[0.02]">
+                  <tr>
+                    <th class="py-4 pl-6 pr-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Server</th>
+                    <th class="px-3 py-4 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Status</th>
+                    <th class="px-3 py-4 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Owner</th>
+                    <th class="px-3 py-4 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">RAM Usage</th>
+                    <th class="px-3 py-4 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">CPU Allocation</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                  <% let listIdx = 0; servers.forEach(server => { %>
+                    <% const inFolderL = folders && folders.some(f => f.members.some(m => m.serverUUID === server.UUID)); if (inFolderL) return; %>
+                    <tr style="--i:<%= listIdx++ %>" data-href="../server/<%= server.UUID %>" role="link" tabindex="0" class="hover:bg-white/[0.02] cursor-pointer transition-colors">
+                      <td class="py-4 pl-6 pr-3 flex items-center gap-3">
+                        <div class="p-2 bg-brand-green/10 rounded-lg text-brand-green">
+                          <%- icon('terminal', { class: 'w-4 h-4' }) %>
+                        </div>
+                        <div>
+                          <p class="text-sm font-bold text-white truncate"><%= server.name %></p>
+                          <% if (server.description) { %><p class="text-xs text-neutral-400 truncate max-w-xs"><%= server.description %></p><% } %>
+                        </div>
+                      </td>
+                      <td class="px-3 py-4">
+                        <%- include('../components/ui/Badge', { status: server.status, label: server.status === 'running' ? 'Online' : 'Offline' }) %>
+                      </td>
+                      <td class="px-3 py-4 text-sm font-medium text-neutral-300"><%= server.owner ? server.owner.username : 'Unknown' %></td>
+                      <td class="px-3 py-4 text-sm font-medium text-neutral-300"><%= Math.round(Number(server.ramUsage || 0)) %>%</td>
+                      <td class="px-3 py-4 text-sm font-medium text-neutral-300"><%= Math.round(Number(server.cpuUsage || 0)) %>%</td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <% if (totalPages > 1) { %>
+              <div class="flex items-center justify-center gap-4 mt-8">
+                <% if (currentPage > 1) { %>
+                  <a href="/dashboard?page=<%= currentPage - 1 %>" class="px-4 py-2 text-xs font-bold text-neutral-300 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all">Prev</a>
+                <% } %>
+                <span class="text-xs font-semibold text-neutral-400"><%= currentPage %> / <%= totalPages %></span>
+                <% if (currentPage < totalPages) { %>
+                  <a href="/dashboard?page=<%= currentPage + 1 %>" class="px-4 py-2 text-xs font-bold text-neutral-300 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all">Next</a>
                 <% } %>
               </div>
-            </a>
-            <!-- Right-click context menu -->
-            <div class="server-ctx-menu hidden absolute z-40 top-2 right-2 bg-white dark:bg-neutral-900 border border-neutral-200 dark:border-white/10 rounded-xl shadow-lg py-1 w-44">
-              <button class="ctx-add-to-folder w-full text-left px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-white/5 transition rounded-t-xl" data-uuid="<%= server.UUID %>">Add to folder</button>
-              <button class="ctx-remove-from-folder w-full text-left px-3 py-2 text-sm text-neutral-700 dark:text-neutral-300 hover:bg-neutral-100 dark:hover:bg-white/5 transition rounded-b-xl" data-uuid="<%= server.UUID %>" style="display:<%= (folders && folders.some(f => f.members.some(m => m.serverUUID === server.UUID))) ? '' : 'none' %>">Remove from folder</button>
-            </div>
+            <% } %>
+
           </div>
-          <% }); %>
-        </div>
-
-        <!-- List view -->
-        <div id="listView" class="rounded-xl border border-neutral-200 dark:border-white/5 overflow-hidden shadow-sm hidden mb-6">
-          <table class="min-w-full divide-y divide-neutral-200 dark:divide-white/5">
-            <thead class="bg-neutral-50 dark:bg-neutral-800/20">
-              <tr>
-                <th class="py-3 pl-6 pr-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400">Server</th>
-                <th class="px-3 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400">Status</th>
-                <th class="px-3 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400">Owner</th>
-                <th class="px-3 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400">RAM</th>
-                <th class="px-3 py-3 text-left text-xs font-medium text-neutral-500 dark:text-neutral-400">CPU</th>
-              </tr>
-            </thead>
-            <tbody class="divide-y divide-neutral-100 dark:divide-white/5 bg-white dark:bg-transparent">
-              <% let listIdx = 0; servers.forEach(server => { %>
-              <% const inFolderL = folders && folders.some(f => f.members.some(m => m.serverUUID === server.UUID)); if (inFolderL) return; %>
-              <tr style="--i:<%= listIdx++ %>" data-href="../server/<%= server.UUID %>" role="link" tabindex="0" class="hover:bg-neutral-50 dark:hover:bg-white/5 cursor-pointer transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-neutral-500">
-                <td class="py-3.5 pl-6 pr-3">
-                  <p class="text-sm font-medium text-neutral-900 dark:text-white truncate"><%= server.name %></p>
-                  <% if (server.description) { %><p class="text-xs text-neutral-500 dark:text-neutral-400 truncate max-w-xs"><%= server.description %></p><% } %>
-                </td>
-                <td class="px-3 py-3.5">
-                  <span class="inline-flex items-center gap-1.5 px-2 py-0.5 text-xs font-medium rounded-md <%= server.status === 'running' ? 'bg-emerald-50 dark:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30' : 'bg-rose-50 dark:bg-rose-500/10 text-rose-600 dark:text-rose-400 border border-rose-200 dark:border-rose-500/20' %>">
-                    <span class="relative flex h-1.5 w-1.5"><% if (server.status === 'running') { %><span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-emerald-500"></span><% } else { %><span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-rose-500"></span><% } %></span>
-                    <%= server.status === 'running' ? 'Running' : 'Stopped' %>
-                  </span>
-                </td>
-                <td class="px-3 py-3.5 text-sm text-neutral-600 dark:text-neutral-300"><%= server.owner ? server.owner.username : 'Unknown' %></td>
-                <td class="px-3 py-3.5 text-sm text-neutral-600 dark:text-neutral-300"><%= Math.round(server.ramUsage) %>%</td>
-                <td class="px-3 py-3.5 text-sm text-neutral-600 dark:text-neutral-300"><%= Math.round(server.cpuUsage) %>%</td>
-              </tr>
-              <% }); %>
-            </tbody>
-          </table>
-        </div>
-
-        <% if (totalPages > 1) { %>
-        <div class="flex items-center justify-center gap-3 mt-2">
-          <% if (currentPage > 1) { %>
-          <a href="/?page=<%= currentPage - 1 %>" class="px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800/60 border border-neutral-200 dark:border-white/5 rounded-xl hover:bg-neutral-200 dark:hover:bg-neutral-700/60 transition"><%= req.translations.prev || 'Prev' %></a>
-          <% } %>
-          <span class="text-sm text-neutral-500"><%= currentPage %> / <%= totalPages %></span>
-          <% if (currentPage < totalPages) { %>
-          <a href="/?page=<%= currentPage + 1 %>" class="px-4 py-2 text-sm font-medium text-neutral-700 dark:text-neutral-300 bg-neutral-100 dark:bg-neutral-800/60 border border-neutral-200 dark:border-white/5 rounded-xl hover:bg-neutral-200 dark:hover:bg-neutral-700/60 transition"><%= req.translations.next || 'Next' %></a>
-          <% } %>
-        </div>
-        <% } %>
-
         <% } %>
       </div>
     </div>
@@ -235,53 +204,52 @@
 </main>
 
 <!-- Drag ghost element -->
-<div id="drag-ghost" class="fixed z-[70] pointer-events-none bg-white dark:bg-neutral-800 border border-neutral-200 dark:border-white/10 rounded-xl px-3.5 py-2.5 text-[13px] font-medium text-neutral-900 dark:text-neutral-100 shadow-[0_8px_24px_rgba(0,0,0,0.18)] flex items-center gap-2 opacity-95 max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis" style="display:none; transform:rotate(2deg)">
-  <%- icon('folder', { class: 'w-3.5 h-3.5 text-amber-500 shrink-0', fill: 'currentColor' }) %>
+<div id="drag-ghost" class="fixed z-[70] pointer-events-none bg-[#0c0c14] border border-white/10 rounded-xl px-4 py-3 text-xs font-bold text-white shadow-2xl flex items-center gap-2.5 opacity-90 max-w-[200px]" style="display:none; transform:rotate(2deg)">
+  <%- icon('folder', { class: 'w-4 h-4 text-amber-500 shrink-0', fill: 'currentColor' }) %>
   <span id="drag-ghost-name"></span>
 </div>
 
 <!-- Folder popup -->
-<div class="fixed inset-0 z-50 bg-black/45 backdrop-blur-sm flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity data-[open]:opacity-100 data-[open]:pointer-events-auto" id="folderPopupOverlay">
-    <div class="bg-white dark:bg-[var(--theme-bg-card,#1c1c1c)] border border-neutral-200 dark:border-white/[0.08] rounded-2xl w-full max-w-[440px] max-h-[80vh] flex flex-col scale-[0.96] opacity-0 transition-[transform,opacity] duration-200 overflow-hidden [[data-open]>&]:scale-100 [[data-open]>&]:opacity-100" role="dialog" aria-modal="true" aria-labelledby="folderPopupTitle">
-    <div class="flex items-center justify-between px-5 py-4 border-b border-neutral-200 dark:border-white/5 flex-shrink-0">
-      <h2 class="text-sm font-semibold text-neutral-800 dark:text-white" id="folderPopupTitle"></h2>
-      <div class="flex items-center gap-1">
-        <button id="deleteFolderBtn" class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-red-50 dark:hover:bg-red-500/10 text-red-600 dark:text-red-400 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500" title="Delete folder" aria-label="Delete folder">
-          <%- icon('trash-2', { class: 'w-3.5 h-3.5', strokeWidth: 1.5 }) %>
+<div class="fixed inset-0 z-[80] bg-black/70 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity data-[open]:opacity-100 data-[open]:pointer-events-auto" id="folderPopupOverlay">
+  <div class="cynex-glass rounded-2xl w-full max-w-[480px] max-h-[75vh] flex flex-col scale-[0.96] opacity-0 transition-[transform,opacity] duration-200 overflow-hidden [[data-open]>&]:scale-100 [[data-open]>&]:opacity-100 border border-white/10 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="folderPopupTitle">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 flex-shrink-0 bg-white/[0.01]">
+      <h2 class="text-sm font-bold text-white" id="folderPopupTitle"></h2>
+      <div class="flex items-center gap-1.5">
+        <button id="deleteFolderBtn" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-red-500/10 text-red-400 transition cursor-pointer" title="Delete Folder">
+          <%- icon('trash-2', { class: 'w-4 h-4', strokeWidth: 1.5 }) %>
         </button>
-        <button id="closeFolderPopup" class="w-10 h-10 flex items-center justify-center rounded-lg hover:bg-neutral-100 dark:hover:bg-neutral-800 text-neutral-500 dark:text-neutral-300 transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-neutral-500" aria-label="Close folder">
+        <button id="closeFolderPopup" class="w-9 h-9 flex items-center justify-center rounded-lg hover:bg-white/5 text-neutral-400 transition cursor-pointer">
           <%- icon('x', { class: 'w-4 h-4' }) %>
         </button>
       </div>
     </div>
-    <div class="flex-1 overflow-y-auto p-4">
-      <div id="folderPopupContent" class="grid grid-cols-1 sm:grid-cols-2 gap-2"></div>
+    <div class="flex-1 overflow-y-auto p-5">
+      <div id="folderPopupContent" class="grid grid-cols-1 gap-2.5"></div>
     </div>
   </div>
 </div>
 
 <!-- New folder dialog -->
-<div class="fixed inset-0 z-[60] bg-black/45 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity data-[open]:opacity-100 data-[open]:pointer-events-auto" id="newFolderOverlay">
-    <div class="bg-white dark:bg-[var(--theme-bg-card,#1c1c1c)] border border-neutral-200 dark:border-white/[0.08] rounded-[14px] w-full max-w-[380px] p-[22px] scale-[0.96] opacity-0 transition-[transform,opacity] duration-200 [[data-open]>&]:scale-100 [[data-open]>&]:opacity-100" role="dialog" aria-modal="true" aria-labelledby="newFolderTitle">
-    <p id="newFolderTitle" class="text-sm font-semibold text-neutral-800 dark:text-white mb-1">New folder</p>
-    <p class="text-xs text-neutral-500 mb-4">Give your folder a name. Drag server cards onto it to add servers.</p>
-    <label for="newFolderName" class="sr-only">Folder name</label>
-    <input id="newFolderName" type="text" class="w-full border border-neutral-200 dark:border-white/10 rounded-[9px] bg-neutral-50 dark:bg-white/[0.04] px-3 py-2 text-[13px] text-neutral-900 dark:text-neutral-100 outline-none font-[inherit] transition-[border-color] placeholder:text-neutral-400 focus:border-neutral-400 dark:focus:border-white/25 box-border mb-4" placeholder="e.g. Game Servers">
-    <div class="flex gap-2 justify-end">
-      <button id="cancelNewFolder" class="inline-flex items-center justify-center min-h-10 px-4 py-2 rounded-[9px] text-[13px] font-medium bg-transparent text-neutral-500 border border-neutral-200 dark:border-white/10 cursor-pointer hover:bg-neutral-100 dark:hover:bg-white/[0.05] transition-[background]">Cancel</button>
-      <button id="confirmNewFolder" class="inline-flex items-center justify-center min-h-10 px-4 py-2 rounded-[9px] text-[13px] font-medium bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 border-none cursor-pointer hover:bg-neutral-700 dark:hover:bg-neutral-200 transition-[background]">Create</button>
+<div class="fixed inset-0 z-[90] bg-black/70 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity data-[open]:opacity-100 data-[open]:pointer-events-auto" id="newFolderOverlay">
+  <div class="cynex-glass rounded-2xl w-full max-w-[400px] p-6 border border-white/10 scale-[0.96] opacity-0 transition-[transform,opacity] duration-200 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="newFolderTitle">
+    <p id="newFolderTitle" class="text-base font-bold text-white mb-1">New Folder</p>
+    <p class="text-xs text-neutral-400 mb-5">Give your folder a name. Drag server cards onto it to group workspaces.</p>
+    <input id="newFolderName" type="text" class="w-full border border-white/10 rounded-xl bg-white/5 px-4 py-2.5 text-sm text-white outline-none font-[inherit] transition focus:border-brand-green/20 placeholder:text-neutral-500 box-border mb-6" placeholder="e.g. My Modded Servers">
+    <div class="flex gap-2.5 justify-end">
+      <button id="cancelNewFolder" class="px-4 py-2 rounded-xl text-xs font-bold bg-transparent text-neutral-400 border border-white/10 hover:bg-white/5 cursor-pointer transition">Cancel</button>
+      <button id="confirmNewFolder" class="px-4 py-2 rounded-xl text-xs font-bold bg-brand-green text-black hover:bg-brand-green-hover cursor-pointer transition">Create</button>
     </div>
   </div>
 </div>
 
 <!-- Delete folder confirm dialog -->
-<div class="fixed inset-0 z-[60] bg-black/45 flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity data-[open]:opacity-100 data-[open]:pointer-events-auto" id="deleteFolderOverlay">
-    <div class="bg-white dark:bg-[var(--theme-bg-card,#1c1c1c)] border border-neutral-200 dark:border-white/[0.08] rounded-[14px] w-full max-w-[380px] p-[22px] scale-[0.96] opacity-0 transition-[transform,opacity] duration-200 [[data-open]>&]:scale-100 [[data-open]>&]:opacity-100" role="dialog" aria-modal="true" aria-labelledby="deleteFolderTitle">
-    <p id="deleteFolderTitle" class="text-sm font-semibold text-neutral-800 dark:text-white mb-1">Delete folder?</p>
-    <p class="text-xs text-neutral-600 dark:text-neutral-300 mb-4">Servers inside will stay accessible. They just won't be in this folder.</p>
-    <div class="flex gap-2 justify-end">
-      <button id="cancelDeleteFolder" class="inline-flex items-center justify-center min-h-10 px-4 py-2 rounded-[9px] text-[13px] font-medium bg-transparent text-neutral-500 border border-neutral-200 dark:border-white/10 cursor-pointer hover:bg-neutral-100 dark:hover:bg-white/[0.05] transition-[background]">Cancel</button>
-      <button id="confirmDeleteFolder" class="min-h-10 px-4 py-2 rounded-lg text-sm font-medium bg-red-600 hover:bg-red-700 text-white border-none cursor-pointer transition focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-red-500 focus-visible:ring-offset-2 dark:focus-visible:ring-offset-neutral-950">Delete folder</button>
+<div class="fixed inset-0 z-[90] bg-black/70 backdrop-blur-md flex items-center justify-center p-4 opacity-0 pointer-events-none transition-opacity data-[open]:opacity-100 data-[open]:pointer-events-auto" id="deleteFolderOverlay">
+  <div class="cynex-glass rounded-2xl w-full max-w-[400px] p-6 border border-white/10 scale-[0.96] opacity-0 transition-[transform,opacity] duration-200 shadow-2xl" role="dialog" aria-modal="true" aria-labelledby="deleteFolderTitle">
+    <p id="deleteFolderTitle" class="text-base font-bold text-white mb-1">Delete Folder?</p>
+    <p class="text-xs text-neutral-400 mb-5">Servers inside will remain safe. They will just be returned to the main server view list.</p>
+    <div class="flex gap-2.5 justify-end">
+      <button id="cancelDeleteFolder" class="px-4 py-2 rounded-xl text-xs font-bold bg-transparent text-neutral-400 border border-white/10 hover:bg-white/5 cursor-pointer transition">Cancel</button>
+      <button id="confirmDeleteFolder" class="px-4 py-2 rounded-xl text-xs font-bold bg-red-600 hover:bg-red-700 text-white cursor-pointer transition">Delete Folder</button>
     </div>
   </div>
 </div>
@@ -292,6 +260,42 @@
 <script nonce="<%- nonce %>">
   document.getElementById('dashboard-data').dataset.folders = '<%- JSON.stringify(folders || []).replace(/'/g, "\\'") %>';
   document.getElementById('dashboard-data').dataset.servers = '<%- JSON.stringify((allServers || []).map(s => ({ UUID: s.UUID, name: s.name, status: s.status, ramUsage: s.ramUsage, cpuUsage: s.cpuUsage }))).replace(/'/g, "\\'") %>';
+</script>
+
+<script nonce="<%- nonce %>">
+  // Quick power actions handler
+  function handleQuickPower(event, uuid, action) {
+    if (event) {
+      event.preventDefault();
+      event.stopPropagation();
+    }
+    
+    if (typeof showToast === 'function') {
+      showToast('Sending action: ' + action.toUpperCase() + '...', 'info');
+    }
+
+    fetch('/server/' + uuid + '/power/' + action, {
+      method: 'POST'
+    })
+    .then(function(res) { return res.json(); })
+    .then(function(data) {
+      if (data.success || !data.error) {
+        if (typeof showToast === 'function') {
+          showToast('Power command ' + action.toUpperCase() + ' sent successfully!', 'success');
+        }
+        setTimeout(function() { window.location.reload(); }, 1200);
+      } else {
+        if (typeof showToast === 'function') {
+          showToast(data.error || 'Power request failed', 'error');
+        }
+      }
+    })
+    .catch(function(err) {
+      if (typeof showToast === 'function') {
+        showToast('Network error triggering power action.', 'error');
+      }
+    });
+  }
 </script>
 
 <script nonce="<%- nonce %>" src="/javascript/dashboard.js"></script>

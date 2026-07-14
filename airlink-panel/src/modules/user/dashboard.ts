@@ -6,6 +6,7 @@ import { getUser } from '../../handlers/utils/user/user';
 import logger from '../../handlers/logger';
 import axios from 'axios';
 import { daemonSchemeSync } from '../../handlers/utils/core/daemonRequest';
+import { BillingService, HOSTER_PLANS } from '../../services/BillingService';
 
 
 interface ErrorMessage {
@@ -25,7 +26,24 @@ const dashboardModule: Module = {
   router: () => {
     const router = Router();
 
-    router.get('/', isAuthenticated(), async (req: Request, res: Response) => {
+    router.get('/', async (req: Request, res: Response) => {
+      try {
+        const settings = await prisma.settings.findUnique({ where: { id: 1 } });
+        const userId = req.session?.user?.id;
+        if (userId) {
+          const user = await prisma.users.findUnique({ where: { id: userId } });
+          if (user) {
+            return res.redirect('/dashboard');
+          }
+        }
+        res.render('landing', { user: null, req, settings, title: 'Home' });
+      } catch (error) {
+        logger.error('Error rendering landing page:', error);
+        res.status(500).send('Error loading page');
+      }
+    });
+
+    router.get('/dashboard', isAuthenticated(), async (req: Request, res: Response) => {
       const errorMessage: ErrorMessage = {};
       const userId = req.session?.user?.id;
       try {
@@ -254,6 +272,52 @@ const dashboardModule: Module = {
           req,
           settings: null,
         });
+      }
+    });
+
+    router.get('/billing', isAuthenticated(), async (req: Request, res: Response) => {
+      try {
+        const userId = req.session?.user?.id;
+        const [user, settings] = await Promise.all([
+          prisma.users.findUnique({ where: { id: userId } }),
+          prisma.settings.findUnique({ where: { id: 1 } }),
+        ]);
+
+        if (!user) return res.redirect('/login');
+
+        const billingInfo = await BillingService.getUserPlan(user.id);
+        res.render('user/billing', {
+          user,
+          req,
+          settings,
+          currentPlan: billingInfo.plan,
+          plans: HOSTER_PLANS,
+          title: 'Billing & Upgrades',
+          csrfToken: req.csrfToken?.(),
+        });
+      } catch (error) {
+        logger.error('Error loading billing page:', error);
+        res.status(500).send('Error loading page');
+      }
+    });
+
+    router.post('/billing/upgrade', isAuthenticated(), async (req: Request, res: Response) => {
+      try {
+        const userId = req.session?.user?.id;
+        const { planKey } = req.body;
+
+        if (!userId) return res.status(401).json({ error: 'Unauthorized' });
+        if (!planKey) return res.status(400).json({ error: 'Missing plan selection' });
+
+        const success = await BillingService.purchasePlan(userId, planKey);
+        if (success) {
+          return res.status(200).json({ success: true, message: 'Plan upgraded successfully!' });
+        } else {
+          return res.status(500).json({ error: 'Plan upgrade failed.' });
+        }
+      } catch (error) {
+        logger.error('Error upgrading plan:', error);
+        res.status(500).json({ error: 'Internal server error during upgrade.' });
       }
     });
 

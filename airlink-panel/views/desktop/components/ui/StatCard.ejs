@@ -1,0 +1,24 @@
+<%
+  const var_title = typeof title !== 'undefined' ? title : '';
+  const var_value = typeof value !== 'undefined' ? value : '';
+  const var_icon = typeof icon_name !== 'undefined' ? icon_name : (typeof icon !== 'undefined' ? icon : '');
+  const var_color = typeof color !== 'undefined' ? color : 'green';
+
+  let iconBg = 'bg-brand-green/10 text-brand-green';
+  if (var_color === 'purple') {
+    iconBg = 'bg-brand-purple/10 text-brand-purple';
+  } else if (var_color === 'blue') {
+    iconBg = 'bg-blue-500/10 text-blue-400';
+  }
+%>
+<%- include('./Card', { hover: true, class: 'flex items-center justify-between border border-white/5 relative overflow-hidden' }) %>
+  <div class="space-y-1">
+    <p class="text-xs font-bold text-neutral-400 uppercase tracking-wider"><%- var_title %></p>
+    <p class="text-3xl font-extrabold text-white"><%- var_value %></p>
+  </div>
+  <% if (var_icon) { %>
+    <div class="w-12 h-12 rounded-2xl <%= iconBg %> flex items-center justify-center shadow-lg">
+      <%- icon(var_icon, { class: 'w-6 h-6' }) %>
+    </div>
+  <% } %>
+</div>

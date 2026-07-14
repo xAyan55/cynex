@@ -1,124 +1,150 @@
+/* Overhauling Plugin Manager stylesheet for CynexGP Premium Dark SaaS theme */
+
 .plugin-manager-page .pm-btn-primary,
 .plugin-manager-page .pm-btn-secondary,
 .plugin-manager-page .pm-tab,
 .plugin-manager-page .pm-input,
 .plugin-manager-page .pm-select {
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
-  transition: all 0.2s ease;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  font-weight: 700;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .plugin-manager-page .pm-btn-primary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
-  background: rgb(23 23 23);
-  color: white;
+  padding: 10px 18px;
+  background: #22c55e;
+  color: #000;
   border: 1px solid transparent;
-  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.08);
+  box-shadow: 0 0 15px rgba(34, 197, 94, 0.15);
+}
+
+.plugin-manager-page .pm-btn-primary:hover {
+  background: #16a34a;
+  transform: translateY(-1px);
+  box-shadow: 0 0 20px rgba(34, 197, 94, 0.3);
 }
 
 .dark .plugin-manager-page .pm-btn-primary {
-  background: white;
-  color: rgb(23 23 23);
+  background: #22c55e;
+  color: #000;
 }
 
 .plugin-manager-page .pm-btn-secondary {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
-  background: white;
-  color: rgb(64 64 64);
-  border: 1px solid rgb(229 229 229);
+  padding: 10px 18px;
+  background: rgba(255, 255, 255, 0.05);
+  color: #d4d4d8;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.plugin-manager-page .pm-btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .dark .plugin-manager-page .pm-btn-secondary {
-  background: rgb(255 255 255 / 0.05);
-  color: rgb(212 212 212);
-  border-color: rgb(255 255 255 / 0.08);
+  background: rgba(255, 255, 255, 0.04);
+  color: #d4d4d8;
+  border-color: rgba(255, 255, 255, 0.08);
 }
 
 .plugin-manager-page .pm-tab {
-  padding: 0.5rem 1rem;
-  border: 1px solid rgb(229 229 229);
-  background: white;
-  color: rgb(82 82 82);
-}
-
-.dark .plugin-manager-page .pm-tab {
-  background: rgb(255 255 255 / 0.05);
-  border-color: rgb(255 255 255 / 0.08);
-  color: rgb(212 212 212);
+  padding: 8px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.02);
+  color: #a1a1aa;
+  cursor: pointer;
 }
 
 .plugin-manager-page .pm-tab.active {
-  background: rgb(245 245 245);
-  color: rgb(23 23 23);
-  border-color: rgb(212 212 212);
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.dark .plugin-manager-page .pm-tab {
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.05);
+  color: #a1a1aa;
 }
 
 .dark .plugin-manager-page .pm-tab.active {
-  background: rgb(255 255 255 / 0.1);
-  color: white;
+  background: rgba(255, 255, 255, 0.08);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
 }
 
 .plugin-manager-page .pm-input,
 .plugin-manager-page .pm-select {
-  padding: 0.625rem 0.875rem;
-  border: 1px solid rgb(229 229 229);
-  background: white;
-  color: rgb(23 23 23);
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.02);
+  color: #fff;
   outline: none;
+}
+
+.plugin-manager-page .pm-input:focus,
+.plugin-manager-page .pm-select:focus {
+  border-color: rgba(34, 197, 94, 0.2);
+  box-shadow: 0 0 10px rgba(34, 197, 94, 0.1);
 }
 
 .dark .plugin-manager-page .pm-input,
 .dark .plugin-manager-page .pm-select {
-  background: rgb(23 23 23);
-  border-color: rgb(64 64 64);
-  color: white;
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.05);
+  color: #fff;
 }
 
 .plugin-manager-page .pm-card {
-  border-radius: 0.875rem;
-  border: 1px solid rgb(229 229 229);
-  background: rgb(250 250 250);
-  padding: 1rem;
+  border-radius: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  background: rgba(255, 255, 255, 0.02);
+  padding: 18px;
+  transition: all 0.2s ease;
+}
+
+.plugin-manager-page .pm-card:hover {
+  border-color: rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.04);
+  transform: translateY(-1px);
 }
 
 .dark .plugin-manager-page .pm-card {
-  background: rgb(255 255 255 / 0.05);
-  border-color: rgb(255 255 255 / 0.08);
+  background: rgba(255, 255, 255, 0.02);
+  border-color: rgba(255, 255, 255, 0.05);
 }
 
 .plugin-manager-page .pm-empty {
-  padding: 3rem 1rem;
+  padding: 48px 16px;
   text-align: center;
-  color: rgb(115 115 115);
-  border: 1px dashed rgb(212 212 212);
-  border-radius: 0.875rem;
+  color: #71717a;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  font-size: 0.8125rem;
 }
 
 .plugin-manager-page .pm-skeleton-grid {
   display: grid;
-  gap: 0.75rem;
+  gap: 12px;
 }
 
 .plugin-manager-page .pm-skeleton-grid::before,
 .plugin-manager-page .pm-skeleton-grid::after {
   content: '';
   display: block;
-  height: 5rem;
-  border-radius: 0.875rem;
-  background: linear-gradient(90deg, rgb(245 245 245), rgb(229 229 229), rgb(245 245 245));
+  height: 80px;
+  border-radius: 16px;
+  background: linear-gradient(90deg, rgba(255,255,255,0.02), rgba(255,255,255,0.05), rgba(255,255,255,0.02));
   background-size: 200% 100%;
   animation: pm-shimmer 1.4s infinite;
-}
-
-.dark .plugin-manager-page .pm-skeleton-grid::before,
-.dark .plugin-manager-page .pm-skeleton-grid::after {
-  background: linear-gradient(90deg, rgb(38 38 38), rgb(64 64 64), rgb(38 38 38));
 }
 
 @keyframes pm-shimmer {
@@ -129,11 +155,12 @@
 .plugin-manager-page .pm-modal {
   position: fixed;
   inset: 0;
-  z-index: 60;
+  z-index: 100;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1rem;
+  padding: 16px;
+  backdrop-blur-sm;
 }
 
 .plugin-manager-page .pm-modal.hidden {
@@ -143,68 +170,76 @@
 .plugin-manager-page .pm-modal-backdrop {
   position: absolute;
   inset: 0;
-  background: rgb(0 0 0 / 0.45);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
 }
 
 .plugin-manager-page .pm-modal-content {
   position: relative;
   width: min(100%, 42rem);
-  max-height: calc(100vh - 2rem);
+  max-height: calc(100vh - 32px);
   overflow-y: auto;
-  border-radius: 1rem;
-  border: 1px solid rgb(229 229 229);
-  background: white;
-  padding: 1.25rem;
-  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.25);
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: #0c0c14;
+  padding: 24px;
+  box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
 }
 
 .dark .plugin-manager-page .pm-modal-content {
-  background: rgb(23 23 23);
-  border-color: rgb(64 64 64);
+  background: #0c0c14;
+  border-color: rgba(255, 255, 255, 0.1);
 }
 
 .plugin-manager-page .pm-icon-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 0.625rem;
-  color: rgb(115 115 115);
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  color: #a1a1aa;
+  transition: all 0.2s ease;
+}
+
+.plugin-manager-page .pm-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.05);
+  color: #fff;
 }
 
 .plugin-manager-page .pm-btn-danger {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.5rem 1rem;
-  border-radius: 0.75rem;
-  font-size: 0.875rem;
+  padding: 10px 18px;
+  border-radius: 12px;
+  font-size: 0.8125rem;
+  font-weight: 700;
   transition: all 0.2s ease;
-  background: rgb(254 226 226);
-  color: rgb(185 28 28);
-  border: 1px solid rgb(254 202 202);
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+}
+
+.plugin-manager-page .pm-btn-danger:hover {
+  background: rgba(239, 68, 68, 0.2);
+  border-color: rgba(239, 68, 68, 0.3);
 }
 
 .dark .plugin-manager-page .pm-btn-danger {
-  background: rgb(127 29 29 / 0.2);
-  color: rgb(252 165 165);
-  border-color: rgb(127 29 29 / 0.3);
+  background: rgba(239, 68, 68, 0.1);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.2);
 }
 
 .plugin-manager-page .pm-badge {
   display: inline-flex;
   align-items: center;
-  padding: 0.125rem 0.5rem;
+  padding: 2px 10px;
   border-radius: 9999px;
   font-size: 0.6875rem;
-  font-weight: 500;
-  background: rgb(245 245 245);
-  color: rgb(82 82 82);
-}
-
-.dark .plugin-manager-page .pm-badge {
-  background: rgb(255 255 255 / 0.08);
-  color: rgb(212 212 212);
+  font-weight: 600;
+  background: rgba(255, 255, 255, 0.05);
+  color: #d4d4d8;
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
