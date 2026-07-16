@@ -5,8 +5,8 @@
     <!-- Static top: logo -->
     <div class="pl-6 pt-5 pb-5 flex min-w-0 shrink-0 border-b border-mono-border">
       <a href="/dashboard" class="flex items-center min-w-0 gap-3">
-        <img src="/assets/logo.png" alt="Logo" class="w-9 h-9 rounded-xl object-contain shadow-lg shadow-black/40">
-        <h1 class="text-mono-text-primary font-bold tracking-tight text-base truncate min-w-0">Cynex<span class="text-mono-text-secondary font-medium">GP</span></h1>
+        <img src="<%= settings.logo ? (settings.logo.startsWith('/') ? settings.logo : '/' + settings.logo) : '/assets/logo.png' %>" alt="Logo" class="w-9 h-9 rounded-xl object-contain shadow-lg shadow-black/40">
+        <h1 class="text-mono-text-primary font-bold tracking-tight text-base truncate min-w-0"><%= settings.title || 'CynexGP' %></h1>
       </a>
     </div>
 
