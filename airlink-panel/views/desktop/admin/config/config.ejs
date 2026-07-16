@@ -1,0 +1,685 @@
+<%- include('../../components/header', { title: 'Admin Config' }) %>
+
+<main class="min-h-screen m-auto">
+  <div class="flex min-h-screen">
+    <div class="w-60 h-full"><%- include('../../components/template') %></div>
+    <div id="page-content" class="flex-1 overflow-y-auto pt-16 pb-12">
+      <div class="px-8 pt-5">
+        <h1 class="text-base font-medium text-neutral-800 dark:text-white">Admin Config</h1>
+        <p class="mt-0.5 text-sm text-neutral-500">Manage panel configuration, store products, coupons, and audit logs.</p>
+      </div>
+
+      <div class="px-8 mt-5">
+
+        <!-- Tab bar -->
+        <div class="flex gap-0.5 mb-6 border-b border-neutral-200 dark:border-neutral-700/40 overflow-x-auto">
+          <button type="button" data-tab="economy" class="config-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 whitespace-nowrap"><%- icon('coins', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Economy</button>
+          <button type="button" data-tab="store" class="config-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 whitespace-nowrap"><%- icon('shopping-bag', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Store</button>
+          <button type="button" data-tab="defaults" class="config-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 whitespace-nowrap"><%- icon('layout', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Defaults</button>
+          <button type="button" data-tab="renewals" class="config-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 whitespace-nowrap"><%- icon('refresh-cw', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Renewals</button>
+          <button type="button" data-tab="limits" class="config-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 whitespace-nowrap"><%- icon('shield', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Limits</button>
+          <button type="button" data-tab="products" class="config-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 whitespace-nowrap"><%- icon('package', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Products</button>
+          <button type="button" data-tab="coupons" class="config-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 whitespace-nowrap"><%- icon('tag', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Coupons</button>
+          <button type="button" data-tab="logs" class="config-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 whitespace-nowrap"><%- icon('file-text', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Logs</button>
+        </div>
+
+        <!-- Stats bar -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+          <div class="rounded-xl bg-neutral-50 dark:bg-neutral-800/20 border border-neutral-200 dark:border-white/5 px-4 py-3">
+            <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Products</p>
+            <p class="text-2xl font-bold text-neutral-800 dark:text-white tabular-nums"><%= products.length %></p>
+          </div>
+          <div class="rounded-xl bg-neutral-50 dark:bg-neutral-800/20 border border-neutral-200 dark:border-white/5 px-4 py-3">
+            <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Transactions</p>
+            <p class="text-2xl font-bold text-neutral-800 dark:text-white tabular-nums"><%= transactions %></p>
+          </div>
+          <div class="rounded-xl bg-neutral-50 dark:bg-neutral-800/20 border border-neutral-200 dark:border-white/5 px-4 py-3">
+            <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Total Coins</p>
+            <p class="text-2xl font-bold text-neutral-800 dark:text-white tabular-nums"><%= totalCoins.toLocaleString() %></p>
+          </div>
+          <div class="rounded-xl bg-neutral-50 dark:bg-neutral-800/20 border border-neutral-200 dark:border-white/5 px-4 py-3">
+            <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Audit Logs</p>
+            <p class="text-2xl font-bold text-neutral-800 dark:text-white tabular-nums"><%= auditLogs.total %></p>
+          </div>
+        </div>
+
+        <!-- ═══ ECONOMY ═══════════════════════════════════════════════════════ -->
+        <form id="form-economy" data-config-panel="economy" class="config-panel hidden space-y-5">
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Economy Settings</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Coin Name</label>
+                <input type="text" name="coinName" value="<%= economy.coinName %>"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Coin Symbol</label>
+                <input type="text" name="coinSymbol" value="<%= economy.coinSymbol %>"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Starting Coins</label>
+                <input type="number" name="startingCoins" value="<%= economy.startingCoins %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Balance</label>
+                <input type="number" name="maxBalance" value="<%= economy.maxBalance %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Tax Percent</label>
+                <div class="relative">
+                  <input type="number" name="taxPercent" value="<%= economy.taxPercent %>" min="0" max="100" step="0.1"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 pr-8 text-neutral-800 dark:text-white transition-colors">
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-neutral-400 pointer-events-none">%</span>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Downgrade Refund Percent</label>
+                <div class="relative">
+                  <input type="number" name="downgradeRefundPercent" value="<%= economy.downgradeRefundPercent %>" min="0" max="100" step="0.1"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 pr-8 text-neutral-800 dark:text-white transition-colors">
+                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-neutral-400 pointer-events-none">%</span>
+                </div>
+              </div>
+            </div>
+            <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end">
+              <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Economy</button>
+            </div>
+          </div>
+        </form>
+
+        <!-- ═══ STORE ═════════════════════════════════════════════════════════ -->
+        <form id="form-store" data-config-panel="store" class="config-panel hidden space-y-5">
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Store Pricing</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">RAM Price <span class="text-neutral-400 font-normal">(coins/MB)</span></label>
+                <input type="number" name="ramPricePerMb" value="<%= store.ramPricePerMb %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">CPU Price <span class="text-neutral-400 font-normal">(coins/%)</span></label>
+                <input type="number" name="cpuPricePerPercent" value="<%= store.cpuPricePerPercent %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Disk Price <span class="text-neutral-400 font-normal">(coins/MB)</span></label>
+                <input type="number" name="diskPricePerMb" value="<%= store.diskPricePerMb %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Backup Slot Price</label>
+                <input type="number" name="backupSlotPrice" value="<%= store.backupSlotPrice %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Database Slot Price</label>
+                <input type="number" name="databaseSlotPrice" value="<%= store.databaseSlotPrice %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Port Price</label>
+                <input type="number" name="portPrice" value="<%= store.portPrice %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+            </div>
+            <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end">
+              <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Store</button>
+            </div>
+          </div>
+        </form>
+
+        <!-- ═══ DEFAULTS ══════════════════════════════════════════════════════ -->
+        <form id="form-defaults" data-config-panel="defaults" class="config-panel hidden space-y-5">
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Default Server Configuration</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 px-5 py-5">
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Memory <span class="text-neutral-400 font-normal">(MB)</span></label>
+                <input type="number" name="defaultMemory" value="<%= defaults.defaultMemory %>" min="64"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default CPU <span class="text-neutral-400 font-normal">(%)</span></label>
+                <input type="number" name="defaultCpu" value="<%= defaults.defaultCpu %>" min="10"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Disk <span class="text-neutral-400 font-normal">(MB)</span></label>
+                <input type="number" name="defaultDisk" value="<%= defaults.defaultDisk %>" min="128"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Validity <span class="text-neutral-400 font-normal">(days)</span></label>
+                <input type="number" name="defaultValidityDays" value="<%= defaults.defaultValidityDays %>" min="1"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Backup Slots</label>
+                <input type="number" name="defaultBackupSlots" value="<%= defaults.defaultBackupSlots %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Database Slots</label>
+                <input type="number" name="defaultDatabaseSlots" value="<%= defaults.defaultDatabaseSlots %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Ports</label>
+                <input type="number" name="defaultPorts" value="<%= defaults.defaultPorts %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+            </div>
+            <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end">
+              <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Defaults</button>
+            </div>
+          </div>
+        </form>
+
+        <!-- ═══ RENEWALS ══════════════════════════════════════════════════════ -->
+        <form id="form-renewals" data-config-panel="renewals" class="config-panel hidden space-y-5">
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Renewal Pricing</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">7-Day Renewal Cost</label>
+                <input type="number" name="renew7DaysCost" value="<%= renewals.renew7DaysCost %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">15-Day Renewal Cost</label>
+                <input type="number" name="renew15DaysCost" value="<%= renewals.renew15DaysCost %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">30-Day Renewal Cost</label>
+                <input type="number" name="renew30DaysCost" value="<%= renewals.renew30DaysCost %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">60-Day Renewal Cost</label>
+                <input type="number" name="renew60DaysCost" value="<%= renewals.renew60DaysCost %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">90-Day Renewal Cost</label>
+                <input type="number" name="renew90DaysCost" value="<%= renewals.renew90DaysCost %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+            </div>
+            <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end">
+              <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Renewals</button>
+            </div>
+          </div>
+        </form>
+
+        <!-- ═══ LIMITS ════════════════════════════════════════════════════════ -->
+        <form id="form-limits" data-config-panel="limits" class="config-panel hidden space-y-5">
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Upgrade Limits</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 px-5 py-5">
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Servers</label>
+                <input type="number" name="maxServers" value="<%= limits.maxServers %>" min="1"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Backups Per Server</label>
+                <input type="number" name="maxBackupsPerServer" value="<%= limits.maxBackupsPerServer %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Databases Per Server</label>
+                <input type="number" name="maxDatabasesPerServer" value="<%= limits.maxDatabasesPerServer %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Ports Per Server</label>
+                <input type="number" name="maxPortsPerServer" value="<%= limits.maxPortsPerServer %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max RAM Upgrade <span class="text-neutral-400 font-normal">(MB)</span></label>
+                <input type="number" name="maxRamUpgrade" value="<%= limits.maxRamUpgrade %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max CPU Upgrade <span class="text-neutral-400 font-normal">(%)</span></label>
+                <input type="number" name="maxCpuUpgrade" value="<%= limits.maxCpuUpgrade %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Disk Upgrade <span class="text-neutral-400 font-normal">(MB)</span></label>
+                <input type="number" name="maxDiskUpgrade" value="<%= limits.maxDiskUpgrade %>" min="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+            </div>
+            <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end">
+              <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Limits</button>
+            </div>
+          </div>
+        </form>
+
+        <!-- ═══ PRODUCTS ══════════════════════════════════════════════════════ -->
+        <div id="panel-products" data-config-panel="products" class="config-panel hidden space-y-5">
+
+          <!-- Create Product -->
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Create Product</h2>
+            <form id="createProductForm" class="px-5 py-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Name</label>
+                <input type="text" name="name" required placeholder="e.g. Extra RAM"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Description</label>
+                <input type="text" name="description" placeholder="Optional"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Action Type</label>
+                <select name="actionType"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  <option value="ADD_COINS">Add Coins</option>
+                  <option value="ADD_RAM">Add RAM</option>
+                  <option value="ADD_CPU">Add CPU</option>
+                  <option value="ADD_DISK">Add Disk</option>
+                  <option value="ADD_BACKUP_SLOTS">Add Backup Slots</option>
+                  <option value="ADD_SERVER_SLOTS">Add Server Slots</option>
+                  <option value="ADD_PORTS">Add Ports</option>
+                  <option value="ADD_DATABASES">Add Databases</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Action Value</label>
+                <input type="number" name="actionValue" required min="1" value="1"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Price (coins)</label>
+                <input type="number" name="price" required min="0" value="100"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Icon URL</label>
+                <input type="text" name="icon" placeholder="Optional"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Display Order</label>
+                <input type="number" name="displayOrder" min="0" value="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div class="flex items-end gap-3">
+                <label class="flex items-center gap-2 cursor-pointer mb-2">
+                  <input type="checkbox" name="featured" class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500">
+                  <span class="text-sm text-neutral-700 dark:text-white">Featured</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer mb-2">
+                  <input type="checkbox" name="enabled" checked class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500">
+                  <span class="text-sm text-neutral-700 dark:text-white">Enabled</span>
+                </label>
+              </div>
+            </form>
+            <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end">
+              <button type="button" id="createProductBtn" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Create Product</button>
+            </div>
+          </div>
+
+          <!-- Products table -->
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Store Products (<%= products.length %>)</h2>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-neutral-200 dark:border-white/5 text-left">
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Order</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Name</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Action</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Value</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Price</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Status</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-neutral-100 dark:divide-white/5">
+                  <% if (products.length === 0) { %>
+                  <tr><td colspan="7" class="px-5 py-8 text-center text-sm text-neutral-400">No products created yet.</td></tr>
+                  <% } else { %>
+                  <% products.forEach(function(product) { %>
+                  <tr class="hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors" data-product-id="<%= product.id %>">
+                    <td class="px-5 py-3">
+                      <input type="number" value="<%= product.displayOrder %>" min="0" data-product-id="<%= product.id %>" class="product-order-input w-16 rounded-lg border border-neutral-200 dark:border-neutral-600/30 bg-neutral-100 dark:bg-neutral-700/20 px-2 py-1 text-xs text-neutral-800 dark:text-white text-center focus:outline-none focus:ring-1 focus:border-neutral-400 dark:focus:border-white/70 transition-colors">
+                    </td>
+                    <td class="px-5 py-3">
+                      <div class="flex items-center gap-2">
+                        <% if (product.icon) { %><img src="<%= product.icon %>" class="w-5 h-5 rounded" alt=""><% } %>
+                        <span class="font-medium text-neutral-800 dark:text-white"><%= product.name %></span>
+                        <% if (product.featured) { %><span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-medium">Featured</span><% } %>
+                      </div>
+                      <% if (product.description) { %><p class="text-xs text-neutral-500 mt-0.5"><%= product.description %></p><% } %>
+                    </td>
+                    <td class="px-5 py-3 text-xs font-mono text-neutral-600 dark:text-neutral-400"><%= product.actionType %></td>
+                    <td class="px-5 py-3 text-sm text-neutral-800 dark:text-white"><%= product.actionValue %></td>
+                    <td class="px-5 py-3 text-sm text-neutral-800 dark:text-white"><%= product.price.toLocaleString() %></td>
+                    <td class="px-5 py-3">
+                      <% if (product.enabled) { %>
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400">Enabled</span>
+                      <% } else { %>
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-neutral-100 dark:bg-neutral-700/40 text-neutral-500 dark:text-neutral-400">Disabled</span>
+                      <% } %>
+                    </td>
+                    <td class="px-5 py-3">
+                      <div class="flex items-center gap-2">
+                        <button type="button" class="product-toggle-btn text-xs px-2.5 py-1 rounded-lg border transition-colors <%= product.enabled ? 'border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10' : 'border-neutral-200 dark:border-neutral-600/30 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700/20' %>" data-product-id="<%= product.id %>" data-enabled="<%= product.enabled %>">
+                          <%= product.enabled ? 'Disable' : 'Enable' %>
+                        </button>
+                        <button type="button" class="product-delete-btn text-xs px-2.5 py-1 rounded-lg border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors" data-product-id="<%= product.id %>">Delete</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <% }); } %>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ COUPONS ═══════════════════════════════════════════════════════ -->
+        <div id="panel-coupons" data-config-panel="coupons" class="config-panel hidden space-y-5">
+          <div class="flex items-center justify-between">
+            <p class="text-sm text-neutral-500">Manage coupon codes for rewards.</p>
+            <a href="/admin/coupons" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-4 py-2 text-sm font-medium shadow-sm transition">Manage Coupons</a>
+          </div>
+        </div>
+
+        <!-- ═══ LOGS ══════════════════════════════════════════════════════════ -->
+        <div id="panel-logs" data-config-panel="logs" class="config-panel hidden space-y-5">
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Audit Logs</h2>
+
+            <!-- Filters -->
+            <div class="px-5 py-3 border-b border-neutral-200 dark:border-white/5 flex flex-wrap gap-3">
+              <input type="text" id="logSearch" placeholder="Search logs..."
+                class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors w-64">
+              <select id="logActionFilter"
+                class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                <option value="">All Actions</option>
+                <option value="CONFIG_UPDATED">Config Updated</option>
+                <option value="COUPON_CREATED">Coupon Created</option>
+                <option value="COUPON_REDEEMED">Coupon Redeemed</option>
+                <option value="COUPON_DELETED">Coupon Deleted</option>
+                <option value="COUPON_TOGGLED">Coupon Toggled</option>
+                <option value="PRODUCT_CREATED">Product Created</option>
+                <option value="PRODUCT_DELETED">Product Deleted</option>
+                <option value="USER_LOGIN">User Login</option>
+                <option value="USER_CREATED">User Created</option>
+                <option value="SERVER_CREATED">Server Created</option>
+                <option value="SERVER_DELETED">Server Deleted</option>
+                <option value="WALLET_PURCHASE">Wallet Purchase</option>
+              </select>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-neutral-200 dark:border-white/5 text-left">
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Time</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Action</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Admin</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Reference</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">IP</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Details</th>
+                  </tr>
+                </thead>
+                <tbody id="logTableBody" class="divide-y divide-neutral-100 dark:divide-white/5">
+                  <% if (auditLogs.logs.length === 0) { %>
+                  <tr><td colspan="6" class="px-5 py-8 text-center text-sm text-neutral-400">No audit logs found.</td></tr>
+                  <% } else { %>
+                  <% auditLogs.logs.forEach(function(log) { %>
+                  <tr class="hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors log-row" data-action="<%= log.action %>" data-reference="<%= log.referenceId || '' %>">
+                    <td class="px-5 py-3 text-xs text-neutral-500 whitespace-nowrap"><%= new Date(log.createdAt).toLocaleString() %></td>
+                    <td class="px-5 py-3">
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium
+                        <%= log.action.includes('DELETE') ? 'bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400' :
+                             log.action.includes('CREATE') ? 'bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400' :
+                             log.action.includes('UPDATE') || log.action.includes('TOGGLE') ? 'bg-blue-100 dark:bg-blue-500/20 text-blue-700 dark:text-blue-400' :
+                             'bg-neutral-100 dark:bg-neutral-700/40 text-neutral-600 dark:text-neutral-400' %>">
+                        <%= log.action %>
+                      </span>
+                    </td>
+                    <td class="px-5 py-3 text-xs text-neutral-600 dark:text-neutral-400"><%= log.adminId ? '#' + log.adminId : 'System' %></td>
+                    <td class="px-5 py-3 text-xs font-mono text-neutral-600 dark:text-neutral-400"><%= log.referenceId || '-' %></td>
+                    <td class="px-5 py-3 text-xs font-mono text-neutral-600 dark:text-neutral-400"><%= log.ipAddress || '-' %></td>
+                    <td class="px-5 py-3 text-xs text-neutral-500 max-w-xs truncate"><%= log.details ? JSON.stringify(log.details) : '-' %></td>
+                  </tr>
+                  <% }); } %>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination -->
+            <% if (auditLogs.totalPages > 1) { %>
+            <div class="px-5 py-3 border-t border-neutral-200 dark:border-white/5 flex items-center justify-between">
+              <p class="text-xs text-neutral-500">Page <%= auditLogs.page %> of <%= auditLogs.totalPages %> (<%= auditLogs.total %> total)</p>
+              <div class="flex gap-2">
+                <% if (auditLogs.page > 1) { %>
+                <a href="/admin/config?tab=logs&page=<%= auditLogs.page - 1 %>" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Previous</a>
+                <% } %>
+                <% if (auditLogs.page < auditLogs.totalPages) { %>
+                <a href="/admin/config?tab=logs&page=<%= auditLogs.page + 1 %>" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Next</a>
+                <% } %>
+              </div>
+            </div>
+            <% } %>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('../../components/toast') %>
+<%- include('../../components/modal') %>
+
+<script nonce="<%- nonce %>">
+(function() {
+  // ── Tab switching ────────────────────────────────────────────────────────
+  const tabBtns = document.querySelectorAll('.config-tab-btn');
+  const panels  = document.querySelectorAll('.config-panel');
+  const urlParams = new URLSearchParams(window.location.search);
+
+  function showTab(tab) {
+    tabBtns.forEach(function(btn) {
+      btn.classList.toggle('text-neutral-900', btn.dataset.tab === tab);
+      btn.classList.toggle('dark:text-white', btn.dataset.tab === tab);
+      btn.classList.toggle('border-neutral-900', btn.dataset.tab === tab);
+      btn.classList.toggle('dark:border-white', btn.dataset.tab === tab);
+      btn.classList.toggle('text-neutral-400', btn.dataset.tab !== tab);
+      btn.classList.toggle('dark:text-neutral-500', btn.dataset.tab !== tab);
+      btn.classList.toggle('border-transparent', btn.dataset.tab !== tab);
+    });
+    panels.forEach(function(p) {
+      p.classList.toggle('hidden', p.dataset.configPanel !== tab);
+    });
+  }
+
+  tabBtns.forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      showTab(this.dataset.tab);
+    });
+  });
+
+  var initialTab = urlParams.get('tab') || 'economy';
+  showTab(initialTab);
+
+  // ── Config form saving ───────────────────────────────────────────────────
+  var toast = window.showToast || function() {};
+
+  document.querySelectorAll('[data-config-panel]').forEach(function(panel) {
+    var form = panel.querySelector('form');
+    if (!form) return;
+    form.addEventListener('submit', function(e) {
+      e.preventDefault();
+      var category = this.dataset.configPanel;
+      var data = {};
+      var inputs = this.querySelectorAll('input, select');
+      inputs.forEach(function(input) {
+        if (input.type === 'checkbox') {
+          data[input.name] = input.checked;
+        } else if (input.type === 'number') {
+          data[input.name] = parseFloat(input.value) || 0;
+        } else {
+          data[input.name] = input.value;
+        }
+      });
+
+      var submitBtn = this.querySelector('button[type="submit"]');
+      var origText = submitBtn ? submitBtn.textContent : '';
+      if (submitBtn) { submitBtn.textContent = 'Saving...'; submitBtn.disabled = true; }
+
+      fetch('/admin/config/' + category, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (res.success) {
+          toast('Settings saved successfully!', 'success');
+        } else {
+          toast(res.error || 'Failed to save settings.', 'error');
+        }
+      })
+      .catch(function() { toast('Network error. Please try again.', 'error'); })
+      .finally(function() { if (submitBtn) { submitBtn.textContent = origText; submitBtn.disabled = false; } });
+    });
+  });
+
+  // ── Product CRUD ─────────────────────────────────────────────────────────
+  var createBtn = document.getElementById('createProductBtn');
+  if (createBtn) {
+    createBtn.addEventListener('click', function() {
+      var form = document.getElementById('createProductForm');
+      var data = {};
+      var inputs = form.querySelectorAll('input, select');
+      inputs.forEach(function(input) {
+        if (input.type === 'checkbox') {
+          data[input.name] = input.checked;
+        } else if (input.type === 'number') {
+          data[input.name] = parseFloat(input.value) || 0;
+        } else {
+          data[input.name] = input.value;
+        }
+      });
+
+      createBtn.textContent = 'Creating...';
+      createBtn.disabled = true;
+
+      fetch('/admin/config/products/create', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (res.success) {
+          toast('Product created!', 'success');
+          setTimeout(function() { location.reload(); }, 800);
+        } else {
+          toast(res.error || 'Failed to create product.', 'error');
+          createBtn.textContent = 'Create Product';
+          createBtn.disabled = false;
+        }
+      })
+      .catch(function() {
+        toast('Network error.', 'error');
+        createBtn.textContent = 'Create Product';
+        createBtn.disabled = false;
+      });
+    });
+  }
+
+  // Product toggle
+  document.querySelectorAll('.product-toggle-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = this.dataset.productId;
+      var self = this;
+      fetch('/admin/config/products/' + id + '/toggle', { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+          if (res.success) { toast('Product updated.', 'success'); setTimeout(function() { location.reload(); }, 500); }
+          else toast(res.error || 'Failed.', 'error');
+        })
+        .catch(function() { toast('Network error.', 'error'); });
+    });
+  });
+
+  // Product delete
+  document.querySelectorAll('.product-delete-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = this.dataset.productId;
+      var self = this;
+      if (window.modal) {
+        window.modal.confirm({
+          title: 'Delete product?',
+          body: 'This action cannot be undone.',
+          danger: true,
+          confirmLabel: 'Delete',
+          onConfirm: function() {
+            fetch('/admin/config/products/' + id + '/delete', { method: 'POST' })
+              .then(function(r) { return r.json(); })
+              .then(function(res) {
+                if (res.success) { toast('Product deleted.', 'success'); self.closest('tr').remove(); }
+                else toast(res.error || 'Failed.', 'error');
+              })
+              .catch(function() { toast('Network error.', 'error'); });
+          }
+        });
+      }
+    });
+  });
+
+  // Product reorder on change
+  document.querySelectorAll('.product-order-input').forEach(function(input) {
+    input.addEventListener('change', function() {
+      var id = this.dataset.productId;
+      var order = parseInt(this.value, 10) || 0;
+      fetch('/admin/config/products/' + id + '/order', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ displayOrder: order })
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(res) { if (res.success) toast('Order updated.', 'success'); })
+      .catch(function() {});
+    });
+  });
+
+  // ── Log filtering ────────────────────────────────────────────────────────
+  var logSearch = document.getElementById('logSearch');
+  var logActionFilter = document.getElementById('logActionFilter');
+  var logRows = document.querySelectorAll('.log-row');
+
+  function filterLogs() {
+    var search = (logSearch ? logSearch.value.toLowerCase() : '');
+    var action = logActionFilter ? logActionFilter.value : '';
+    logRows.forEach(function(row) {
+      var matchAction = !action || row.dataset.action === action;
+      var matchSearch = !search || row.textContent.toLowerCase().includes(search);
+      row.style.display = matchAction && matchSearch ? '' : 'none';
+    });
+  }
+
+  if (logSearch) logSearch.addEventListener('input', filterLogs);
+  if (logActionFilter) logActionFilter.addEventListener('change', filterLogs);
+})();
+</script>
+
+<%- include('../../components/footer') %>

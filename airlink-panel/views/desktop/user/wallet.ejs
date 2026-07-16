@@ -1,0 +1,191 @@
+<%- include('../components/header', { title: 'Wallet' }) %>
+
+<style>
+  ::-webkit-scrollbar { display: none; }
+</style>
+
+<main class="h-screen m-auto bg-mono-bg text-white">
+  <div class="flex h-screen">
+    <div class="w-60 h-full"><%- include('../components/template') %></div>
+
+    <div id="page-content" class="flex-1 overflow-y-auto pt-16">
+      <div class="px-12 pt-8 pb-12 space-y-8">
+
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/[0.01] border border-white/5 p-6 rounded-2xl">
+          <div>
+            <h1 class="text-xl font-bold tracking-tight text-white">Wallet</h1>
+            <p class="text-sm text-neutral-400 mt-1">View your coin balance, transaction history, and recent account activity.</p>
+          </div>
+        </div>
+
+        <!-- Balance Card -->
+        <div class="cynex-glass rounded-2xl border border-white/5 p-8 relative overflow-hidden">
+          <div class="absolute -top-10 -right-10 w-40 h-40 bg-brand-green/5 rounded-full blur-3xl"></div>
+          <div class="relative flex items-center justify-between">
+            <div>
+              <p class="text-xs font-bold text-neutral-400 uppercase tracking-wider mb-2">Current Balance</p>
+              <div class="flex items-baseline gap-2">
+                <span class="text-5xl font-extrabold text-white"><%= balance.toLocaleString() %></span>
+                <span class="text-lg font-bold text-neutral-400">coins</span>
+              </div>
+            </div>
+            <div class="w-16 h-16 rounded-2xl bg-brand-green/10 border border-brand-green/20 flex items-center justify-center">
+              <svg xmlns="http://www.w3.org/2000/svg" class="w-8 h-8 text-brand-green" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>
+            </div>
+          </div>
+          <div class="flex items-center gap-6 mt-6 pt-5 border-t border-white/5">
+            <a href="/store" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-green text-black text-xs font-bold hover:bg-brand-green-hover transition cursor-pointer">
+              <%- icon('shopping-bag', { class: 'w-3.5 h-3.5' }) %> Visit Store
+            </a>
+            <a href="/redeem" class="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-white/5 border border-white/10 text-xs font-semibold text-neutral-300 hover:bg-white/10 transition cursor-pointer">
+              <%- icon('gift', { class: 'w-3.5 h-3.5' }) %> Redeem Code
+            </a>
+          </div>
+        </div>
+
+        <!-- Transaction History -->
+        <div class="cynex-glass rounded-2xl border border-white/5 overflow-hidden">
+          <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.01]">
+            <h2 class="text-sm font-bold text-white">Transaction History</h2>
+            <select id="txFilter" class="px-3 py-1.5 rounded-lg bg-white/5 border border-white/10 text-xs text-white outline-none focus:border-brand-green/20 transition cursor-pointer appearance-none pr-7" style="background-image: url('data:image/svg+xml;utf8,<svg fill=\"none\" stroke=\"white\" stroke-width=\"2\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M19 9l-7 7-7-7\"/></svg>'); background-repeat: no-repeat; background-position: right 0.35rem center; background-size: 0.75rem;">
+              <option value="all">All Types</option>
+              <option value="credit">Credits Only</option>
+              <option value="debit">Debits Only</option>
+            </select>
+          </div>
+
+          <% if (transactions && transactions.length > 0) { %>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-white/5">
+                <thead class="bg-white/[0.02]">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Amount</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Reason</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Reference</th>
+                  </tr>
+                </thead>
+                <tbody id="txBody" class="divide-y divide-white/5">
+                  <% transactions.forEach(function(tx) { %>
+                    <%
+                      const isCredit = tx.amount > 0;
+                      const typeLabel = tx.type ? tx.type.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, function(c) { return c.toUpperCase(); }) : 'Unknown';
+                    %>
+                    <tr class="tx-row hover:bg-white/[0.01] transition-colors" data-amount="<%= tx.amount %>">
+                      <td class="px-6 py-3.5 text-xs font-medium text-neutral-300 whitespace-nowrap">
+                        <%= new Date(tx.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %>
+                        <span class="text-neutral-500 ml-1"><%= new Date(tx.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
+                      </td>
+                      <td class="px-6 py-3.5">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-wider <%= isCredit ? 'bg-emerald-500/10 text-emerald-400 border border-emerald-500/20' : 'bg-red-500/10 text-red-400 border border-red-500/20' %>">
+                          <span class="w-1.5 h-1.5 rounded-full <%= isCredit ? 'bg-emerald-400' : 'bg-red-400' %>"></span>
+                          <%= typeLabel %>
+                        </span>
+                      </td>
+                      <td class="px-6 py-3.5 text-xs font-bold whitespace-nowrap <%= isCredit ? 'text-emerald-400' : 'text-red-400' %>">
+                        <%= isCredit ? '+' : '' %><%= tx.amount.toLocaleString() %> coins
+                      </td>
+                      <td class="px-6 py-3.5 text-xs text-neutral-400 max-w-[200px] truncate"><%= tx.reason || '-' %></td>
+                      <td class="px-6 py-3.5 text-xs text-neutral-500 font-mono max-w-[140px] truncate"><%= tx.referenceId || '-' %></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+
+            <% if (totalPages > 1) { %>
+              <div class="flex items-center justify-center gap-4 px-6 py-4 border-t border-white/5">
+                <% if (page > 1) { %>
+                  <a href="/wallet?page=<%= page - 1 %>" class="px-4 py-2 text-xs font-bold text-neutral-300 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all">Prev</a>
+                <% } %>
+                <span class="text-xs font-semibold text-neutral-400">Page <%= page %> of <%= totalPages %></span>
+                <% if (page < totalPages) { %>
+                  <a href="/wallet?page=<%= page + 1 %>" class="px-4 py-2 text-xs font-bold text-neutral-300 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all">Next</a>
+                <% } %>
+              </div>
+            <% } %>
+          <% } else { %>
+            <div class="flex flex-col items-center justify-center py-16 text-center">
+              <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
+                <%- icon('wallet', { class: 'h-7 w-7 text-neutral-500' }) %>
+              </div>
+              <p class="text-sm font-bold text-neutral-300">No transactions yet</p>
+              <p class="text-xs text-neutral-500 mt-1">Your coin transaction history will appear here.</p>
+            </div>
+          <% } %>
+        </div>
+
+        <!-- Audit Logs -->
+        <div class="cynex-glass rounded-2xl border border-white/5 overflow-hidden">
+          <div class="px-6 py-4 border-b border-white/5 bg-white/[0.01]">
+            <h2 class="text-sm font-bold text-white">Recent Activity</h2>
+            <p class="text-xs text-neutral-500 mt-0.5">Audit logs for your account.</p>
+          </div>
+
+          <% if (auditLogs && auditLogs.length > 0) { %>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-white/5">
+                <thead class="bg-white/[0.02]">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Action</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Details</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">IP</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-white/5">
+                  <% auditLogs.forEach(function(log) { %>
+                    <tr class="hover:bg-white/[0.01] transition-colors">
+                      <td class="px-6 py-3.5 text-xs font-medium text-neutral-300 whitespace-nowrap">
+                        <%= new Date(log.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %>
+                        <span class="text-neutral-500 ml-1"><%= new Date(log.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
+                      </td>
+                      <td class="px-6 py-3.5">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                          <%= log.action %>
+                        </span>
+                      </td>
+                      <td class="px-6 py-3.5 text-xs text-neutral-400 max-w-[250px] truncate">
+                        <% if (log.details) { %>
+                          <%- typeof log.details === 'string' ? log.details : JSON.stringify(log.details) %>
+                        <% } else { %>-<% } %>
+                      </td>
+                      <td class="px-6 py-3.5 text-xs text-neutral-500 font-mono"><%= log.ipAddress || '-' %></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+          <% } else { %>
+            <div class="flex flex-col items-center justify-center py-12 text-center">
+              <p class="text-xs text-neutral-500">No activity recorded yet.</p>
+            </div>
+          <% } %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<script nonce="<%- nonce %>">
+document.getElementById('txFilter')?.addEventListener('change', function() {
+  var val = this.value;
+  var rows = document.querySelectorAll('.tx-row');
+  rows.forEach(function(row) {
+    var amount = parseInt(row.dataset.amount) || 0;
+    if (val === 'all') {
+      row.style.display = '';
+    } else if (val === 'credit' && amount > 0) {
+      row.style.display = '';
+    } else if (val === 'debit' && amount < 0) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+});
+</script>
+
+<%- include('../components/footer') %>

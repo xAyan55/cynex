@@ -3,6 +3,7 @@ import { Prisma, WalletTransactionType } from '../generated/prisma/client';
 import { WalletService } from './WalletService';
 import { RewardPipeline } from './RewardPipeline';
 import { AuditService } from './AuditService';
+import { NotificationService } from './NotificationService';
 import {
   StoreProductNotFoundError,
   ProductDisabledError,
@@ -77,6 +78,14 @@ export class StoreService {
           actionValue: product.actionValue,
           coinCost: product.price,
         },
+      });
+
+      await NotificationService.create({
+        userId, type: 'store_purchase',
+        title: 'Purchase Complete',
+        message: `Purchased ${product.name} for ${product.price} coins.`,
+        referenceId: `product-${productId}`,
+        tx,
       });
     });
 

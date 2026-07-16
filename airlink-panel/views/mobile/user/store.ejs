@@ -2,64 +2,615 @@
 <main id="page-content" class="relative z-10">
   <%- include('../components/template') %>
   <div class="px-4 pt-5 pb-24 space-y-7">
+
     <div class="flex items-center justify-between">
       <div>
         <h1 class="text-base font-medium text-white">Store</h1>
-        <p class="text-xs text-neutral-400 mt-0.5">Purchase resources with coins.</p>
+        <p class="text-xs text-neutral-400 mt-0.5">Resources, upgrades, renewals.</p>
       </div>
       <div class="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5">
         <svg xmlns="http://www.w3.org/2000/svg" class="w-4 h-4 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>
-        <span class="text-xs font-bold text-white"><%= balance.toLocaleString() %></span>
+        <span id="balanceDisplay" class="text-xs font-bold text-white"><%= balance.toLocaleString() %></span>
       </div>
     </div>
 
-    <% if (!products || products.length === 0) { %>
-      <div class="flex flex-col items-center justify-center py-16 text-center">
-        <div class="w-12 h-12 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
-          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-12 0v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-6 0h18M3 9l9-6 9 6"/></svg>
-        </div>
-        <p class="text-sm font-medium text-white">No products yet</p>
-      </div>
-    <% } else { %>
-      <div class="space-y-3">
-        <% products.forEach(function(product) { %>
-          <div class="rounded-xl bg-white/5 border border-white/5 p-4 space-y-3">
-            <div class="flex items-start justify-between">
-              <div class="flex items-center gap-2.5">
-                <div class="p-2 rounded-lg bg-brand-green/10 border border-brand-green/20 text-brand-green">
-                  <%- icon(product.icon || 'package', { class: 'w-4 h-4' }) %>
-                </div>
-                <div>
-                  <p class="text-sm font-medium text-white"><%= product.name %></p>
-                  <% if (product.description) { %><p class="text-xs text-neutral-400"><%= product.description %></p><% } %>
-                </div>
-              </div>
-              <% if (product.featured) { %><span class="text-xs text-amber-400">Featured</span><% } %>
-            </div>
-            <div class="flex items-center justify-between pt-2 border-t border-white/5">
-              <span class="text-sm font-bold text-white"><%= product.price.toLocaleString() %> coins</span>
-              <button onclick="purchase(<%= product.id %>)" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-green text-black">Buy</button>
-            </div>
+    <div class="flex items-center gap-1 bg-white/5 border border-white/10 rounded-xl p-1 overflow-x-auto">
+      <button onclick="switchTab('resources')" id="tab-resources" class="tab-btn px-4 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap bg-brand-green text-black">Resources</button>
+      <button onclick="switchTab('upgrade')" id="tab-upgrade" class="tab-btn px-4 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap text-neutral-400">Upgrade</button>
+      <button onclick="switchTab('renew')" id="tab-renew" class="tab-btn px-4 py-2 rounded-lg text-xs font-medium transition-all whitespace-nowrap text-neutral-400">Renew</button>
+    </div>
+
+    <div id="panel-resources" class="tab-panel space-y-3">
+
+      <div class="rounded-xl bg-white/5 border border-white/5 p-4 space-y-3">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 rounded-lg bg-blue-500/10 border border-blue-500/20 text-blue-400"><%- icon('memory-stick', { class: 'w-4 h-4' }) %></div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-white">RAM</p>
+            <p class="text-[10px] text-neutral-400">Allocated: <%= resources.ram ? resources.ram.allocated.toLocaleString() : 0 %> MB &middot; Used: <%= resources.ram ? resources.ram.used.toLocaleString() : 0 %> MB</p>
           </div>
+          <span class="text-xs font-bold text-brand-green shrink-0"><%= storeConfig.ramPricePerMb %>/MB</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="number" min="1" value="1" data-type="RAM" data-price="<%= storeConfig.ramPricePerMb %>" class="resource-amount flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none" oninput="updateResourceCost(this)">
+          <span class="text-[10px] text-neutral-400 shrink-0">MB</span>
+          <button onclick="buyResource('RAM', this)" class="px-3 py-2 rounded-lg text-xs font-bold bg-brand-green text-black shrink-0">Buy</button>
+        </div>
+        <p class="text-[10px] text-neutral-400">Total: <span class="text-white font-bold resource-total"><%= storeConfig.ramPricePerMb %></span> coins</p>
+      </div>
+
+      <div class="rounded-xl bg-white/5 border border-white/5 p-4 space-y-3">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 rounded-lg bg-purple-500/10 border border-purple-500/20 text-purple-400"><%- icon('cpu', { class: 'w-4 h-4' }) %></div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-white">CPU</p>
+            <p class="text-[10px] text-neutral-400">Allocated: <%= resources.cpu ? resources.cpu.allocated : 0 %>% &middot; Used: <%= resources.cpu ? resources.cpu.used : 0 %>%</p>
+          </div>
+          <span class="text-xs font-bold text-brand-green shrink-0"><%= storeConfig.cpuPricePerPercent %>/%</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="number" min="1" value="1" data-type="CPU" data-price="<%= storeConfig.cpuPricePerPercent %>" class="resource-amount flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none" oninput="updateResourceCost(this)">
+          <span class="text-[10px] text-neutral-400 shrink-0">%</span>
+          <button onclick="buyResource('CPU', this)" class="px-3 py-2 rounded-lg text-xs font-bold bg-brand-green text-black shrink-0">Buy</button>
+        </div>
+        <p class="text-[10px] text-neutral-400">Total: <span class="text-white font-bold resource-total"><%= storeConfig.cpuPricePerPercent %></span> coins</p>
+      </div>
+
+      <div class="rounded-xl bg-white/5 border border-white/5 p-4 space-y-3">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 rounded-lg bg-emerald-500/10 border border-emerald-500/20 text-emerald-400"><%- icon('hard-drive', { class: 'w-4 h-4' }) %></div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-white">Disk</p>
+            <p class="text-[10px] text-neutral-400">Allocated: <%= resources.disk ? resources.disk.allocated.toLocaleString() : 0 %> MB &middot; Used: <%= resources.disk ? resources.disk.used.toLocaleString() : 0 %> MB</p>
+          </div>
+          <span class="text-xs font-bold text-brand-green shrink-0"><%= storeConfig.diskPricePerMb %>/MB</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="number" min="1" value="1" data-type="DISK" data-price="<%= storeConfig.diskPricePerMb %>" class="resource-amount flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none" oninput="updateResourceCost(this)">
+          <span class="text-[10px] text-neutral-400 shrink-0">MB</span>
+          <button onclick="buyResource('DISK', this)" class="px-3 py-2 rounded-lg text-xs font-bold bg-brand-green text-black shrink-0">Buy</button>
+        </div>
+        <p class="text-[10px] text-neutral-400">Total: <span class="text-white font-bold resource-total"><%= storeConfig.diskPricePerMb %></span> coins</p>
+      </div>
+
+      <div class="rounded-xl bg-white/5 border border-white/5 p-4 space-y-3">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400"><%- icon('archive', { class: 'w-4 h-4' }) %></div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-white">Backup Slots</p>
+            <p class="text-[10px] text-neutral-400">Allocated: <%= backupSlots %></p>
+          </div>
+          <span class="text-xs font-bold text-brand-green shrink-0"><%= storeConfig.backupSlotPrice %>/ea</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="number" min="1" value="1" data-type="BACKUP_SLOTS" data-price="<%= storeConfig.backupSlotPrice %>" class="resource-amount flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none" oninput="updateResourceCost(this)">
+          <span class="text-[10px] text-neutral-400 shrink-0">slots</span>
+          <button onclick="buyResource('BACKUP_SLOTS', this)" class="px-3 py-2 rounded-lg text-xs font-bold bg-brand-green text-black shrink-0">Buy</button>
+        </div>
+        <p class="text-[10px] text-neutral-400">Total: <span class="text-white font-bold resource-total"><%= storeConfig.backupSlotPrice %></span> coins</p>
+      </div>
+
+      <div class="rounded-xl bg-white/5 border border-white/5 p-4 space-y-3">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400"><%- icon('database', { class: 'w-4 h-4' }) %></div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-white">Database Slots</p>
+            <p class="text-[10px] text-neutral-400">Allocated: <%= databaseSlots %></p>
+          </div>
+          <span class="text-xs font-bold text-brand-green shrink-0"><%= storeConfig.databaseSlotPrice %>/ea</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="number" min="1" value="1" data-type="DATABASE_SLOTS" data-price="<%= storeConfig.databaseSlotPrice %>" class="resource-amount flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none" oninput="updateResourceCost(this)">
+          <span class="text-[10px] text-neutral-400 shrink-0">slots</span>
+          <button onclick="buyResource('DATABASE_SLOTS', this)" class="px-3 py-2 rounded-lg text-xs font-bold bg-brand-green text-black shrink-0">Buy</button>
+        </div>
+        <p class="text-[10px] text-neutral-400">Total: <span class="text-white font-bold resource-total"><%= storeConfig.databaseSlotPrice %></span> coins</p>
+      </div>
+
+      <div class="rounded-xl bg-white/5 border border-white/5 p-4 space-y-3">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400"><%- icon('network', { class: 'w-4 h-4' }) %></div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-white">Ports</p>
+            <p class="text-[10px] text-neutral-400">Allocated: <%= ports %></p>
+          </div>
+          <span class="text-xs font-bold text-brand-green shrink-0"><%= storeConfig.portPrice %>/ea</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="number" min="1" value="1" data-type="PORTS" data-price="<%= storeConfig.portPrice %>" class="resource-amount flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none" oninput="updateResourceCost(this)">
+          <span class="text-[10px] text-neutral-400 shrink-0">ports</span>
+          <button onclick="buyResource('PORTS', this)" class="px-3 py-2 rounded-lg text-xs font-bold bg-brand-green text-black shrink-0">Buy</button>
+        </div>
+        <p class="text-[10px] text-neutral-400">Total: <span class="text-white font-bold resource-total"><%= storeConfig.portPrice %></span> coins</p>
+      </div>
+
+      <div class="rounded-xl bg-white/5 border border-white/5 p-4 space-y-3">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400"><%- icon('server', { class: 'w-4 h-4' }) %></div>
+          <div class="flex-1 min-w-0">
+            <p class="text-sm font-medium text-white">Server Slots</p>
+            <p class="text-[10px] text-neutral-400">Allocated: <%= serverSlots %></p>
+          </div>
+          <span class="text-xs font-bold text-brand-green shrink-0"><%= storeConfig.databaseSlotPrice %>/ea</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="number" min="1" value="1" data-type="SERVER_SLOTS" data-price="<%= storeConfig.databaseSlotPrice %>" class="resource-amount flex-1 bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white outline-none" oninput="updateResourceCost(this)">
+          <span class="text-[10px] text-neutral-400 shrink-0">slots</span>
+          <button onclick="buyResource('SERVER_SLOTS', this)" class="px-3 py-2 rounded-lg text-xs font-bold bg-brand-green text-black shrink-0">Buy</button>
+        </div>
+        <p class="text-[10px] text-neutral-400">Total: <span class="text-white font-bold resource-total"><%= storeConfig.databaseSlotPrice %></span> coins</p>
+      </div>
+
+      <% if (products && products.length > 0) { %>
+      <div class="pt-2 space-y-3">
+        <p class="text-[11px] font-medium text-neutral-400 uppercase tracking-wider">Featured Products</p>
+        <% products.forEach(function(product) { %>
+        <div class="rounded-xl bg-white/5 border border-white/5 p-4 space-y-3">
+          <div class="flex items-start justify-between">
+            <div class="flex items-center gap-2.5">
+              <div class="p-2 rounded-lg bg-brand-green/10 border border-brand-green/20 text-brand-green">
+                <%- icon(product.icon || 'package', { class: 'w-4 h-4' }) %>
+              </div>
+              <div>
+                <p class="text-sm font-medium text-white"><%= product.name %></p>
+                <% if (product.description) { %><p class="text-xs text-neutral-400"><%= product.description %></p><% } %>
+              </div>
+            </div>
+            <% if (product.featured) { %><span class="text-xs text-amber-400">Featured</span><% } %>
+          </div>
+          <div class="flex items-center justify-between pt-2 border-t border-white/5">
+            <span class="text-sm font-bold text-white"><%= product.price.toLocaleString() %> coins</span>
+            <button onclick="purchaseProduct(<%= product.id %>, '<%= product.name.replace(/'/g, "\\'") %>', <%= product.price %>)" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-brand-green text-black">Buy</button>
+          </div>
+        </div>
         <% }); %>
       </div>
-    <% } %>
+      <% } %>
+    </div>
+
+    <div id="panel-upgrade" class="tab-panel hidden space-y-4">
+      <div class="rounded-xl bg-white/5 border border-white/5 p-4 space-y-4">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 rounded-lg bg-brand-green/10 border border-brand-green/20 text-brand-green"><%- icon('arrow-up-circle', { class: 'w-4 h-4' }) %></div>
+          <div>
+            <p class="text-sm font-medium text-white">Upgrade Server</p>
+            <p class="text-[10px] text-neutral-400">Increase RAM, CPU, or Disk</p>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-xs font-medium text-neutral-400 block mb-1.5">Select Server</label>
+          <select id="upgradeServer" onchange="loadServerUpgradeInfo()" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white outline-none appearance-none">
+            <option value="">Choose a server...</option>
+            <% servers.forEach(function(server) { %>
+            <option value="<%= server.UUID %>" data-name="<%= server.name %>" data-memory="<%= server.Memory %>" data-cpu="<%= server.Cpu %>" data-disk="<%= server.Storage %>">
+              <%= server.name %>
+            </option>
+            <% }); %>
+          </select>
+        </div>
+
+        <div id="upgradeInfo" class="hidden space-y-4">
+          <div class="grid grid-cols-3 gap-2">
+            <div class="bg-white/5 rounded-lg p-2.5 border border-white/5 text-center">
+              <p class="text-[10px] text-neutral-400">RAM</p>
+              <p id="upgradeCurrentRam" class="text-sm font-bold text-white"></p>
+            </div>
+            <div class="bg-white/5 rounded-lg p-2.5 border border-white/5 text-center">
+              <p class="text-[10px] text-neutral-400">CPU</p>
+              <p id="upgradeCurrentCpu" class="text-sm font-bold text-white"></p>
+            </div>
+            <div class="bg-white/5 rounded-lg p-2.5 border border-white/5 text-center">
+              <p class="text-[10px] text-neutral-400">Disk</p>
+              <p id="upgradeCurrentDisk" class="text-sm font-bold text-white"></p>
+            </div>
+          </div>
+
+          <div class="space-y-3">
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-xs text-neutral-400">New RAM (MB)</label>
+                <span class="text-[10px] text-neutral-500">Avail: <span id="upgradeAvailRam" class="text-brand-green"></span></span>
+              </div>
+              <input type="number" id="upgradeRam" min="64" step="64" oninput="calcUpgradeCost()" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white outline-none">
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-xs text-neutral-400">New CPU (%)</label>
+                <span class="text-[10px] text-neutral-500">Avail: <span id="upgradeAvailCpu" class="text-brand-green"></span></span>
+              </div>
+              <input type="number" id="upgradeCpu" min="10" step="10" oninput="calcUpgradeCost()" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white outline-none">
+            </div>
+            <div>
+              <div class="flex items-center justify-between mb-1">
+                <label class="text-xs text-neutral-400">New Disk (MB)</label>
+                <span class="text-[10px] text-neutral-500">Avail: <span id="upgradeAvailDisk" class="text-brand-green"></span></span>
+              </div>
+              <input type="number" id="upgradeDisk" min="512" step="512" oninput="calcUpgradeCost()" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white outline-none">
+            </div>
+          </div>
+
+          <div class="bg-white/5 rounded-xl border border-white/5 p-3 space-y-1.5">
+            <div class="flex justify-between text-xs"><span class="text-neutral-400">RAM Cost</span><span id="upgradeRamCost" class="text-white font-medium">0</span></div>
+            <div class="flex justify-between text-xs"><span class="text-neutral-400">CPU Cost</span><span id="upgradeCpuCost" class="text-white font-medium">0</span></div>
+            <div class="flex justify-between text-xs"><span class="text-neutral-400">Disk Cost</span><span id="upgradeDiskCost" class="text-white font-medium">0</span></div>
+            <div class="border-t border-white/5 pt-1.5 flex justify-between text-sm"><span class="text-neutral-400">Total</span><span id="upgradeTotalCost" class="text-white font-bold">0 coins</span></div>
+          </div>
+
+          <button onclick="submitUpgrade()" id="upgradeBtn" class="w-full py-2.5 rounded-xl text-sm font-bold bg-brand-green text-black disabled:opacity-50" disabled>Upgrade Server</button>
+        </div>
+      </div>
+    </div>
+
+    <div id="panel-renew" class="tab-panel hidden space-y-4">
+      <div class="rounded-xl bg-white/5 border border-white/5 p-4 space-y-4">
+        <div class="flex items-center gap-2.5">
+          <div class="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400"><%- icon('refresh-cw', { class: 'w-4 h-4' }) %></div>
+          <div>
+            <p class="text-sm font-medium text-white">Renew Server</p>
+            <p class="text-[10px] text-neutral-400">Extend subscription period</p>
+          </div>
+        </div>
+
+        <div>
+          <label class="text-xs font-medium text-neutral-400 block mb-1.5">Select Server</label>
+          <select id="renewServer" onchange="loadServerRenewInfo()" class="w-full bg-white/5 border border-white/10 rounded-xl px-3 py-2.5 text-sm text-white outline-none appearance-none">
+            <option value="">Choose a server...</option>
+            <% servers.forEach(function(server) { %>
+            <option value="<%= server.UUID %>" data-name="<%= server.name %>" data-expires="<%= server.expiresAt ? server.expiresAt.toISOString() : '' %>">
+              <%= server.name %>
+            </option>
+            <% }); %>
+          </select>
+        </div>
+
+        <div id="renewInfo" class="hidden space-y-4">
+          <div class="bg-white/5 rounded-lg p-3 border border-white/5">
+            <p class="text-[10px] text-neutral-400 mb-0.5">Current Expiry</p>
+            <p id="renewCurrentExpiry" class="text-sm font-bold text-white"></p>
+          </div>
+
+          <div>
+            <label class="text-xs font-medium text-neutral-400 block mb-2">Duration</label>
+            <div class="grid grid-cols-5 gap-1.5">
+              <button onclick="selectRenewDays(7, this)" data-days="7" class="renew-day-btn py-2 rounded-lg text-xs font-bold border border-white/10 bg-white/5 text-neutral-400 text-center">7<span class="block text-[9px] font-normal">days</span></button>
+              <button onclick="selectRenewDays(15, this)" data-days="15" class="renew-day-btn py-2 rounded-lg text-xs font-bold border border-white/10 bg-white/5 text-neutral-400 text-center">15<span class="block text-[9px] font-normal">days</span></button>
+              <button onclick="selectRenewDays(30, this)" data-days="30" class="renew-day-btn py-2 rounded-lg text-xs font-bold border border-white/10 bg-white/5 text-neutral-400 text-center">30<span class="block text-[9px] font-normal">days</span></button>
+              <button onclick="selectRenewDays(60, this)" data-days="60" class="renew-day-btn py-2 rounded-lg text-xs font-bold border border-white/10 bg-white/5 text-neutral-400 text-center">60<span class="block text-[9px] font-normal">days</span></button>
+              <button onclick="selectRenewDays(90, this)" data-days="90" class="renew-day-btn py-2 rounded-lg text-xs font-bold border border-white/10 bg-white/5 text-neutral-400 text-center">90<span class="block text-[9px] font-normal">days</span></button>
+            </div>
+          </div>
+
+          <div class="bg-white/5 rounded-xl border border-white/5 p-3 space-y-1.5">
+            <div class="flex justify-between text-xs"><span class="text-neutral-400">Duration</span><span id="renewDuration" class="text-white font-medium">-</span></div>
+            <div class="flex justify-between text-xs"><span class="text-neutral-400">Current Expiry</span><span id="renewExpiryCurrent" class="text-white font-medium">-</span></div>
+            <div class="flex justify-between text-xs"><span class="text-neutral-400">New Expiry</span><span id="renewExpiryNew" class="text-brand-green font-medium">-</span></div>
+            <div class="border-t border-white/5 pt-1.5 flex justify-between text-sm"><span class="text-neutral-400">Cost</span><span id="renewCost" class="text-white font-bold">0 coins</span></div>
+          </div>
+
+          <button onclick="submitRenew()" id="renewBtn" class="w-full py-2.5 rounded-xl text-sm font-bold bg-brand-green text-black disabled:opacity-50" disabled>Renew Server</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 </main>
+
 <script nonce="<%- nonce %>">
-function purchase(productId) {
-  if (!confirm('Confirm purchase?')) return;
-  fetch('/store/buy/' + productId, { method: 'POST' })
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      if (data.success) {
-        alert('Purchased!');
-        window.location.reload();
-      } else {
-        alert(data.error || 'Purchase failed.');
-      }
-    })
-    .catch(function() { alert('Network error.'); });
+var CURRENT_BALANCE = <%= balance %>;
+var STORE_CONFIG = {
+  ramPricePerMb: <%= storeConfig.ramPricePerMb %>,
+  cpuPricePerPercent: <%= storeConfig.cpuPricePerPercent %>,
+  diskPricePerMb: <%= storeConfig.diskPricePerMb %>,
+  backupSlotPrice: <%= storeConfig.backupSlotPrice %>,
+  databaseSlotPrice: <%= storeConfig.databaseSlotPrice %>,
+  portPrice: <%= storeConfig.portPrice %>
+};
+var RENEWAL_CONFIG = {
+  7: <%= renewalConfig.renew7DaysCost %>,
+  15: <%= renewalConfig.renew15DaysCost %>,
+  30: <%= renewalConfig.renew30DaysCost %>,
+  60: <%= renewalConfig.renew60DaysCost %>,
+  90: <%= renewalConfig.renew90DaysCost %>
+};
+var RESOURCES = <%- JSON.stringify(resources) %>;
+var selectedRenewDays = 0;
+
+function switchTab(tab) {
+  document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.add('hidden'); });
+  document.querySelectorAll('.tab-btn').forEach(function(b) {
+    b.classList.remove('bg-brand-green', 'text-black');
+    b.classList.add('text-neutral-400');
+  });
+  document.getElementById('panel-' + tab).classList.remove('hidden');
+  var btn = document.getElementById('tab-' + tab);
+  btn.classList.add('bg-brand-green', 'text-black');
+  btn.classList.remove('text-neutral-400');
+}
+
+function updateResourceCost(el) {
+  var price = parseInt(el.dataset.price, 10);
+  var amount = parseInt(el.value, 10) || 0;
+  var total = amount * price;
+  el.closest('.rounded-xl').querySelector('.resource-total').textContent = total.toLocaleString();
+}
+
+function buyResource(type, btnEl) {
+  var card = btnEl.closest('.rounded-xl');
+  var input = card.querySelector('.resource-amount');
+  var amount = parseInt(input.value, 10);
+  if (!amount || amount <= 0) { alert('Enter a valid amount.'); return; }
+  var price = parseInt(input.dataset.price, 10);
+  var total = amount * price;
+
+  window.modal.confirm({
+    title: 'Confirm Purchase',
+    body: 'Buy ' + amount + ' ' + type.replace(/_/g, ' ').toLowerCase() + ' for ' + total.toLocaleString() + ' coins?',
+    danger: false,
+    confirmLabel: 'Buy',
+    onConfirm: function() {
+      btnEl.disabled = true;
+      btnEl.textContent = '...';
+      fetch('/store/buy-resource', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type: type, amount: amount })
+      }).then(function(r) { return r.json(); }).then(function(data) {
+        btnEl.disabled = false;
+        btnEl.textContent = 'Buy';
+        if (data.success) {
+          CURRENT_BALANCE = data.newBalance;
+          document.getElementById('balanceDisplay').textContent = CURRENT_BALANCE.toLocaleString();
+          window.modal.confirm({
+            title: 'Purchased!',
+            body: 'Bought ' + amount + ' ' + type.replace(/_/g, ' ').toLowerCase() + ' for ' + total.toLocaleString() + ' coins.',
+            danger: false,
+            confirmLabel: 'OK',
+            onConfirm: function() { window.location.reload(); }
+          });
+        } else {
+          alert(data.error || 'Purchase failed.');
+        }
+      }).catch(function() {
+        btnEl.disabled = false;
+        btnEl.textContent = 'Buy';
+        alert('Network error.');
+      });
+    }
+  });
+}
+
+function purchaseProduct(id, name, price) {
+  window.modal.confirm({
+    title: 'Confirm Purchase',
+    body: 'Buy ' + name + ' for ' + price.toLocaleString() + ' coins?',
+    danger: false,
+    confirmLabel: 'Buy',
+    onConfirm: function() {
+      fetch('/store/buy/' + id, { method: 'POST' }).then(function(r) { return r.json(); }).then(function(data) {
+        if (data.success) {
+          CURRENT_BALANCE = CURRENT_BALANCE - price;
+          document.getElementById('balanceDisplay').textContent = CURRENT_BALANCE.toLocaleString();
+          window.modal.confirm({
+            title: 'Purchased!',
+            body: 'Bought ' + name + '.',
+            danger: false,
+            confirmLabel: 'OK',
+            onConfirm: function() { window.location.reload(); }
+          });
+        } else {
+          alert(data.error || 'Purchase failed.');
+        }
+      }).catch(function() { alert('Network error.'); });
+    }
+  });
+}
+
+function loadServerUpgradeInfo() {
+  var sel = document.getElementById('upgradeServer');
+  var opt = sel.options[sel.selectedIndex];
+  var info = document.getElementById('upgradeInfo');
+  if (!sel.value) { info.classList.add('hidden'); return; }
+
+  var mem = parseInt(opt.dataset.memory, 10);
+  var cpu = parseInt(opt.dataset.cpu, 10);
+  var disk = parseInt(opt.dataset.disk, 10);
+
+  document.getElementById('upgradeCurrentRam').textContent = mem + 'MB';
+  document.getElementById('upgradeCurrentCpu').textContent = cpu + '%';
+  document.getElementById('upgradeCurrentDisk').textContent = disk + 'MB';
+
+  document.getElementById('upgradeRam').value = mem;
+  document.getElementById('upgradeCpu').value = cpu;
+  document.getElementById('upgradeDisk').value = disk;
+
+  var availRam = RESOURCES.ram ? RESOURCES.ram.available : 0;
+  var availCpu = RESOURCES.cpu ? RESOURCES.cpu.available : 0;
+  var availDisk = RESOURCES.disk ? RESOURCES.disk.available : 0;
+  document.getElementById('upgradeAvailRam').textContent = availRam.toLocaleString();
+  document.getElementById('upgradeAvailCpu').textContent = availCpu;
+  document.getElementById('upgradeAvailDisk').textContent = availDisk.toLocaleString();
+
+  info.classList.remove('hidden');
+  calcUpgradeCost();
+}
+
+function calcUpgradeCost() {
+  var sel = document.getElementById('upgradeServer');
+  var opt = sel.options[sel.selectedIndex];
+  if (!sel.value) return;
+
+  var curMem = parseInt(opt.dataset.memory, 10);
+  var curCpu = parseInt(opt.dataset.cpu, 10);
+  var curDisk = parseInt(opt.dataset.disk, 10);
+
+  var newMem = parseInt(document.getElementById('upgradeRam').value, 10) || curMem;
+  var newCpu = parseInt(document.getElementById('upgradeCpu').value, 10) || curCpu;
+  var newDisk = parseInt(document.getElementById('upgradeDisk').value, 10) || curDisk;
+
+  var memDiff = Math.max(0, newMem - curMem);
+  var cpuDiff = Math.max(0, newCpu - curCpu);
+  var diskDiff = Math.max(0, newDisk - curDisk);
+
+  var memCost = memDiff * STORE_CONFIG.ramPricePerMb;
+  var cpuCost = cpuDiff * STORE_CONFIG.cpuPricePerPercent;
+  var diskCost = diskDiff * STORE_CONFIG.diskPricePerMb;
+  var total = memCost + cpuCost + diskCost;
+
+  document.getElementById('upgradeRamCost').textContent = memCost.toLocaleString() + ' coins';
+  document.getElementById('upgradeCpuCost').textContent = cpuCost.toLocaleString() + ' coins';
+  document.getElementById('upgradeDiskCost').textContent = diskCost.toLocaleString() + ' coins';
+  document.getElementById('upgradeTotalCost').textContent = total.toLocaleString() + ' coins';
+
+  document.getElementById('upgradeBtn').disabled = total === 0;
+}
+
+function submitUpgrade() {
+  var sel = document.getElementById('upgradeServer');
+  var serverId = sel.value;
+  if (!serverId) return;
+
+  var mem = document.getElementById('upgradeRam').value;
+  var cpu = document.getElementById('upgradeCpu').value;
+  var disk = document.getElementById('upgradeDisk').value;
+  var totalCost = document.getElementById('upgradeTotalCost').textContent;
+
+  window.modal.confirm({
+    title: 'Confirm Upgrade',
+    body: 'Upgrade for ' + totalCost + '?',
+    danger: false,
+    confirmLabel: 'Upgrade',
+    onConfirm: function() {
+      var btn = document.getElementById('upgradeBtn');
+      btn.disabled = true;
+      btn.textContent = 'Upgrading...';
+      fetch('/store/upgrade', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ serverId: serverId, memory: mem, cpu: cpu, disk: disk })
+      }).then(function(r) { return r.json(); }).then(function(data) {
+        btn.disabled = false;
+        btn.textContent = 'Upgrade Server';
+        if (data.success) {
+          CURRENT_BALANCE = data.newBalance;
+          document.getElementById('balanceDisplay').textContent = CURRENT_BALANCE.toLocaleString();
+          window.modal.confirm({
+            title: 'Upgraded!',
+            body: 'Server upgraded for ' + data.coinCost + ' coins.',
+            danger: false,
+            confirmLabel: 'OK',
+            onConfirm: function() { window.location.reload(); }
+          });
+        } else {
+          alert(data.error || 'Upgrade failed.');
+        }
+      }).catch(function() {
+        btn.disabled = false;
+        btn.textContent = 'Upgrade Server';
+        alert('Network error.');
+      });
+    }
+  });
+}
+
+function loadServerRenewInfo() {
+  var sel = document.getElementById('renewServer');
+  var opt = sel.options[sel.selectedIndex];
+  var info = document.getElementById('renewInfo');
+  if (!sel.value) { info.classList.add('hidden'); return; }
+
+  var expiresStr = opt.dataset.expires;
+  var expiryDate = expiresStr ? new Date(expiresStr) : null;
+  var now = new Date();
+  var currentExpiry = expiryDate && expiryDate > now ? expiryDate : now;
+
+  document.getElementById('renewCurrentExpiry').textContent = formatDate(currentExpiry);
+  selectedRenewDays = 0;
+  document.querySelectorAll('.renew-day-btn').forEach(function(b) {
+    b.classList.remove('bg-brand-green', 'text-black', 'border-brand-green/30');
+    b.classList.add('bg-white/5', 'text-neutral-400', 'border-white/10');
+  });
+  document.getElementById('renewDuration').textContent = '-';
+  document.getElementById('renewExpiryCurrent').textContent = '-';
+  document.getElementById('renewExpiryNew').textContent = '-';
+  document.getElementById('renewCost').textContent = '0 coins';
+  document.getElementById('renewBtn').disabled = true;
+
+  info.classList.remove('hidden');
+}
+
+function selectRenewDays(days, el) {
+  selectedRenewDays = days;
+  document.querySelectorAll('.renew-day-btn').forEach(function(b) {
+    b.classList.remove('bg-brand-green', 'text-black', 'border-brand-green/30');
+    b.classList.add('bg-white/5', 'text-neutral-400', 'border-white/10');
+  });
+  el.classList.add('bg-brand-green', 'text-black', 'border-brand-green/30');
+  el.classList.remove('bg-white/5', 'text-neutral-400', 'border-white/10');
+
+  var sel = document.getElementById('renewServer');
+  var opt = sel.options[sel.selectedIndex];
+  var expiresStr = opt.dataset.expires;
+  var expiryDate = expiresStr ? new Date(expiresStr) : null;
+  var now = new Date();
+  var currentExpiry = expiryDate && expiryDate > now ? expiryDate : now;
+  var newExpiry = new Date(currentExpiry.getTime() + days * 86400000);
+  var cost = RENEWAL_CONFIG[days] || 0;
+
+  document.getElementById('renewDuration').textContent = days + ' days';
+  document.getElementById('renewExpiryCurrent').textContent = formatDate(currentExpiry);
+  document.getElementById('renewExpiryNew').textContent = formatDate(newExpiry);
+  document.getElementById('renewCost').textContent = cost.toLocaleString() + ' coins';
+  document.getElementById('renewBtn').disabled = false;
+}
+
+function submitRenew() {
+  var sel = document.getElementById('renewServer');
+  var serverId = sel.value;
+  if (!serverId || !selectedRenewDays) return;
+
+  var cost = RENEWAL_CONFIG[selectedRenewDays] || 0;
+  window.modal.confirm({
+    title: 'Confirm Renewal',
+    body: 'Renew for ' + selectedRenewDays + ' days for ' + cost.toLocaleString() + ' coins?',
+    danger: false,
+    confirmLabel: 'Renew',
+    onConfirm: function() {
+      var btn = document.getElementById('renewBtn');
+      btn.disabled = true;
+      btn.textContent = 'Renewing...';
+      fetch('/store/renew', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ serverId: serverId, days: selectedRenewDays })
+      }).then(function(r) { return r.json(); }).then(function(data) {
+        btn.disabled = false;
+        btn.textContent = 'Renew Server';
+        if (data.success) {
+          CURRENT_BALANCE = data.newBalance;
+          document.getElementById('balanceDisplay').textContent = CURRENT_BALANCE.toLocaleString();
+          window.modal.confirm({
+            title: 'Renewed!',
+            body: 'Renewed for ' + data.coinCost + ' coins. New expiry: ' + formatDate(new Date(data.expiresAt)) + '.',
+            danger: false,
+            confirmLabel: 'OK',
+            onConfirm: function() { window.location.reload(); }
+          });
+        } else {
+          alert(data.error || 'Renewal failed.');
+        }
+      }).catch(function() {
+        btn.disabled = false;
+        btn.textContent = 'Renew Server';
+        alert('Network error.');
+      });
+    }
+  });
+}
+
+function formatDate(d) {
+  if (!d || isNaN(d.getTime())) return 'No expiry';
+  return d.toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' });
 }
 </script>
 <%- include('../components/footer') %>

@@ -6,6 +6,9 @@ import { getUser } from '../../handlers/utils/user/user';
 import logger from '../../handlers/logger';
 import axios from 'axios';
 import { daemonSchemeSync } from '../../handlers/utils/core/daemonRequest';
+import { WalletService } from '../../services/WalletService';
+import { ResourceService } from '../../services/ResourceService';
+import { StoreService } from '../../services/StoreService';
 interface ErrorMessage {
   message?: string;
 }
@@ -48,7 +51,7 @@ const dashboardModule: Module = {
         ]);
         if (!user) {
           errorMessage.message = 'User not found.';
-          res.render('user/dashboard', { errorMessage, user, req });
+          res.render('user/dashboard', { errorMessage, user, req, walletBalance: 0, resourceTotals: { ram: { allocated: 0, used: 0, available: 0 }, cpu: { allocated: 0, used: 0, available: 0 }, disk: { allocated: 0, used: 0, available: 0 } }, recentPurchases: [], recentTransactions: [] });
           return;
         }
 
@@ -104,6 +107,13 @@ const dashboardModule: Module = {
           });
           const canCreateServer = !user.isAdmin && (settings?.allowUserCreateServer ?? false);
 
+          const [walletBalance, resourceTotals, purchaseHistory, transactionHistory] = await Promise.all([
+            WalletService.getBalance(userId).catch(() => 0),
+            ResourceService.getUserResources(userId).catch(() => ({ ram: { allocated: 0, used: 0, available: 0 }, cpu: { allocated: 0, used: 0, available: 0 }, disk: { allocated: 0, used: 0, available: 0 } })),
+            StoreService.getPurchaseHistory(userId, 1, 5).catch(() => ({ purchases: [], total: 0, page: 1, totalPages: 0 })),
+            WalletService.getHistory(userId, 1, 5).catch(() => ({ transactions: [], total: 0, page: 1, totalPages: 0 })),
+          ]);
+
           return res.render('user/dashboard', {
             errorMessage: {
               message:
@@ -120,6 +130,10 @@ const dashboardModule: Module = {
             totalPages: 1,
             daemonOffline: true,
             nodeStatuses,
+            walletBalance,
+            resourceTotals,
+            recentPurchases: purchaseHistory.purchases,
+            recentTransactions: transactionHistory.transactions,
           });
         }
 
@@ -237,6 +251,13 @@ const dashboardModule: Module = {
 
         const canCreateServer = !user.isAdmin && (settings?.allowUserCreateServer ?? false);
 
+        const [walletBalance, resourceTotals, purchaseHistory, transactionHistory] = await Promise.all([
+          WalletService.getBalance(userId).catch(() => 0),
+          ResourceService.getUserResources(userId).catch(() => ({ ram: { allocated: 0, used: 0, available: 0 }, cpu: { allocated: 0, used: 0, available: 0 }, disk: { allocated: 0, used: 0, available: 0 } })),
+          StoreService.getPurchaseHistory(userId, 1, 5).catch(() => ({ purchases: [], total: 0, page: 1, totalPages: 0 })),
+          WalletService.getHistory(userId, 1, 5).catch(() => ({ transactions: [], total: 0, page: 1, totalPages: 0 })),
+        ]);
+
         res.render('user/dashboard', {
           errorMessage,
           user,
@@ -249,6 +270,10 @@ const dashboardModule: Module = {
           currentPage: page,
           totalPages: Math.ceil(servers.length / perPage),
           title: 'Servers',
+          walletBalance,
+          resourceTotals,
+          recentPurchases: purchaseHistory.purchases,
+          recentTransactions: transactionHistory.transactions,
         });
       } catch (error) {
         logger.error('Error fetching user:', error);
@@ -258,6 +283,10 @@ const dashboardModule: Module = {
           user: getUser(req),
           req,
           settings: null,
+          walletBalance: 0,
+          resourceTotals: { ram: { allocated: 0, used: 0, available: 0 }, cpu: { allocated: 0, used: 0, available: 0 }, disk: { allocated: 0, used: 0, available: 0 } },
+          recentPurchases: [],
+          recentTransactions: [],
         });
       }
     });

@@ -3,6 +3,7 @@ import { Prisma, AllocationType, AllocationSource, WalletTransactionType } from 
 import { WalletService } from './WalletService';
 import { ResourceService } from './ResourceService';
 import { AuditService } from './AuditService';
+import { NotificationService } from './NotificationService';
 import { ConfigService } from './config/ConfigService';
 import {
   ServerNotFoundError,
@@ -134,6 +135,14 @@ export class ServerLifecycleService {
         tx,
       });
 
+      await NotificationService.create({
+        userId, type: 'server_upgrade',
+        title: 'Server Upgraded',
+        message: `Resources upgraded. Cost: ${coinCost} coins.`,
+        referenceId: serverId,
+        tx,
+      });
+
       return { success: true, serverId, coinCost, memory: newMemory, cpu: newCpu, disk: newDisk };
     });
   }
@@ -212,6 +221,14 @@ export class ServerLifecycleService {
         tx,
       });
 
+      await NotificationService.create({
+        userId, type: 'server_downgrade',
+        title: 'Server Downgraded',
+        message: `Resources reduced. Refund: ${refundAmount} coins.`,
+        referenceId: serverId,
+        tx,
+      });
+
       return { success: true, serverId, refundAmount, memory: newMemory, cpu: newCpu, disk: newDisk };
     });
   }
@@ -275,6 +292,14 @@ export class ServerLifecycleService {
         tx,
       });
 
+      await NotificationService.create({
+        userId, type: 'server_renew',
+        title: 'Server Renewed',
+        message: `Renewed for ${days} days. Cost: ${coinCost} coins.`,
+        referenceId: serverId,
+        tx,
+      });
+
       return { success: true, serverId, coinCost, expiresAt: newExpiry };
     });
   }
@@ -305,6 +330,14 @@ export class ServerLifecycleService {
         ipAddress,
         tx,
       });
+
+      await NotificationService.create({
+        userId: server.ownerId, type: 'server_suspended',
+        title: 'Server Suspended',
+        message: reason || 'Your server has been suspended.',
+        referenceId: serverId,
+        tx,
+      });
     });
   }
 
@@ -333,6 +366,14 @@ export class ServerLifecycleService {
         ipAddress,
         tx,
       });
+
+      await NotificationService.create({
+        userId: server.ownerId, type: 'server_unsuspended',
+        title: 'Server Unsuspended',
+        message: 'Your server has been unsuspended.',
+        referenceId: serverId,
+        tx,
+      });
     });
   }
 
@@ -356,6 +397,14 @@ export class ServerLifecycleService {
         details: { before: { name: server.name, memory: server.Memory, cpu: server.Cpu, disk: server.Storage }, after: null },
         referenceId: serverId,
         ipAddress,
+        tx,
+      });
+
+      await NotificationService.create({
+        userId, type: 'server_deleted',
+        title: 'Server Deleted',
+        message: `Server "${server.name}" has been deleted.`,
+        referenceId: serverId,
         tx,
       });
     });

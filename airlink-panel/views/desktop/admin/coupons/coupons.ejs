@@ -1,0 +1,224 @@
+<%- include('../../components/header', { title: 'Coupon Management' }) %>
+
+<main class="min-h-screen m-auto">
+  <div class="flex min-h-screen">
+    <div class="w-60 h-full"><%- include('../../components/template') %></div>
+    <div id="page-content" class="flex-1 overflow-y-auto pt-16 pb-12">
+      <div class="px-8 pt-5">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-base font-medium text-neutral-800 dark:text-white">Coupon Management</h1>
+            <p class="mt-0.5 text-sm text-neutral-500">Create and manage coupon codes for rewards.</p>
+          </div>
+          <a href="/admin/coupons/create" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-4 py-2 text-sm font-medium shadow-sm transition flex items-center gap-1.5">
+            <%- icon('plus', { class: 'w-4 h-4' }) %>
+            Create Coupon
+          </a>
+        </div>
+      </div>
+
+      <div class="px-8 mt-5">
+
+        <!-- Search -->
+        <div class="mb-4">
+          <form method="GET" action="/admin/coupons" class="flex gap-3">
+            <input type="text" name="search" value="<%= search %>" placeholder="Search by code..."
+              class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors w-72">
+            <button type="submit" class="rounded-xl bg-neutral-200 dark:bg-neutral-700/60 hover:bg-neutral-300 dark:hover:bg-neutral-700 text-neutral-700 dark:text-neutral-200 border border-neutral-300 dark:border-white/5 px-4 py-2 text-sm font-medium transition">Search</button>
+            <% if (search) { %>
+            <a href="/admin/coupons" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 px-4 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Clear</a>
+            <% } %>
+          </form>
+        </div>
+
+        <!-- Coupons table -->
+        <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-neutral-200 dark:border-white/5 text-left">
+                  <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Code</th>
+                  <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Description</th>
+                  <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Reward</th>
+                  <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Uses</th>
+                  <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Expiry</th>
+                  <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Status</th>
+                  <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-neutral-100 dark:divide-white/5">
+                <% if (coupons.length === 0) { %>
+                <tr>
+                  <td colspan="7" class="px-5 py-12 text-center">
+                    <div class="text-neutral-400 mb-2">
+                      <%- icon('tag', { class: 'w-8 h-8 mx-auto opacity-50' }) %>
+                    </div>
+                    <p class="text-sm text-neutral-500"><%= search ? 'No coupons match your search.' : 'No coupons created yet.' %></p>
+                    <% if (!search) { %>
+                    <a href="/admin/coupons/create" class="inline-block mt-3 text-sm text-neutral-900 dark:text-white font-medium hover:underline">Create your first coupon</a>
+                    <% } %>
+                  </td>
+                </tr>
+                <% } else { %>
+                <% coupons.forEach(function(coupon) { %>
+                <tr class="hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors coupon-row" data-coupon-id="<%= coupon.id %>">
+                  <td class="px-5 py-3">
+                    <div class="flex items-center gap-2">
+                      <span class="font-mono font-medium text-neutral-800 dark:text-white text-xs tracking-wider"><%= coupon.code %></span>
+                      <button type="button" class="copy-code-btn text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition" data-code="<%= coupon.code %>" title="Copy code">
+                        <%- icon('copy', { class: 'w-3.5 h-3.5' }) %>
+                      </button>
+                    </div>
+                  </td>
+                  <td class="px-5 py-3 text-xs text-neutral-500 max-w-[200px] truncate"><%= coupon.description || '-' %></td>
+                  <td class="px-5 py-3">
+                    <div>
+                      <span class="text-xs font-medium text-neutral-800 dark:text-white"><%= coupon.actionType.replace('ADD_', '+') %></span>
+                      <span class="text-xs text-neutral-500 ml-1">&times; <%= coupon.actionValue.toLocaleString() %></span>
+                    </div>
+                  </td>
+                  <td class="px-5 py-3 text-xs text-neutral-600 dark:text-neutral-400">
+                    <%= coupon.maxUses > 0 ? 'Unlimited' : coupon.maxUses %>
+                  </td>
+                  <td class="px-5 py-3 text-xs text-neutral-500 whitespace-nowrap">
+                    <%= coupon.expiresAt ? new Date(coupon.expiresAt).toLocaleDateString() : 'Never' %>
+                  </td>
+                  <td class="px-5 py-3">
+                    <% if (coupon.enabled) { %>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400">Active</span>
+                    <% } else { %>
+                    <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-neutral-100 dark:bg-neutral-700/40 text-neutral-500 dark:text-neutral-400">Disabled</span>
+                    <% } %>
+                  </td>
+                  <td class="px-5 py-3">
+                    <div class="flex items-center gap-1.5">
+                      <button type="button" class="coupon-toggle-btn text-xs px-2 py-1 rounded-lg border transition-colors <%= coupon.enabled ? 'border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10' : 'border-neutral-200 dark:border-neutral-600/30 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700/20' %>" data-coupon-id="<%= coupon.id %>">
+                        <%= coupon.enabled ? 'Disable' : 'Enable' %>
+                      </button>
+                      <a href="/admin/coupons/<%= coupon.id %>/edit" class="text-xs px-2 py-1 rounded-lg border border-neutral-200 dark:border-neutral-600/30 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Edit</a>
+                      <button type="button" class="coupon-duplicate-btn text-xs px-2 py-1 rounded-lg border border-blue-200 dark:border-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition" data-coupon-id="<%= coupon.id %>">Clone</button>
+                      <button type="button" class="coupon-delete-btn text-xs px-2 py-1 rounded-lg border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition" data-coupon-id="<%= coupon.id %>">Delete</button>
+                    </div>
+                  </td>
+                </tr>
+                <% }); } %>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Pagination -->
+        <% if (totalPages > 1) { %>
+        <div class="mt-4 flex items-center justify-between">
+          <p class="text-xs text-neutral-500">Page <%= page %> of <%= totalPages %> (<%= total %> total)</p>
+          <div class="flex gap-2">
+            <% if (page > 1) { %>
+            <a href="/admin/coupons?page=<%= page - 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %>" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Previous</a>
+            <% } %>
+            <% for (var p = 1; p <= totalPages; p++) { %>
+            <% if (p === page) { %>
+            <span class="rounded-lg bg-neutral-900 dark:bg-white text-white dark:text-neutral-900 px-3 py-1.5 text-xs font-medium"><%= p %></span>
+            <% } else if (Math.abs(p - page) <= 2 || p === 1 || p === totalPages) { %>
+            <a href="/admin/coupons?page=<%= p %><%= search ? '&search=' + encodeURIComponent(search) : '' %>" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition"><%= p %></a>
+            <% } else if (Math.abs(p - page) === 3) { %>
+            <span class="text-xs text-neutral-400 px-1">...</span>
+            <% } %>
+            <% } %>
+            <% if (page < totalPages) { %>
+            <a href="/admin/coupons?page=<%= page + 1 %><%= search ? '&search=' + encodeURIComponent(search) : '' %>" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Next</a>
+            <% } %>
+          </div>
+        </div>
+        <% } %>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('../../components/toast') %>
+<%- include('../../components/modal') %>
+
+<script nonce="<%- nonce %>">
+(function() {
+  var toast = window.showToast || function() {};
+
+  // Copy code
+  document.querySelectorAll('.copy-code-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var code = this.dataset.code;
+      navigator.clipboard.writeText(code).then(function() {
+        toast('Code copied!', 'success');
+      });
+    });
+  });
+
+  // Toggle coupon
+  document.querySelectorAll('.coupon-toggle-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = this.dataset.couponId;
+      var self = this;
+      fetch('/admin/coupons/' + id + '/toggle', { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+          if (res.success) {
+            toast('Coupon ' + (res.enabled ? 'enabled' : 'disabled') + '.', 'success');
+            setTimeout(function() { location.reload(); }, 500);
+          } else {
+            toast(res.error || 'Failed.', 'error');
+          }
+        })
+        .catch(function() { toast('Network error.', 'error'); });
+    });
+  });
+
+  // Duplicate coupon
+  document.querySelectorAll('.coupon-duplicate-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = this.dataset.couponId;
+      fetch('/admin/coupons/' + id + '/duplicate', { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+          if (res.success) {
+            toast('Coupon duplicated as ' + res.coupon.code, 'success');
+            setTimeout(function() { location.reload(); }, 800);
+          } else {
+            toast(res.error || 'Failed.', 'error');
+          }
+        })
+        .catch(function() { toast('Network error.', 'error'); });
+    });
+  });
+
+  // Delete coupon
+  document.querySelectorAll('.coupon-delete-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = this.dataset.couponId;
+      var self = this;
+      if (window.modal) {
+        window.modal.confirm({
+          title: 'Delete this coupon?',
+          body: 'This action cannot be undone. Existing redemptions will remain in the audit log.',
+          danger: true,
+          confirmLabel: 'Delete',
+          onConfirm: function() {
+            fetch('/admin/coupons/' + id + '/delete', { method: 'POST' })
+              .then(function(r) { return r.json(); })
+              .then(function(res) {
+                if (res.success) {
+                  toast('Coupon deleted.', 'success');
+                  self.closest('tr').remove();
+                } else {
+                  toast(res.error || 'Failed.', 'error');
+                }
+              })
+              .catch(function() { toast('Network error.', 'error'); });
+          }
+        });
+      }
+    });
+  });
+})();
+</script>
+
+<%- include('../../components/footer') %>

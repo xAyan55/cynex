@@ -89,6 +89,7 @@ model Users {
   folders             ServerFolder[]
   apiKeys             ApiKey[]
   loginHistory        LoginHistory[]
+  notifications       Notification[]
 }
 
 model Session {
@@ -444,6 +445,23 @@ model AuditLog {
   @@index([createdAt])
   @@index([action])
   @@index([userId])
+}
+
+/// Notifications for user events (purchases, renewals, expiry, etc.)
+model Notification {
+  id          Int      @id @default(autoincrement())
+  userId      Int
+  type        String
+  title       String
+  message     String
+  referenceId String?
+  read        Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, read])
+  @@index([createdAt])
 }
 
 /// Future-proof plan model — enables plan-based server creation and upgrades.

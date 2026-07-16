@@ -287,6 +287,7 @@ export type UsersWhereInput = {
   folders?: Prisma.ServerFolderListRelationFilter
   apiKeys?: Prisma.ApiKeyListRelationFilter
   loginHistory?: Prisma.LoginHistoryListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
 }
 
 export type UsersOrderByWithRelationInput = {
@@ -313,6 +314,7 @@ export type UsersOrderByWithRelationInput = {
   folders?: Prisma.ServerFolderOrderByRelationAggregateInput
   apiKeys?: Prisma.ApiKeyOrderByRelationAggregateInput
   loginHistory?: Prisma.LoginHistoryOrderByRelationAggregateInput
+  notifications?: Prisma.NotificationOrderByRelationAggregateInput
 }
 
 export type UsersWhereUniqueInput = Prisma.AtLeast<{
@@ -342,6 +344,7 @@ export type UsersWhereUniqueInput = Prisma.AtLeast<{
   folders?: Prisma.ServerFolderListRelationFilter
   apiKeys?: Prisma.ApiKeyListRelationFilter
   loginHistory?: Prisma.LoginHistoryListRelationFilter
+  notifications?: Prisma.NotificationListRelationFilter
 }, "id" | "email" | "username">
 
 export type UsersOrderByWithAggregationInput = {
@@ -405,6 +408,7 @@ export type UsersCreateInput = {
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateInput = {
@@ -431,6 +435,7 @@ export type UsersUncheckedCreateInput = {
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersUpdateInput = {
@@ -456,6 +461,7 @@ export type UsersUpdateInput = {
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateInput = {
@@ -482,6 +488,7 @@ export type UsersUncheckedUpdateInput = {
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateManyInput = {
@@ -783,6 +790,20 @@ export type UsersUpdateOneWithoutAuditLogsAsAdminNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutAuditLogsAsAdminInput, Prisma.UsersUpdateWithoutAuditLogsAsAdminInput>, Prisma.UsersUncheckedUpdateWithoutAuditLogsAsAdminInput>
 }
 
+export type UsersCreateNestedOneWithoutNotificationsInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutNotificationsInput, Prisma.UsersUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutNotificationsInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneRequiredWithoutNotificationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutNotificationsInput, Prisma.UsersUncheckedCreateWithoutNotificationsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutNotificationsInput
+  upsert?: Prisma.UsersUpsertWithoutNotificationsInput
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UsersUpdateWithoutNotificationsInput>, Prisma.UsersUncheckedUpdateWithoutNotificationsInput>
+}
+
 export type UsersCreateWithoutServersInput = {
   email: string
   username?: string | null
@@ -805,6 +826,7 @@ export type UsersCreateWithoutServersInput = {
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutServersInput = {
@@ -830,6 +852,7 @@ export type UsersUncheckedCreateWithoutServersInput = {
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutServersInput = {
@@ -870,6 +893,7 @@ export type UsersUpdateWithoutServersInput = {
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutServersInput = {
@@ -895,6 +919,7 @@ export type UsersUncheckedUpdateWithoutServersInput = {
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutFoldersInput = {
@@ -919,6 +944,7 @@ export type UsersCreateWithoutFoldersInput = {
   servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutFoldersInput = {
@@ -944,6 +970,7 @@ export type UsersUncheckedCreateWithoutFoldersInput = {
   servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutFoldersInput = {
@@ -984,6 +1011,7 @@ export type UsersUpdateWithoutFoldersInput = {
   servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutFoldersInput = {
@@ -1009,6 +1037,7 @@ export type UsersUncheckedUpdateWithoutFoldersInput = {
   servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutApiKeysInput = {
@@ -1033,6 +1062,7 @@ export type UsersCreateWithoutApiKeysInput = {
   servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutApiKeysInput = {
@@ -1058,6 +1088,7 @@ export type UsersUncheckedCreateWithoutApiKeysInput = {
   servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutApiKeysInput = {
@@ -1098,6 +1129,7 @@ export type UsersUpdateWithoutApiKeysInput = {
   servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutApiKeysInput = {
@@ -1123,6 +1155,7 @@ export type UsersUncheckedUpdateWithoutApiKeysInput = {
   servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutLoginHistoryInput = {
@@ -1147,6 +1180,7 @@ export type UsersCreateWithoutLoginHistoryInput = {
   servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutLoginHistoryInput = {
@@ -1172,6 +1206,7 @@ export type UsersUncheckedCreateWithoutLoginHistoryInput = {
   servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutLoginHistoryInput = {
@@ -1212,6 +1247,7 @@ export type UsersUpdateWithoutLoginHistoryInput = {
   servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutLoginHistoryInput = {
@@ -1237,6 +1273,7 @@ export type UsersUncheckedUpdateWithoutLoginHistoryInput = {
   servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutWalletInput = {
@@ -1261,6 +1298,7 @@ export type UsersCreateWithoutWalletInput = {
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutWalletInput = {
@@ -1286,6 +1324,7 @@ export type UsersUncheckedCreateWithoutWalletInput = {
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutWalletInput = {
@@ -1326,6 +1365,7 @@ export type UsersUpdateWithoutWalletInput = {
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutWalletInput = {
@@ -1351,6 +1391,7 @@ export type UsersUncheckedUpdateWithoutWalletInput = {
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutWalletTransactionsInput = {
@@ -1375,6 +1416,7 @@ export type UsersCreateWithoutWalletTransactionsInput = {
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutWalletTransactionsInput = {
@@ -1400,6 +1442,7 @@ export type UsersUncheckedCreateWithoutWalletTransactionsInput = {
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutWalletTransactionsInput = {
@@ -1440,6 +1483,7 @@ export type UsersUpdateWithoutWalletTransactionsInput = {
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutWalletTransactionsInput = {
@@ -1465,6 +1509,7 @@ export type UsersUncheckedUpdateWithoutWalletTransactionsInput = {
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutAllocationsInput = {
@@ -1489,6 +1534,7 @@ export type UsersCreateWithoutAllocationsInput = {
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutAllocationsInput = {
@@ -1514,6 +1560,7 @@ export type UsersUncheckedCreateWithoutAllocationsInput = {
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutAllocationsInput = {
@@ -1554,6 +1601,7 @@ export type UsersUpdateWithoutAllocationsInput = {
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutAllocationsInput = {
@@ -1579,6 +1627,7 @@ export type UsersUncheckedUpdateWithoutAllocationsInput = {
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutStorePurchasesInput = {
@@ -1603,6 +1652,7 @@ export type UsersCreateWithoutStorePurchasesInput = {
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutStorePurchasesInput = {
@@ -1628,6 +1678,7 @@ export type UsersUncheckedCreateWithoutStorePurchasesInput = {
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutStorePurchasesInput = {
@@ -1668,6 +1719,7 @@ export type UsersUpdateWithoutStorePurchasesInput = {
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutStorePurchasesInput = {
@@ -1693,6 +1745,7 @@ export type UsersUncheckedUpdateWithoutStorePurchasesInput = {
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutCouponRedemptionsInput = {
@@ -1717,6 +1770,7 @@ export type UsersCreateWithoutCouponRedemptionsInput = {
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutCouponRedemptionsInput = {
@@ -1742,6 +1796,7 @@ export type UsersUncheckedCreateWithoutCouponRedemptionsInput = {
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutCouponRedemptionsInput = {
@@ -1782,6 +1837,7 @@ export type UsersUpdateWithoutCouponRedemptionsInput = {
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutCouponRedemptionsInput = {
@@ -1807,6 +1863,7 @@ export type UsersUncheckedUpdateWithoutCouponRedemptionsInput = {
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutAuditLogsAsUserInput = {
@@ -1831,6 +1888,7 @@ export type UsersCreateWithoutAuditLogsAsUserInput = {
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutAuditLogsAsUserInput = {
@@ -1856,6 +1914,7 @@ export type UsersUncheckedCreateWithoutAuditLogsAsUserInput = {
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutAuditLogsAsUserInput = {
@@ -1885,6 +1944,7 @@ export type UsersCreateWithoutAuditLogsAsAdminInput = {
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutAuditLogsAsAdminInput = {
@@ -1910,6 +1970,7 @@ export type UsersUncheckedCreateWithoutAuditLogsAsAdminInput = {
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutAuditLogsAsAdminInput = {
@@ -1950,6 +2011,7 @@ export type UsersUpdateWithoutAuditLogsAsUserInput = {
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutAuditLogsAsUserInput = {
@@ -1975,6 +2037,7 @@ export type UsersUncheckedUpdateWithoutAuditLogsAsUserInput = {
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUpsertWithoutAuditLogsAsAdminInput = {
@@ -2010,6 +2073,7 @@ export type UsersUpdateWithoutAuditLogsAsAdminInput = {
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutAuditLogsAsAdminInput = {
@@ -2035,6 +2099,125 @@ export type UsersUncheckedUpdateWithoutAuditLogsAsAdminInput = {
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UsersCreateWithoutNotificationsInput = {
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutNotificationsInput = {
+  id?: number
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutNotificationsInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutNotificationsInput, Prisma.UsersUncheckedCreateWithoutNotificationsInput>
+}
+
+export type UsersUpsertWithoutNotificationsInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutNotificationsInput, Prisma.UsersUncheckedUpdateWithoutNotificationsInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutNotificationsInput, Prisma.UsersUncheckedCreateWithoutNotificationsInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutNotificationsInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutNotificationsInput, Prisma.UsersUncheckedUpdateWithoutNotificationsInput>
+}
+
+export type UsersUpdateWithoutNotificationsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutNotificationsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -2053,6 +2236,7 @@ export type UsersCountOutputType = {
   folders: number
   apiKeys: number
   loginHistory: number
+  notifications: number
 }
 
 export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2066,6 +2250,7 @@ export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   folders?: boolean | UsersCountOutputTypeCountFoldersArgs
   apiKeys?: boolean | UsersCountOutputTypeCountApiKeysArgs
   loginHistory?: boolean | UsersCountOutputTypeCountLoginHistoryArgs
+  notifications?: boolean | UsersCountOutputTypeCountNotificationsArgs
 }
 
 /**
@@ -2148,6 +2333,13 @@ export type UsersCountOutputTypeCountLoginHistoryArgs<ExtArgs extends runtime.Ty
   where?: Prisma.LoginHistoryWhereInput
 }
 
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.NotificationWhereInput
+}
+
 
 export type UsersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2173,6 +2365,7 @@ export type UsersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   folders?: boolean | Prisma.Users$foldersArgs<ExtArgs>
   apiKeys?: boolean | Prisma.Users$apiKeysArgs<ExtArgs>
   loginHistory?: boolean | Prisma.Users$loginHistoryArgs<ExtArgs>
+  notifications?: boolean | Prisma.Users$notificationsArgs<ExtArgs>
   _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["users"]>
 
@@ -2234,6 +2427,7 @@ export type UsersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   folders?: boolean | Prisma.Users$foldersArgs<ExtArgs>
   apiKeys?: boolean | Prisma.Users$apiKeysArgs<ExtArgs>
   loginHistory?: boolean | Prisma.Users$loginHistoryArgs<ExtArgs>
+  notifications?: boolean | Prisma.Users$notificationsArgs<ExtArgs>
   _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UsersIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2253,6 +2447,7 @@ export type $UsersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     folders: Prisma.$ServerFolderPayload<ExtArgs>[]
     apiKeys: Prisma.$ApiKeyPayload<ExtArgs>[]
     loginHistory: Prisma.$LoginHistoryPayload<ExtArgs>[]
+    notifications: Prisma.$NotificationPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2672,6 +2867,7 @@ export interface Prisma__UsersClient<T, Null = never, ExtArgs extends runtime.Ty
   folders<T extends Prisma.Users$foldersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$foldersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServerFolderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   apiKeys<T extends Prisma.Users$apiKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$apiKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   loginHistory<T extends Prisma.Users$loginHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$loginHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoginHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  notifications<T extends Prisma.Users$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3360,6 +3556,30 @@ export type Users$loginHistoryArgs<ExtArgs extends runtime.Types.Extensions.Inte
   take?: number
   skip?: number
   distinct?: Prisma.LoginHistoryScalarFieldEnum | Prisma.LoginHistoryScalarFieldEnum[]
+}
+
+/**
+ * Users.notifications
+ */
+export type Users$notificationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Notification
+   */
+  select?: Prisma.NotificationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Notification
+   */
+  omit?: Prisma.NotificationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.NotificationInclude<ExtArgs> | null
+  where?: Prisma.NotificationWhereInput
+  orderBy?: Prisma.NotificationOrderByWithRelationInput | Prisma.NotificationOrderByWithRelationInput[]
+  cursor?: Prisma.NotificationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
 }
 
 /**

@@ -1,0 +1,145 @@
+<%- include('../components/header', { title: 'Purchases' }) %>
+
+<style>
+  ::-webkit-scrollbar { display: none; }
+</style>
+
+<main class="h-screen m-auto bg-mono-bg text-white">
+  <div class="flex h-screen">
+    <div class="w-60 h-full"><%- include('../components/template') %></div>
+
+    <div id="page-content" class="flex-1 overflow-y-auto pt-16">
+      <div class="px-12 pt-8 pb-12 space-y-8">
+
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/[0.01] border border-white/5 p-6 rounded-2xl">
+          <div>
+            <h1 class="text-xl font-bold tracking-tight text-white">Purchase History</h1>
+            <p class="text-sm text-neutral-400 mt-1">Browse all your store purchases and view receipts.</p>
+          </div>
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <div class="relative flex-1 sm:flex-none">
+              <svg class="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+              <input id="searchInput" type="text" placeholder="Search purchases..."
+                class="w-full sm:w-64 pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white outline-none focus:border-brand-green/20 transition placeholder:text-neutral-500">
+            </div>
+          </div>
+        </div>
+
+        <%
+          const totalSpent = purchases ? purchases.reduce(function(sum, p) { return sum + (p.coinCost || 0); }, 0) : 0;
+          const uniqueProducts = purchases ? purchases.length : 0;
+        %>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <%- include('../components/ui/StatCard', { title: 'Total Purchases', value: uniqueProducts, icon_name: 'shopping-cart', color: 'green' }) %>
+          <%- include('../components/ui/StatCard', { title: 'Total Spent', value: totalSpent.toLocaleString() + ' coins', icon_name: 'coins', color: 'purple' }) %>
+          <%- include('../components/ui/StatCard', { title: 'Items Purchased', value: total, icon_name: 'package', color: 'blue' }) %>
+        </div>
+
+        <div class="cynex-glass rounded-2xl border border-white/5 overflow-hidden">
+          <div class="px-6 py-4 border-b border-white/5 bg-white/[0.01]">
+            <h2 class="text-sm font-bold text-white">All Purchases</h2>
+          </div>
+
+          <% if (purchases && purchases.length > 0) { %>
+            <div class="overflow-x-auto">
+              <table class="min-w-full divide-y divide-white/5">
+                <thead class="bg-white/[0.02]">
+                  <tr>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Product</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Price</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Date</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Type</th>
+                    <th class="px-6 py-3 text-left text-xs font-bold text-neutral-400 uppercase tracking-wider">Receipt #</th>
+                  </tr>
+                </thead>
+                <tbody id="purchaseBody" class="divide-y divide-white/5">
+                  <% purchases.forEach(function(purchase) { %>
+                    <%
+                      var productName = purchase.product ? purchase.product.name : 'Unknown Product';
+                      var productIcon = purchase.product ? (purchase.product.icon || 'package') : 'package';
+                      var actionLabel = purchase.actionType ? purchase.actionType.replace(/_/g, ' ').toLowerCase().replace(/\b\w/g, function(c) { return c.toUpperCase(); }) : 'Unknown';
+                    %>
+                    <tr class="purchase-row hover:bg-white/[0.01] transition-colors" data-product="<%= productName.toLowerCase() %>">
+                      <td class="px-6 py-3.5">
+                        <div class="flex items-center gap-3">
+                          <div class="p-2 rounded-xl bg-brand-green/10 border border-brand-green/20 text-brand-green shrink-0">
+                            <%- icon(productIcon, { class: 'w-4 h-4' }) %>
+                          </div>
+                          <div>
+                            <p class="text-sm font-bold text-white"><%= productName %></p>
+                            <% if (purchase.product && purchase.product.description) { %>
+                              <p class="text-xs text-neutral-500 mt-0.5 truncate max-w-[200px]"><%= purchase.product.description %></p>
+                            <% } %>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="px-6 py-3.5">
+                        <div class="flex items-center gap-1.5">
+                          <svg xmlns="http://www.w3.org/2000/svg" class="w-3.5 h-3.5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>
+                          <span class="text-sm font-bold text-white"><%= (purchase.coinCost || 0).toLocaleString() %></span>
+                          <span class="text-xs text-neutral-500 font-normal">coins</span>
+                        </div>
+                      </td>
+                      <td class="px-6 py-3.5 text-xs font-medium text-neutral-300 whitespace-nowrap">
+                        <%= new Date(purchase.createdAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) %>
+                        <span class="text-neutral-500 ml-1"><%= new Date(purchase.createdAt).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' }) %></span>
+                      </td>
+                      <td class="px-6 py-3.5">
+                        <span class="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                          <%= actionLabel %>
+                        </span>
+                      </td>
+                      <td class="px-6 py-3.5 text-xs text-neutral-500 font-mono">#<%= String(purchase.id).padStart(6, '0') %></td>
+                    </tr>
+                  <% }); %>
+                </tbody>
+              </table>
+            </div>
+
+            <% if (totalPages > 1) { %>
+              <div class="flex items-center justify-center gap-4 px-6 py-4 border-t border-white/5">
+                <% if (page > 1) { %>
+                  <a href="/purchases?page=<%= page - 1 %>" class="px-4 py-2 text-xs font-bold text-neutral-300 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all">Prev</a>
+                <% } %>
+                <span class="text-xs font-semibold text-neutral-400">Page <%= page %> of <%= totalPages %></span>
+                <% if (page < totalPages) { %>
+                  <a href="/purchases?page=<%= page + 1 %>" class="px-4 py-2 text-xs font-bold text-neutral-300 bg-white/5 border border-white/10 rounded-xl hover:bg-white/10 transition-all">Next</a>
+                <% } %>
+              </div>
+            <% } %>
+          <% } else { %>
+            <div class="flex flex-col items-center justify-center py-16 text-center">
+              <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
+                <%- icon('shopping-bag', { class: 'h-7 w-7 text-neutral-500' }) %>
+              </div>
+              <p class="text-sm font-bold text-neutral-300">No purchases yet</p>
+              <p class="text-xs text-neutral-500 mt-1">Visit the store to make your first purchase.</p>
+              <a href="/store" class="mt-4 inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-brand-green text-black text-xs font-bold hover:bg-brand-green-hover transition">
+                <%- icon('shopping-bag', { class: 'w-3.5 h-3.5' }) %> Visit Store
+              </a>
+            </div>
+          <% } %>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<script nonce="<%- nonce %>">
+document.getElementById('searchInput')?.addEventListener('input', function() {
+  var search = this.value.toLowerCase().trim();
+  var rows = document.querySelectorAll('.purchase-row');
+  rows.forEach(function(row) {
+    var product = row.dataset.product || '';
+    if (!search || product.indexOf(search) !== -1) {
+      row.style.display = '';
+    } else {
+      row.style.display = 'none';
+    }
+  });
+});
+</script>
+
+<%- include('../components/footer') %>

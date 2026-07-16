@@ -143,6 +143,11 @@ export type Config = Prisma.ConfigModel
  */
 export type AuditLog = Prisma.AuditLogModel
 /**
+ * Model Notification
+ * Notifications for user events (purchases, renewals, expiry, etc.)
+ */
+export type Notification = Prisma.NotificationModel
+/**
  * Model Plan
  * Future-proof plan model — enables plan-based server creation and upgrades.
  */

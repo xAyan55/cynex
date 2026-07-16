@@ -49,6 +49,26 @@ const adminModule: Module = {
             where: { id: 1 },
           });
 
+          const [totalCoinsResult, storePurchaseCount, storeRevenueResult, couponRedemptionCount, recentAuditLogs, recentWalletTransactions] = await Promise.all([
+            prisma.wallet.aggregate({ _sum: { balance: true } }).catch(() => ({ _sum: { balance: 0 } })),
+            prisma.storePurchase.count().catch(() => 0),
+            prisma.storePurchase.aggregate({ _sum: { coinCost: true } }).catch(() => ({ _sum: { coinCost: 0 } })),
+            prisma.couponRedemption.count().catch(() => 0),
+            prisma.auditLog.findMany({
+              orderBy: { createdAt: 'desc' },
+              take: 20,
+              include: { user: { select: { username: true } }, admin: { select: { username: true } } },
+            }).catch(() => []),
+            prisma.walletTransaction.findMany({
+              orderBy: { createdAt: 'desc' },
+              take: 20,
+              include: { wallet: { select: { userId: true } } },
+            }).catch(() => []),
+          ]);
+
+          const totalCoinsInCirculation = totalCoinsResult._sum.balance || 0;
+          const totalStoreRevenue = storeRevenueResult._sum.coinCost || 0;
+
           res.render('admin/overview/overview', {
             errorMessage,
             user,
@@ -59,6 +79,12 @@ const adminModule: Module = {
             req,
             settings,
             airlinkVersion: res.locals.airlinkVersion,
+            totalCoinsInCirculation,
+            storePurchaseCount,
+            totalStoreRevenue,
+            couponRedemptionCount,
+            recentAuditLogs,
+            recentWalletTransactions,
           });
         } catch (error) {
           logger.error('Error fetching user:', error);

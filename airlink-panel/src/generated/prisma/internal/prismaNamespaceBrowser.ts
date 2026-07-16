@@ -75,6 +75,7 @@ export const ModelName = {
   CouponRedemption: 'CouponRedemption',
   Config: 'Config',
   AuditLog: 'AuditLog',
+  Notification: 'Notification',
   Plan: 'Plan'
 } as const
 
@@ -457,6 +458,20 @@ export const AuditLogScalarFieldEnum = {
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const NotificationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  title: 'title',
+  message: 'message',
+  referenceId: 'referenceId',
+  read: 'read',
+  createdAt: 'createdAt'
+} as const
+
+export type NotificationScalarFieldEnum = (typeof NotificationScalarFieldEnum)[keyof typeof NotificationScalarFieldEnum]
 
 
 export const PlanScalarFieldEnum = {

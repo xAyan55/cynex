@@ -1,0 +1,457 @@
+<%- include('../components/header', { title: 'Instances' }) %>
+
+<style>
+  ::-webkit-scrollbar { display: none; }
+  @keyframes modal-in { from { opacity:0; transform:translateY(8px) scale(0.97); } to { opacity:1; transform:translateY(0) scale(1); } }
+  .modal-animate { animation: modal-in 0.2s ease-out forwards; }
+  .progress-bar { transition: width 0.6s cubic-bezier(0.4,0,0.2,1); }
+</style>
+
+<main class="h-screen m-auto bg-mono-bg text-white">
+  <div class="flex h-screen">
+    <div class="w-60 h-full"><%- include('../components/template') %></div>
+
+    <div id="page-content" class="flex-1 overflow-y-auto pt-16">
+      <div class="px-12 pt-8 pb-12 space-y-8">
+
+        <%
+          const totalCount = servers.length;
+          const onlineCount = servers.filter(s => s.status === 'running').length;
+          const offlineCount = servers.filter(s => s.status === 'stopped' || s.status === 'unknown').length;
+          const suspendedCount = servers.filter(s => s.status === 'suspended').length;
+        %>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <%- include('../components/ui/StatCard', { title: 'Total Servers', value: totalCount, icon_name: 'server', color: 'green' }) %>
+          <%- include('../components/ui/StatCard', { title: 'Online', value: onlineCount, icon_name: 'activity', color: 'purple' }) %>
+          <%- include('../components/ui/StatCard', { title: 'Offline', value: offlineCount, icon_name: 'power', color: 'blue' }) %>
+          <%- include('../components/ui/StatCard', { title: 'Suspended', value: suspendedCount, icon_name: 'ban', color: 'blue' }) %>
+        </div>
+
+        <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/[0.01] border border-white/5 p-6 rounded-2xl">
+          <div>
+            <h1 class="text-xl font-bold tracking-tight text-white">All Instances</h1>
+            <p class="text-sm text-neutral-400 mt-1">View and manage all of your server instances across every node.</p>
+          </div>
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <div class="relative flex-1 sm:flex-none">
+              <svg class="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+              <input id="searchInput" type="text" placeholder="Search servers..."
+                class="w-full sm:w-64 pl-10 pr-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white outline-none focus:border-brand-green/20 transition placeholder:text-neutral-500">
+            </div>
+            <select id="filterStatus" class="px-4 py-2.5 rounded-xl bg-white/5 border border-white/10 text-sm text-white outline-none focus:border-brand-green/20 transition cursor-pointer appearance-none pr-8" style="background-image: url('data:image/svg+xml;utf8,<svg fill=\"none\" stroke=\"white\" stroke-width=\"2\" viewBox=\"0 0 24 24\" xmlns=\"http://www.w3.org/2000/svg\"><path stroke-linecap=\"round\" stroke-linejoin=\"round\" d=\"M19 9l-7 7-7-7\"/></svg>'); background-repeat: no-repeat; background-position: right 0.5rem center; background-size: 1rem;">
+              <option value="all">All Status</option>
+              <option value="running">Online</option>
+              <option value="stopped">Offline</option>
+              <option value="suspended">Suspended</option>
+            </select>
+          </div>
+        </div>
+
+        <% if (servers.length === 0) { %>
+          <div class="flex flex-col items-center justify-center py-20 text-center cynex-glass rounded-2xl border border-white/5">
+            <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+              <%- icon('server', { class: 'h-8 w-8 text-neutral-400' }) %>
+            </div>
+            <h2 class="text-base font-bold text-white">No Servers Found</h2>
+            <p class="text-sm text-neutral-400 mt-2 max-w-sm">You don't have any server instances yet. Create one from the dashboard.</p>
+            <a href="/dashboard" class="mt-6 px-5 py-2.5 rounded-xl text-sm font-bold bg-brand-green text-black hover:bg-brand-green-hover transition">Go to Dashboard</a>
+          </div>
+        <% } else { %>
+
+          <div id="serverGrid" class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+            <% servers.forEach(function(server) { %>
+              <%
+                const statusLabel = server.status === 'running' ? 'Online' : (server.status === 'suspended' ? 'Suspended' : 'Offline');
+                const statusBadge = server.status === 'running' ? 'running' : (server.status === 'suspended' ? 'suspended' : 'stopped');
+                const ramPercent = server.Memory > 0 ? Math.min(100, Math.round((Number(server.ramUsage || 0)))) : 0;
+                const cpuPercent = server.Cpu > 0 ? Math.min(100, Math.round((Number(server.cpuUsage || 0)))) : 0;
+                let diskPercent = 0;
+                if (server.Storage > 0) {
+                  const usedMB = parseFloat(server.diskUsed) || 0;
+                  diskPercent = Math.min(100, Math.round((usedMB / server.Storage) * 100));
+                }
+                const expiryText = server.expiresAt ? new Date(server.expiresAt).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' }) : 'Never';
+                const daysLeft = server.expiresAt ? Math.max(0, Math.ceil((new Date(server.expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : null;
+                const isExpiringSoon = daysLeft !== null && daysLeft <= 7 && daysLeft > 0;
+                const isExpired = daysLeft !== null && daysLeft <= 0;
+              %>
+              <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4 hover:border-white/15 transition-all server-card"
+                   data-name="<%= server.name.toLowerCase() %>"
+                   data-status="<%= server.status %>">
+                <div class="flex items-start justify-between">
+                  <div class="min-w-0 flex-1 pr-3">
+                    <h3 class="text-sm font-bold text-white truncate"><%= server.name %></h3>
+                    <p class="text-xs text-neutral-400 mt-1 truncate"><%= server.node.name %><%= server.image && server.image.name ? ' &middot; ' + server.image.name : '' %></p>
+                  </div>
+                  <%- include('../components/ui/Badge', { status: statusBadge, label: statusLabel }) %>
+                </div>
+
+                <div class="flex items-center gap-2 text-xs text-neutral-400">
+                  <%- icon('map-pin', { class: 'w-3.5 h-3.5 text-neutral-500' }) %>
+                  <span class="font-medium"><%= server.node.address %>:<%= server.node.port %></span>
+                </div>
+
+                <div class="space-y-3">
+                  <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                      <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">RAM</span>
+                      <span class="text-[11px] font-semibold text-neutral-400"><%= server.ramUsed || '0MB' %> / <%= server.Memory >= 1024 ? (server.Memory / 1024).toFixed(1) + ' GB' : server.Memory + ' MB' %></span>
+                    </div>
+                    <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                      <div class="progress-bar h-full rounded-full <%= ramPercent > 90 ? 'bg-red-500' : (ramPercent > 70 ? 'bg-amber-500' : 'bg-brand-green') %>" style="width: <%= ramPercent %>%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                      <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">CPU</span>
+                      <span class="text-[11px] font-semibold text-neutral-400"><%= Math.round(Number(server.cpuUsage || 0)) %>% / <%= server.Cpu %>%</span>
+                    </div>
+                    <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                      <div class="progress-bar h-full rounded-full <%= cpuPercent > 90 ? 'bg-red-500' : (cpuPercent > 70 ? 'bg-amber-500' : 'bg-brand-green') %>" style="width: <%= cpuPercent %>%"></div>
+                    </div>
+                  </div>
+                  <div>
+                    <div class="flex items-center justify-between mb-1.5">
+                      <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Disk</span>
+                      <span class="text-[11px] font-semibold text-neutral-400"><%= server.diskUsed || '0MB' %> / <%= server.Storage >= 1024 ? (server.Storage / 1024).toFixed(1) + ' GB' : server.Storage + ' MB' %></span>
+                    </div>
+                    <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+                      <div class="progress-bar h-full rounded-full <%= diskPercent > 90 ? 'bg-red-500' : (diskPercent > 70 ? 'bg-amber-500' : 'bg-brand-green') %>" style="width: <%= diskPercent %>%"></div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="flex items-center gap-2 text-xs">
+                  <%- icon('clock', { class: 'w-3.5 h-3.5 text-neutral-500' }) %>
+                  <span class="<%= isExpired ? 'text-red-400 font-bold' : (isExpiringSoon ? 'text-amber-400 font-semibold' : 'text-neutral-400 font-medium') %>">
+                    Expires: <%= expiryText %><%= daysLeft !== null ? ' (' + daysLeft + 'd left)' : '' %>
+                  </span>
+                </div>
+
+                <div class="pt-3 border-t border-white/5 space-y-3">
+                  <div class="flex items-center gap-2">
+                    <a href="/server/<%= server.UUID %>" class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-semibold text-neutral-300 transition cursor-pointer">
+                      <%- icon('settings', { class: 'w-3.5 h-3.5' }) %> Manage
+                    </a>
+                    <% if (!server.Suspended) { %>
+                      <button onclick="handlePower('<%= server.UUID %>', 'start')" class="p-2 bg-brand-green/10 border border-brand-green/20 hover:bg-brand-green hover:text-black rounded-xl text-brand-green transition-all cursor-pointer" title="Start">
+                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+                      </button>
+                      <button onclick="handlePower('<%= server.UUID %>', 'stop')" class="p-2 bg-red-500/10 border border-red-500/20 hover:bg-red-500 hover:text-white rounded-xl text-red-400 transition-all cursor-pointer" title="Stop">
+                        <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
+                      </button>
+                      <button onclick="handlePower('<%= server.UUID %>', 'restart')" class="p-2 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500 hover:text-black rounded-xl text-amber-400 transition-all cursor-pointer" title="Restart">
+                        <%- icon('refresh-cw', { class: 'w-3.5 h-3.5' }) %>
+                      </button>
+                      <button onclick="handlePower('<%= server.UUID %>', 'kill')" class="p-2 bg-red-500/10 border border-red-500/20 hover:bg-red-500 hover:text-white rounded-xl text-red-400 transition-all cursor-pointer" title="Kill">
+                        <%- icon('zap', { class: 'w-3.5 h-3.5' }) %>
+                      </button>
+                    <% } %>
+                  </div>
+                  <div class="flex items-center gap-2">
+                    <button onclick="openActionModal('upgrade', '<%= server.UUID %>', '<%= server.name %>', <%= server.Memory %>, <%= server.Cpu %>, <%= server.Storage %>)" class="flex-1 px-3 py-2 rounded-xl bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 text-xs font-semibold text-blue-400 transition cursor-pointer">
+                      Upgrade
+                    </button>
+                    <button onclick="openActionModal('downgrade', '<%= server.UUID %>', '<%= server.name %>', <%= server.Memory %>, <%= server.Cpu %>, <%= server.Storage %>)" class="flex-1 px-3 py-2 rounded-xl bg-orange-500/10 border border-orange-500/20 hover:bg-orange-500/20 text-xs font-semibold text-orange-400 transition cursor-pointer">
+                      Downgrade
+                    </button>
+                    <button onclick="openActionModal('renew', '<%= server.UUID %>', '<%= server.name %>', '<%= expiryText %>')" class="flex-1 px-3 py-2 rounded-xl bg-purple-500/10 border border-purple-500/20 hover:bg-purple-500/20 text-xs font-semibold text-purple-400 transition cursor-pointer">
+                      Renew
+                    </button>
+                  </div>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+
+          <div id="noResults" class="hidden flex flex-col items-center justify-center py-16 text-center">
+            <div class="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-4">
+              <svg class="w-7 h-7 text-neutral-500" fill="none" stroke="currentColor" stroke-width="1.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
+            </div>
+            <p class="text-sm font-bold text-neutral-300">No servers match your search</p>
+            <p class="text-xs text-neutral-500 mt-1">Try a different search term or filter.</p>
+          </div>
+
+        <% } %>
+      </div>
+    </div>
+  </div>
+</main>
+
+<!-- Upgrade Modal -->
+<div id="upgradeModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-all">
+  <div class="cynex-glass rounded-2xl w-full max-w-md overflow-hidden border border-white/10 shadow-2xl modal-animate">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.01]">
+      <h3 class="text-sm font-bold text-white">Upgrade Server</h3>
+      <button onclick="closeModal('upgradeModal')" class="w-7 h-7 flex items-center justify-center rounded-lg text-neutral-400 hover:text-white transition cursor-pointer">
+        <%- icon('x', { class: 'w-4 h-4' }) %>
+      </button>
+    </div>
+    <div class="p-6 space-y-5">
+      <p class="text-xs text-neutral-400">Increase resources for <span id="upgradeServerName" class="text-white font-bold"></span></p>
+      <form id="upgradeForm" class="space-y-4" onsubmit="return handleResourceAction(event, 'upgrade')">
+        <input type="hidden" id="upgradeServerUUID" name="serverUUID">
+        <div>
+          <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1.5 block">RAM (MB)</label>
+          <input id="upgradeRAM" type="number" min="256" step="256" placeholder="e.g. 4096"
+            class="w-full border border-white/10 rounded-xl bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-brand-green/20 transition placeholder:text-neutral-600">
+        </div>
+        <div>
+          <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1.5 block">CPU (%)</label>
+          <input id="upgradeCPU" type="number" min="5" step="5" placeholder="e.g. 100"
+            class="w-full border border-white/10 rounded-xl bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-brand-green/20 transition placeholder:text-neutral-600">
+        </div>
+        <div>
+          <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1.5 block">Disk (MB)</label>
+          <input id="upgradeDisk" type="number" min="1024" step="1024" placeholder="e.g. 20480"
+            class="w-full border border-white/10 rounded-xl bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-brand-green/20 transition placeholder:text-neutral-600">
+        </div>
+        <button type="submit" class="w-full px-4 py-2.5 rounded-xl text-sm font-bold bg-blue-500 hover:bg-blue-600 text-white transition cursor-pointer">Confirm Upgrade</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Downgrade Modal -->
+<div id="downgradeModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-all">
+  <div class="cynex-glass rounded-2xl w-full max-w-md overflow-hidden border border-white/10 shadow-2xl modal-animate">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.01]">
+      <h3 class="text-sm font-bold text-white">Downgrade Server</h3>
+      <button onclick="closeModal('downgradeModal')" class="w-7 h-7 flex items-center justify-center rounded-lg text-neutral-400 hover:text-white transition cursor-pointer">
+        <%- icon('x', { class: 'w-4 h-4' }) %>
+      </button>
+    </div>
+    <div class="p-6 space-y-5">
+      <p class="text-xs text-neutral-400">Decrease resources for <span id="downgradeServerName" class="text-white font-bold"></span></p>
+      <form id="downgradeForm" class="space-y-4" onsubmit="return handleResourceAction(event, 'downgrade')">
+        <input type="hidden" id="downgradeServerUUID" name="serverUUID">
+        <div>
+          <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1.5 block">RAM (MB)</label>
+          <input id="downgradeRAM" type="number" min="256" step="256" placeholder="e.g. 2048"
+            class="w-full border border-white/10 rounded-xl bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-brand-green/20 transition placeholder:text-neutral-600">
+        </div>
+        <div>
+          <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1.5 block">CPU (%)</label>
+          <input id="downgradeCPU" type="number" min="5" step="5" placeholder="e.g. 50"
+            class="w-full border border-white/10 rounded-xl bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-brand-green/20 transition placeholder:text-neutral-600">
+        </div>
+        <div>
+          <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1.5 block">Disk (MB)</label>
+          <input id="downgradeDisk" type="number" min="1024" step="1024" placeholder="e.g. 10240"
+            class="w-full border border-white/10 rounded-xl bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-brand-green/20 transition placeholder:text-neutral-600">
+        </div>
+        <button type="submit" class="w-full px-4 py-2.5 rounded-xl text-sm font-bold bg-orange-500 hover:bg-orange-600 text-white transition cursor-pointer">Confirm Downgrade</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Renew Modal -->
+<div id="renewModal" class="fixed inset-0 z-[100] hidden items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-all">
+  <div class="cynex-glass rounded-2xl w-full max-w-md overflow-hidden border border-white/10 shadow-2xl modal-animate">
+    <div class="flex items-center justify-between px-6 py-4 border-b border-white/5 bg-white/[0.01]">
+      <h3 class="text-sm font-bold text-white">Renew Server</h3>
+      <button onclick="closeModal('renewModal')" class="w-7 h-7 flex items-center justify-center rounded-lg text-neutral-400 hover:text-white transition cursor-pointer">
+        <%- icon('x', { class: 'w-4 h-4' }) %>
+      </button>
+    </div>
+    <div class="p-6 space-y-5">
+      <p class="text-xs text-neutral-400">Extend the expiry for <span id="renewServerName" class="text-white font-bold"></span></p>
+      <p class="text-xs text-neutral-500">Current expiry: <span id="renewCurrentExpiry" class="text-neutral-300 font-semibold"></span></p>
+      <form id="renewForm" class="space-y-4" onsubmit="return handleRenew(event)">
+        <input type="hidden" id="renewServerUUID" name="serverUUID">
+        <div>
+          <label class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider mb-1.5 block">Extend by (days)</label>
+          <input id="renewDays" type="number" min="1" max="365" step="1" placeholder="e.g. 30"
+            class="w-full border border-white/10 rounded-xl bg-white/5 px-4 py-2.5 text-sm text-white outline-none focus:border-brand-green/20 transition placeholder:text-neutral-600">
+        </div>
+        <button type="submit" class="w-full px-4 py-2.5 rounded-xl text-sm font-bold bg-purple-500 hover:bg-purple-600 text-white transition cursor-pointer">Confirm Renewal</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<%- include('../components/toast') %>
+
+<script nonce="<%- nonce %>">
+function handlePower(uuid, action) {
+  if (typeof showToast === 'function') {
+    showToast('Sending ' + action.toUpperCase() + ' command...', 'info');
+  }
+  fetch('/server/' + uuid + '/power/' + action, { method: 'POST' })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success || !data.error) {
+        if (typeof showToast === 'function') {
+          showToast(action.charAt(0).toUpperCase() + action.slice(1) + ' command sent.', 'success');
+        }
+        setTimeout(function() { window.location.reload(); }, 1200);
+      } else {
+        if (typeof showToast === 'function') {
+          showToast(data.error || 'Action failed', 'error');
+        }
+      }
+    })
+    .catch(function() {
+      if (typeof showToast === 'function') {
+        showToast('Network error.', 'error');
+      }
+    });
+}
+
+function openActionModal(type, uuid, name, ram, cpu, storage) {
+  if (type === 'upgrade') {
+    document.getElementById('upgradeServerUUID').value = uuid;
+    document.getElementById('upgradeServerName').textContent = name;
+    document.getElementById('upgradeRAM').value = '';
+    document.getElementById('upgradeCPU').value = '';
+    document.getElementById('upgradeDisk').value = '';
+    document.getElementById('upgradeRAM').placeholder = 'Current: ' + ram + ' MB';
+    document.getElementById('upgradeCPU').placeholder = 'Current: ' + cpu + '%';
+    document.getElementById('upgradeDisk').placeholder = 'Current: ' + storage + ' MB';
+    showModal('upgradeModal');
+  } else if (type === 'downgrade') {
+    document.getElementById('downgradeServerUUID').value = uuid;
+    document.getElementById('downgradeServerName').textContent = name;
+    document.getElementById('downgradeRAM').value = '';
+    document.getElementById('downgradeCPU').value = '';
+    document.getElementById('downgradeDisk').value = '';
+    document.getElementById('downgradeRAM').placeholder = 'Current: ' + ram + ' MB';
+    document.getElementById('downgradeCPU').placeholder = 'Current: ' + cpu + '%';
+    document.getElementById('downgradeDisk').placeholder = 'Current: ' + storage + ' MB';
+    showModal('downgradeModal');
+  } else if (type === 'renew') {
+    document.getElementById('renewServerUUID').value = uuid;
+    document.getElementById('renewServerName').textContent = name;
+    document.getElementById('renewCurrentExpiry').textContent = storage;
+    document.getElementById('renewDays').value = '';
+    showModal('renewModal');
+  }
+}
+
+function showModal(id) {
+  const modal = document.getElementById(id);
+  modal.classList.remove('hidden');
+  modal.classList.add('flex');
+}
+
+function closeModal(id) {
+  const modal = document.getElementById(id);
+  modal.classList.add('hidden');
+  modal.classList.remove('flex');
+}
+
+function handleResourceAction(event, type) {
+  event.preventDefault();
+  const uuid = document.getElementById(type + 'ServerUUID').value;
+  const ram = document.getElementById(type + 'RAM').value;
+  const cpu = document.getElementById(type + 'CPU').value;
+  const disk = document.getElementById(type + 'Disk').value;
+
+  if (!ram && !cpu && !disk) {
+    if (typeof showToast === 'function') showToast('Please enter at least one resource value.', 'error');
+    return false;
+  }
+
+  const payload = {};
+  if (ram) payload.ram = parseInt(ram);
+  if (cpu) payload.cpu = parseInt(cpu);
+  if (disk) payload.disk = parseInt(disk);
+
+  fetch('/server/' + uuid + '/' + type, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(payload)
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.success || !data.error) {
+      if (typeof showToast === 'function') showToast(type.charAt(0).toUpperCase() + type.slice(1) + ' request submitted.', 'success');
+      closeModal(type + 'Modal');
+      setTimeout(function() { window.location.reload(); }, 1200);
+    } else {
+      if (typeof showToast === 'function') showToast(data.error || 'Action failed', 'error');
+    }
+  })
+  .catch(function() {
+    if (typeof showToast === 'function') showToast('Network error.', 'error');
+  });
+
+  return false;
+}
+
+function handleRenew(event) {
+  event.preventDefault();
+  const uuid = document.getElementById('renewServerUUID').value;
+  const days = document.getElementById('renewDays').value;
+
+  if (!days || parseInt(days) < 1) {
+    if (typeof showToast === 'function') showToast('Please enter a valid number of days.', 'error');
+    return false;
+  }
+
+  fetch('/server/' + uuid + '/renew', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ days: parseInt(days) })
+  })
+  .then(function(r) { return r.json(); })
+  .then(function(data) {
+    if (data.success || !data.error) {
+      if (typeof showToast === 'function') showToast('Renewal request submitted.', 'success');
+      closeModal('renewModal');
+      setTimeout(function() { window.location.reload(); }, 1200);
+    } else {
+      if (typeof showToast === 'function') showToast(data.error || 'Renewal failed', 'error');
+    }
+  })
+  .catch(function() {
+    if (typeof showToast === 'function') showToast('Network error.', 'error');
+  });
+
+  return false;
+}
+
+document.getElementById('searchInput')?.addEventListener('input', filterServers);
+document.getElementById('filterStatus')?.addEventListener('change', filterServers);
+
+function filterServers() {
+  var search = (document.getElementById('searchInput').value || '').toLowerCase().trim();
+  var status = document.getElementById('filterStatus').value;
+  var cards = document.querySelectorAll('.server-card');
+  var visible = 0;
+
+  cards.forEach(function(card) {
+    var name = card.dataset.name || '';
+    var cardStatus = card.dataset.status || '';
+    var matchesSearch = !search || name.indexOf(search) !== -1;
+    var matchesStatus = status === 'all' || cardStatus === status;
+    if (matchesSearch && matchesStatus) {
+      card.style.display = '';
+      visible++;
+    } else {
+      card.style.display = 'none';
+    }
+  });
+
+  var noResults = document.getElementById('noResults');
+  if (noResults) {
+    if (visible === 0) {
+      noResults.classList.remove('hidden');
+      noResults.classList.add('flex');
+    } else {
+      noResults.classList.add('hidden');
+      noResults.classList.remove('flex');
+    }
+  }
+}
+
+document.addEventListener('click', function(e) {
+  if (e.target.id && (e.target.id === 'upgradeModal' || e.target.id === 'downgradeModal' || e.target.id === 'renewModal')) {
+    closeModal(e.target.id);
+  }
+});
+</script>
+
+<%- include('../components/footer') %>

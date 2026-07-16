@@ -1,0 +1,181 @@
+<%- include('../../components/header', { title: 'Create Coupon' }) %>
+
+<main class="min-h-screen m-auto">
+  <div class="flex min-h-screen">
+    <div class="w-60 h-full"><%- include('../../components/template') %></div>
+    <div id="page-content" class="flex-1 overflow-y-auto pt-16 pb-12">
+      <div class="px-8 pt-5">
+        <div class="flex items-center gap-3 mb-1">
+          <a href="/admin/coupons" class="text-neutral-400 hover:text-neutral-600 dark:hover:text-neutral-300 transition">
+            <%- icon('arrow-left', { class: 'w-4 h-4' }) %>
+          </a>
+          <h1 class="text-base font-medium text-neutral-800 dark:text-white">Create Coupon</h1>
+        </div>
+        <p class="mt-0.5 text-sm text-neutral-500 ml-7">Add a new coupon code to the system.</p>
+      </div>
+
+      <div class="px-8 mt-5">
+        <form id="createCouponForm" class="max-w-2xl space-y-5">
+
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Coupon Details</h2>
+            <div class="px-5 py-5 space-y-4">
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Coupon Code</label>
+                <div class="flex gap-2">
+                  <input type="text" name="code" id="couponCode" value="<%= suggestedCode %>" required minlength="3" maxlength="32"
+                    class="rounded-xl flex-1 border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 font-mono tracking-wider text-neutral-800 dark:text-white transition-colors uppercase">
+                  <button type="button" id="generateCodeBtn" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 px-4 py-2 text-sm text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition whitespace-nowrap flex items-center gap-1.5">
+                    <%- icon('refresh-cw', { class: 'w-3.5 h-3.5' }) %>
+                    Generate
+                  </button>
+                </div>
+                <p class="mt-1 text-xs text-neutral-500">3-32 characters. Will be stored uppercase.</p>
+              </div>
+
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Description</label>
+                <input type="text" name="description" placeholder="Optional description"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors">
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Reward Settings</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 px-5 py-5">
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Action Type</label>
+                <select name="actionType" required
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  <option value="ADD_COINS">Add Coins</option>
+                  <option value="ADD_RAM">Add RAM</option>
+                  <option value="ADD_CPU">Add CPU</option>
+                  <option value="ADD_DISK">Add Disk</option>
+                  <option value="ADD_BACKUP_SLOTS">Add Backup Slots</option>
+                  <option value="ADD_SERVER_SLOTS">Add Server Slots</option>
+                  <option value="ADD_PORTS">Add Ports</option>
+                  <option value="ADD_DATABASES">Add Databases</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Action Value</label>
+                <input type="number" name="actionValue" required min="1" value="100"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                <p class="mt-1 text-xs text-neutral-500">Amount of the reward (e.g., coins, MB, slots).</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Limits</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 px-5 py-5">
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Total Uses</label>
+                <input type="number" name="maxUses" min="0" value="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                <p class="mt-1 text-xs text-neutral-500">0 = unlimited.</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Per-User Limit</label>
+                <input type="number" name="perUserLimit" min="1" value="1"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                <p class="mt-1 text-xs text-neutral-500">How many times each user can redeem this coupon.</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Schedule &amp; Status</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-5 px-5 py-5">
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Starts At</label>
+                <input type="datetime-local" name="startsAt"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                <p class="mt-1 text-xs text-neutral-500">Leave empty for immediate availability.</p>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Expires At</label>
+                <input type="datetime-local" name="expiresAt"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                <p class="mt-1 text-xs text-neutral-500">Leave empty for no expiration.</p>
+              </div>
+              <div class="sm:col-span-2">
+                <label class="relative inline-flex items-center cursor-pointer">
+                  <input type="checkbox" name="enabled" checked class="sr-only peer">
+                  <div class="w-11 h-6 bg-neutral-300 dark:bg-neutral-600 rounded-full peer peer-checked:after:translate-x-full after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+                  <span class="ml-3 text-sm font-medium text-neutral-700 dark:text-white">Enabled</span>
+                </label>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex justify-end gap-3">
+            <a href="/admin/coupons" class="rounded-xl border border-neutral-200 dark:border-neutral-700/40 text-neutral-600 dark:text-neutral-400 hover:text-neutral-800 dark:hover:text-white px-4 py-2 text-sm font-medium transition">Cancel</a>
+            <button type="submit" id="submitBtn" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-6 py-2 text-sm font-medium shadow-sm transition">Create Coupon</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</main>
+
+<%- include('../../components/toast') %>
+
+<script nonce="<%- nonce %>">
+(function() {
+  var toast = window.showToast || function() {};
+
+  // Generate code
+  document.getElementById('generateCodeBtn').addEventListener('click', function() {
+    var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+    var code = '';
+    for (var i = 0; i < 8; i++) {
+      code += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+    document.getElementById('couponCode').value = code;
+  });
+
+  // Submit form
+  document.getElementById('createCouponForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    var data = {};
+    var inputs = this.querySelectorAll('input, select');
+    inputs.forEach(function(input) {
+      if (input.type === 'checkbox') {
+        if (input.name === 'enabled') data[input.name] = input.checked;
+      } else {
+        data[input.name] = input.value;
+      }
+    });
+
+    var submitBtn = document.getElementById('submitBtn');
+    submitBtn.textContent = 'Creating...';
+    submitBtn.disabled = true;
+
+    fetch('/admin/coupons/create', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res.success) {
+        toast('Coupon created successfully!', 'success');
+        setTimeout(function() { window.location.href = '/admin/coupons'; }, 800);
+      } else {
+        toast(res.error || 'Failed to create coupon.', 'error');
+        submitBtn.textContent = 'Create Coupon';
+        submitBtn.disabled = false;
+      }
+    })
+    .catch(function() {
+      toast('Network error. Please try again.', 'error');
+      submitBtn.textContent = 'Create Coupon';
+      submitBtn.disabled = false;
+    });
+  });
+})();
+</script>
+
+<%- include('../../components/footer') %>

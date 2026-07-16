@@ -1,6 +1,7 @@
 import prisma from '../db';
 import { RewardPipeline } from './RewardPipeline';
 import { AuditService } from './AuditService';
+import { NotificationService } from './NotificationService';
 import {
   CouponNotFoundError,
   CouponExpiredError,
@@ -67,6 +68,14 @@ export class CouponService {
 
       await tx.couponRedemption.create({
         data: { couponId: coupon.id, userId },
+      });
+
+      await NotificationService.create({
+        userId, type: 'coupon_redeemed',
+        title: 'Coupon Redeemed',
+        message: `Coupon "${code}" redeemed for ${coupon.actionValue} ${coupon.actionType}.`,
+        referenceId: code,
+        tx,
       });
     });
 
