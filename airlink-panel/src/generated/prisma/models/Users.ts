@@ -288,6 +288,11 @@ export type UsersWhereInput = {
   apiKeys?: Prisma.ApiKeyListRelationFilter
   loginHistory?: Prisma.LoginHistoryListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  earnSessions?: Prisma.EarnSessionListRelationFilter
+  afkSessions?: Prisma.AfkSessionListRelationFilter
+  streak?: Prisma.XOR<Prisma.UserStreakNullableScalarRelationFilter, Prisma.UserStreakWhereInput> | null
+  fraudLogs?: Prisma.MonetizationFraudLogListRelationFilter
+  earnPrefs?: Prisma.XOR<Prisma.UserEarnPreferencesNullableScalarRelationFilter, Prisma.UserEarnPreferencesWhereInput> | null
 }
 
 export type UsersOrderByWithRelationInput = {
@@ -315,6 +320,11 @@ export type UsersOrderByWithRelationInput = {
   apiKeys?: Prisma.ApiKeyOrderByRelationAggregateInput
   loginHistory?: Prisma.LoginHistoryOrderByRelationAggregateInput
   notifications?: Prisma.NotificationOrderByRelationAggregateInput
+  earnSessions?: Prisma.EarnSessionOrderByRelationAggregateInput
+  afkSessions?: Prisma.AfkSessionOrderByRelationAggregateInput
+  streak?: Prisma.UserStreakOrderByWithRelationInput
+  fraudLogs?: Prisma.MonetizationFraudLogOrderByRelationAggregateInput
+  earnPrefs?: Prisma.UserEarnPreferencesOrderByWithRelationInput
 }
 
 export type UsersWhereUniqueInput = Prisma.AtLeast<{
@@ -345,6 +355,11 @@ export type UsersWhereUniqueInput = Prisma.AtLeast<{
   apiKeys?: Prisma.ApiKeyListRelationFilter
   loginHistory?: Prisma.LoginHistoryListRelationFilter
   notifications?: Prisma.NotificationListRelationFilter
+  earnSessions?: Prisma.EarnSessionListRelationFilter
+  afkSessions?: Prisma.AfkSessionListRelationFilter
+  streak?: Prisma.XOR<Prisma.UserStreakNullableScalarRelationFilter, Prisma.UserStreakWhereInput> | null
+  fraudLogs?: Prisma.MonetizationFraudLogListRelationFilter
+  earnPrefs?: Prisma.XOR<Prisma.UserEarnPreferencesNullableScalarRelationFilter, Prisma.UserEarnPreferencesWhereInput> | null
 }, "id" | "email" | "username">
 
 export type UsersOrderByWithAggregationInput = {
@@ -409,6 +424,11 @@ export type UsersCreateInput = {
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
 }
 
 export type UsersUncheckedCreateInput = {
@@ -436,6 +456,11 @@ export type UsersUncheckedCreateInput = {
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UsersUpdateInput = {
@@ -462,6 +487,11 @@ export type UsersUpdateInput = {
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateInput = {
@@ -489,6 +519,11 @@ export type UsersUncheckedUpdateInput = {
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UsersCreateManyInput = {
@@ -804,6 +839,76 @@ export type UsersUpdateOneRequiredWithoutNotificationsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutNotificationsInput, Prisma.UsersUpdateWithoutNotificationsInput>, Prisma.UsersUncheckedUpdateWithoutNotificationsInput>
 }
 
+export type UsersCreateNestedOneWithoutEarnSessionsInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutEarnSessionsInput, Prisma.UsersUncheckedCreateWithoutEarnSessionsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutEarnSessionsInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneRequiredWithoutEarnSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutEarnSessionsInput, Prisma.UsersUncheckedCreateWithoutEarnSessionsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutEarnSessionsInput
+  upsert?: Prisma.UsersUpsertWithoutEarnSessionsInput
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutEarnSessionsInput, Prisma.UsersUpdateWithoutEarnSessionsInput>, Prisma.UsersUncheckedUpdateWithoutEarnSessionsInput>
+}
+
+export type UsersCreateNestedOneWithoutAfkSessionsInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutAfkSessionsInput, Prisma.UsersUncheckedCreateWithoutAfkSessionsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutAfkSessionsInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneRequiredWithoutAfkSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutAfkSessionsInput, Prisma.UsersUncheckedCreateWithoutAfkSessionsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutAfkSessionsInput
+  upsert?: Prisma.UsersUpsertWithoutAfkSessionsInput
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutAfkSessionsInput, Prisma.UsersUpdateWithoutAfkSessionsInput>, Prisma.UsersUncheckedUpdateWithoutAfkSessionsInput>
+}
+
+export type UsersCreateNestedOneWithoutStreakInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutStreakInput, Prisma.UsersUncheckedCreateWithoutStreakInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutStreakInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneRequiredWithoutStreakNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutStreakInput, Prisma.UsersUncheckedCreateWithoutStreakInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutStreakInput
+  upsert?: Prisma.UsersUpsertWithoutStreakInput
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutStreakInput, Prisma.UsersUpdateWithoutStreakInput>, Prisma.UsersUncheckedUpdateWithoutStreakInput>
+}
+
+export type UsersCreateNestedOneWithoutFraudLogsInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutFraudLogsInput, Prisma.UsersUncheckedCreateWithoutFraudLogsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutFraudLogsInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneRequiredWithoutFraudLogsNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutFraudLogsInput, Prisma.UsersUncheckedCreateWithoutFraudLogsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutFraudLogsInput
+  upsert?: Prisma.UsersUpsertWithoutFraudLogsInput
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutFraudLogsInput, Prisma.UsersUpdateWithoutFraudLogsInput>, Prisma.UsersUncheckedUpdateWithoutFraudLogsInput>
+}
+
+export type UsersCreateNestedOneWithoutEarnPrefsInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutEarnPrefsInput, Prisma.UsersUncheckedCreateWithoutEarnPrefsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutEarnPrefsInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneRequiredWithoutEarnPrefsNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutEarnPrefsInput, Prisma.UsersUncheckedCreateWithoutEarnPrefsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutEarnPrefsInput
+  upsert?: Prisma.UsersUpsertWithoutEarnPrefsInput
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutEarnPrefsInput, Prisma.UsersUpdateWithoutEarnPrefsInput>, Prisma.UsersUncheckedUpdateWithoutEarnPrefsInput>
+}
+
 export type UsersCreateWithoutServersInput = {
   email: string
   username?: string | null
@@ -827,6 +932,11 @@ export type UsersCreateWithoutServersInput = {
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutServersInput = {
@@ -853,6 +963,11 @@ export type UsersUncheckedCreateWithoutServersInput = {
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutServersInput = {
@@ -894,6 +1009,11 @@ export type UsersUpdateWithoutServersInput = {
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutServersInput = {
@@ -920,6 +1040,11 @@ export type UsersUncheckedUpdateWithoutServersInput = {
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutFoldersInput = {
@@ -945,6 +1070,11 @@ export type UsersCreateWithoutFoldersInput = {
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutFoldersInput = {
@@ -971,6 +1101,11 @@ export type UsersUncheckedCreateWithoutFoldersInput = {
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutFoldersInput = {
@@ -1012,6 +1147,11 @@ export type UsersUpdateWithoutFoldersInput = {
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutFoldersInput = {
@@ -1038,6 +1178,11 @@ export type UsersUncheckedUpdateWithoutFoldersInput = {
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutApiKeysInput = {
@@ -1063,6 +1208,11 @@ export type UsersCreateWithoutApiKeysInput = {
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutApiKeysInput = {
@@ -1089,6 +1239,11 @@ export type UsersUncheckedCreateWithoutApiKeysInput = {
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutApiKeysInput = {
@@ -1130,6 +1285,11 @@ export type UsersUpdateWithoutApiKeysInput = {
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutApiKeysInput = {
@@ -1156,6 +1316,11 @@ export type UsersUncheckedUpdateWithoutApiKeysInput = {
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutLoginHistoryInput = {
@@ -1181,6 +1346,11 @@ export type UsersCreateWithoutLoginHistoryInput = {
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutLoginHistoryInput = {
@@ -1207,6 +1377,11 @@ export type UsersUncheckedCreateWithoutLoginHistoryInput = {
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutLoginHistoryInput = {
@@ -1248,6 +1423,11 @@ export type UsersUpdateWithoutLoginHistoryInput = {
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutLoginHistoryInput = {
@@ -1274,6 +1454,11 @@ export type UsersUncheckedUpdateWithoutLoginHistoryInput = {
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutWalletInput = {
@@ -1299,6 +1484,11 @@ export type UsersCreateWithoutWalletInput = {
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutWalletInput = {
@@ -1325,6 +1515,11 @@ export type UsersUncheckedCreateWithoutWalletInput = {
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutWalletInput = {
@@ -1366,6 +1561,11 @@ export type UsersUpdateWithoutWalletInput = {
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutWalletInput = {
@@ -1392,6 +1592,11 @@ export type UsersUncheckedUpdateWithoutWalletInput = {
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutWalletTransactionsInput = {
@@ -1417,6 +1622,11 @@ export type UsersCreateWithoutWalletTransactionsInput = {
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutWalletTransactionsInput = {
@@ -1443,6 +1653,11 @@ export type UsersUncheckedCreateWithoutWalletTransactionsInput = {
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutWalletTransactionsInput = {
@@ -1484,6 +1699,11 @@ export type UsersUpdateWithoutWalletTransactionsInput = {
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutWalletTransactionsInput = {
@@ -1510,6 +1730,11 @@ export type UsersUncheckedUpdateWithoutWalletTransactionsInput = {
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutAllocationsInput = {
@@ -1535,6 +1760,11 @@ export type UsersCreateWithoutAllocationsInput = {
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutAllocationsInput = {
@@ -1561,6 +1791,11 @@ export type UsersUncheckedCreateWithoutAllocationsInput = {
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutAllocationsInput = {
@@ -1602,6 +1837,11 @@ export type UsersUpdateWithoutAllocationsInput = {
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutAllocationsInput = {
@@ -1628,6 +1868,11 @@ export type UsersUncheckedUpdateWithoutAllocationsInput = {
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutStorePurchasesInput = {
@@ -1653,6 +1898,11 @@ export type UsersCreateWithoutStorePurchasesInput = {
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutStorePurchasesInput = {
@@ -1679,6 +1929,11 @@ export type UsersUncheckedCreateWithoutStorePurchasesInput = {
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutStorePurchasesInput = {
@@ -1720,6 +1975,11 @@ export type UsersUpdateWithoutStorePurchasesInput = {
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutStorePurchasesInput = {
@@ -1746,6 +2006,11 @@ export type UsersUncheckedUpdateWithoutStorePurchasesInput = {
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutCouponRedemptionsInput = {
@@ -1771,6 +2036,11 @@ export type UsersCreateWithoutCouponRedemptionsInput = {
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutCouponRedemptionsInput = {
@@ -1797,6 +2067,11 @@ export type UsersUncheckedCreateWithoutCouponRedemptionsInput = {
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutCouponRedemptionsInput = {
@@ -1838,6 +2113,11 @@ export type UsersUpdateWithoutCouponRedemptionsInput = {
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutCouponRedemptionsInput = {
@@ -1864,6 +2144,11 @@ export type UsersUncheckedUpdateWithoutCouponRedemptionsInput = {
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutAuditLogsAsUserInput = {
@@ -1889,6 +2174,11 @@ export type UsersCreateWithoutAuditLogsAsUserInput = {
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutAuditLogsAsUserInput = {
@@ -1915,6 +2205,11 @@ export type UsersUncheckedCreateWithoutAuditLogsAsUserInput = {
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutAuditLogsAsUserInput = {
@@ -1945,6 +2240,11 @@ export type UsersCreateWithoutAuditLogsAsAdminInput = {
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutAuditLogsAsAdminInput = {
@@ -1971,6 +2271,11 @@ export type UsersUncheckedCreateWithoutAuditLogsAsAdminInput = {
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
   notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutAuditLogsAsAdminInput = {
@@ -2012,6 +2317,11 @@ export type UsersUpdateWithoutAuditLogsAsUserInput = {
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutAuditLogsAsUserInput = {
@@ -2038,6 +2348,11 @@ export type UsersUncheckedUpdateWithoutAuditLogsAsUserInput = {
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UsersUpsertWithoutAuditLogsAsAdminInput = {
@@ -2074,6 +2389,11 @@ export type UsersUpdateWithoutAuditLogsAsAdminInput = {
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutAuditLogsAsAdminInput = {
@@ -2100,6 +2420,11 @@ export type UsersUncheckedUpdateWithoutAuditLogsAsAdminInput = {
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
   notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutNotificationsInput = {
@@ -2125,6 +2450,11 @@ export type UsersCreateWithoutNotificationsInput = {
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutNotificationsInput = {
@@ -2151,6 +2481,11 @@ export type UsersUncheckedCreateWithoutNotificationsInput = {
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutNotificationsInput = {
@@ -2192,6 +2527,11 @@ export type UsersUpdateWithoutNotificationsInput = {
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutNotificationsInput = {
@@ -2218,6 +2558,701 @@ export type UsersUncheckedUpdateWithoutNotificationsInput = {
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UsersCreateWithoutEarnSessionsInput = {
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutEarnSessionsInput = {
+  id?: number
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutEarnSessionsInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutEarnSessionsInput, Prisma.UsersUncheckedCreateWithoutEarnSessionsInput>
+}
+
+export type UsersUpsertWithoutEarnSessionsInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutEarnSessionsInput, Prisma.UsersUncheckedUpdateWithoutEarnSessionsInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutEarnSessionsInput, Prisma.UsersUncheckedCreateWithoutEarnSessionsInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutEarnSessionsInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutEarnSessionsInput, Prisma.UsersUncheckedUpdateWithoutEarnSessionsInput>
+}
+
+export type UsersUpdateWithoutEarnSessionsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutEarnSessionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UsersCreateWithoutAfkSessionsInput = {
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutAfkSessionsInput = {
+  id?: number
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutAfkSessionsInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutAfkSessionsInput, Prisma.UsersUncheckedCreateWithoutAfkSessionsInput>
+}
+
+export type UsersUpsertWithoutAfkSessionsInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutAfkSessionsInput, Prisma.UsersUncheckedUpdateWithoutAfkSessionsInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutAfkSessionsInput, Prisma.UsersUncheckedCreateWithoutAfkSessionsInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutAfkSessionsInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutAfkSessionsInput, Prisma.UsersUncheckedUpdateWithoutAfkSessionsInput>
+}
+
+export type UsersUpdateWithoutAfkSessionsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutAfkSessionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UsersCreateWithoutStreakInput = {
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutStreakInput = {
+  id?: number
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutStreakInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutStreakInput, Prisma.UsersUncheckedCreateWithoutStreakInput>
+}
+
+export type UsersUpsertWithoutStreakInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutStreakInput, Prisma.UsersUncheckedUpdateWithoutStreakInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutStreakInput, Prisma.UsersUncheckedCreateWithoutStreakInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutStreakInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutStreakInput, Prisma.UsersUncheckedUpdateWithoutStreakInput>
+}
+
+export type UsersUpdateWithoutStreakInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutStreakInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UsersCreateWithoutFraudLogsInput = {
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutFraudLogsInput = {
+  id?: number
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutFraudLogsInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutFraudLogsInput, Prisma.UsersUncheckedCreateWithoutFraudLogsInput>
+}
+
+export type UsersUpsertWithoutFraudLogsInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutFraudLogsInput, Prisma.UsersUncheckedUpdateWithoutFraudLogsInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutFraudLogsInput, Prisma.UsersUncheckedCreateWithoutFraudLogsInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutFraudLogsInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutFraudLogsInput, Prisma.UsersUncheckedUpdateWithoutFraudLogsInput>
+}
+
+export type UsersUpdateWithoutFraudLogsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutFraudLogsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+}
+
+export type UsersCreateWithoutEarnPrefsInput = {
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutEarnPrefsInput = {
+  id?: number
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutEarnPrefsInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutEarnPrefsInput, Prisma.UsersUncheckedCreateWithoutEarnPrefsInput>
+}
+
+export type UsersUpsertWithoutEarnPrefsInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutEarnPrefsInput, Prisma.UsersUncheckedUpdateWithoutEarnPrefsInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutEarnPrefsInput, Prisma.UsersUncheckedCreateWithoutEarnPrefsInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutEarnPrefsInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutEarnPrefsInput, Prisma.UsersUncheckedUpdateWithoutEarnPrefsInput>
+}
+
+export type UsersUpdateWithoutEarnPrefsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutEarnPrefsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -2237,6 +3272,9 @@ export type UsersCountOutputType = {
   apiKeys: number
   loginHistory: number
   notifications: number
+  earnSessions: number
+  afkSessions: number
+  fraudLogs: number
 }
 
 export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2251,6 +3289,9 @@ export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   apiKeys?: boolean | UsersCountOutputTypeCountApiKeysArgs
   loginHistory?: boolean | UsersCountOutputTypeCountLoginHistoryArgs
   notifications?: boolean | UsersCountOutputTypeCountNotificationsArgs
+  earnSessions?: boolean | UsersCountOutputTypeCountEarnSessionsArgs
+  afkSessions?: boolean | UsersCountOutputTypeCountAfkSessionsArgs
+  fraudLogs?: boolean | UsersCountOutputTypeCountFraudLogsArgs
 }
 
 /**
@@ -2340,6 +3381,27 @@ export type UsersCountOutputTypeCountNotificationsArgs<ExtArgs extends runtime.T
   where?: Prisma.NotificationWhereInput
 }
 
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountEarnSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.EarnSessionWhereInput
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountAfkSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AfkSessionWhereInput
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountFraudLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MonetizationFraudLogWhereInput
+}
+
 
 export type UsersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2366,6 +3428,11 @@ export type UsersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   apiKeys?: boolean | Prisma.Users$apiKeysArgs<ExtArgs>
   loginHistory?: boolean | Prisma.Users$loginHistoryArgs<ExtArgs>
   notifications?: boolean | Prisma.Users$notificationsArgs<ExtArgs>
+  earnSessions?: boolean | Prisma.Users$earnSessionsArgs<ExtArgs>
+  afkSessions?: boolean | Prisma.Users$afkSessionsArgs<ExtArgs>
+  streak?: boolean | Prisma.Users$streakArgs<ExtArgs>
+  fraudLogs?: boolean | Prisma.Users$fraudLogsArgs<ExtArgs>
+  earnPrefs?: boolean | Prisma.Users$earnPrefsArgs<ExtArgs>
   _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["users"]>
 
@@ -2428,6 +3495,11 @@ export type UsersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   apiKeys?: boolean | Prisma.Users$apiKeysArgs<ExtArgs>
   loginHistory?: boolean | Prisma.Users$loginHistoryArgs<ExtArgs>
   notifications?: boolean | Prisma.Users$notificationsArgs<ExtArgs>
+  earnSessions?: boolean | Prisma.Users$earnSessionsArgs<ExtArgs>
+  afkSessions?: boolean | Prisma.Users$afkSessionsArgs<ExtArgs>
+  streak?: boolean | Prisma.Users$streakArgs<ExtArgs>
+  fraudLogs?: boolean | Prisma.Users$fraudLogsArgs<ExtArgs>
+  earnPrefs?: boolean | Prisma.Users$earnPrefsArgs<ExtArgs>
   _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UsersIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -2448,6 +3520,11 @@ export type $UsersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     apiKeys: Prisma.$ApiKeyPayload<ExtArgs>[]
     loginHistory: Prisma.$LoginHistoryPayload<ExtArgs>[]
     notifications: Prisma.$NotificationPayload<ExtArgs>[]
+    earnSessions: Prisma.$EarnSessionPayload<ExtArgs>[]
+    afkSessions: Prisma.$AfkSessionPayload<ExtArgs>[]
+    streak: Prisma.$UserStreakPayload<ExtArgs> | null
+    fraudLogs: Prisma.$MonetizationFraudLogPayload<ExtArgs>[]
+    earnPrefs: Prisma.$UserEarnPreferencesPayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -2868,6 +3945,11 @@ export interface Prisma__UsersClient<T, Null = never, ExtArgs extends runtime.Ty
   apiKeys<T extends Prisma.Users$apiKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$apiKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   loginHistory<T extends Prisma.Users$loginHistoryArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$loginHistoryArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LoginHistoryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   notifications<T extends Prisma.Users$notificationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$notificationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$NotificationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  earnSessions<T extends Prisma.Users$earnSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$earnSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$EarnSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  afkSessions<T extends Prisma.Users$afkSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$afkSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AfkSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  streak<T extends Prisma.Users$streakArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$streakArgs<ExtArgs>>): Prisma.Prisma__UserStreakClient<runtime.Types.Result.GetResult<Prisma.$UserStreakPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  fraudLogs<T extends Prisma.Users$fraudLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$fraudLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MonetizationFraudLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  earnPrefs<T extends Prisma.Users$earnPrefsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$earnPrefsArgs<ExtArgs>>): Prisma.Prisma__UserEarnPreferencesClient<runtime.Types.Result.GetResult<Prisma.$UserEarnPreferencesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3580,6 +4662,116 @@ export type Users$notificationsArgs<ExtArgs extends runtime.Types.Extensions.Int
   take?: number
   skip?: number
   distinct?: Prisma.NotificationScalarFieldEnum | Prisma.NotificationScalarFieldEnum[]
+}
+
+/**
+ * Users.earnSessions
+ */
+export type Users$earnSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the EarnSession
+   */
+  select?: Prisma.EarnSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the EarnSession
+   */
+  omit?: Prisma.EarnSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.EarnSessionInclude<ExtArgs> | null
+  where?: Prisma.EarnSessionWhereInput
+  orderBy?: Prisma.EarnSessionOrderByWithRelationInput | Prisma.EarnSessionOrderByWithRelationInput[]
+  cursor?: Prisma.EarnSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.EarnSessionScalarFieldEnum | Prisma.EarnSessionScalarFieldEnum[]
+}
+
+/**
+ * Users.afkSessions
+ */
+export type Users$afkSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AfkSession
+   */
+  select?: Prisma.AfkSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AfkSession
+   */
+  omit?: Prisma.AfkSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AfkSessionInclude<ExtArgs> | null
+  where?: Prisma.AfkSessionWhereInput
+  orderBy?: Prisma.AfkSessionOrderByWithRelationInput | Prisma.AfkSessionOrderByWithRelationInput[]
+  cursor?: Prisma.AfkSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AfkSessionScalarFieldEnum | Prisma.AfkSessionScalarFieldEnum[]
+}
+
+/**
+ * Users.streak
+ */
+export type Users$streakArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserStreak
+   */
+  select?: Prisma.UserStreakSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserStreak
+   */
+  omit?: Prisma.UserStreakOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserStreakInclude<ExtArgs> | null
+  where?: Prisma.UserStreakWhereInput
+}
+
+/**
+ * Users.fraudLogs
+ */
+export type Users$fraudLogsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MonetizationFraudLog
+   */
+  select?: Prisma.MonetizationFraudLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MonetizationFraudLog
+   */
+  omit?: Prisma.MonetizationFraudLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MonetizationFraudLogInclude<ExtArgs> | null
+  where?: Prisma.MonetizationFraudLogWhereInput
+  orderBy?: Prisma.MonetizationFraudLogOrderByWithRelationInput | Prisma.MonetizationFraudLogOrderByWithRelationInput[]
+  cursor?: Prisma.MonetizationFraudLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MonetizationFraudLogScalarFieldEnum | Prisma.MonetizationFraudLogScalarFieldEnum[]
+}
+
+/**
+ * Users.earnPrefs
+ */
+export type Users$earnPrefsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserEarnPreferences
+   */
+  select?: Prisma.UserEarnPreferencesSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserEarnPreferences
+   */
+  omit?: Prisma.UserEarnPreferencesOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserEarnPreferencesInclude<ExtArgs> | null
+  where?: Prisma.UserEarnPreferencesWhereInput
 }
 
 /**

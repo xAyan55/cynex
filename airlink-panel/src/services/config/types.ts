@@ -68,7 +68,62 @@ export interface UIConfig {
   brandLogo: string;
 }
 
-export type ConfigGroup = EconomyConfig | StoreConfig | DefaultServerConfig | RenewalConfig | LimitsConfig | UIConfig | NotificationsConfig;
+export interface MonetizationConfig {
+  enabled: boolean;
+  maintenanceMode: boolean;
+  requireLogin: boolean;
+  fraudDetection: boolean;
+  minimumAccountAgeDays: number;
+  allowedCountries: string;     // Comma-separated ISO codes
+  loggingEnabled: boolean;
+  
+  // Linkvertise
+  linkvertiseEnabled: boolean;
+  linkvertiseUserId: string;
+  linkvertiseApiKey: string;
+  linkvertiseCallbackSecret: string;
+  coinsPerLinkCompletion: number;
+  minTimeBetweenLinks: number;  // seconds
+  maxDailyLinks: number;
+  linkCooldownSeconds: number;
+  
+  // Adsterra
+  adsterraEnabled: boolean;
+  adsterraPublisherId: string;
+  adsterraDomain: string;
+  adsterraAdultAds: boolean;
+  adsterraPopunderId: string;
+  adsterraNativeBannerId: string;
+  adsterraBannerId: string;
+  adsterraSmartlinkId: string;
+  adsterraSocialBarId: string;
+  adsterra468x60Id: string;
+  adsterra300x250Id: string;
+  adsterra160x300Id: string;
+  adsterra160x600Id: string;
+  adsterra320x50Id: string;
+  adsterra728x90Id: string;
+  
+  // AFK
+  coinsPerAfkMinute: number;
+  maxAfkMinutesPerDay: number;
+  
+  // Limits
+  dailyCoinLimit: number;
+  
+  // Streaks
+  streakDay1Reward: number;
+  streakDay3Reward: number;
+  streakDay7Reward: number;
+  streakDay14Reward: number;
+  streakDay30Reward: number;
+  
+  // Fraud thresholds
+  maxRewardsPerHour: number;
+  maxSessionsPerIp: number;
+}
+
+export type ConfigGroup = EconomyConfig | StoreConfig | DefaultServerConfig | RenewalConfig | LimitsConfig | UIConfig | NotificationsConfig | MonetizationConfig;
 
 export const defaultValues: Record<string, Record<string, unknown>> = {
   economy: {
@@ -133,5 +188,59 @@ export const defaultValues: Record<string, Record<string, unknown>> = {
     notifyOnAdminAction: true,
     notifyOnMaintenance: true,
     expirationWarningDays: 3,
+  },
+  monetization: {
+    enabled: true,
+    maintenanceMode: false,
+    requireLogin: true,
+    fraudDetection: true,
+    minimumAccountAgeDays: 0,
+    allowedCountries: '',
+    loggingEnabled: true,
+    
+    // Linkvertise
+    linkvertiseEnabled: true,
+    linkvertiseUserId: '209302',
+    linkvertiseApiKey: '',
+    linkvertiseCallbackSecret: 'my_secret',
+    coinsPerLinkCompletion: 15,
+    minTimeBetweenLinks: 60,
+    maxDailyLinks: 10,
+    linkCooldownSeconds: 60,
+    
+    // Adsterra
+    adsterraEnabled: true,
+    adsterraPublisherId: '109201',
+    adsterraDomain: 'adsterra.com',
+    adsterraAdultAds: false,
+    adsterraPopunderId: '',
+    adsterraNativeBannerId: '',
+    adsterraBannerId: '',
+    adsterraSmartlinkId: '',
+    adsterraSocialBarId: '',
+    adsterra468x60Id: '',
+    adsterra300x250Id: '',
+    adsterra160x300Id: '',
+    adsterra160x600Id: '',
+    adsterra320x50Id: '',
+    adsterra728x90Id: '',
+    
+    // AFK
+    coinsPerAfkMinute: 2,
+    maxAfkMinutesPerDay: 240,
+    
+    // Limits
+    dailyCoinLimit: 1000,
+    
+    // Streaks
+    streakDay1Reward: 10,
+    streakDay3Reward: 30,
+    streakDay7Reward: 100,
+    streakDay14Reward: 250,
+    streakDay30Reward: 600,
+    
+    // Fraud thresholds
+    maxRewardsPerHour: 100,
+    maxSessionsPerIp: 2,
   },
 };

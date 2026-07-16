@@ -1,0 +1,506 @@
+<%- include('../components/header', { title: 'Earning Hub' }) %>
+
+<main class="min-h-screen m-auto bg-mono-bg text-white">
+  <div class="flex min-h-screen">
+    <div class="w-60 h-full"><%- include('../components/template') %></div>
+    <div id="page-content" class="flex-1 overflow-y-auto pt-16 pb-12">
+      
+      <!-- Top banner header -->
+      <div class="px-8 pt-5">
+        <h1 class="text-base font-medium text-neutral-800 dark:text-white">Earning Hub</h1>
+        <p class="mt-0.5 text-sm text-neutral-500">Earn coins by completing link tasks, staying AFK, and claiming daily rewards.</p>
+      </div>
+
+      <div class="px-8 mt-5">
+        
+        <!-- Tab bar -->
+        <div class="flex gap-0.5 mb-6 border-b border-neutral-200 dark:border-neutral-700/40 overflow-x-auto">
+          <button type="button" data-tab="overview" class="earn-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('layout-grid', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Overview</button>
+          <button type="button" data-tab="offers" class="earn-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('package', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Offers</button>
+          <button type="button" data-tab="afk" class="earn-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('clock', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>AFK Rewards</button>
+          <button type="button" data-tab="streak" class="earn-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('calendar-check', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Daily Streak</button>
+          <button type="button" data-tab="history" class="earn-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('file-text', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>History</button>
+          <button type="button" data-tab="leaderboard" class="earn-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('trophy', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Leaderboard</button>
+        </div>
+
+        <!-- Notification messages -->
+        <div id="earnToast" class="hidden fixed bottom-5 right-5 bg-green-500 text-black px-4 py-2 rounded-xl text-sm font-semibold shadow-lg z-50"></div>
+
+        <!-- ═══ OVERVIEW TAB ══════════════════════════════════════════════════ -->
+        <div id="earn-panel-overview" class="earn-content-panel hidden space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <%- include('../components/ui/StatCard', { title: 'Current Balance', value: balance.toLocaleString(), icon_name: 'wallet', color: 'green' }) %>
+            <%- include('../components/ui/StatCard', { title: 'Earned Today', value: stats.todayEarned.toLocaleString(), icon_name: 'sun', color: 'blue' }) %>
+            <%- include('../components/ui/StatCard', { title: 'Lifetime Earnings', value: stats.lifetimeEarned.toLocaleString(), icon_name: 'gift', color: 'purple' }) %>
+          </div>
+
+          <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            <!-- Recent activity -->
+            <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 p-5 lg:col-span-2">
+              <h2 class="text-sm font-bold text-white mb-4">Recent Earning Actions</h2>
+              <div class="divide-y divide-neutral-200 dark:divide-white/5">
+                <% if (recentActivity.length === 0) { %>
+                  <p class="py-4 text-sm text-neutral-500 text-center">No completions recorded yet.</p>
+                <% } else { %>
+                  <% recentActivity.forEach(act => { %>
+                    <div class="py-3 flex justify-between items-center text-sm">
+                      <div>
+                        <p class="font-medium text-neutral-800 dark:text-neutral-200"><%= act.offer?.name || 'AFK Session' %></p>
+                        <p class="text-xs text-neutral-500"><%= new Date(act.createdAt).toLocaleString() %></p>
+                      </div>
+                      <span class="text-green-400 font-semibold font-mono">+<%= act.coinsAwarded %> coins</span>
+                    </div>
+                  <% }); %>
+                <% } %>
+              </div>
+            </div>
+            
+            <!-- Quick Actions widget -->
+            <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 p-5">
+              <h2 class="text-sm font-bold text-white mb-4">Quick Actions</h2>
+              <div class="space-y-3">
+                <a href="/store" class="block w-full py-2.5 bg-white text-black hover:bg-neutral-200 text-center text-xs font-bold rounded-xl transition">
+                  Go to Store
+                </a>
+                <button onclick="switchTab('offers')" class="w-full py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-center text-xs font-bold rounded-xl transition">
+                  Browse Offers
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ OFFERS TAB ════════════════════════════════════════════════════ -->
+        <div id="earn-panel-offers" class="earn-content-panel hidden space-y-6">
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <% offers.forEach(offer => { %>
+              <div class="bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/5 rounded-xl p-5 hover:border-white/10 transition relative">
+                <h3 class="font-bold text-white text-base"><%= offer.name %></h3>
+                <p class="text-xs text-neutral-500 mt-1 uppercase tracking-wider"><%= offer.provider %> task</p>
+                <p class="text-sm text-neutral-400 mt-3"><%= offer.description || 'Complete the task steps to claim your reward.' %></p>
+                
+                <div class="mt-4 flex flex-wrap gap-1">
+                  <% offer.rewards.forEach(r => { %>
+                    <span class="bg-green-500/10 text-green-400 text-xs px-2.5 py-0.5 rounded border border-green-500/20 font-semibold">+<%= r.amount %> <%= r.rewardType %></span>
+                  <% }); %>
+                </div>
+
+                <div class="mt-5 border-t border-white/5 pt-4 flex justify-between items-center">
+                  <span class="text-xs text-neutral-500"><%- icon('clock', { class: 'w-3 h-3 inline mr-1' }) %>Cooldown: <%= offer.cooldown %>s</span>
+                  <button onclick="startOffer(<%= offer.id %>)" class="px-4 py-2 bg-white text-black hover:bg-neutral-200 text-xs font-bold rounded-xl transition shadow">Start Task</button>
+                </div>
+              </div>
+            <% }); %>
+          </div>
+        </div>
+
+        <!-- ═══ AFK TAB ═══════════════════════════════════════════════════════ -->
+        <div id="earn-panel-afk" class="earn-content-panel hidden space-y-6">
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 p-8 max-w-lg mx-auto text-center space-y-6">
+            <h2 class="text-lg font-bold text-white">AFK Rewards System</h2>
+            <p class="text-sm text-neutral-400">Earning matches Visibility and Active State indicators. Earning will auto-pause if you switch tabs or lose page focus.</p>
+
+            <div class="h-28 flex items-center justify-center bg-white/[0.02] border border-white/5 rounded-2xl relative">
+              <span id="afkTimer" class="text-4xl font-mono font-bold text-white select-none">00:00:00</span>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 text-center">
+              <div class="bg-white/5 p-3 rounded-xl border border-white/5">
+                <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Coins/Min</p>
+                <p class="text-lg font-bold text-white font-mono"><%= monetization.coinsPerAfkMinute %></p>
+              </div>
+              <div class="bg-white/5 p-3 rounded-xl border border-white/5">
+                <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Earned Session</p>
+                <p id="sessionEarned" class="text-lg font-bold text-white font-mono">0</p>
+              </div>
+              <div class="bg-white/5 p-3 rounded-xl border border-white/5">
+                <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Daily Cap</p>
+                <p class="text-lg font-bold text-white font-mono"><%= monetization.maxAfkMinutesPerDay %>m</p>
+              </div>
+            </div>
+
+            <div id="afkStatusDot" class="flex items-center justify-center gap-2 py-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block animate-pulse"></span>
+              <span id="afkStatusLabel" class="text-xs text-neutral-500 font-semibold uppercase">Inactive</span>
+            </div>
+
+            <div class="flex gap-3 justify-center">
+              <button id="startAfkBtn" onclick="startAfk()" class="px-5 py-2.5 bg-white text-black hover:bg-neutral-200 text-xs font-bold rounded-xl transition shadow">Start AFK Earning</button>
+              <button id="stopAfkBtn" onclick="stopAfk()" class="hidden px-5 py-2.5 bg-red-500 text-black hover:bg-red-600 text-xs font-bold rounded-xl transition shadow">Stop Session</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ STREAK TAB ════════════════════════════════════════════════════ -->
+        <div id="earn-panel-streak" class="earn-content-panel hidden space-y-6">
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 p-6 max-w-lg mx-auto text-center space-y-6">
+            <h2 class="text-base font-bold text-white">Daily Streak Reward</h2>
+            <p class="text-sm text-neutral-400">Claim your rewards consecutive days to unlock larger milestones.</p>
+
+            <div class="flex justify-around items-center py-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+              <div>
+                <p class="text-xs text-neutral-500 uppercase mb-1">Current Streak</p>
+                <p class="text-3xl font-bold text-white font-mono"><%= streak.currentStreak %> Days</p>
+              </div>
+              <div class="h-10 w-px bg-white/5"></div>
+              <div>
+                <p class="text-xs text-neutral-500 uppercase mb-1">Best Streak</p>
+                <p class="text-3xl font-bold text-white font-mono"><%= streak.bestStreak %> Days</p>
+              </div>
+            </div>
+
+            <!-- Milestone progression calendar -->
+            <div class="grid grid-cols-5 gap-3">
+              <% [1, 3, 7, 14, 30].forEach(day => { %>
+                <div class="p-3 rounded-xl border border-white/5 <%= streak.currentStreak >= day ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-white/5 text-neutral-500' %>">
+                  <p class="text-xs font-semibold">Day <%= day %></p>
+                  <p class="text-lg font-bold font-mono mt-1">+<%= monetization['streakDay' + day + 'Reward'] %></p>
+                </div>
+              <% }); %>
+            </div>
+
+            <button onclick="claimStreak()" class="w-full py-3 bg-white text-black hover:bg-neutral-200 text-xs font-bold rounded-xl transition shadow">Claim Daily Reward</button>
+          </div>
+        </div>
+
+        <!-- ═══ HISTORY TAB ═══════════════════════════════════════════════════ -->
+        <div id="earn-panel-history" class="earn-content-panel hidden space-y-6">
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm">
+            <div class="flex justify-between items-center px-5 py-4 border-b border-neutral-200 dark:border-white/5">
+              <h2 class="text-sm font-bold text-white">Your Earning History</h2>
+              <!-- Simple export CSV button -->
+              <button onclick="exportHistoryCsv()" class="text-xs bg-white/5 border border-white/10 hover:bg-white/10 px-3 py-1.5 rounded-lg font-semibold transition">Export CSV</button>
+            </div>
+            
+            <div id="historyTableContainer" class="overflow-x-auto">
+              <table class="w-full text-left border-collapse text-sm">
+                <thead>
+                  <tr class="bg-neutral-50 dark:bg-white/5 text-neutral-500 border-b border-neutral-200 dark:border-white/5">
+                    <th class="px-5 py-3">Offer/Event</th>
+                    <th class="px-5 py-3">Completed At</th>
+                    <th class="px-5 py-3">Earning Type</th>
+                    <th class="px-5 py-3 text-right">Coins Credit</th>
+                  </tr>
+                </thead>
+                <tbody id="historyTableBody" class="divide-y divide-neutral-200 dark:divide-white/5 text-neutral-400">
+                  <tr>
+                    <td colspan="4" class="px-5 py-8 text-center text-neutral-500">Loading history records...</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Pagination buttons -->
+            <div class="flex justify-between items-center px-5 py-3 border-t border-neutral-200 dark:border-white/5 text-xs text-neutral-500">
+              <span id="historyPageLabel">Page 1 of 1</span>
+              <div class="flex gap-2">
+                <button id="prevHistBtn" onclick="changeHistoryPage(-1)" class="px-3 py-1.5 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg text-neutral-400">Previous</button>
+                <button id="nextHistBtn" onclick="changeHistoryPage(1)" class="px-3 py-1.5 bg-white/5 border border-white/10 hover:bg-white/10 rounded-lg text-neutral-400">Next</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- ═══ LEADERBOARD TAB ═══════════════════════════════════════════════ -->
+        <div id="earn-panel-leaderboard" class="earn-content-panel hidden space-y-6">
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 p-6 max-w-lg mx-auto">
+            <h2 class="text-sm font-bold text-white mb-4 text-center">Top Earners Ranking</h2>
+            
+            <div class="divide-y divide-neutral-200 dark:divide-white/5">
+              <% if (leaderboard.length === 0) { %>
+                <p class="py-8 text-sm text-neutral-500 text-center">No record history found.</p>
+              <% } else { %>
+                <% leaderboard.forEach((user, index) => { %>
+                  <div class="py-3 flex justify-between items-center text-sm">
+                    <div class="flex items-center gap-3">
+                      <span class="w-6 font-bold text-neutral-500 text-xs text-center"><%= index + 1 %></span>
+                      <img src="<%= user.avatar ? user.avatar : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' + encodeURIComponent(user.username) %>" class="w-8 h-8 rounded-lg border border-white/5 object-cover">
+                      <p class="font-medium text-white"><%= user.username %></p>
+                    </div>
+                    <span class="text-green-400 font-mono font-semibold"><%= user.totalEarned %> coins</span>
+                  </div>
+                <% }); %>
+              <% } %>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<script nonce="<%- nonce %>">
+  // Earn Page tabs manager
+  document.addEventListener('DOMContentLoaded', () => {
+    const tabs = document.querySelectorAll('.earn-tab-btn');
+    const panels = document.querySelectorAll('.earn-content-panel');
+
+    window.switchTab = function(tabId) {
+      tabs.forEach(tab => {
+        if (tab.getAttribute('data-tab') === tabId) {
+          tab.classList.add('border-white', 'text-white');
+          tab.classList.remove('border-transparent', 'text-neutral-400');
+        } else {
+          tab.classList.remove('border-white', 'text-white');
+          tab.classList.add('border-transparent', 'text-neutral-400');
+        }
+      });
+
+      panels.forEach(panel => {
+        if (panel.id === `earn-panel-${tabId}`) {
+          panel.classList.remove('hidden');
+        } else {
+          panel.classList.add('hidden');
+        }
+      });
+
+      if (tabId === 'history') {
+        loadHistory();
+      }
+    };
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        switchTab(tab.getAttribute('data-tab'));
+      });
+    });
+
+    // Default select first tab
+    switchTab('overview');
+  });
+
+  function showEarnToast(message, isError = false) {
+    const toast = document.getElementById('earnToast');
+    toast.textContent = message;
+    toast.className = isError 
+      ? 'fixed bottom-5 right-5 bg-red-500 text-black px-4 py-2 rounded-xl text-sm font-semibold shadow-lg z-50' 
+      : 'fixed bottom-5 right-5 bg-green-500 text-black px-4 py-2 rounded-xl text-sm font-semibold shadow-lg z-50';
+    toast.classList.remove('hidden');
+    setTimeout(() => {
+      toast.classList.add('hidden');
+    }, 3000);
+  }
+
+  // --- Offers verification flow ---
+  async function startOffer(offerId) {
+    const idKey = `id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    try {
+      const res = await fetch('/api/v1/earn/link', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Idempotency-Key': idKey
+        },
+        body: JSON.stringify({ offerId })
+      });
+      const data = await res.json();
+      if (data.success && data.redirectUrl) {
+        showEarnToast('Redirecting to task provider...');
+        setTimeout(() => {
+          window.location.href = data.redirectUrl;
+        }, 1000);
+      } else {
+        showEarnToast(data.error || 'Failed to start offer.', true);
+      }
+    } catch {
+      showEarnToast('Network error starting offer.', true);
+    }
+  }
+
+  // --- Streak claim flow ---
+  async function claimStreak() {
+    const idKey = `id-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    try {
+      const res = await fetch('/api/v1/earn/claim', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Idempotency-Key': idKey
+        },
+        body: JSON.stringify({ timezone: Intl.DateTimeFormat().resolvedOptions().timeZone })
+      });
+      const data = await res.json();
+      if (data.success) {
+        showEarnToast(`Streak claimed! +${data.coinsAwarded} coins.`);
+        setTimeout(() => window.location.reload(), 1500);
+      } else {
+        showEarnToast(data.error || 'Failed to claim daily reward.', true);
+      }
+    } catch {
+      showEarnToast('Network error claiming daily reward.', true);
+    }
+  }
+
+  // --- AFK Engine UI ---
+  let afkInterval = null;
+  let afkSeconds = 0;
+  let afkSessionToken = null;
+  let sessionEarnedCoins = 0;
+  let lastHeartbeatTime = Date.now();
+
+  function formatTime(seconds) {
+    const h = Math.floor(seconds / 3600).toString().padStart(2, '0');
+    const m = Math.floor((seconds % 3600) / 60).toString().padStart(2, '0');
+    const s = (seconds % 60).toString().padStart(2, '0');
+    return `${h}:${m}:${s}`;
+  }
+
+  async function startAfk() {
+    afkSessionToken = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substr(2, 9);
+    try {
+      const res = await fetch('/api/v1/earn/afk/start', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ sessionToken: afkSessionToken })
+      });
+      const data = await res.json();
+      
+      if (data.success) {
+        // Start timers
+        afkSeconds = 0;
+        sessionEarnedCoins = 0;
+        document.getElementById('sessionEarned').textContent = '0';
+        document.getElementById('afkTimer').textContent = '00:00:00';
+        
+        document.getElementById('startAfkBtn').classList.add('hidden');
+        document.getElementById('stopAfkBtn').classList.remove('hidden');
+        
+        const statusDot = document.getElementById('afkStatusDot').querySelector('span');
+        statusDot.className = 'w-2.5 h-2.5 rounded-full bg-green-500 inline-block animate-pulse';
+        document.getElementById('afkStatusLabel').textContent = 'ACTIVE earning';
+        document.getElementById('afkStatusLabel').className = 'text-xs text-green-400 font-semibold uppercase';
+
+        afkInterval = setInterval(updateAfkTimer, 1000);
+        showEarnToast('AFK Earning session started.');
+      } else {
+        showEarnToast(data.error || 'Failed to start AFK session.', true);
+      }
+    } catch {
+      showEarnToast('Network error starting AFK session.', true);
+    }
+  }
+
+  function updateAfkTimer() {
+    afkSeconds++;
+    document.getElementById('afkTimer').textContent = formatTime(afkSeconds);
+
+    // Send heartbeat every 60 seconds
+    const now = Date.now();
+    if (now - lastHeartbeatTime >= 60000) {
+      sendHeartbeat();
+    }
+  }
+
+  async function sendHeartbeat() {
+    if (!afkSessionToken) return;
+    lastHeartbeatTime = Date.now();
+
+    try {
+      const res = await fetch('/api/v1/earn/afk/heartbeat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          sessionToken: afkSessionToken,
+          visible: document.visibilityState === 'visible',
+          focused: document.hasFocus()
+        })
+      });
+      const data = await res.json();
+      if (data.success) {
+        if (data.coinsAwarded > 0) {
+          sessionEarnedCoins += data.coinsAwarded;
+          document.getElementById('sessionEarned').textContent = sessionEarnedCoins;
+          showEarnToast(`Heartbeat validated! +${data.coinsAwarded} coins.`);
+        }
+      } else {
+        showEarnToast(data.error || 'AFK session paused.', true);
+        stopAfk(false);
+      }
+    } catch {
+      logger.error('Error sending heartbeat.');
+    }
+  }
+
+  async function stopAfk(sendStopRequest = true) {
+    if (afkInterval) {
+      clearInterval(afkInterval);
+      afkInterval = null;
+    }
+
+    if (sendStopRequest && afkSessionToken) {
+      try {
+        await fetch('/api/v1/earn/afk/stop', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ sessionToken: afkSessionToken })
+        });
+      } catch {}
+    }
+
+    afkSessionToken = null;
+    document.getElementById('startAfkBtn').classList.remove('hidden');
+    document.getElementById('stopAfkBtn').classList.add('hidden');
+    
+    const statusDot = document.getElementById('afkStatusDot').querySelector('span');
+    statusDot.className = 'w-2.5 h-2.5 rounded-full bg-red-500 inline-block animate-pulse';
+    document.getElementById('afkStatusLabel').textContent = 'Inactive';
+    document.getElementById('afkStatusLabel').className = 'text-xs text-neutral-500 font-semibold uppercase';
+    showEarnToast('AFK Earning session ended.');
+  }
+
+  // Page visibility listener
+  document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState === 'hidden' && afkInterval) {
+      showEarnToast('Tab hidden. AFK earning paused.', true);
+      stopAfk();
+    }
+  });
+
+  // --- Paginated History Loading ---
+  let historyPage = 1;
+  let historyTotalPages = 1;
+
+  async function loadHistory() {
+    try {
+      const res = await fetch(`/api/v1/earn/history?page=${historyPage}`);
+      const data = await res.json();
+      if (data.success) {
+        renderHistoryTable(data.history);
+        historyTotalPages = data.pagination.totalPages || 1;
+        document.getElementById('historyPageLabel').textContent = `Page ${historyPage} of ${historyTotalPages}`;
+      }
+    } catch {
+      logger.error('Error loading history.');
+    }
+  }
+
+  function renderHistoryTable(items) {
+    const tbody = document.getElementById('historyTableBody');
+    if (!items || items.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="4" class="px-5 py-8 text-center text-neutral-500">No completions recorded yet.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = items.map(item => `
+      <tr class="hover:bg-neutral-50/50 dark:hover:bg-white/[0.02] transition">
+        <td class="px-5 py-3 font-semibold text-white">${item.offer?.name || 'AFK Session'}</td>
+        <td class="px-5 py-3 text-neutral-500 text-xs">${new Date(item.createdAt).toLocaleString()}</td>
+        <td class="px-5 py-3 text-neutral-500 text-xs"><span class="bg-white/5 px-2 py-0.5 rounded border border-white/5">${item.type}</span></td>
+        <td class="px-5 py-3 text-right text-green-400 font-mono font-semibold">+${item.coinsAwarded}</td>
+      </tr>
+    `).join('');
+  }
+
+  window.changeHistoryPage = function(delta) {
+    const target = historyPage + delta;
+    if (target >= 1 && target <= historyTotalPages) {
+      historyPage = target;
+      loadHistory();
+    }
+  };
+
+  window.exportHistoryCsv = function() {
+    window.location.href = `/api/v1/earn/history/export`; // If endpoint created
+  };
+</script>

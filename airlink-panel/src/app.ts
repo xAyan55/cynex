@@ -50,9 +50,14 @@ import {
   notFoundHandler,
   renderErrorPage,
 } from './handlers/errorPages';
+import { initializeProviders } from './services/monetization/providers';
+import { NotificationQueue } from './services/monetization/NotificationQueue';
 
 
 loadEnv();
+
+initializeProviders();
+NotificationQueue.initialize();
 
 // Set max listeners
 process.setMaxListeners(20);
@@ -183,6 +188,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   const cdnScripts = [
     'https://cdn.jsdelivr.net',
     'https://cdnjs.cloudflare.com',
+    'https://*.adsterra.com',
+    'https://*.adsrterra.com',
+    'https://*.adsterracdn.com',
   ];
   const cdnStyles = [
     'https://cdn.jsdelivr.net',

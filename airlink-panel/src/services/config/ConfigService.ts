@@ -8,6 +8,7 @@ import {
   LimitsConfig,
   UIConfig,
   NotificationsConfig,
+  MonetizationConfig,
   defaultValues,
 } from './types';
 
@@ -73,6 +74,11 @@ export class ConfigService {
   static async notifications(): Promise<NotificationsConfig> {
     const rows = await this.getCategoryRows(ConfigCategory.NOTIFICATIONS);
     return buildConfig<NotificationsConfig>(rows, defaultValues.notifications);
+  }
+
+  static async monetization(): Promise<MonetizationConfig> {
+    const rows = await this.getCategoryRows(ConfigCategory.MONETIZATION);
+    return buildConfig<MonetizationConfig>(rows, defaultValues.monetization);
   }
 
   static async updateCategory(category: ConfigCategory, data: Record<string, unknown>) {

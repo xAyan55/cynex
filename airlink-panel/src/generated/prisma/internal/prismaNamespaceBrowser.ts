@@ -76,7 +76,16 @@ export const ModelName = {
   Config: 'Config',
   AuditLog: 'AuditLog',
   Notification: 'Notification',
-  Plan: 'Plan'
+  Plan: 'Plan',
+  Offer: 'Offer',
+  OfferReward: 'OfferReward',
+  EarnSession: 'EarnSession',
+  AfkSession: 'AfkSession',
+  UserStreak: 'UserStreak',
+  MonetizationFraudLog: 'MonetizationFraudLog',
+  ProviderHealthRecord: 'ProviderHealthRecord',
+  MonetizationSchedulerJob: 'MonetizationSchedulerJob',
+  UserEarnPreferences: 'UserEarnPreferences'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -489,6 +498,157 @@ export const PlanScalarFieldEnum = {
 } as const
 
 export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof PlanScalarFieldEnum]
+
+
+export const OfferScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  type: 'type',
+  provider: 'provider',
+  targetUrl: 'targetUrl',
+  enabled: 'enabled',
+  dailyLimit: 'dailyLimit',
+  cooldown: 'cooldown',
+  sortOrder: 'sortOrder',
+  icon: 'icon',
+  description: 'description',
+  conditions: 'conditions',
+  priority: 'priority',
+  category: 'category',
+  tags: 'tags',
+  startsAt: 'startsAt',
+  expiresAt: 'expiresAt',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type OfferScalarFieldEnum = (typeof OfferScalarFieldEnum)[keyof typeof OfferScalarFieldEnum]
+
+
+export const OfferRewardScalarFieldEnum = {
+  id: 'id',
+  offerId: 'offerId',
+  rewardType: 'rewardType',
+  amount: 'amount'
+} as const
+
+export type OfferRewardScalarFieldEnum = (typeof OfferRewardScalarFieldEnum)[keyof typeof OfferRewardScalarFieldEnum]
+
+
+export const EarnSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  status: 'status',
+  provider: 'provider',
+  offerId: 'offerId',
+  token: 'token',
+  coinsAwarded: 'coinsAwarded',
+  ipAddress: 'ipAddress',
+  browser: 'browser',
+  userAgent: 'userAgent',
+  country: 'country',
+  fingerprint: 'fingerprint',
+  metadata: 'metadata',
+  nonce: 'nonce',
+  expiresAt: 'expiresAt',
+  completedAt: 'completedAt',
+  createdAt: 'createdAt'
+} as const
+
+export type EarnSessionScalarFieldEnum = (typeof EarnSessionScalarFieldEnum)[keyof typeof EarnSessionScalarFieldEnum]
+
+
+export const AfkSessionScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  startedAt: 'startedAt',
+  endedAt: 'endedAt',
+  lastHeartbeat: 'lastHeartbeat',
+  totalMinutes: 'totalMinutes',
+  coinsEarned: 'coinsEarned',
+  status: 'status',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  fingerprint: 'fingerprint',
+  createdAt: 'createdAt'
+} as const
+
+export type AfkSessionScalarFieldEnum = (typeof AfkSessionScalarFieldEnum)[keyof typeof AfkSessionScalarFieldEnum]
+
+
+export const UserStreakScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  currentStreak: 'currentStreak',
+  bestStreak: 'bestStreak',
+  lastClaimDate: 'lastClaimDate',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type UserStreakScalarFieldEnum = (typeof UserStreakScalarFieldEnum)[keyof typeof UserStreakScalarFieldEnum]
+
+
+export const MonetizationFraudLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  severity: 'severity',
+  details: 'details',
+  ipAddress: 'ipAddress',
+  fingerprint: 'fingerprint',
+  status: 'status',
+  createdAt: 'createdAt'
+} as const
+
+export type MonetizationFraudLogScalarFieldEnum = (typeof MonetizationFraudLogScalarFieldEnum)[keyof typeof MonetizationFraudLogScalarFieldEnum]
+
+
+export const ProviderHealthRecordScalarFieldEnum = {
+  id: 'id',
+  provider: 'provider',
+  status: 'status',
+  responseTime: 'responseTime',
+  lastSuccess: 'lastSuccess',
+  lastFailure: 'lastFailure',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt'
+} as const
+
+export type ProviderHealthRecordScalarFieldEnum = (typeof ProviderHealthRecordScalarFieldEnum)[keyof typeof ProviderHealthRecordScalarFieldEnum]
+
+
+export const MonetizationSchedulerJobScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  cron: 'cron',
+  enabled: 'enabled',
+  lastRun: 'lastRun',
+  nextRun: 'nextRun',
+  maxRetries: 'maxRetries',
+  backoff: 'backoff',
+  timeout: 'timeout',
+  lastError: 'lastError',
+  duration: 'duration',
+  lockedBy: 'lockedBy',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MonetizationSchedulerJobScalarFieldEnum = (typeof MonetizationSchedulerJobScalarFieldEnum)[keyof typeof MonetizationSchedulerJobScalarFieldEnum]
+
+
+export const UserEarnPreferencesScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  afkNotifications: 'afkNotifications',
+  rewardNotifications: 'rewardNotifications',
+  streakNotifications: 'streakNotifications',
+  offerNotifications: 'offerNotifications'
+} as const
+
+export type UserEarnPreferencesScalarFieldEnum = (typeof UserEarnPreferencesScalarFieldEnum)[keyof typeof UserEarnPreferencesScalarFieldEnum]
 
 
 export const SortOrder = {

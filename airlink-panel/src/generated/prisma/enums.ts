@@ -68,7 +68,91 @@ export const ConfigCategory = {
   RENEWALS: 'RENEWALS',
   LIMITS: 'LIMITS',
   UI: 'UI',
-  NOTIFICATIONS: 'NOTIFICATIONS'
+  NOTIFICATIONS: 'NOTIFICATIONS',
+  MONETIZATION: 'MONETIZATION'
 } as const
 
 export type ConfigCategory = (typeof ConfigCategory)[keyof typeof ConfigCategory]
+
+
+export const ProviderType = {
+  LINKVERTISE: 'LINKVERTISE',
+  ADSTERRA: 'ADSTERRA',
+  LOOTLABS: 'LOOTLABS',
+  CUSTOM: 'CUSTOM'
+} as const
+
+export type ProviderType = (typeof ProviderType)[keyof typeof ProviderType]
+
+
+export const EarnType = {
+  OFFER: 'OFFER',
+  AFK: 'AFK',
+  STREAK: 'STREAK',
+  CUSTOM: 'CUSTOM',
+  SURVEY: 'SURVEY',
+  ADS: 'ADS'
+} as const
+
+export type EarnType = (typeof EarnType)[keyof typeof EarnType]
+
+
+export const EarnStatus = {
+  PENDING: 'PENDING',
+  COMPLETED: 'COMPLETED',
+  FAILED: 'FAILED',
+  EXPIRED: 'EXPIRED'
+} as const
+
+export type EarnStatus = (typeof EarnStatus)[keyof typeof EarnStatus]
+
+
+export const RewardType = {
+  COINS: 'COINS',
+  RAM: 'RAM',
+  CPU: 'CPU',
+  DISK: 'DISK',
+  BACKUPS: 'BACKUPS',
+  SERVER_SLOT: 'SERVER_SLOT',
+  CUSTOM: 'CUSTOM'
+} as const
+
+export type RewardType = (typeof RewardType)[keyof typeof RewardType]
+
+
+export const FraudSeverity = {
+  LOW: 'LOW',
+  MEDIUM: 'MEDIUM',
+  HIGH: 'HIGH'
+} as const
+
+export type FraudSeverity = (typeof FraudSeverity)[keyof typeof FraudSeverity]
+
+
+export const FraudStatus = {
+  FLAGGED: 'FLAGGED',
+  RESOLVED: 'RESOLVED',
+  DISMISSED: 'DISMISSED'
+} as const
+
+export type FraudStatus = (typeof FraudStatus)[keyof typeof FraudStatus]
+
+
+export const SessionStatus = {
+  ACTIVE: 'ACTIVE',
+  PAUSED: 'PAUSED',
+  COMPLETED: 'COMPLETED',
+  ABANDONED: 'ABANDONED'
+} as const
+
+export type SessionStatus = (typeof SessionStatus)[keyof typeof SessionStatus]
+
+
+export const ProviderHealthStatus = {
+  HEALTHY: 'HEALTHY',
+  DEGRADED: 'DEGRADED',
+  OFFLINE: 'OFFLINE',
+  UNKNOWN: 'UNKNOWN'
+} as const
+
+export type ProviderHealthStatus = (typeof ProviderHealthStatus)[keyof typeof ProviderHealthStatus]

@@ -120,4 +120,14 @@ registerPermission('airlink.api.settings.read');
 registerPermission('airlink.api.settings.update');
 registerPermission('airlink.admin.menu.main');
 
+registerPermission('monetization.view' as any);
+registerPermission('monetization.edit' as any);
+registerPermission('monetization.analytics' as any);
+registerPermission('monetization.providers' as any);
+registerPermission('monetization.offers' as any);
+registerPermission('monetization.logs' as any);
+registerPermission('monetization.config' as any);
+registerPermission('monetization.rewards' as any);
+registerPermission('monetization.scheduler' as any);
+
 export default permissions;

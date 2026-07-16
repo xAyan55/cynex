@@ -59,6 +59,7 @@ enum ConfigCategory {
   LIMITS
   UI
   NOTIFICATIONS
+  MONETIZATION
 }
 
 // ──────────────────────────────────────────
@@ -91,6 +92,11 @@ model Users {
   apiKeys             ApiKey[]
   loginHistory        LoginHistory[]
   notifications       Notification[]
+  earnSessions        EarnSession[]        @relation("UserEarnSessions")
+  afkSessions         AfkSession[]         @relation("UserAfkSessions")
+  streak              UserStreak?          @relation("UserStreakRelation")
+  fraudLogs           MonetizationFraudLog[] @relation("UserFraudLogs")
+  earnPrefs           UserEarnPreferences?  @relation("UserEarnPrefs")
 }
 
 model Session {
@@ -479,3 +485,236 @@ model Plan {
   sortOrder   Int      @default(0)
   createdAt   DateTime @default(now())
 }
+
+// ──────────────────────────────────────────
+// Monetization Enums
+// ──────────────────────────────────────────
+
+enum ProviderType {
+  LINKVERTISE
+  ADSTERRA
+  LOOTLABS
+  CUSTOM
+}
+
+enum EarnType {
+  OFFER
+  AFK
+  STREAK
+  CUSTOM
+  SURVEY
+  ADS
+}
+
+enum EarnStatus {
+  PENDING
+  COMPLETED
+  FAILED
+  EXPIRED
+}
+
+enum RewardType {
+  COINS
+  RAM
+  CPU
+  DISK
+  BACKUPS
+  SERVER_SLOT
+  CUSTOM
+}
+
+enum FraudSeverity {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum FraudStatus {
+  FLAGGED
+  RESOLVED
+  DISMISSED
+}
+
+enum SessionStatus {
+  ACTIVE
+  PAUSED
+  COMPLETED
+  ABANDONED
+}
+
+enum ProviderHealthStatus {
+  HEALTHY
+  DEGRADED
+  OFFLINE
+  UNKNOWN
+}
+
+// ──────────────────────────────────────────
+// Monetization Models
+// ──────────────────────────────────────────
+
+model Offer {
+  id                 Int           @id @default(autoincrement())
+  name               String
+  type               EarnType      @default(OFFER)
+  provider           ProviderType
+  targetUrl          String
+  enabled            Boolean       @default(true)
+  dailyLimit         Int           @default(0)     // 0 = unlimited
+  cooldown           Int           @default(0)     // In seconds
+  sortOrder          Int           @default(0)
+  icon               String?
+  description        String?
+  
+  // Custom Offer Conditions (Stored as JSON for dynamic evaluator scalability)
+  // Example: {"minimumServers": 2, "emailVerified": true, "country": ["IN", "US"]}
+  conditions         Json
+
+  // Expiration, Scheduling & Categorization
+  priority           Int           @default(0)
+  category           String?
+  tags               String        @default("[]")  // JSON array string
+  startsAt           DateTime?
+  expiresAt          DateTime?
+
+  createdAt          DateTime      @default(now())
+  updatedAt          DateTime      @updatedAt
+
+  rewards            OfferReward[] @relation("OfferRewards")
+  sessions           EarnSession[] @relation("OfferSessions")
+}
+
+model OfferReward {
+  id          Int        @id @default(autoincrement())
+  offerId     Int
+  rewardType  RewardType
+  amount      Int
+
+  offer       Offer      @relation("OfferRewards", fields: [offerId], references: [id], onDelete: Cascade)
+
+  @@index([offerId])
+}
+
+model EarnSession {
+  id            Int           @id @default(autoincrement())
+  userId        Int
+  type          EarnType
+  status        EarnStatus    @default(PENDING)
+  provider      ProviderType?
+  offerId       Int?
+  token         String        @unique // HMAC security token
+  coinsAwarded  Int           @default(0)
+  
+  // Client Metadata (Normalized JSON columns)
+  ipAddress     String?
+  browser       String?
+  userAgent     String?
+  country       String?
+  fingerprint   String?
+  metadata      Json
+  
+  // Callback Protection Fields
+  nonce         String        @unique
+  expiresAt     DateTime?
+  completedAt   DateTime?
+  createdAt     DateTime      @default(now())
+
+  user  Users  @relation("UserEarnSessions", fields: [userId], references: [id], onDelete: Cascade)
+  offer Offer? @relation("OfferSessions", fields: [offerId], references: [id], onDelete: SetNull)
+
+  @@index([userId, type])
+  @@index([token])
+  @@index([createdAt])
+}
+
+model AfkSession {
+  id            Int           @id @default(autoincrement())
+  userId        Int
+  startedAt     DateTime      @default(now())
+  endedAt       DateTime?
+  lastHeartbeat DateTime      @default(now())
+  totalMinutes  Int           @default(0)
+  coinsEarned   Int           @default(0)
+  status        SessionStatus @default(ACTIVE)
+  
+  ipAddress     String?
+  userAgent     String?
+  fingerprint   String?
+  createdAt     DateTime      @default(now())
+
+  user Users @relation("UserAfkSessions", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, status])
+  @@index([createdAt])
+}
+
+model UserStreak {
+  id            Int       @id @default(autoincrement())
+  userId        Int       @unique
+  currentStreak Int       @default(0)
+  bestStreak    Int       @default(0)
+  lastClaimDate DateTime?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  user Users @relation("UserStreakRelation", fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model MonetizationFraudLog {
+  id          Int           @id @default(autoincrement())
+  userId      Int
+  type        String        // "velocity" | "multi_account" | "vpn" | "country_mismatch" | "anomaly"
+  severity    FraudSeverity
+  details     Json
+  ipAddress   String?
+  fingerprint String?
+  status      FraudStatus   @default(FLAGGED)
+  createdAt   DateTime      @default(now())
+
+  user Users @relation("UserFraudLogs", fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([createdAt])
+}
+
+model ProviderHealthRecord {
+  id            Int                  @id @default(autoincrement())
+  provider      ProviderType
+  status        ProviderHealthStatus @default(UNKNOWN)
+  responseTime  Int                  // In ms
+  lastSuccess   DateTime?
+  lastFailure   DateTime?
+  errorMessage  String?
+  createdAt     DateTime             @default(now())
+
+  @@index([provider, createdAt])
+}
+
+model MonetizationSchedulerJob {
+  id          Int       @id @default(autoincrement())
+  name        String    @unique
+  cron        String
+  enabled     Boolean   @default(true)
+  lastRun     DateTime?
+  nextRun     DateTime?
+  maxRetries  Int       @default(3)
+  backoff     Int       @default(300) // In seconds
+  timeout     Int       @default(60)  // In seconds
+  lastError   String?
+  duration    Int       @default(0)   // Elapsed milliseconds
+  lockedBy    String?   // Process ID or worker key
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model UserEarnPreferences {
+  id                 Int     @id @default(autoincrement())
+  userId             Int     @unique
+  afkNotifications   Boolean @default(true)
+  rewardNotifications Boolean @default(true)
+  streakNotifications Boolean @default(true)
+  offerNotifications Boolean @default(true)
+
+  user Users @relation("UserEarnPrefs", fields: [userId], references: [id], onDelete: Cascade)
+}
+

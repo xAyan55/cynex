@@ -152,3 +152,48 @@ export type Notification = Prisma.NotificationModel
  * Future-proof plan model — enables plan-based server creation and upgrades.
  */
 export type Plan = Prisma.PlanModel
+/**
+ * Model Offer
+ * 
+ */
+export type Offer = Prisma.OfferModel
+/**
+ * Model OfferReward
+ * 
+ */
+export type OfferReward = Prisma.OfferRewardModel
+/**
+ * Model EarnSession
+ * 
+ */
+export type EarnSession = Prisma.EarnSessionModel
+/**
+ * Model AfkSession
+ * 
+ */
+export type AfkSession = Prisma.AfkSessionModel
+/**
+ * Model UserStreak
+ * 
+ */
+export type UserStreak = Prisma.UserStreakModel
+/**
+ * Model MonetizationFraudLog
+ * 
+ */
+export type MonetizationFraudLog = Prisma.MonetizationFraudLogModel
+/**
+ * Model ProviderHealthRecord
+ * 
+ */
+export type ProviderHealthRecord = Prisma.ProviderHealthRecordModel
+/**
+ * Model MonetizationSchedulerJob
+ * 
+ */
+export type MonetizationSchedulerJob = Prisma.MonetizationSchedulerJobModel
+/**
+ * Model UserEarnPreferences
+ * 
+ */
+export type UserEarnPreferences = Prisma.UserEarnPreferencesModel
