@@ -58,6 +58,7 @@ enum ConfigCategory {
   RENEWALS
   LIMITS
   UI
+  NOTIFICATIONS
 }
 
 // ──────────────────────────────────────────

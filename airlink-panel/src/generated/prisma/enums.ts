@@ -67,7 +67,8 @@ export const ConfigCategory = {
   DEFAULTS: 'DEFAULTS',
   RENEWALS: 'RENEWALS',
   LIMITS: 'LIMITS',
-  UI: 'UI'
+  UI: 'UI',
+  NOTIFICATIONS: 'NOTIFICATIONS'
 } as const
 
 export type ConfigCategory = (typeof ConfigCategory)[keyof typeof ConfigCategory]

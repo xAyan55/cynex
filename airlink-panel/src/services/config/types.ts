@@ -14,6 +14,16 @@ export interface StoreConfig {
   backupSlotPrice: number;
   databaseSlotPrice: number;
   portPrice: number;
+  serverSlotPrice: number;
+}
+
+export interface NotificationsConfig {
+  notifyOnServerExpiration: boolean;
+  notifyOnPurchase: boolean;
+  notifyOnCouponRedeem: boolean;
+  notifyOnAdminAction: boolean;
+  notifyOnMaintenance: boolean;
+  expirationWarningDays: number;
 }
 
 export interface DefaultServerConfig {
@@ -42,16 +52,23 @@ export interface LimitsConfig {
   maxRamUpgrade: number;
   maxCpuUpgrade: number;
   maxDiskUpgrade: number;
+  maxWalletBalance: number;
+  maxCouponUsesPerUser: number;
 }
 
 export interface UIConfig {
   coinIconPath: string;
   dashboardShowResourceCards: boolean;
+  dashboardShowStore: boolean;
+  dashboardShowCoupons: boolean;
   storeEnabled: boolean;
   couponsEnabled: boolean;
+  landingEnabled: boolean;
+  brandName: string;
+  brandLogo: string;
 }
 
-export type ConfigGroup = EconomyConfig | StoreConfig | DefaultServerConfig | RenewalConfig | LimitsConfig | UIConfig;
+export type ConfigGroup = EconomyConfig | StoreConfig | DefaultServerConfig | RenewalConfig | LimitsConfig | UIConfig | NotificationsConfig;
 
 export const defaultValues: Record<string, Record<string, unknown>> = {
   economy: {
@@ -69,6 +86,7 @@ export const defaultValues: Record<string, Record<string, unknown>> = {
     backupSlotPrice: 500,
     databaseSlotPrice: 300,
     portPrice: 200,
+    serverSlotPrice: 1000,
   },
   defaults: {
     defaultMemory: 512,
@@ -94,11 +112,26 @@ export const defaultValues: Record<string, Record<string, unknown>> = {
     maxRamUpgrade: 16384,
     maxCpuUpgrade: 400,
     maxDiskUpgrade: 102400,
+    maxWalletBalance: 999999,
+    maxCouponUsesPerUser: 10,
   },
   ui: {
     coinIconPath: '/assets/dash/coin.png',
     dashboardShowResourceCards: true,
+    dashboardShowStore: true,
+    dashboardShowCoupons: true,
     storeEnabled: true,
     couponsEnabled: true,
+    landingEnabled: false,
+    brandName: 'CynexGP',
+    brandLogo: '/assets/dash/logo.png',
+  },
+  notifications: {
+    notifyOnServerExpiration: true,
+    notifyOnPurchase: true,
+    notifyOnCouponRedeem: true,
+    notifyOnAdminAction: true,
+    notifyOnMaintenance: true,
+    expirationWarningDays: 3,
   },
 };

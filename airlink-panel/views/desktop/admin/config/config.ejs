@@ -6,7 +6,7 @@
     <div id="page-content" class="flex-1 overflow-y-auto pt-16 pb-12">
       <div class="px-8 pt-5">
         <h1 class="text-base font-medium text-neutral-800 dark:text-white">Admin Config</h1>
-        <p class="mt-0.5 text-sm text-neutral-500">Manage panel configuration, store products, coupons, and audit logs.</p>
+        <p class="mt-0.5 text-sm text-neutral-500">Manage panel configuration, store products, coupons, notifications, and audit logs.</p>
       </div>
 
       <div class="px-8 mt-5">
@@ -20,259 +20,314 @@
           <button type="button" data-tab="limits" class="config-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 whitespace-nowrap"><%- icon('shield', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Limits</button>
           <button type="button" data-tab="products" class="config-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 whitespace-nowrap"><%- icon('package', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Products</button>
           <button type="button" data-tab="coupons" class="config-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 whitespace-nowrap"><%- icon('tag', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Coupons</button>
+          <button type="button" data-tab="notifications" class="config-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 whitespace-nowrap"><%- icon('bell', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Notifications</button>
+          <button type="button" data-tab="ui" class="config-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 whitespace-nowrap"><%- icon('palette', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>UI</button>
           <button type="button" data-tab="logs" class="config-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 whitespace-nowrap"><%- icon('file-text', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Logs</button>
         </div>
 
         <!-- Stats bar -->
-        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+        <div class="grid grid-cols-2 lg:grid-cols-6 gap-4 mb-6">
           <div class="rounded-xl bg-neutral-50 dark:bg-neutral-800/20 border border-neutral-200 dark:border-white/5 px-4 py-3">
             <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Products</p>
-            <p class="text-2xl font-bold text-neutral-800 dark:text-white tabular-nums"><%= products.length %></p>
+            <p class="text-2xl font-bold text-neutral-800 dark:text-white tabular-nums"><%= typeof products !== 'undefined' && products ? products.length : 0 %></p>
+          </div>
+          <div class="rounded-xl bg-neutral-50 dark:bg-neutral-800/20 border border-neutral-200 dark:border-white/5 px-4 py-3">
+            <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Coupons</p>
+            <p class="text-2xl font-bold text-neutral-800 dark:text-white tabular-nums"><%= typeof couponTotal !== 'undefined' ? couponTotal : 0 %></p>
+          </div>
+          <div class="rounded-xl bg-neutral-50 dark:bg-neutral-800/20 border border-neutral-200 dark:border-white/5 px-4 py-3">
+            <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Servers</p>
+            <p class="text-2xl font-bold text-neutral-800 dark:text-white tabular-nums"><%= typeof serverCount !== 'undefined' ? serverCount : 0 %></p>
           </div>
           <div class="rounded-xl bg-neutral-50 dark:bg-neutral-800/20 border border-neutral-200 dark:border-white/5 px-4 py-3">
             <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Transactions</p>
-            <p class="text-2xl font-bold text-neutral-800 dark:text-white tabular-nums"><%= transactions %></p>
+            <p class="text-2xl font-bold text-neutral-800 dark:text-white tabular-nums"><%= typeof transactions !== 'undefined' ? transactions : 0 %></p>
           </div>
           <div class="rounded-xl bg-neutral-50 dark:bg-neutral-800/20 border border-neutral-200 dark:border-white/5 px-4 py-3">
             <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Total Coins</p>
-            <p class="text-2xl font-bold text-neutral-800 dark:text-white tabular-nums"><%= totalCoins.toLocaleString() %></p>
+            <p class="text-2xl font-bold text-neutral-800 dark:text-white tabular-nums"><%= typeof totalCoins !== 'undefined' ? totalCoins.toLocaleString() : 0 %></p>
           </div>
           <div class="rounded-xl bg-neutral-50 dark:bg-neutral-800/20 border border-neutral-200 dark:border-white/5 px-4 py-3">
             <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Audit Logs</p>
-            <p class="text-2xl font-bold text-neutral-800 dark:text-white tabular-nums"><%= auditLogs.total %></p>
+            <p class="text-2xl font-bold text-neutral-800 dark:text-white tabular-nums"><%= typeof auditLogs !== 'undefined' && auditLogs ? auditLogs.total : 0 %></p>
+          </div>
+        </div>
+        <!-- ═══ ECONOMY ═══════════════════════════════════════════════════════ -->
+        <div id="panel-economy" data-config-panel="economy" class="config-panel hidden space-y-5">
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Economy Settings</h2>
+            <form class="config-form" data-category="economy">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Coin Name</label>
+                  <input type="text" name="coinName" value="<%= economy.coinName %>" required
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Coin Symbol</label>
+                  <input type="text" name="coinSymbol" value="<%= economy.coinSymbol %>" required maxlength="5"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Starting Coins</label>
+                  <input type="number" name="startingCoins" value="<%= economy.startingCoins %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Balance</label>
+                  <input type="number" name="maxBalance" value="<%= economy.maxBalance %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Tax Percent</label>
+                  <div class="relative">
+                    <input type="number" name="taxPercent" value="<%= economy.taxPercent %>" min="0" max="100" step="0.1"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 pr-8 text-neutral-800 dark:text-white transition-colors">
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-neutral-400 pointer-events-none">%</span>
+                  </div>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Downgrade Refund Percent</label>
+                  <div class="relative">
+                    <input type="number" name="downgradeRefundPercent" value="<%= economy.downgradeRefundPercent %>" min="0" max="100" step="0.1"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 pr-8 text-neutral-800 dark:text-white transition-colors">
+                    <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-neutral-400 pointer-events-none">%</span>
+                  </div>
+                </div>
+              </div>
+              <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end gap-3">
+                <button type="button" class="config-reset-btn rounded-xl border border-neutral-200 dark:border-neutral-600/30 text-neutral-600 dark:text-neutral-400 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Reset</button>
+                <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Economy</button>
+              </div>
+            </form>
           </div>
         </div>
 
-        <!-- ═══ ECONOMY ═══════════════════════════════════════════════════════ -->
-        <form id="form-economy" data-config-panel="economy" class="config-panel hidden space-y-5">
-          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
-            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Economy Settings</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Coin Name</label>
-                <input type="text" name="coinName" value="<%= economy.coinName %>"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Coin Symbol</label>
-                <input type="text" name="coinSymbol" value="<%= economy.coinSymbol %>"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Starting Coins</label>
-                <input type="number" name="startingCoins" value="<%= economy.startingCoins %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Balance</label>
-                <input type="number" name="maxBalance" value="<%= economy.maxBalance %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Tax Percent</label>
-                <div class="relative">
-                  <input type="number" name="taxPercent" value="<%= economy.taxPercent %>" min="0" max="100" step="0.1"
-                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 pr-8 text-neutral-800 dark:text-white transition-colors">
-                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-neutral-400 pointer-events-none">%</span>
-                </div>
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Downgrade Refund Percent</label>
-                <div class="relative">
-                  <input type="number" name="downgradeRefundPercent" value="<%= economy.downgradeRefundPercent %>" min="0" max="100" step="0.1"
-                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 pr-8 text-neutral-800 dark:text-white transition-colors">
-                  <span class="absolute right-3 top-1/2 -translate-y-1/2 text-xs text-neutral-400 pointer-events-none">%</span>
-                </div>
-              </div>
-            </div>
-            <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end">
-              <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Economy</button>
-            </div>
-          </div>
-        </form>
-
         <!-- ═══ STORE ═════════════════════════════════════════════════════════ -->
-        <form id="form-store" data-config-panel="store" class="config-panel hidden space-y-5">
+        <div id="panel-store" data-config-panel="store" class="config-panel hidden space-y-5">
           <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
             <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Store Pricing</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">RAM Price <span class="text-neutral-400 font-normal">(coins/MB)</span></label>
-                <input type="number" name="ramPricePerMb" value="<%= store.ramPricePerMb %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+            <form class="config-form" data-category="store">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">RAM Price <span class="text-neutral-400 font-normal">(coins/MB)</span></label>
+                  <input type="number" name="ramPricePerMb" value="<%= store.ramPricePerMb %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">CPU Price <span class="text-neutral-400 font-normal">(coins/%)</span></label>
+                  <input type="number" name="cpuPricePerPercent" value="<%= store.cpuPricePerPercent %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Disk Price <span class="text-neutral-400 font-normal">(coins/MB)</span></label>
+                  <input type="number" name="diskPricePerMb" value="<%= store.diskPricePerMb %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Backup Slot Price</label>
+                  <input type="number" name="backupSlotPrice" value="<%= store.backupSlotPrice %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Database Slot Price</label>
+                  <input type="number" name="databaseSlotPrice" value="<%= store.databaseSlotPrice %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Port Price</label>
+                  <input type="number" name="portPrice" value="<%= store.portPrice %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Server Slot Price</label>
+                  <input type="number" name="serverSlotPrice" value="<%= store.serverSlotPrice %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
               </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">CPU Price <span class="text-neutral-400 font-normal">(coins/%)</span></label>
-                <input type="number" name="cpuPricePerPercent" value="<%= store.cpuPricePerPercent %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end gap-3">
+                <button type="button" class="config-reset-btn rounded-xl border border-neutral-200 dark:border-neutral-600/30 text-neutral-600 dark:text-neutral-400 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Reset</button>
+                <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Store</button>
               </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Disk Price <span class="text-neutral-400 font-normal">(coins/MB)</span></label>
-                <input type="number" name="diskPricePerMb" value="<%= store.diskPricePerMb %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Backup Slot Price</label>
-                <input type="number" name="backupSlotPrice" value="<%= store.backupSlotPrice %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Database Slot Price</label>
-                <input type="number" name="databaseSlotPrice" value="<%= store.databaseSlotPrice %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Port Price</label>
-                <input type="number" name="portPrice" value="<%= store.portPrice %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-            </div>
-            <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end">
-              <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Store</button>
-            </div>
+            </form>
           </div>
-        </form>
+        </div>
 
         <!-- ═══ DEFAULTS ══════════════════════════════════════════════════════ -->
-        <form id="form-defaults" data-config-panel="defaults" class="config-panel hidden space-y-5">
+        <div id="panel-defaults" data-config-panel="defaults" class="config-panel hidden space-y-5">
           <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
             <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Default Server Configuration</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 px-5 py-5">
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Memory <span class="text-neutral-400 font-normal">(MB)</span></label>
-                <input type="number" name="defaultMemory" value="<%= defaults.defaultMemory %>" min="64"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+            <form class="config-form" data-category="defaults">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 px-5 py-5">
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Memory <span class="text-neutral-400 font-normal">(MB)</span></label>
+                  <input type="number" name="defaultMemory" value="<%= defaults.defaultMemory %>" min="64"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default CPU <span class="text-neutral-400 font-normal">(%)</span></label>
+                  <input type="number" name="defaultCpu" value="<%= defaults.defaultCpu %>" min="10"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Disk <span class="text-neutral-400 font-normal">(MB)</span></label>
+                  <input type="number" name="defaultDisk" value="<%= defaults.defaultDisk %>" min="128"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Validity <span class="text-neutral-400 font-normal">(days)</span></label>
+                  <input type="number" name="defaultValidityDays" value="<%= defaults.defaultValidityDays %>" min="1"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Backup Slots</label>
+                  <input type="number" name="defaultBackupSlots" value="<%= defaults.defaultBackupSlots %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Database Slots</label>
+                  <input type="number" name="defaultDatabaseSlots" value="<%= defaults.defaultDatabaseSlots %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Ports</label>
+                  <input type="number" name="defaultPorts" value="<%= defaults.defaultPorts %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
               </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default CPU <span class="text-neutral-400 font-normal">(%)</span></label>
-                <input type="number" name="defaultCpu" value="<%= defaults.defaultCpu %>" min="10"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end gap-3">
+                <button type="button" class="config-reset-btn rounded-xl border border-neutral-200 dark:border-neutral-600/30 text-neutral-600 dark:text-neutral-400 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Reset</button>
+                <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Defaults</button>
               </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Disk <span class="text-neutral-400 font-normal">(MB)</span></label>
-                <input type="number" name="defaultDisk" value="<%= defaults.defaultDisk %>" min="128"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Validity <span class="text-neutral-400 font-normal">(days)</span></label>
-                <input type="number" name="defaultValidityDays" value="<%= defaults.defaultValidityDays %>" min="1"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Backup Slots</label>
-                <input type="number" name="defaultBackupSlots" value="<%= defaults.defaultBackupSlots %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Database Slots</label>
-                <input type="number" name="defaultDatabaseSlots" value="<%= defaults.defaultDatabaseSlots %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Default Ports</label>
-                <input type="number" name="defaultPorts" value="<%= defaults.defaultPorts %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-            </div>
-            <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end">
-              <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Defaults</button>
-            </div>
+            </form>
           </div>
-        </form>
+        </div>
 
         <!-- ═══ RENEWALS ══════════════════════════════════════════════════════ -->
-        <form id="form-renewals" data-config-panel="renewals" class="config-panel hidden space-y-5">
+        <div id="panel-renewals" data-config-panel="renewals" class="config-panel hidden space-y-5">
           <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
             <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Renewal Pricing</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">7-Day Renewal Cost</label>
-                <input type="number" name="renew7DaysCost" value="<%= renewals.renew7DaysCost %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+            <form class="config-form" data-category="renewals">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">7-Day Renewal Cost</label>
+                  <input type="number" name="renew7DaysCost" value="<%= renewals.renew7DaysCost %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">15-Day Renewal Cost</label>
+                  <input type="number" name="renew15DaysCost" value="<%= renewals.renew15DaysCost %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">30-Day Renewal Cost</label>
+                  <input type="number" name="renew30DaysCost" value="<%= renewals.renew30DaysCost %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">60-Day Renewal Cost</label>
+                  <input type="number" name="renew60DaysCost" value="<%= renewals.renew60DaysCost %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">90-Day Renewal Cost</label>
+                  <input type="number" name="renew90DaysCost" value="<%= renewals.renew90DaysCost %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
               </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">15-Day Renewal Cost</label>
-                <input type="number" name="renew15DaysCost" value="<%= renewals.renew15DaysCost %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end gap-3">
+                <button type="button" class="config-reset-btn rounded-xl border border-neutral-200 dark:border-neutral-600/30 text-neutral-600 dark:text-neutral-400 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Reset</button>
+                <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Renewals</button>
               </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">30-Day Renewal Cost</label>
-                <input type="number" name="renew30DaysCost" value="<%= renewals.renew30DaysCost %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">60-Day Renewal Cost</label>
-                <input type="number" name="renew60DaysCost" value="<%= renewals.renew60DaysCost %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">90-Day Renewal Cost</label>
-                <input type="number" name="renew90DaysCost" value="<%= renewals.renew90DaysCost %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-            </div>
-            <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end">
-              <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Renewals</button>
-            </div>
+            </form>
           </div>
-        </form>
+        </div>
 
         <!-- ═══ LIMITS ════════════════════════════════════════════════════════ -->
-        <form id="form-limits" data-config-panel="limits" class="config-panel hidden space-y-5">
+        <div id="panel-limits" data-config-panel="limits" class="config-panel hidden space-y-5">
           <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
             <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Upgrade Limits</h2>
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 px-5 py-5">
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Servers</label>
-                <input type="number" name="maxServers" value="<%= limits.maxServers %>" min="1"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+            <form class="config-form" data-category="limits">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 px-5 py-5">
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Servers Per User</label>
+                  <input type="number" name="maxServers" value="<%= limits.maxServers %>" min="1"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Backups Per Server</label>
+                  <input type="number" name="maxBackupsPerServer" value="<%= limits.maxBackupsPerServer %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Databases Per Server</label>
+                  <input type="number" name="maxDatabasesPerServer" value="<%= limits.maxDatabasesPerServer %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Ports Per Server</label>
+                  <input type="number" name="maxPortsPerServer" value="<%= limits.maxPortsPerServer %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max RAM Upgrade <span class="text-neutral-400 font-normal">(MB)</span></label>
+                  <input type="number" name="maxRamUpgrade" value="<%= limits.maxRamUpgrade %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max CPU Upgrade <span class="text-neutral-400 font-normal">(%)</span></label>
+                  <input type="number" name="maxCpuUpgrade" value="<%= limits.maxCpuUpgrade %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Disk Upgrade <span class="text-neutral-400 font-normal">(MB)</span></label>
+                  <input type="number" name="maxDiskUpgrade" value="<%= limits.maxDiskUpgrade %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Wallet Balance</label>
+                  <input type="number" name="maxWalletBalance" value="<%= limits.maxWalletBalance %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Coupon Uses Per User</label>
+                  <input type="number" name="maxCouponUsesPerUser" value="<%= limits.maxCouponUsesPerUser %>" min="0"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
               </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Backups Per Server</label>
-                <input type="number" name="maxBackupsPerServer" value="<%= limits.maxBackupsPerServer %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end gap-3">
+                <button type="button" class="config-reset-btn rounded-xl border border-neutral-200 dark:border-neutral-600/30 text-neutral-600 dark:text-neutral-400 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Reset</button>
+                <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Limits</button>
               </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Databases Per Server</label>
-                <input type="number" name="maxDatabasesPerServer" value="<%= limits.maxDatabasesPerServer %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Ports Per Server</label>
-                <input type="number" name="maxPortsPerServer" value="<%= limits.maxPortsPerServer %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max RAM Upgrade <span class="text-neutral-400 font-normal">(MB)</span></label>
-                <input type="number" name="maxRamUpgrade" value="<%= limits.maxRamUpgrade %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max CPU Upgrade <span class="text-neutral-400 font-normal">(%)</span></label>
-                <input type="number" name="maxCpuUpgrade" value="<%= limits.maxCpuUpgrade %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-              <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Max Disk Upgrade <span class="text-neutral-400 font-normal">(MB)</span></label>
-                <input type="number" name="maxDiskUpgrade" value="<%= limits.maxDiskUpgrade %>" min="0"
-                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-              </div>
-            </div>
-            <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end">
-              <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Limits</button>
-            </div>
+            </form>
           </div>
-        </form>
-
+        </div>
         <!-- ═══ PRODUCTS ══════════════════════════════════════════════════════ -->
         <div id="panel-products" data-config-panel="products" class="config-panel hidden space-y-5">
+
+          <!-- Product filters & search -->
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <div class="px-5 py-3 flex flex-wrap items-center gap-3">
+              <input type="text" id="productSearch" placeholder="Search products..." value="<%= typeof productSearch !== 'undefined' ? productSearch : '' %>"
+                class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors w-56">
+              <select id="productFilter"
+                class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                <option value="">All</option>
+                <option value="enabled" <%= typeof productFilter !== 'undefined' && productFilter === 'enabled' ? 'selected' : '' %>>Enabled</option>
+                <option value="disabled" <%= typeof productFilter !== 'undefined' && productFilter === 'disabled' ? 'selected' : '' %>>Disabled</option>
+                <option value="featured" <%= typeof productFilter !== 'undefined' && productFilter === 'featured' ? 'selected' : '' %>>Featured</option>
+                <option value="hidden" <%= typeof productFilter !== 'undefined' && productFilter === 'hidden' ? 'selected' : '' %>>Hidden</option>
+              </select>
+              <button type="button" id="clearProductFilters" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Clear</button>
+            </div>
+          </div>
 
           <!-- Create Product -->
           <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
             <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Create Product</h2>
             <form id="createProductForm" class="px-5 py-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
               <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Name</label>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Name *</label>
                 <input type="text" name="name" required placeholder="e.g. Extra RAM"
                   class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors">
               </div>
@@ -282,7 +337,7 @@
                   class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors">
               </div>
               <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Action Type</label>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Action Type *</label>
                 <select name="actionType"
                   class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
                   <option value="ADD_COINS">Add Coins</option>
@@ -296,12 +351,12 @@
                 </select>
               </div>
               <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Action Value</label>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Action Value *</label>
                 <input type="number" name="actionValue" required min="1" value="1"
                   class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
               </div>
               <div>
-                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Price (coins)</label>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Price (coins) *</label>
                 <input type="number" name="price" required min="0" value="100"
                   class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
               </div>
@@ -315,12 +370,21 @@
                 <input type="number" name="displayOrder" min="0" value="0"
                   class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
               </div>
-              <div class="flex items-end gap-3">
-                <label class="flex items-center gap-2 cursor-pointer mb-2">
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Max Per User</label>
+                <input type="number" name="maxPurchasePerUser" min="0" placeholder="Unlimited"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors">
+              </div>
+              <div class="flex items-end gap-4">
+                <label class="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" name="featured" class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500">
                   <span class="text-sm text-neutral-700 dark:text-white">Featured</span>
                 </label>
-                <label class="flex items-center gap-2 cursor-pointer mb-2">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="hidden" class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500">
+                  <span class="text-sm text-neutral-700 dark:text-white">Hidden</span>
+                </label>
+                <label class="flex items-center gap-2 cursor-pointer">
                   <input type="checkbox" name="enabled" checked class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500">
                   <span class="text-sm text-neutral-700 dark:text-white">Enabled</span>
                 </label>
@@ -333,7 +397,7 @@
 
           <!-- Products table -->
           <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
-            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Store Products (<%= products.length %>)</h2>
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Store Products (<%= typeof products !== 'undefined' && products ? products.length : 0 %>)</h2>
             <div class="overflow-x-auto">
               <table class="w-full text-sm">
                 <thead>
@@ -343,13 +407,14 @@
                     <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Action</th>
                     <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Value</th>
                     <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Price</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Max/User</th>
                     <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Status</th>
                     <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Actions</th>
                   </tr>
                 </thead>
-                <tbody class="divide-y divide-neutral-100 dark:divide-white/5">
-                  <% if (products.length === 0) { %>
-                  <tr><td colspan="7" class="px-5 py-8 text-center text-sm text-neutral-400">No products created yet.</td></tr>
+                <tbody id="productsTableBody" class="divide-y divide-neutral-100 dark:divide-white/5">
+                  <% if (typeof products === 'undefined' || !products || products.length === 0) { %>
+                  <tr><td colspan="8" class="px-5 py-8 text-center text-sm text-neutral-400">No products found.</td></tr>
                   <% } else { %>
                   <% products.forEach(function(product) { %>
                   <tr class="hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors" data-product-id="<%= product.id %>">
@@ -361,12 +426,14 @@
                         <% if (product.icon) { %><img src="<%= product.icon %>" class="w-5 h-5 rounded" alt=""><% } %>
                         <span class="font-medium text-neutral-800 dark:text-white"><%= product.name %></span>
                         <% if (product.featured) { %><span class="text-[10px] px-1.5 py-0.5 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 font-medium">Featured</span><% } %>
+                        <% if (product.hidden) { %><span class="text-[10px] px-1.5 py-0.5 rounded bg-purple-100 dark:bg-purple-500/20 text-purple-700 dark:text-purple-400 font-medium">Hidden</span><% } %>
                       </div>
                       <% if (product.description) { %><p class="text-xs text-neutral-500 mt-0.5"><%= product.description %></p><% } %>
                     </td>
                     <td class="px-5 py-3 text-xs font-mono text-neutral-600 dark:text-neutral-400"><%= product.actionType %></td>
                     <td class="px-5 py-3 text-sm text-neutral-800 dark:text-white"><%= product.actionValue %></td>
                     <td class="px-5 py-3 text-sm text-neutral-800 dark:text-white"><%= product.price.toLocaleString() %></td>
+                    <td class="px-5 py-3 text-xs text-neutral-500"><%= product.maxPurchasePerUser ? product.maxPurchasePerUser : '∞' %></td>
                     <td class="px-5 py-3">
                       <% if (product.enabled) { %>
                       <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400">Enabled</span>
@@ -375,11 +442,11 @@
                       <% } %>
                     </td>
                     <td class="px-5 py-3">
-                      <div class="flex items-center gap-2">
-                        <button type="button" class="product-toggle-btn text-xs px-2.5 py-1 rounded-lg border transition-colors <%= product.enabled ? 'border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10' : 'border-neutral-200 dark:border-neutral-600/30 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700/20' %>" data-product-id="<%= product.id %>" data-enabled="<%= product.enabled %>">
-                          <%= product.enabled ? 'Disable' : 'Enable' %>
-                        </button>
-                        <button type="button" class="product-delete-btn text-xs px-2.5 py-1 rounded-lg border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors" data-product-id="<%= product.id %>">Delete</button>
+                      <div class="flex items-center gap-1.5 flex-wrap">
+                        <button type="button" class="product-toggle-btn text-xs px-2 py-1 rounded-lg border transition-colors <%= product.enabled ? 'border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10' : 'border-neutral-200 dark:border-neutral-600/30 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700/20' %>" data-product-id="<%= product.id %>" data-enabled="<%= product.enabled %>"><%= product.enabled ? 'Disable' : 'Enable' %></button>
+                        <button type="button" class="product-edit-btn text-xs px-2 py-1 rounded-lg border border-blue-200 dark:border-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors" data-product-id="<%= product.id %>">Edit</button>
+                        <button type="button" class="product-duplicate-btn text-xs px-2 py-1 rounded-lg border border-neutral-200 dark:border-neutral-600/30 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition-colors" data-product-id="<%= product.id %>">Copy</button>
+                        <button type="button" class="product-delete-btn text-xs px-2 py-1 rounded-lg border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors" data-product-id="<%= product.id %>">Delete</button>
                       </div>
                     </td>
                   </tr>
@@ -387,43 +454,522 @@
                 </tbody>
               </table>
             </div>
+
+            <!-- Product pagination -->
+            <% if (typeof productTotalPages !== 'undefined' && productTotalPages > 1) { %>
+            <div class="px-5 py-3 border-t border-neutral-200 dark:border-white/5 flex items-center justify-between">
+              <p class="text-xs text-neutral-500">Page <%= typeof productPage !== 'undefined' ? productPage : 1 %> of <%= productTotalPages %></p>
+              <div class="flex gap-2">
+                <% if (productPage > 1) { %>
+                <a href="?tab=products&productPage=<%= productPage - 1 %><%= typeof productSearch !== 'undefined' && productSearch ? '&productSearch=' + encodeURIComponent(productSearch) : '' %><%= typeof productFilter !== 'undefined' && productFilter ? '&productFilter=' + encodeURIComponent(productFilter) : '' %>" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Previous</a>
+                <% } %>
+                <% if (productPage < productTotalPages) { %>
+                <a href="?tab=products&productPage=<%= productPage + 1 %><%= typeof productSearch !== 'undefined' && productSearch ? '&productSearch=' + encodeURIComponent(productSearch) : '' %><%= typeof productFilter !== 'undefined' && productFilter ? '&productFilter=' + encodeURIComponent(productFilter) : '' %>" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Next</a>
+                <% } %>
+              </div>
+            </div>
+            <% } %>
+          </div>
+
+          <!-- Product Edit Modal -->
+          <div id="productEditModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-all duration-300">
+            <div class="bg-white dark:bg-neutral-900 rounded-2xl w-full max-w-2xl overflow-hidden flex flex-col shadow-2xl border border-neutral-200 dark:border-white/10">
+              <div class="flex justify-between items-center px-6 py-5 border-b border-neutral-200 dark:border-white/5">
+                <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Edit Product</h3>
+                <button type="button" class="text-neutral-400 hover:text-neutral-600 dark:hover:text-white transition-colors cursor-pointer product-edit-modal-close">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+              </div>
+              <div class="p-6 overflow-y-auto max-h-[75vh]">
+                <form id="editProductForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <input type="hidden" name="editProductId" id="editProductId">
+                  <div class="sm:col-span-2">
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Name</label>
+                    <input type="text" name="name" id="editProductName" required
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div class="sm:col-span-2">
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Description</label>
+                    <input type="text" name="description" id="editProductDesc"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Action Type</label>
+                    <select name="actionType" id="editProductActionType"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                      <option value="ADD_COINS">Add Coins</option>
+                      <option value="ADD_RAM">Add RAM</option>
+                      <option value="ADD_CPU">Add CPU</option>
+                      <option value="ADD_DISK">Add Disk</option>
+                      <option value="ADD_BACKUP_SLOTS">Add Backup Slots</option>
+                      <option value="ADD_SERVER_SLOTS">Add Server Slots</option>
+                      <option value="ADD_PORTS">Add Ports</option>
+                      <option value="ADD_DATABASES">Add Databases</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Action Value</label>
+                    <input type="number" name="actionValue" id="editProductActionValue" required min="1"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Price (coins)</label>
+                    <input type="number" name="price" id="editProductPrice" required min="0"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Icon URL</label>
+                    <input type="text" name="icon" id="editProductIcon"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Display Order</label>
+                    <input type="number" name="displayOrder" id="editProductDisplayOrder" min="0"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Max Per User</label>
+                    <input type="number" name="maxPurchasePerUser" id="editProductMaxPerUser" min="0" placeholder="0 = Unlimited"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div class="sm:col-span-2 flex items-center gap-6 pt-2">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="featured" id="editProductFeatured" class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500">
+                      <span class="text-sm text-neutral-700 dark:text-white">Featured</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="hidden" id="editProductHidden" class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500">
+                      <span class="text-sm text-neutral-700 dark:text-white">Hidden</span>
+                    </label>
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="enabled" id="editProductEnabled" checked class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500">
+                      <span class="text-sm text-neutral-700 dark:text-white">Enabled</span>
+                    </label>
+                  </div>
+                </form>
+              </div>
+              <div class="px-6 py-4 border-t border-neutral-200 dark:border-white/5 flex justify-end gap-3">
+                <button type="button" class="product-edit-modal-close rounded-xl border border-neutral-200 dark:border-neutral-600/30 text-neutral-600 dark:text-neutral-400 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Cancel</button>
+                <button type="button" id="saveEditProductBtn" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Changes</button>
+              </div>
+            </div>
           </div>
         </div>
-
         <!-- ═══ COUPONS ═══════════════════════════════════════════════════════ -->
         <div id="panel-coupons" data-config-panel="coupons" class="config-panel hidden space-y-5">
-          <div class="flex items-center justify-between">
-            <p class="text-sm text-neutral-500">Manage coupon codes for rewards.</p>
-            <a href="/admin/coupons" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-4 py-2 text-sm font-medium shadow-sm transition">Manage Coupons</a>
+
+          <!-- Coupon search & create -->
+          <div class="flex items-center justify-between gap-4 flex-wrap">
+            <div class="flex items-center gap-3">
+              <input type="text" id="couponSearch" placeholder="Search by code..." value="<%= typeof couponSearch !== 'undefined' ? couponSearch : '' %>"
+                class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors w-56">
+              <button type="button" id="clearCouponSearch" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Clear</button>
+            </div>
+            <button type="button" id="showCreateCouponBtn" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-4 py-2 text-sm font-medium shadow-sm transition"><%- icon('plus', { class: 'w-4 h-4 inline mr-1 -mt-0.5' }) %>Create Coupon</button>
+          </div>
+
+          <!-- Create Coupon (inline toggle) -->
+          <div id="createCouponPanel" class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none hidden">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Create Coupon</h2>
+            <form id="createCouponForm" class="px-5 py-5 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Code *</label>
+                <div class="flex gap-2">
+                  <input type="text" name="code" id="couponCodeInput" required minlength="3" placeholder="e.g. SUMMER2024"
+                    class="flex-1 rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors uppercase">
+                  <button type="button" id="generateCouponCode" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 text-neutral-600 dark:text-neutral-400 px-3 py-2 text-sm hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition" title="Generate random code"><%- icon('refresh-cw', { class: 'w-4 h-4' }) %></button>
+                </div>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Description</label>
+                <input type="text" name="description" placeholder="Optional"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Action Type *</label>
+                <select name="actionType"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  <option value="ADD_COINS">Add Coins</option>
+                  <option value="ADD_RAM">Add RAM</option>
+                  <option value="ADD_CPU">Add CPU</option>
+                  <option value="ADD_DISK">Add Disk</option>
+                  <option value="ADD_BACKUP_SLOTS">Add Backup Slots</option>
+                  <option value="ADD_SERVER_SLOTS">Add Server Slots</option>
+                  <option value="ADD_PORTS">Add Ports</option>
+                  <option value="ADD_DATABASES">Add Databases</option>
+                </select>
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Action Value *</label>
+                <input type="number" name="actionValue" required min="1" value="100"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Max Uses <span class="text-neutral-400 font-normal">(0 = unlimited)</span></label>
+                <input type="number" name="maxUses" min="0" value="0"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Per User Limit</label>
+                <input type="number" name="perUserLimit" min="1" value="1"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Starts At</label>
+                <input type="datetime-local" name="startsAt"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Expires At</label>
+                <input type="datetime-local" name="expiresAt"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div class="flex items-end">
+                <label class="flex items-center gap-2 cursor-pointer">
+                  <input type="checkbox" name="enabled" checked class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500">
+                  <span class="text-sm text-neutral-700 dark:text-white">Enabled</span>
+                </label>
+              </div>
+            </form>
+            <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end gap-3">
+              <button type="button" id="cancelCreateCoupon" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 text-neutral-600 dark:text-neutral-400 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Cancel</button>
+              <button type="button" id="createCouponBtn" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Create Coupon</button>
+            </div>
+          </div>
+
+          <!-- Coupons table -->
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Coupons (<%= typeof couponTotal !== 'undefined' ? couponTotal : 0 %>)</h2>
+            <div class="overflow-x-auto">
+              <table class="w-full text-sm">
+                <thead>
+                  <tr class="border-b border-neutral-200 dark:border-white/5 text-left">
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Code</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Description</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Reward</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Uses</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Expires</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Status</th>
+                    <th class="px-5 py-3 text-xs font-medium text-neutral-500 uppercase tracking-wider">Actions</th>
+                  </tr>
+                </thead>
+                <tbody id="couponsTableBody" class="divide-y divide-neutral-100 dark:divide-white/5">
+                  <% if (typeof coupons === 'undefined' || !coupons || coupons.length === 0) { %>
+                  <tr><td colspan="7" class="px-5 py-8 text-center text-sm text-neutral-400">No coupons found.</td></tr>
+                  <% } else { %>
+                  <% coupons.forEach(function(coupon) { %>
+                  <tr class="hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors" data-coupon-id="<%= coupon.id %>">
+                    <td class="px-5 py-3">
+                      <span class="font-mono font-medium text-sm text-neutral-800 dark:text-white"><%= coupon.code %></span>
+                    </td>
+                    <td class="px-5 py-3 text-xs text-neutral-500"><%= coupon.description || '-' %></td>
+                    <td class="px-5 py-3 text-xs font-mono text-neutral-600 dark:text-neutral-400"><%= coupon.actionType %> x<%= coupon.actionValue %></td>
+                    <td class="px-5 py-3 text-xs text-neutral-600 dark:text-neutral-400"><%= coupon.maxUses > 0 ? coupon.maxUses : '∞' %> | <%= coupon.perUserLimit %>/user</td>
+                    <td class="px-5 py-3 text-xs text-neutral-500"><%= coupon.expiresAt ? new Date(coupon.expiresAt).toLocaleDateString() : 'Never' %></td>
+                    <td class="px-5 py-3">
+                      <% if (coupon.enabled) { %>
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-100 dark:bg-emerald-500/20 text-emerald-700 dark:text-emerald-400">Active</span>
+                      <% } else { %>
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-neutral-100 dark:bg-neutral-700/40 text-neutral-500 dark:text-neutral-400">Disabled</span>
+                      <% } %>
+                      <% if (coupon.expiresAt && new Date(coupon.expiresAt) < new Date()) { %>
+                      <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400 ml-1">Expired</span>
+                      <% } %>
+                    </td>
+                    <td class="px-5 py-3">
+                      <div class="flex items-center gap-1.5 flex-wrap">
+                        <button type="button" class="coupon-toggle-btn text-xs px-2 py-1 rounded-lg border transition-colors <%= coupon.enabled ? 'border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10' : 'border-neutral-200 dark:border-neutral-600/30 text-neutral-500 hover:bg-neutral-100 dark:hover:bg-neutral-700/20' %>" data-coupon-id="<%= coupon.id %>" data-enabled="<%= coupon.enabled %>"><%= coupon.enabled ? 'Disable' : 'Enable' %></button>
+                        <button type="button" class="coupon-edit-btn text-xs px-2 py-1 rounded-lg border border-blue-200 dark:border-blue-500/20 text-blue-600 dark:text-blue-400 hover:bg-blue-50 dark:hover:bg-blue-500/10 transition-colors" data-coupon-id="<%= coupon.id %>">Edit</button>
+                        <button type="button" class="coupon-duplicate-btn text-xs px-2 py-1 rounded-lg border border-neutral-200 dark:border-neutral-600/30 text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition-colors" data-coupon-id="<%= coupon.id %>">Copy</button>
+                        <button type="button" class="coupon-delete-btn text-xs px-2 py-1 rounded-lg border border-red-200 dark:border-red-500/20 text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-500/10 transition-colors" data-coupon-id="<%= coupon.id %>">Delete</button>
+                      </div>
+                    </td>
+                  </tr>
+                  <% }); } %>
+                </tbody>
+              </table>
+            </div>
+
+            <!-- Coupon pagination -->
+            <% if (typeof couponTotalPages !== 'undefined' && couponTotalPages > 1) { %>
+            <div class="px-5 py-3 border-t border-neutral-200 dark:border-white/5 flex items-center justify-between">
+              <p class="text-xs text-neutral-500">Page <%= typeof couponPage !== 'undefined' ? couponPage : 1 %> of <%= couponTotalPages %></p>
+              <div class="flex gap-2">
+                <% if (couponPage > 1) { %>
+                <a href="?tab=coupons&couponPage=<%= couponPage - 1 %><%= typeof couponSearch !== 'undefined' && couponSearch ? '&couponSearch=' + encodeURIComponent(couponSearch) : '' %>" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Previous</a>
+                <% } %>
+                <% if (couponPage < couponTotalPages) { %>
+                <a href="?tab=coupons&couponPage=<%= couponPage + 1 %><%= typeof couponSearch !== 'undefined' && couponSearch ? '&couponSearch=' + encodeURIComponent(couponSearch) : '' %>" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Next</a>
+                <% } %>
+              </div>
+            </div>
+            <% } %>
+          </div>
+
+          <!-- Coupon Edit Modal -->
+          <div id="couponEditModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-all duration-300">
+            <div class="bg-white dark:bg-neutral-900 rounded-2xl w-full max-w-2xl overflow-hidden flex flex-col shadow-2xl border border-neutral-200 dark:border-white/10">
+              <div class="flex justify-between items-center px-6 py-5 border-b border-neutral-200 dark:border-white/5">
+                <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Edit Coupon</h3>
+                <button type="button" class="text-neutral-400 hover:text-neutral-600 dark:hover:text-white transition-colors cursor-pointer coupon-edit-modal-close">
+                  <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+                </button>
+              </div>
+              <div class="p-6 overflow-y-auto max-h-[75vh]">
+                <form id="editCouponForm" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <input type="hidden" name="editCouponId" id="editCouponId">
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Code</label>
+                    <input type="text" name="code" id="editCouponCode" required minlength="3"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors uppercase">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Description</label>
+                    <input type="text" name="description" id="editCouponDesc"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Action Type</label>
+                    <select name="actionType" id="editCouponActionType"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                      <option value="ADD_COINS">Add Coins</option>
+                      <option value="ADD_RAM">Add RAM</option>
+                      <option value="ADD_CPU">Add CPU</option>
+                      <option value="ADD_DISK">Add Disk</option>
+                      <option value="ADD_BACKUP_SLOTS">Add Backup Slots</option>
+                      <option value="ADD_SERVER_SLOTS">Add Server Slots</option>
+                      <option value="ADD_PORTS">Add Ports</option>
+                      <option value="ADD_DATABASES">Add Databases</option>
+                    </select>
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Action Value</label>
+                    <input type="number" name="actionValue" id="editCouponActionValue" required min="1"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Max Uses <span class="text-neutral-400 font-normal">(0 = unlimited)</span></label>
+                    <input type="number" name="maxUses" id="editCouponMaxUses" min="0"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Per User Limit</label>
+                    <input type="number" name="perUserLimit" id="editCouponPerUserLimit" min="1"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Starts At</label>
+                    <input type="datetime-local" name="startsAt" id="editCouponStartsAt"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-1.5">Expires At</label>
+                    <input type="datetime-local" name="expiresAt" id="editCouponExpiresAt"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div class="flex items-end">
+                    <label class="flex items-center gap-2 cursor-pointer">
+                      <input type="checkbox" name="enabled" id="editCouponEnabled" class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500">
+                      <span class="text-sm text-neutral-700 dark:text-white">Enabled</span>
+                    </label>
+                  </div>
+                </form>
+              </div>
+              <div class="px-6 py-4 border-t border-neutral-200 dark:border-white/5 flex justify-end gap-3">
+                <button type="button" class="coupon-edit-modal-close rounded-xl border border-neutral-200 dark:border-neutral-600/30 text-neutral-600 dark:text-neutral-400 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Cancel</button>
+                <button type="button" id="saveEditCouponBtn" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Changes</button>
+              </div>
+            </div>
           </div>
         </div>
+        <!-- --- NOTIFICATIONS -------------------------------------------------- -->
+        <div id="panel-notifications" data-config-panel="notifications" class="config-panel hidden space-y-5">
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Notification Settings</h2>
+            <form class="config-form" data-category="notifications">
+              <div class="px-5 py-5 space-y-4">
+                <div class="flex items-center justify-between py-3 border-b border-neutral-100 dark:border-white/5">
+                  <div>
+                    <p class="text-sm font-medium text-neutral-800 dark:text-white">Server Expiration Alerts</p>
+                    <p class="text-xs text-neutral-500 mt-0.5">Notify users when their servers are about to expire</p>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="notifyOnServerExpiration" class="sr-only peer" <%- notifications.notifyOnServerExpiration ? 'checked' : '' %>>
+                    <div class="w-9 h-5 bg-neutral-300 dark:bg-neutral-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-neutral-900 dark:peer-checked:bg-white"></div>
+                  </label>
+                </div>
+                <div class="flex items-center justify-between py-3 border-b border-neutral-100 dark:border-white/5">
+                  <div>
+                    <p class="text-sm font-medium text-neutral-800 dark:text-white">Purchase Notifications</p>
+                    <p class="text-xs text-neutral-500 mt-0.5">Notify users when they make a purchase</p>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="notifyOnPurchase" class="sr-only peer" <%- notifications.notifyOnPurchase ? 'checked' : '' %>>
+                    <div class="w-9 h-5 bg-neutral-300 dark:bg-neutral-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-neutral-900 dark:peer-checked:bg-white"></div>
+                  </label>
+                </div>
+                <div class="flex items-center justify-between py-3 border-b border-neutral-100 dark:border-white/5">
+                  <div>
+                    <p class="text-sm font-medium text-neutral-800 dark:text-white">Coupon Redemption Notifications</p>
+                    <p class="text-xs text-neutral-500 mt-0.5">Notify users when they redeem a coupon</p>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="notifyOnCouponRedeem" class="sr-only peer" <%- notifications.notifyOnCouponRedeem ? 'checked' : '' %>>
+                    <div class="w-9 h-5 bg-neutral-300 dark:bg-neutral-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-neutral-900 dark:peer-checked:bg-white"></div>
+                  </label>
+                </div>
+                <div class="flex items-center justify-between py-3 border-b border-neutral-100 dark:border-white/5">
+                  <div>
+                    <p class="text-sm font-medium text-neutral-800 dark:text-white">Admin Action Notifications</p>
+                    <p class="text-xs text-neutral-500 mt-0.5">Notify users about admin actions on their account</p>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="notifyOnAdminAction" class="sr-only peer" <%- notifications.notifyOnAdminAction ? 'checked' : '' %>>
+                    <div class="w-9 h-5 bg-neutral-300 dark:bg-neutral-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-neutral-900 dark:peer-checked:bg-white"></div>
+                  </label>
+                </div>
+                <div class="flex items-center justify-between py-3 border-b border-neutral-100 dark:border-white/5">
+                  <div>
+                    <p class="text-sm font-medium text-neutral-800 dark:text-white">Maintenance Notifications</p>
+                    <p class="text-xs text-neutral-500 mt-0.5">Notify users about scheduled maintenance</p>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" name="notifyOnMaintenance" class="sr-only peer" <%- notifications.notifyOnMaintenance ? 'checked' : '' %>>
+                    <div class="w-9 h-5 bg-neutral-300 dark:bg-neutral-600 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full rtl:peer-checked:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-neutral-900 dark:peer-checked:bg-white"></div>
+                  </label>
+                </div>
+                <div class="pt-3">
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Expiration Warning (days before)</label>
+                  <input type="number" name="expirationWarningDays" value="<%= notifications.expirationWarningDays %>" min="1" max="30"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full max-w-xs bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
+              </div>
+              <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end gap-3">
+                <button type="button" class="config-reset-btn rounded-xl border border-neutral-200 dark:border-neutral-600/30 text-neutral-600 dark:text-neutral-400 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Reset</button>
+                <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Notifications</button>
+              </div>
+            </form>
+          </div>
+        </div>        <!-- --- UI ----------------------------------------------------------- -->
+        <div id="panel-ui" data-config-panel="ui" class="config-panel hidden space-y-5">
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">UI & Branding Settings</h2>
+            <form class="config-form" data-category="ui">
+              <div class="px-5 py-5 space-y-4">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Brand Name</label>
+                    <input type="text" name="brandName" value="<%= ui.brandName %>"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Brand Logo URL</label>
+                    <input type="text" name="brandLogo" value="<%= ui.brandLogo %>"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Coin Icon URL</label>
+                    <input type="text" name="coinIconPath" value="<%= ui.coinIconPath %>"
+                      class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  </div>
+                </div>
 
-        <!-- ═══ LOGS ══════════════════════════════════════════════════════════ -->
+                <div class="border-t border-neutral-100 dark:border-white/5 pt-4">
+                  <p class="text-sm font-medium text-neutral-800 dark:text-white mb-3">Dashboard Visibility</p>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <label class="flex items-center gap-3 cursor-pointer p-3 rounded-xl border border-neutral-200 dark:border-white/5 hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition">
+                      <input type="checkbox" name="dashboardShowResourceCards" class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500" <%- ui.dashboardShowResourceCards ? 'checked' : '' %>>
+                      <span class="text-sm text-neutral-700 dark:text-white">Show Resource Cards</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer p-3 rounded-xl border border-neutral-200 dark:border-white/5 hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition">
+                      <input type="checkbox" name="dashboardShowStore" class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500" <%- ui.dashboardShowStore ? 'checked' : '' %>>
+                      <span class="text-sm text-neutral-700 dark:text-white">Show Store on Dashboard</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer p-3 rounded-xl border border-neutral-200 dark:border-white/5 hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition">
+                      <input type="checkbox" name="dashboardShowCoupons" class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500" <%- ui.dashboardShowCoupons ? 'checked' : '' %>>
+                      <span class="text-sm text-neutral-700 dark:text-white">Show Coupons on Dashboard</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer p-3 rounded-xl border border-neutral-200 dark:border-white/5 hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition">
+                      <input type="checkbox" name="landingEnabled" class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500" <%- ui.landingEnabled ? 'checked' : '' %>>
+                      <span class="text-sm text-neutral-700 dark:text-white">Enable Landing Page</span>
+                    </label>
+                  </div>
+                </div>
+
+                <div class="border-t border-neutral-100 dark:border-white/5 pt-4">
+                  <p class="text-sm font-medium text-neutral-800 dark:text-white mb-3">Feature Toggles</p>
+                  <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <label class="flex items-center gap-3 cursor-pointer p-3 rounded-xl border border-neutral-200 dark:border-white/5 hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition">
+                      <input type="checkbox" name="storeEnabled" class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500" <%- ui.storeEnabled ? 'checked' : '' %>>
+                      <span class="text-sm text-neutral-700 dark:text-white">Enable Store Module</span>
+                    </label>
+                    <label class="flex items-center gap-3 cursor-pointer p-3 rounded-xl border border-neutral-200 dark:border-white/5 hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition">
+                      <input type="checkbox" name="couponsEnabled" class="rounded border-neutral-300 dark:border-neutral-600 text-blue-600 focus:ring-blue-500" <%- ui.couponsEnabled ? 'checked' : '' %>>
+                      <span class="text-sm text-neutral-700 dark:text-white">Enable Coupons Module</span>
+                    </label>
+                  </div>
+                </div>
+              </div>
+              <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end gap-3">
+                <button type="button" class="config-reset-btn rounded-xl border border-neutral-200 dark:border-neutral-600/30 text-neutral-600 dark:text-neutral-400 px-4 py-2 text-sm font-medium hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Reset</button>
+                <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save UI</button>
+              </div>
+            </form>
+          </div>
+        </div>        <!-- --- LOGS ---------------------------------------------------------- -->
         <div id="panel-logs" data-config-panel="logs" class="config-panel hidden space-y-5">
           <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
             <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Audit Logs</h2>
 
             <!-- Filters -->
-            <div class="px-5 py-3 border-b border-neutral-200 dark:border-white/5 flex flex-wrap gap-3">
-              <input type="text" id="logSearch" placeholder="Search logs..."
-                class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors w-64">
-              <select id="logActionFilter"
-                class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-                <option value="">All Actions</option>
-                <option value="CONFIG_UPDATED">Config Updated</option>
-                <option value="COUPON_CREATED">Coupon Created</option>
-                <option value="COUPON_REDEEMED">Coupon Redeemed</option>
-                <option value="COUPON_DELETED">Coupon Deleted</option>
-                <option value="COUPON_TOGGLED">Coupon Toggled</option>
-                <option value="PRODUCT_CREATED">Product Created</option>
-                <option value="PRODUCT_DELETED">Product Deleted</option>
-                <option value="USER_LOGIN">User Login</option>
-                <option value="USER_CREATED">User Created</option>
-                <option value="SERVER_CREATED">Server Created</option>
-                <option value="SERVER_DELETED">Server Deleted</option>
-                <option value="WALLET_PURCHASE">Wallet Purchase</option>
-              </select>
-            </div>
+            <form id="logFilters" class="px-5 py-3 border-b border-neutral-200 dark:border-white/5 flex flex-wrap gap-3 items-end">
+              <div>
+                <label class="block text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Search</label>
+                <input type="text" name="search" placeholder="Search logs..." value="<%= typeof logSearch !== 'undefined' ? logSearch : '' %>"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white placeholder-neutral-400 transition-colors w-48">
+              </div>
+              <div>
+                <label class="block text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Action</label>
+                <select name="action"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  <option value="">All Actions</option>
+                  <% if (typeof distinctActions !== 'undefined' && distinctActions) { %>
+                  <% distinctActions.forEach(function(a) { %>
+                  <option value="<%= a %>" <%= typeof logAction !== 'undefined' && logAction === a ? 'selected' : '' %>><%= a %></option>
+                  <% }); } %>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Admin</label>
+                <select name="adminId"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                  <option value="">All Admins</option>
+                  <% if (typeof adminUsers !== 'undefined' && adminUsers) { %>
+                  <% adminUsers.forEach(function(a) { %>
+                  <option value="<%= a.id %>" <%= typeof logAdminId !== 'undefined' && logAdminId == a.id ? 'selected' : '' %>><%= a.username || '#' + a.id %></option>
+                  <% }); } %>
+                </select>
+              </div>
+              <div>
+                <label class="block text-[10px] text-neutral-500 uppercase tracking-wider mb-1">From</label>
+                <input type="date" name="dateFrom" value="<%= typeof logDateFrom !== 'undefined' ? logDateFrom : '' %>"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div>
+                <label class="block text-[10px] text-neutral-500 uppercase tracking-wider mb-1">To</label>
+                <input type="date" name="dateTo" value="<%= typeof logDateTo !== 'undefined' ? logDateTo : '' %>"
+                  class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+              </div>
+              <div class="flex gap-2">
+                <button type="submit" class="rounded-lg bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-4 py-2 text-xs font-medium transition">Filter</button>
+                <a href="?tab=logs" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-4 py-2 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition inline-flex items-center">Clear</a>
+                <a href="<%= typeof logExportUrl !== 'undefined' ? logExportUrl : '/admin/config/logs/export' %>"
+                   class="rounded-lg border border-emerald-200 dark:border-emerald-500/20 text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-500/10 px-4 py-2 text-xs font-medium transition inline-flex items-center gap-1">
+                  <svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                  Export CSV
+                </a>
+              </div>
+            </form>
 
             <div class="overflow-x-auto">
               <table class="w-full text-sm">
@@ -438,11 +984,11 @@
                   </tr>
                 </thead>
                 <tbody id="logTableBody" class="divide-y divide-neutral-100 dark:divide-white/5">
-                  <% if (auditLogs.logs.length === 0) { %>
+                  <% if (typeof auditLogs === 'undefined' || !auditLogs || auditLogs.logs.length === 0) { %>
                   <tr><td colspan="6" class="px-5 py-8 text-center text-sm text-neutral-400">No audit logs found.</td></tr>
                   <% } else { %>
                   <% auditLogs.logs.forEach(function(log) { %>
-                  <tr class="hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors log-row" data-action="<%= log.action %>" data-reference="<%= log.referenceId || '' %>">
+                  <tr class="hover:bg-neutral-50 dark:hover:bg-white/[0.02] transition-colors cursor-pointer log-row" data-log-id="<%= log.id %>" onclick="showLogDetails(<%= log.id %>)">
                     <td class="px-5 py-3 text-xs text-neutral-500 whitespace-nowrap"><%= new Date(log.createdAt).toLocaleString() %></td>
                     <td class="px-5 py-3">
                       <span class="inline-flex items-center px-2 py-0.5 rounded-full text-[10px] font-medium
@@ -456,7 +1002,7 @@
                     <td class="px-5 py-3 text-xs text-neutral-600 dark:text-neutral-400"><%= log.adminId ? '#' + log.adminId : 'System' %></td>
                     <td class="px-5 py-3 text-xs font-mono text-neutral-600 dark:text-neutral-400"><%= log.referenceId || '-' %></td>
                     <td class="px-5 py-3 text-xs font-mono text-neutral-600 dark:text-neutral-400"><%= log.ipAddress || '-' %></td>
-                    <td class="px-5 py-3 text-xs text-neutral-500 max-w-xs truncate"><%= log.details ? JSON.stringify(log.details) : '-' %></td>
+                    <td class="px-5 py-3 text-xs text-neutral-500 max-w-[200px] truncate"><%= log.details ? JSON.stringify(log.details).substring(0, 80) : '-' %></td>
                   </tr>
                   <% }); } %>
                 </tbody>
@@ -464,22 +1010,21 @@
             </div>
 
             <!-- Pagination -->
-            <% if (auditLogs.totalPages > 1) { %>
+            <% if (typeof auditLogs !== 'undefined' && auditLogs && auditLogs.totalPages > 1) { %>
             <div class="px-5 py-3 border-t border-neutral-200 dark:border-white/5 flex items-center justify-between">
               <p class="text-xs text-neutral-500">Page <%= auditLogs.page %> of <%= auditLogs.totalPages %> (<%= auditLogs.total %> total)</p>
               <div class="flex gap-2">
                 <% if (auditLogs.page > 1) { %>
-                <a href="/admin/config?tab=logs&page=<%= auditLogs.page - 1 %>" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Previous</a>
+                <a href="?tab=logs&page=<%= auditLogs.page - 1 %><%= typeof logSearch !== 'undefined' && logSearch ? '&search=' + encodeURIComponent(logSearch) : '' %><%= typeof logAction !== 'undefined' && logAction ? '&action=' + encodeURIComponent(logAction) : '' %><%= typeof logAdminId !== 'undefined' && logAdminId ? '&adminId=' + encodeURIComponent(logAdminId) : '' %><%= typeof logDateFrom !== 'undefined' && logDateFrom ? '&dateFrom=' + encodeURIComponent(logDateFrom) : '' %><%= typeof logDateTo !== 'undefined' && logDateTo ? '&dateTo=' + encodeURIComponent(logDateTo) : '' %>" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Previous</a>
                 <% } %>
                 <% if (auditLogs.page < auditLogs.totalPages) { %>
-                <a href="/admin/config?tab=logs&page=<%= auditLogs.page + 1 %>" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Next</a>
+                <a href="?tab=logs&page=<%= auditLogs.page + 1 %><%= typeof logSearch !== 'undefined' && logSearch ? '&search=' + encodeURIComponent(logSearch) : '' %><%= typeof logAction !== 'undefined' && logAction ? '&action=' + encodeURIComponent(logAction) : '' %><%= typeof logAdminId !== 'undefined' && logAdminId ? '&adminId=' + encodeURIComponent(logAdminId) : '' %><%= typeof logDateFrom !== 'undefined' && logDateFrom ? '&dateFrom=' + encodeURIComponent(logDateFrom) : '' %><%= typeof logDateTo !== 'undefined' && logDateTo ? '&dateTo=' + encodeURIComponent(logDateTo) : '' %>" class="rounded-lg border border-neutral-200 dark:border-neutral-600/30 px-3 py-1.5 text-xs text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-700/20 transition">Next</a>
                 <% } %>
               </div>
             </div>
             <% } %>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -488,22 +1033,52 @@
 <%- include('../../components/toast') %>
 <%- include('../../components/modal') %>
 
+<!-- Log Details Modal -->
+<div id="logDetailModal" class="fixed inset-0 z-[100] hidden flex items-center justify-center p-4 bg-black/70 backdrop-blur-md transition-all duration-300">
+  <div class="bg-white dark:bg-neutral-900 rounded-2xl w-full max-w-lg overflow-hidden flex flex-col shadow-2xl border border-neutral-200 dark:border-white/10">
+    <div class="flex justify-between items-center px-6 py-5 border-b border-neutral-200 dark:border-white/5">
+      <h3 class="text-lg font-bold text-neutral-900 dark:text-white">Log Details</h3>
+      <button type="button" class="text-neutral-400 hover:text-neutral-600 dark:hover:text-white transition-colors cursor-pointer" onclick="document.getElementById('logDetailModal').classList.add('hidden')">
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12" /></svg>
+      </button>
+    </div>
+    <div class="p-6 overflow-y-auto max-h-[75vh]">
+      <div class="space-y-3">
+        <div><span class="text-xs text-neutral-500 uppercase tracking-wider">ID</span><p class="text-sm text-neutral-900 dark:text-white font-mono" id="logDetailId"></p></div>
+        <div><span class="text-xs text-neutral-500 uppercase tracking-wider">Action</span><p class="text-sm text-neutral-900 dark:text-white" id="logDetailAction"></p></div>
+        <div><span class="text-xs text-neutral-500 uppercase tracking-wider">Time</span><p class="text-sm text-neutral-900 dark:text-white" id="logDetailTime"></p></div>
+        <div><span class="text-xs text-neutral-500 uppercase tracking-wider">Admin ID</span><p class="text-sm text-neutral-900 dark:text-white font-mono" id="logDetailAdmin"></p></div>
+        <div><span class="text-xs text-neutral-500 uppercase tracking-wider">Reference ID</span><p class="text-sm text-neutral-900 dark:text-white font-mono" id="logDetailRef"></p></div>
+        <div><span class="text-xs text-neutral-500 uppercase tracking-wider">IP Address</span><p class="text-sm text-neutral-900 dark:text-white font-mono" id="logDetailIp"></p></div>
+        <div><span class="text-xs text-neutral-500 uppercase tracking-wider">Details</span><pre class="text-sm text-neutral-900 dark:text-white bg-neutral-100 dark:bg-neutral-800 rounded-lg p-3 overflow-x-auto mt-1" id="logDetailDetails"></pre></div>
+      </div>
+    </div>
+    <div class="px-6 py-4 border-t border-neutral-200 dark:border-white/5 flex justify-end">
+      <button type="button" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition" onclick="document.getElementById('logDetailModal').classList.add('hidden')">Close</button>
+    </div>
+  </div>
+</div>
+
 <script nonce="<%- nonce %>">
 (function() {
-  // ── Tab switching ────────────────────────────────────────────────────────
-  const tabBtns = document.querySelectorAll('.config-tab-btn');
-  const panels  = document.querySelectorAll('.config-panel');
-  const urlParams = new URLSearchParams(window.location.search);
+  var toast = window.showToast || function(m, t) { alert(m); };
+  var modal = window.modal || { confirm: function(o) { if (o.onConfirm && confirm(o.title)) o.onConfirm(); } };
+  var unsaved = false;
+
+  // -- Tab switching --------------------------------------------------------
+  var tabBtns = document.querySelectorAll('.config-tab-btn');
+  var panels  = document.querySelectorAll('.config-panel');
+  var urlParams = new URLSearchParams(window.location.search);
 
   function showTab(tab) {
     tabBtns.forEach(function(btn) {
-      btn.classList.toggle('text-neutral-900', btn.dataset.tab === tab);
-      btn.classList.toggle('dark:text-white', btn.dataset.tab === tab);
-      btn.classList.toggle('border-neutral-900', btn.dataset.tab === tab);
-      btn.classList.toggle('dark:border-white', btn.dataset.tab === tab);
-      btn.classList.toggle('text-neutral-400', btn.dataset.tab !== tab);
-      btn.classList.toggle('dark:text-neutral-500', btn.dataset.tab !== tab);
-      btn.classList.toggle('border-transparent', btn.dataset.tab !== tab);
+      if (btn.dataset.tab === tab) {
+        btn.classList.add('text-neutral-900', 'dark:text-white', 'border-neutral-900', 'dark:border-white');
+        btn.classList.remove('text-neutral-400', 'dark:text-neutral-500', 'border-transparent');
+      } else {
+        btn.classList.remove('text-neutral-900', 'dark:text-white', 'border-neutral-900', 'dark:border-white');
+        btn.classList.add('text-neutral-400', 'dark:text-neutral-500', 'border-transparent');
+      }
     });
     panels.forEach(function(p) {
       p.classList.toggle('hidden', p.dataset.configPanel !== tab);
@@ -512,24 +1087,31 @@
 
   tabBtns.forEach(function(btn) {
     btn.addEventListener('click', function() {
+      if (unsaved && !confirm('You have unsaved changes. Discard them and switch tabs?')) return;
       showTab(this.dataset.tab);
+      var url = new URL(window.location);
+      url.searchParams.set('tab', this.dataset.tab);
+      window.history.replaceState({}, '', url);
     });
   });
 
   var initialTab = urlParams.get('tab') || 'economy';
   showTab(initialTab);
 
-  // ── Config form saving ───────────────────────────────────────────────────
-  var toast = window.showToast || function() {};
+  // -- Config form saving ---------------------------------------------------
+  document.querySelectorAll('.config-form').forEach(function(form) {
+    var category = form.dataset.category;
 
-  document.querySelectorAll('[data-config-panel]').forEach(function(panel) {
-    var form = panel.querySelector('form');
-    if (!form) return;
+    // Track unsaved changes
+    form.querySelectorAll('input, select').forEach(function(input) {
+      input.addEventListener('change', function() { unsaved = true; });
+      input.addEventListener('input', function() { unsaved = true; });
+    });
+
     form.addEventListener('submit', function(e) {
       e.preventDefault();
-      var category = this.dataset.configPanel;
       var data = {};
-      var inputs = this.querySelectorAll('input, select');
+      var inputs = form.querySelectorAll('input, select, textarea');
       inputs.forEach(function(input) {
         if (input.type === 'checkbox') {
           data[input.name] = input.checked;
@@ -540,9 +1122,11 @@
         }
       });
 
-      var submitBtn = this.querySelector('button[type="submit"]');
-      var origText = submitBtn ? submitBtn.textContent : '';
-      if (submitBtn) { submitBtn.textContent = 'Saving...'; submitBtn.disabled = true; }
+      var submitBtn = form.querySelector('button[type="submit"]');
+      if (!submitBtn) return;
+      var origText = submitBtn.textContent;
+      submitBtn.textContent = 'Saving...';
+      submitBtn.disabled = true;
 
       fetch('/admin/config/' + category, {
         method: 'POST',
@@ -553,16 +1137,77 @@
       .then(function(res) {
         if (res.success) {
           toast('Settings saved successfully!', 'success');
+          unsaved = false;
         } else {
           toast(res.error || 'Failed to save settings.', 'error');
         }
       })
       .catch(function() { toast('Network error. Please try again.', 'error'); })
-      .finally(function() { if (submitBtn) { submitBtn.textContent = origText; submitBtn.disabled = false; } });
+      .finally(function() {
+        submitBtn.textContent = origText;
+        submitBtn.disabled = false;
+      });
     });
   });
 
-  // ── Product CRUD ─────────────────────────────────────────────────────────
+  // -- Reset buttons --------------------------------------------------------
+  document.querySelectorAll('.config-reset-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var form = this.closest('.config-form');
+      if (!form) return;
+      form.querySelectorAll('input[type="text"], input[type="number"]').forEach(function(input) {
+        input.value = input.defaultValue;
+      });
+      form.querySelectorAll('input[type="checkbox"]').forEach(function(input) {
+        input.checked = input.defaultChecked;
+      });
+      form.querySelectorAll('select').forEach(function(select) {
+        var options = select.querySelectorAll('option');
+        options.forEach(function(opt) { opt.selected = opt.defaultSelected; });
+      });
+      unsaved = false;
+      toast('Form reset to saved values.', 'info');
+    });
+  });
+
+  // -- Unsaved warning on navigate away -------------------------------------
+  window.addEventListener('beforeunload', function(e) {
+    if (unsaved) { e.preventDefault(); e.returnValue = ''; }
+  });
+
+  // -- Log detail modal -----------------------------------------------------
+  window.showLogDetails = function(logId) {
+    var rows = document.querySelectorAll('.log-row');
+    var row = null;
+    rows.forEach(function(r) {
+      if (r.dataset.logId == logId) row = r;
+    });
+    if (!row) return;
+    var cells = row.querySelectorAll('td');
+    document.getElementById('logDetailId').textContent = logId;
+    document.getElementById('logDetailAction').textContent = cells[1].textContent.trim();
+    document.getElementById('logDetailTime').textContent = cells[0].textContent.trim();
+    document.getElementById('logDetailAdmin').textContent = cells[2].textContent.trim();
+    document.getElementById('logDetailRef').textContent = cells[3].textContent.trim();
+    document.getElementById('logDetailIp').textContent = cells[4].textContent.trim();
+    var detailsText = cells[5].textContent.trim();
+    try {
+      var parsed = JSON.parse(detailsText);
+      document.getElementById('logDetailDetails').textContent = JSON.stringify(parsed, null, 2);
+    } catch(e) {
+      document.getElementById('logDetailDetails').textContent = detailsText;
+    }
+    document.getElementById('logDetailModal').classList.remove('hidden');
+  };
+
+  // -- Close modals on overlay click ----------------------------------------
+  document.querySelectorAll('.fixed.inset-0').forEach(function(modalEl) {
+    modalEl.addEventListener('click', function(e) {
+      if (e.target === this) this.classList.add('hidden');
+    });
+  });
+
+  // -- Product CRUD ---------------------------------------------------------
   var createBtn = document.getElementById('createProductBtn');
   if (createBtn) {
     createBtn.addEventListener('click', function() {
@@ -570,21 +1215,16 @@
       var data = {};
       var inputs = form.querySelectorAll('input, select');
       inputs.forEach(function(input) {
-        if (input.type === 'checkbox') {
-          data[input.name] = input.checked;
-        } else if (input.type === 'number') {
-          data[input.name] = parseFloat(input.value) || 0;
-        } else {
-          data[input.name] = input.value;
-        }
+        if (input.type === 'checkbox') { data[input.name] = input.checked; }
+        else if (input.type === 'number') { data[input.name] = parseFloat(input.value) || 0; }
+        else { data[input.name] = input.value; }
       });
 
       createBtn.textContent = 'Creating...';
       createBtn.disabled = true;
 
       fetch('/admin/config/products/create', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(data)
       })
       .then(function(r) { return r.json(); })
@@ -625,28 +1265,26 @@
   document.querySelectorAll('.product-delete-btn').forEach(function(btn) {
     btn.addEventListener('click', function() {
       var id = this.dataset.productId;
-      var self = this;
-      if (window.modal) {
-        window.modal.confirm({
-          title: 'Delete product?',
-          body: 'This action cannot be undone.',
-          danger: true,
-          confirmLabel: 'Delete',
-          onConfirm: function() {
-            fetch('/admin/config/products/' + id + '/delete', { method: 'POST' })
-              .then(function(r) { return r.json(); })
-              .then(function(res) {
-                if (res.success) { toast('Product deleted.', 'success'); self.closest('tr').remove(); }
-                else toast(res.error || 'Failed.', 'error');
-              })
-              .catch(function() { toast('Network error.', 'error'); });
-          }
-        });
-      }
+      var self = this.closest('tr');
+      modal.confirm({
+        title: 'Delete product?',
+        body: 'This action cannot be undone.',
+        danger: true,
+        confirmLabel: 'Delete',
+        onConfirm: function() {
+          fetch('/admin/config/products/' + id + '/delete', { method: 'POST' })
+            .then(function(r) { return r.json(); })
+            .then(function(res) {
+              if (res.success) { toast('Product deleted.', 'success'); if (self) self.remove(); }
+              else toast(res.error || 'Failed.', 'error');
+            })
+            .catch(function() { toast('Network error.', 'error'); });
+        }
+      });
     });
   });
 
-  // Product reorder on change
+  // Product reorder
   document.querySelectorAll('.product-order-input').forEach(function(input) {
     input.addEventListener('change', function() {
       var id = this.dataset.productId;
@@ -662,23 +1300,355 @@
     });
   });
 
-  // ── Log filtering ────────────────────────────────────────────────────────
-  var logSearch = document.getElementById('logSearch');
-  var logActionFilter = document.getElementById('logActionFilter');
-  var logRows = document.querySelectorAll('.log-row');
+  // Product duplicate
+  document.querySelectorAll('.product-duplicate-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = this.dataset.productId;
+      this.textContent = '...';
+      fetch('/admin/config/products/' + id + '/duplicate', { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+          if (res.success) { toast('Product duplicated.', 'success'); setTimeout(function() { location.reload(); }, 500); }
+          else toast(res.error || 'Failed.', 'error');
+        })
+        .catch(function() { toast('Network error.', 'error'); })
+        .finally(function() { btn.textContent = 'Copy'; });
+    });
+  });
 
-  function filterLogs() {
-    var search = (logSearch ? logSearch.value.toLowerCase() : '');
-    var action = logActionFilter ? logActionFilter.value : '';
-    logRows.forEach(function(row) {
-      var matchAction = !action || row.dataset.action === action;
-      var matchSearch = !search || row.textContent.toLowerCase().includes(search);
-      row.style.display = matchAction && matchSearch ? '' : 'none';
+  // Product edit modal
+  var productEditModal = document.getElementById('productEditModal');
+  document.querySelectorAll('.product-edit-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var row = this.closest('tr');
+      if (!row) return;
+      var cells = row.querySelectorAll('td');
+      var productId = row.dataset.productId;
+      var name = cells[1].querySelector('.font-medium').textContent.trim();
+      var desc = cells[1].querySelector('.text-xs') ? cells[1].querySelector('.text-xs').textContent.trim() : '';
+      var actionType = cells[2].textContent.trim();
+      var actionValue = cells[3].textContent.trim();
+      var price = cells[4].textContent.trim().replace(/,/g, '');
+      var icon = cells[1].querySelector('img') ? cells[1].querySelector('img').src : '';
+      var featured = row.querySelector('.bg-amber-100, .dark\\\\:bg-amber-500\\/20') !== null;
+      var hidden = row.querySelector('.bg-purple-100, .dark\\\\:bg-purple-500\\/20') !== null;
+      var enabled = cells[6].querySelector('.bg-emerald-100') !== null;
+      var maxPerUser = cells[5].textContent.trim();
+      var orderInput = cells[0].querySelector('input');
+      var displayOrder = orderInput ? orderInput.value : '0';
+
+      document.getElementById('editProductId').value = productId;
+      document.getElementById('editProductName').value = name;
+      document.getElementById('editProductDesc').value = desc;
+      document.getElementById('editProductActionType').value = actionType;
+      document.getElementById('editProductActionValue').value = actionValue;
+      document.getElementById('editProductPrice').value = price;
+      document.getElementById('editProductIcon').value = icon;
+      document.getElementById('editProductDisplayOrder').value = displayOrder;
+      document.getElementById('editProductMaxPerUser').value = maxPerUser === '8' ? '' : maxPerUser;
+      document.getElementById('editProductFeatured').checked = featured;
+      document.getElementById('editProductHidden').checked = hidden;
+      document.getElementById('editProductEnabled').checked = enabled;
+
+      productEditModal.classList.remove('hidden');
+    });
+  });
+
+  document.querySelectorAll('.product-edit-modal-close').forEach(function(btn) {
+    btn.addEventListener('click', function() { productEditModal.classList.add('hidden'); });
+  });
+
+  document.getElementById('saveEditProductBtn').addEventListener('click', function() {
+    var form = document.getElementById('editProductForm');
+    var data = {};
+    var inputs = form.querySelectorAll('input, select');
+    inputs.forEach(function(input) {
+      if (input.type === 'checkbox') { data[input.name] = input.checked; }
+      else if (input.type === 'number') { data[input.name] = parseFloat(input.value) || 0; }
+      else if (input.name !== 'editProductId') { data[input.name] = input.value; }
+    });
+
+    var id = document.getElementById('editProductId').value;
+    var btn = this;
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+
+    fetch('/admin/config/products/' + id + '/update', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res.success) {
+        toast('Product updated!', 'success');
+        setTimeout(function() { location.reload(); }, 500);
+      } else {
+        toast(res.error || 'Failed to update product.', 'error');
+        btn.textContent = 'Save Changes';
+        btn.disabled = false;
+      }
+    })
+    .catch(function() {
+      toast('Network error.', 'error');
+      btn.textContent = 'Save Changes';
+      btn.disabled = false;
+    });
+  });
+
+  // Product search/filter
+  var productSearchInput = document.getElementById('productSearch');
+  var productFilterSelect = document.getElementById('productFilter');
+  var clearProductFilters = document.getElementById('clearProductFilters');
+
+  function applyProductFilters() {
+    var params = new URLSearchParams(window.location.search);
+    params.set('tab', 'products');
+    if (productSearchInput && productSearchInput.value) params.set('productSearch', productSearchInput.value);
+    else params.delete('productSearch');
+    if (productFilterSelect && productFilterSelect.value) params.set('productFilter', productFilterSelect.value);
+    else params.delete('productFilter');
+    params.delete('productPage');
+    window.location.search = params.toString();
+  }
+
+  if (productSearchInput) {
+    var debounceTimer;
+    productSearchInput.addEventListener('input', function() {
+      clearTimeout(debounceTimer);
+      debounceTimer = setTimeout(applyProductFilters, 500);
+    });
+  }
+  if (productFilterSelect) productFilterSelect.addEventListener('change', applyProductFilters);
+  if (clearProductFilters) {
+    clearProductFilters.addEventListener('click', function() {
+      if (productSearchInput) productSearchInput.value = '';
+      if (productFilterSelect) productFilterSelect.value = '';
+      applyProductFilters();
     });
   }
 
-  if (logSearch) logSearch.addEventListener('input', filterLogs);
-  if (logActionFilter) logActionFilter.addEventListener('change', filterLogs);
+  // -- Coupon CRUD ----------------------------------------------------------
+  var createCouponPanel = document.getElementById('createCouponPanel');
+  var showCreateCouponBtn = document.getElementById('showCreateCouponBtn');
+  var cancelCreateCoupon = document.getElementById('cancelCreateCoupon');
+
+  if (showCreateCouponBtn) {
+    showCreateCouponBtn.addEventListener('click', function() {
+      createCouponPanel.classList.toggle('hidden');
+    });
+  }
+  if (cancelCreateCoupon) {
+    cancelCreateCoupon.addEventListener('click', function() {
+      createCouponPanel.classList.add('hidden');
+    });
+  }
+
+  // Generate coupon code
+  var generateBtn = document.getElementById('generateCouponCode');
+  var codeInput = document.getElementById('couponCodeInput');
+  if (generateBtn && codeInput) {
+    generateBtn.addEventListener('click', function() {
+      var chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+      var code = '';
+      for (var i = 0; i < 8; i++) code += chars.charAt(Math.floor(Math.random() * chars.length));
+      codeInput.value = code;
+    });
+  }
+
+  // Create coupon
+  var createCouponBtn = document.getElementById('createCouponBtn');
+  if (createCouponBtn) {
+    createCouponBtn.addEventListener('click', function() {
+      var form = document.getElementById('createCouponForm');
+      var data = {};
+      var inputs = form.querySelectorAll('input, select');
+      inputs.forEach(function(input) {
+        if (input.type === 'checkbox') { data[input.name] = input.checked; }
+        else if (input.type === 'number') { data[input.name] = parseFloat(input.value) || 0; }
+        else { data[input.name] = input.value; }
+      });
+
+      createCouponBtn.textContent = 'Creating...';
+      createCouponBtn.disabled = true;
+
+      fetch('/admin/config/coupons/create', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(data)
+      })
+      .then(function(r) { return r.json(); })
+      .then(function(res) {
+        if (res.success) {
+          toast('Coupon created!', 'success');
+          setTimeout(function() { location.reload(); }, 800);
+        } else {
+          toast(res.error || 'Failed to create coupon.', 'error');
+          createCouponBtn.textContent = 'Create Coupon';
+          createCouponBtn.disabled = false;
+        }
+      })
+      .catch(function() {
+        toast('Network error.', 'error');
+        createCouponBtn.textContent = 'Create Coupon';
+        createCouponBtn.disabled = false;
+      });
+    });
+  }
+
+  // Coupon toggle
+  document.querySelectorAll('.coupon-toggle-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = this.dataset.couponId;
+      fetch('/admin/config/coupons/' + id + '/toggle', { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+          if (res.success) { toast('Coupon updated.', 'success'); setTimeout(function() { location.reload(); }, 500); }
+          else toast(res.error || 'Failed.', 'error');
+        })
+        .catch(function() { toast('Network error.', 'error'); });
+    });
+  });
+
+  // Coupon delete
+  document.querySelectorAll('.coupon-delete-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = this.dataset.couponId;
+      var row = this.closest('tr');
+      modal.confirm({
+        title: 'Delete coupon?',
+        body: 'This action cannot be undone.',
+        danger: true,
+        confirmLabel: 'Delete',
+        onConfirm: function() {
+          fetch('/admin/config/coupons/' + id + '/delete', { method: 'POST' })
+            .then(function(r) { return r.json(); })
+            .then(function(res) {
+              if (res.success) { toast('Coupon deleted.', 'success'); if (row) row.remove(); }
+              else toast(res.error || 'Failed.', 'error');
+            })
+            .catch(function() { toast('Network error.', 'error'); });
+        }
+      });
+    });
+  });
+
+  // Coupon duplicate
+  document.querySelectorAll('.coupon-duplicate-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var id = this.dataset.couponId;
+      this.textContent = '...';
+      fetch('/admin/config/coupons/' + id + '/duplicate', { method: 'POST' })
+        .then(function(r) { return r.json(); })
+        .then(function(res) {
+          if (res.success) { toast('Coupon duplicated.', 'success'); setTimeout(function() { location.reload(); }, 500); }
+          else toast(res.error || 'Failed.', 'error');
+        })
+        .catch(function() { toast('Network error.', 'error'); })
+        .finally(function() { btn.textContent = 'Copy'; });
+    });
+  });
+
+  // Coupon edit modal
+  var couponEditModal = document.getElementById('couponEditModal');
+  document.querySelectorAll('.coupon-edit-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+      var row = this.closest('tr');
+      if (!row) return;
+      var cells = row.querySelectorAll('td');
+      var couponId = row.dataset.couponId;
+      var code = cells[0].textContent.trim();
+      var desc = cells[1].textContent.trim();
+      var rewardParts = cells[2].textContent.trim().split(' x');
+      var actionType = rewardParts[0];
+      var actionValue = rewardParts[1] || '';
+      var usesText = cells[3].textContent.trim();
+      var maxUses = usesText.split(' | ')[0];
+      var perUserLimit = usesText.split(' | ')[1] ? usesText.split(' | ')[1].replace('/user', '') : '1';
+      var expiresText = cells[4].textContent.trim();
+      var enabled = cells[5].querySelector('.bg-emerald-100') !== null;
+
+      document.getElementById('editCouponId').value = couponId;
+      document.getElementById('editCouponCode').value = code;
+      document.getElementById('editCouponDesc').value = desc === '-' ? '' : desc;
+      document.getElementById('editCouponActionType').value = actionType;
+      document.getElementById('editCouponActionValue').value = actionValue;
+      document.getElementById('editCouponMaxUses').value = maxUses === '8' ? '0' : maxUses;
+      document.getElementById('editCouponPerUserLimit').value = perUserLimit || '1';
+      document.getElementById('editCouponStartsAt').value = '';
+      document.getElementById('editCouponExpiresAt').value = expiresText !== 'Never' ? expiresText : '';
+      document.getElementById('editCouponEnabled').checked = enabled;
+
+      couponEditModal.classList.remove('hidden');
+    });
+  });
+
+  document.querySelectorAll('.coupon-edit-modal-close').forEach(function(btn) {
+    btn.addEventListener('click', function() { couponEditModal.classList.add('hidden'); });
+  });
+
+  document.getElementById('saveEditCouponBtn').addEventListener('click', function() {
+    var form = document.getElementById('editCouponForm');
+    var data = {};
+    var inputs = form.querySelectorAll('input, select');
+    inputs.forEach(function(input) {
+      if (input.type === 'checkbox') { data[input.name] = input.checked; }
+      else if (input.type === 'number') { data[input.name] = parseFloat(input.value) || 0; }
+      else if (input.name !== 'editCouponId') { data[input.name] = input.value; }
+    });
+
+    var id = document.getElementById('editCouponId').value;
+    var btn = this;
+    btn.textContent = 'Saving...';
+    btn.disabled = true;
+
+    fetch('/admin/config/coupons/' + id + '/update', {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data)
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(res) {
+      if (res.success) {
+        toast('Coupon updated!', 'success');
+        setTimeout(function() { location.reload(); }, 500);
+      } else {
+        toast(res.error || 'Failed to update coupon.', 'error');
+        btn.textContent = 'Save Changes';
+        btn.disabled = false;
+      }
+    })
+    .catch(function() {
+      toast('Network error.', 'error');
+      btn.textContent = 'Save Changes';
+      btn.disabled = false;
+    });
+  });
+
+  // Coupon search
+  var couponSearchInput = document.getElementById('couponSearch');
+  var clearCouponSearch = document.getElementById('clearCouponSearch');
+
+  function applyCouponSearch() {
+    var params = new URLSearchParams(window.location.search);
+    params.set('tab', 'coupons');
+    if (couponSearchInput && couponSearchInput.value) params.set('couponSearch', couponSearchInput.value);
+    else params.delete('couponSearch');
+    params.delete('couponPage');
+    window.location.search = params.toString();
+  }
+
+  if (couponSearchInput) {
+    var debounceTimer2;
+    couponSearchInput.addEventListener('input', function() {
+      clearTimeout(debounceTimer2);
+      debounceTimer2 = setTimeout(applyCouponSearch, 500);
+    });
+  }
+  if (clearCouponSearch) {
+    clearCouponSearch.addEventListener('click', function() {
+      if (couponSearchInput) couponSearchInput.value = '';
+      applyCouponSearch();
+    });
+  }
+
 })();
 </script>
 
