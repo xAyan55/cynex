@@ -60,7 +60,7 @@ export const loadModules = async (
 
   const results = await Promise.all(
     files.map((file) =>
-      import(pathToFileURL(file).href)
+      import(process.platform === 'win32' ? pathToFileURL(file).href : file)
         .then((mod) => ({ file, mod }))
         .catch((error) => ({ file, error })),
     ),
