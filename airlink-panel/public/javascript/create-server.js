@@ -241,13 +241,11 @@
     btn.disabled = true;
     btn.textContent = 'Creating...';
 
-    const planType = window.activePlan || 'free';
-
     try {
       const r = await fetch('/create-server', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description, nodeId, imageId, dockerImage, Memory, Cpu, Storage, planType }),
+        body: JSON.stringify({ name, description, nodeId, imageId, dockerImage, Memory, Cpu, Storage }),
       });
       const d = await r.json();
       if (d.success) {

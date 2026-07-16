@@ -79,7 +79,7 @@
   .confirm-overlay.open .confirm-box { transform: scale(1); opacity: 1; }
 </style>
 
-<main class="h-screen m-auto bg-[#07070a] text-white">
+<main class="h-screen m-auto bg-mono-bg text-white">
   <div class="flex h-screen">
     <div class="w-60 h-full"><%- include('../components/template') %></div>
 
@@ -131,65 +131,29 @@
 
             <div class="pt-4 border-t border-white/5 flex justify-end">
               <button onclick="nextStep(2)" class="px-5 py-2.5 rounded-xl bg-brand-green text-black hover:bg-brand-green-hover text-xs font-bold transition cursor-pointer">
-                Continue to Plan
+                Continue to Location
               </button>
             </div>
           </div>
         </div>
 
-        <!-- WIZARD STEP 2: PLAN & LOCATION -->
+        <!-- WIZARD STEP 2: LOCATION & RESOURCES -->
         <div class="wizard-pane space-y-6 hidden" data-step="2">
           <%- include('../components/ui/Card', { hover: false, class: 'p-6 border border-white/5 space-y-6' }) %>
             <div>
-              <h2 class="text-base font-bold text-white">Select Hosting Slot Plan</h2>
-              <p class="text-xs text-neutral-400 mt-0.5">Free tiers are queued during high server loads, while Paid tiers deploy instantly.</p>
+              <h2 class="text-base font-bold text-white">Choose Deploy Region</h2>
+              <p class="text-xs text-neutral-400 mt-0.5">Select the closest geographic zone for minimal latency.</p>
             </div>
 
-            <!-- Custom Plan Select Cards -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <!-- Free Selector -->
-              <div onclick="selectPlan('free')" id="plan-card-free" class="cynex-glass rounded-xl p-5 border border-brand-green/20 bg-brand-green/[0.02] cursor-pointer hover:border-brand-green/40 transition duration-200">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <h3 class="font-bold text-white text-sm">Free Hosting Slot</h3>
-                    <p class="text-[11px] text-neutral-400 mt-1">Capped at 1GB RAM, includes queueing.</p>
-                  </div>
-                  <span class="w-4 h-4 rounded-full border-2 border-brand-green flex items-center justify-center">
-                    <span id="plan-dot-free" class="w-2 h-2 rounded-full bg-brand-green"></span>
-                  </span>
-                </div>
-              </div>
-
-              <!-- Premium Selector -->
-              <div onclick="selectPlan('premium')" id="plan-card-premium" class="cynex-glass rounded-xl p-5 border border-white/5 cursor-pointer hover:border-brand-green/20 transition duration-200">
-                <div class="flex justify-between items-start">
-                  <div>
-                    <h3 class="font-bold text-white text-sm">Premium Hosting Slot</h3>
-                    <p class="text-[11px] text-neutral-400 mt-1">Allocate maximum limits, instant deployment.</p>
-                  </div>
-                  <span class="w-4 h-4 rounded-full border-2 border-white/10 flex items-center justify-center">
-                    <span id="plan-dot-premium" class="w-2 h-2 rounded-full bg-transparent"></span>
-                  </span>
-                </div>
-              </div>
-            </div>
-
-            <div class="space-y-4 pt-4 border-t border-white/5">
-              <div>
-                <h2 class="text-sm font-bold text-white">Choose Deploy Region</h2>
-                <p class="text-xs text-neutral-400 mt-0.5">Select the closest geographic zone for minimal latency.</p>
-              </div>
-
-              <div class="space-y-2 max-w-sm">
-                <label class="form-label">Server Node Address</label>
-                <select id="nodeId" class="hidden">
-                  <option value="" disabled selected>Select geographic node</option>
-                  <% nodes.forEach(node => { %>
-                    <option value="<%= node.id %>"><%= node.name %> — <%= node.address %></option>
-                  <% }); %>
-                </select>
-                <div class="custom-select" data-for="nodeId"></div>
-              </div>
+            <div class="space-y-2 max-w-sm">
+              <label class="form-label">Server Node Address</label>
+              <select id="nodeId" class="hidden">
+                <option value="" disabled selected>Select geographic node</option>
+                <% nodes.forEach(node => { %>
+                  <option value="<%= node.id %>"><%= node.name %> — <%= node.address %></option>
+                <% }); %>
+              </select>
+              <div class="custom-select" data-for="nodeId"></div>
             </div>
 
             <div class="pt-4 border-t border-white/5 flex justify-between">
@@ -224,7 +188,7 @@
                     <option value="1024">GB</option>
                   </select>
                 </div>
-                <p id="max-ram-label" class="text-[10px] text-neutral-500 font-semibold">Max Free Allocation: 1024 MB</p>
+                <p id="max-ram-label" class="text-[10px] text-neutral-500 font-semibold">Max Allocation: <%= resourceLimits.maxMemory %> MB</p>
               </div>
 
               <!-- CPU -->
@@ -235,10 +199,10 @@
                 </label>
                 <div class="stepper">
                   <button type="button" class="stepper-btn" data-action="dec" data-target="Cpu" data-step="50" data-min="50">−</button>
-                  <input id="Cpu" type="number" value="100" min="50" max="100" class="stepper-input">
+                  <input id="Cpu" type="number" value="100" min="50" max="<%= resourceLimits.maxCpu %>" class="stepper-input">
                   <button type="button" class="stepper-btn" data-action="inc" data-target="Cpu" data-step="50" data-max="100">+</button>
                 </div>
-                <p id="max-cpu-label" class="text-[10px] text-neutral-500 font-semibold">Max Free Allocation: 100% (1 Core)</p>
+                <p id="max-cpu-label" class="text-[10px] text-neutral-500 font-semibold">Max Allocation: <%= resourceLimits.maxCpu %>%</p>
               </div>
 
               <!-- Storage -->
@@ -257,7 +221,7 @@
                     <option value="1024" selected>GB</option>
                   </select>
                 </div>
-                <p id="max-disk-label" class="text-[10px] text-neutral-500 font-semibold">Max Free Allocation: 5 GB</p>
+                <p id="max-disk-label" class="text-[10px] text-neutral-500 font-semibold">Max Allocation: <%= Math.round(resourceLimits.maxStorage / 1024) %> GB</p>
               </div>
             </div>
 
@@ -303,17 +267,13 @@
 
             <!-- Summary panel -->
             <div class="md:col-span-5">
-              <%- include('../components/ui/Card', { hover: false, class: 'p-6 border border-brand-green/20 shadow-[0_0_20px_rgba(34,197,94,0.05)] space-y-6' }) %>
+              <%- include('../components/ui/Card', { hover: false, class: 'p-6 border border-brand-green/20 shadow-[0_0_20px_rgba(255,255,255,0.02)] space-y-6' }) %>
                 <div>
                   <h3 class="text-xs font-bold uppercase tracking-widest text-brand-green">Launch Summary</h3>
                   <h2 class="text-xl font-bold text-white mt-1">Ready for Deploy</h2>
                 </div>
 
                 <div class="space-y-3.5 text-xs text-neutral-300">
-                  <div class="flex justify-between">
-                    <span class="text-neutral-500">Plan Slot</span>
-                    <span class="text-white font-bold" id="summaryPlan">Free Plan</span>
-                  </div>
                   <div class="flex justify-between">
                     <span class="text-neutral-500">Node Location</span>
                     <span class="text-white font-bold" id="summaryNode">Not Chosen</span>
@@ -328,13 +288,13 @@
                   </div>
                   <div class="flex justify-between">
                     <span class="text-neutral-500">Deploy Duration</span>
-                    <span class="text-brand-green font-bold" id="summaryDeployTime">~15 seconds</span>
+                    <span class="text-brand-green font-bold" id="summaryDeployTime">queued for install</span>
                   </div>
                 </div>
 
                 <!-- Submit trigger -->
                 <button type="button" id="createBtn"
-                  class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-brand-green px-4 py-2.5 text-sm font-bold text-black hover:bg-brand-green-hover hover:scale-[1.02] hover:shadow-[0_0_20px_rgba(34,197,94,0.35)] active:scale-95 transition-all duration-200 cursor-pointer">
+                  class="w-full inline-flex items-center justify-center gap-2 rounded-xl bg-brand-green px-4 py-2.5 text-sm font-bold text-black hover:bg-brand-green-hover hover:scale-[1.02] hover:shadow-[0_0_20px_var(--color-mono-focus)] active:scale-95 transition-all duration-200 cursor-pointer">
                   <span id="createBtnText">Launch Server</span>
                   <span id="createBtnSpinner" class="hidden w-4 h-4 border-2 border-black/30 border-t-black rounded-full animate-spin"></span>
                 </button>
@@ -391,68 +351,6 @@
 
 <script nonce="<%- nonce %>">
   let activeWizardStep = 1;
-  window.activePlan = 'free';
-
-  // Resource ceilings based on Plan
-  const LIMITS = {
-    free: {
-      maxMemory: 1024,
-      maxCpu: 100,
-      maxStorage: 5, // in GB
-    },
-    premium: {
-      maxMemory: <%= resourceLimits.maxMemory %>,
-      maxCpu: <%= resourceLimits.maxCpu %>,
-      maxStorage: <%= Math.round(resourceLimits.maxStorage / 1024) %>,
-    }
-  };
-
-  function selectPlan(plan) {
-    window.activePlan = plan;
-    
-    // Toggle selector cards UI
-    const cardFree = document.getElementById('plan-card-free');
-    const cardPrem = document.getElementById('plan-card-premium');
-    const dotFree = document.getElementById('plan-dot-free');
-    const dotPrem = document.getElementById('plan-dot-premium');
-
-    if (plan === 'free') {
-      cardFree.classList.add('border-brand-green/20', 'bg-brand-green/[0.02]');
-      cardPrem.classList.remove('border-brand-green/20', 'bg-brand-green/[0.02]');
-      cardPrem.classList.add('border-white/5');
-      dotFree.classList.remove('bg-transparent');
-      dotFree.classList.add('bg-brand-green');
-      dotPrem.classList.remove('bg-brand-green');
-      dotPrem.classList.add('bg-transparent');
-
-      // Adjust slider values to Free caps
-      document.getElementById('Cpu').value = 100;
-      document.getElementById('Cpu').max = 100;
-      document.getElementById('MemoryDisplay').value = 1024;
-      document.getElementById('MemoryUnit').value = 1;
-      document.getElementById('Memory').value = 1024;
-      document.getElementById('StorageDisplay').value = 5;
-      document.getElementById('StorageUnit').value = 1024;
-      document.getElementById('Storage').value = 5120;
-    } else {
-      cardPrem.classList.add('border-brand-green/20', 'bg-brand-green/[0.02]');
-      cardFree.classList.remove('border-brand-green/20', 'bg-brand-green/[0.02]');
-      cardFree.classList.add('border-white/5');
-      dotPrem.classList.remove('bg-transparent');
-      dotPrem.classList.add('bg-brand-green');
-      dotFree.classList.remove('bg-brand-green');
-      dotFree.classList.add('bg-transparent');
-
-      // Adjust slider values to Premium caps
-      document.getElementById('Cpu').max = LIMITS.premium.maxCpu;
-      document.getElementById('Cpu').value = Math.min(200, LIMITS.premium.maxCpu);
-    }
-
-    // Update resource sub-labels
-    document.getElementById('max-ram-label').textContent = 'Max Allocation: ' + LIMITS[plan].maxMemory + ' MB';
-    document.getElementById('max-cpu-label').textContent = 'Max Allocation: ' + LIMITS[plan].maxCpu + '%';
-    document.getElementById('max-disk-label').textContent = 'Max Allocation: ' + LIMITS[plan].maxStorage + ' GB';
-  }
 
   function nextStep(step) {
     // Basic validation before shifting step
@@ -479,18 +377,14 @@
 
     if (step === 4) {
       // Compile final launch summary
-      const planName = activePlan === 'free' ? 'Free Slot Plan' : 'Premium Dedicated Plan';
       const nodeSelect = document.getElementById('nodeId');
       const nodeName = nodeSelect.options[nodeSelect.selectedIndex]?.text || 'Not chosen';
       const ramVal = document.getElementById('Memory').value + ' MB';
       const cpuVal = document.getElementById('Cpu').value + '%';
-      const deployTime = activePlan === 'free' ? '~15 seconds (queued)' : '~2 seconds (direct)';
 
-      document.getElementById('summaryPlan').textContent = planName;
       document.getElementById('summaryNode').textContent = nodeName;
       document.getElementById('summaryRAM').textContent = ramVal;
       document.getElementById('summaryCPU').textContent = cpuVal;
-      document.getElementById('summaryDeployTime').textContent = deployTime;
     }
 
     // Hide all panes
@@ -525,7 +419,7 @@
       if (!el) return;
 
       if (step === num) {
-        el.className = "w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs bg-brand-green text-black shadow-[0_0_15px_rgba(34,197,94,0.4)] transition-all duration-300";
+        el.className = "w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs bg-brand-green text-black shadow-[0_0_15px_var(--color-mono-focus)] transition-all duration-300";
         if(text) text.className = "text-xs font-semibold uppercase tracking-wider text-white transition-all duration-300";
       } else if (step > num) {
         el.className = "w-8 h-8 rounded-full flex items-center justify-center font-bold text-xs bg-brand-green/20 text-brand-green border border-brand-green/30 transition-all duration-300";

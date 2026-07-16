@@ -9,7 +9,7 @@
   .ov-open { opacity: 1 !important; pointer-events: auto !important; }
 </style>
 
-<main class="h-screen m-auto bg-[#07070a] text-white">
+<main class="h-screen m-auto bg-mono-bg text-white">
   <div class="flex h-screen">
     <div class="w-60 h-full"><%- include('../components/template') %></div>
 
@@ -24,9 +24,9 @@
             const totalMemoryAllocated = servers.reduce((sum, s) => sum + s.Memory, 0);
             const ramText = totalMemoryAllocated >= 1024 ? `${(totalMemoryAllocated/1024).toFixed(1)} GB` : `${totalMemoryAllocated} MB`;
           %>
-          <%- include('../components/ui/StatCard', { title: 'Total Servers', value: totalCount, icon: 'server', color: 'green' }) %>
-          <%- include('../components/ui/StatCard', { title: 'Online Servers', value: onlineCount, icon: 'activity', color: 'purple' }) %>
-          <%- include('../components/ui/StatCard', { title: 'Memory Allocated', value: ramText, icon: 'cpu', color: 'blue' }) %>
+          <%- include('../components/ui/StatCard', { title: 'Total Servers', value: totalCount, icon_name: 'server', color: 'green' }) %>
+          <%- include('../components/ui/StatCard', { title: 'Online Servers', value: onlineCount, icon_name: 'activity', color: 'purple' }) %>
+          <%- include('../components/ui/StatCard', { title: 'Memory Allocated', value: ramText, icon_name: 'cpu', color: 'blue' }) %>
         </div>
 
         <!-- Header Controls Row -->
@@ -69,7 +69,7 @@
         <% if (req.query.err === 'SERVER_LIMIT_REACHED') { %>
           <div class="rounded-xl bg-red-500/10 border border-red-500/20 px-5 py-4">
             <p class="text-sm font-semibold text-red-400">Server Limit Reached.</p>
-            <p class="text-xs text-neutral-400 mt-1">You have reached the server creation slots allowed for this plan tier. Upgrade to gain more slots.</p>
+            <p class="text-xs text-neutral-400 mt-1">You have reached your server creation limit. Contact an administrator to increase it.</p>
           </div>
         <% } %>
         <% if (typeof daemonOffline !== 'undefined' && daemonOffline) { %>

@@ -39,10 +39,10 @@ export const isAuthenticatedForServer =
           return;
         }
 
-        res.redirect('/');
+        res.redirect('/dashboard');
       } catch (error) {
         logger.error('Error in isAuthenticatedForServer middleware:', error);
-        res.redirect('/');
+        res.redirect('/dashboard');
       }
     };
 

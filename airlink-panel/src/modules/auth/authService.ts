@@ -124,7 +124,7 @@ const authServiceModule: Module = {
           },
         });
 
-        res.redirect('/');
+        res.redirect('/dashboard');
       } catch (error) {
         logger.error('Login error:', error);
         res.redirect('/login?err=invalid_credentials');

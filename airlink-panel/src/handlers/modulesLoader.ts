@@ -3,6 +3,7 @@ import fs from 'fs';
 import path from 'path';
 import logger from './logger';
 import chalk from 'chalk';
+import { pathToFileURL } from 'url';
 
 const isDebugMode = process.env.DEBUG === 'true';
 
@@ -59,7 +60,7 @@ export const loadModules = async (
 
   const results = await Promise.all(
     files.map((file) =>
-      import(file)
+      import(pathToFileURL(file).href)
         .then((mod) => ({ file, mod }))
         .catch((error) => ({ file, error })),
     ),

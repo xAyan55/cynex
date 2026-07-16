@@ -1,18 +1,19 @@
 <!-- Sidebar -->
 <div id="pc-sidebar" class="sidebar transition hidden lg:fixed lg:inset-y-0 lg:z-50 lg:flex lg:w-56 lg:flex-col left-0 font-['General_Sans',sans-serif]">
-  <div id="pc-sidebar2" class="flex flex-col h-full bg-[#08080c] border-r border-white/5">
+  <div id="pc-sidebar2" class="flex flex-col h-full bg-[#1a1a1a] border-r border-mono-border">
 
     <!-- Static top: logo -->
-    <div class="pl-6 pt-5 pb-5 flex min-w-0 shrink-0 border-b border-white/5">
+    <div class="pl-6 pt-5 pb-5 flex min-w-0 shrink-0 border-b border-mono-border">
       <a href="/dashboard" class="flex items-center min-w-0 gap-3">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-brand-green to-emerald-400 flex items-center justify-center shadow-lg shadow-brand-green/25">
+        <div class="w-9 h-9 rounded-xl bg-mono-accent flex items-center justify-center shadow-lg shadow-black/40">
           <span class="font-extrabold text-black text-lg">C</span>
         </div>
-        <h1 class="text-white font-bold tracking-tight text-base truncate min-w-0">Cynex<span class="text-brand-green">GP</span></h1>
+        <h1 class="text-mono-text-primary font-bold tracking-tight text-base truncate min-w-0">Cynex<span class="text-mono-text-secondary font-medium">GP</span></h1>
       </a>
     </div>
 
     <!-- Static: user info — clicking goes to account page -->
+    <% if (typeof user !== 'undefined' && user) { %>
     <a href="/account" id="sidebar-account-link" class="sidebar-special-link flex items-center space-x-3.5 py-4 px-5 border-b border-white/5 shrink-0 hover:bg-white/[0.03] transition-colors group">
       <img class="h-9 w-9 rounded-xl border border-white/5 shrink-0 object-cover" src="<%= user.avatar ? user.avatar : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' + encodeURIComponent(user.username) %>" alt="User avatar">
       <div class="min-w-0">
@@ -25,6 +26,19 @@
         <p id="sidebar-description" class="text-xs text-neutral-400 truncate"><%= user.description || 'Minecraft Host Client' %></p>
       </div>
     </a>
+    <% } else { %>
+    <a href="/login" class="sidebar-special-link flex items-center space-x-3.5 py-4 px-5 border-b border-white/5 shrink-0 hover:bg-white/[0.03] transition-colors group">
+      <div class="h-9 w-9 rounded-xl border border-white/5 shrink-0 bg-neutral-800 flex items-center justify-center">
+        <%- icon('user', { class: 'w-4 h-4 text-neutral-400' }) %>
+      </div>
+      <div class="min-w-0">
+        <p class="text-sm font-semibold text-neutral-200 truncate">
+          <span>Guest</span>
+        </p>
+        <p class="text-xs text-neutral-400 truncate">Please Sign In</p>
+      </div>
+    </a>
+    <% } %>
 
     <!-- Scrollable nav -->
     <nav class="flex-1 overflow-y-auto">
@@ -52,7 +66,7 @@
           </li>
         <% }); } %>
 
-        <% if (user.isAdmin === true) { %>
+        <% if (typeof user !== 'undefined' && user && user.isAdmin === true) { %>
           <div class="px-4 text-neutral-500 text-[10px] font-bold uppercase tracking-widest pt-6 pb-2">Admin Panel</div>
           <li>
             <a href="/admin/overview" searchdata="admin overview control" class="transition nav-link text-neutral-400 hover:text-white px-4 py-2 flex items-center gap-3 rounded-xl text-sm font-medium">
@@ -167,9 +181,9 @@
 })();
 </script>
 
-<div id="colcont" class="lg:pl-56 bg-[#07070a] min-h-screen text-white">
+<div id="colcont" class="lg:pl-56 bg-mono-bg min-h-screen text-white">
   <!-- Topbar Search -->
-  <div class="fixed top-0 left-0 lg:left-56 right-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-[#07070a]/80 backdrop-blur-xl border-b border-white/5 px-6">
+  <div class="fixed top-0 left-0 lg:left-56 right-0 z-40 flex h-16 shrink-0 items-center gap-x-4 bg-mono-bg/85 backdrop-blur-xl border-b border-white/5 px-6">
     <div class="flex flex-1 gap-x-4 self-stretch lg:gap-x-6">
       <div class="relative flex flex-1 flex-col justify-center">
 

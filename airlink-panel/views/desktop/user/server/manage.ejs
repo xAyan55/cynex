@@ -19,7 +19,7 @@
 
     #terminal {
         height: 420px;
-        background: #08080c;
+        background: #0f0f0f;
     }
 
     #terminal .xterm {
@@ -28,12 +28,12 @@
     }
 
     #terminal .xterm-viewport {
-        background: #08080c !important;
+        background: #0f0f0f !important;
         border-radius: 0;
     }
 
     #terminal .xterm-screen {
-        background: #08080c;
+        background: #0f0f0f;
     }
 
     .console-wrap {
@@ -46,7 +46,7 @@
     }
 </style>
 
-<main class="h-screen m-auto bg-[#07070a] text-white">
+<main class="h-screen m-auto bg-mono-bg text-white">
   <div class="flex h-screen">
     <!-- Sidebar -->
     <div class="w-60 h-full shrink-0">
@@ -105,7 +105,7 @@
           <%- icon('triangle-alert', { class: 'h-5 w-5 shrink-0 text-red-500' }) %>
           <div>
             <p class="text-sm font-semibold text-red-500"><%= req.translations.serverSuspended || "This server has been suspended by an administrator." %></p>
-            <p class="text-xs text-neutral-400 mt-1"><%= req.translations.serverSuspendedDesc || 'Reach out to your billing administrator to verify resource boundaries.' %></p>
+            <p class="text-xs text-neutral-400 mt-1"><%= req.translations.serverSuspendedDesc || 'Reach out to an administrator to verify resource boundaries.' %></p>
           </div>
         </div>
         <% } %>
@@ -131,12 +131,12 @@
 
         <!-- Left side: Console -->
         <div class="w-full lg:w-2/3 flex flex-col min-w-0">
-          <div class="flex flex-col rounded-t-2xl overflow-hidden border border-white/5 bg-[#08080c] flex-1 console-wrap">
+          <div class="flex flex-col rounded-t-2xl overflow-hidden border border-white/5 bg-[#0f0f0f] flex-1 console-wrap">
             <!-- Console chrome bar -->
-            <div class="flex items-center gap-2 px-4 py-3 bg-[#0c0c14] border-b border-white/5 shrink-0">
+            <div class="flex items-center gap-2 px-4 py-3 bg-[#1a1a1a] border-b border-white/5 shrink-0">
               <span class="text-[10px] font-bold text-neutral-500 select-none tracking-widest uppercase">server console</span>
             </div>
-            <div class="bg-[#08080c] flex-1 relative border-b border-white/5">
+            <div class="bg-[#0f0f0f] flex-1 relative border-b border-white/5">
               <div id="terminal"></div>
             </div>
           </div>
@@ -220,7 +220,7 @@
 <script nonce="<%- nonce %>">
 const termTheme = {
   foreground: '#c5c9d1',
-  background: '#08080c',
+  background: '#0f0f0f',
   selectionBackground: '#5DA5D580',
   black: '#1E1E1D',
   brightBlack: '#262625',

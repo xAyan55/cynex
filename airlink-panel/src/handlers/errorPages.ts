@@ -148,7 +148,8 @@ export async function renderErrorPage(
 
   // If user is not authenticated and not requesting JSON, redirect to login
   const isAuthenticated = req.session?.user?.id;
-  if (!isAuthenticated && !wantsJson(req)) {
+  const isPublicPath = req.path === '/' || req.path === '/login' || req.path === '/register';
+  if (!isAuthenticated && !wantsJson(req) && !isPublicPath) {
     return res.redirect('/login');
   }
 

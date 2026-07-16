@@ -46,7 +46,7 @@ const adminMenuModule: Module = {
           res.render('admin/menu/menu', { user, req, settings });
         } catch (error) {
           logger.error('Error rendering menu:', error);
-          res.redirect('/');
+          res.redirect('/dashboard');
         }
       },
     );

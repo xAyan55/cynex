@@ -2,21 +2,21 @@
   const var_variant = typeof variant !== 'undefined' ? variant : 'secondary';
   const var_label = typeof label !== 'undefined' ? label : '';
   const var_href = typeof href !== 'undefined' ? href : null;
-  const var_class = typeof class_name !== 'undefined' ? class_name : (typeof class !== 'undefined' ? class : '');
+  const var_class = typeof class_name !== 'undefined' ? class_name : (typeof locals.class !== 'undefined' ? locals.class : '');
   const var_id = typeof id !== 'undefined' ? id : '';
   const var_attrs = typeof attrs !== 'undefined' ? attrs : '';
 
   let btnClass = 'inline-flex items-center justify-center gap-2 rounded-xl font-medium transition-all duration-300 text-sm disabled:opacity-50 disabled:cursor-not-allowed ';
   if (var_variant === 'primary') {
-    btnClass += 'bg-brand-green text-black hover:bg-brand-green-hover hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(34,197,94,0.35)] active:scale-95 px-5 py-2.5';
+    btnClass += 'bg-mono-accent text-black hover:bg-white hover:scale-[1.02] hover:shadow-[0_0_25px_var(--color-mono-focus)] active:scale-95 px-5 py-2.5';
   } else if (var_variant === 'secondary') {
-    btnClass += 'bg-white/5 border border-white/10 text-neutral-200 hover:bg-white/10 hover:text-white px-5 py-2.5';
+    btnClass += 'bg-mono-muted border border-mono-border text-mono-text-primary hover:bg-white/10 hover:text-mono-text-primary px-5 py-2.5';
   } else if (var_variant === 'danger') {
     btnClass += 'bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 hover:text-red-300 px-5 py-2.5';
   } else if (var_variant === 'outline') {
-    btnClass += 'border border-white/10 text-neutral-400 hover:text-white px-5 py-2.5';
+    btnClass += 'border border-mono-border text-mono-text-secondary hover:text-mono-text-primary px-5 py-2.5';
   } else if (var_variant === 'glow') {
-    btnClass += 'bg-brand-purple text-white hover:bg-brand-purple-hover hover:scale-[1.02] hover:shadow-[0_0_25px_rgba(139,92,246,0.35)] active:scale-95 px-5 py-2.5';
+    btnClass += 'bg-mono-accent/10 border border-mono-accent/20 text-mono-text-primary hover:bg-mono-accent hover:text-black hover:scale-[1.02] hover:shadow-[0_0_25px_var(--color-mono-focus)] active:scale-95 px-5 py-2.5';
   }
   btnClass += ' ' + var_class;
 %>

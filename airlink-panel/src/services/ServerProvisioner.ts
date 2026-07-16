@@ -23,7 +23,6 @@ export interface ProvisionOptions {
   nodeId?: number;
   imageId: number;
   dockerImage: string;
-  planType: 'free' | 'premium';
   memory?: number;
   cpu?: number;
   storage?: number;
@@ -36,20 +35,14 @@ export class ServerProvisioner {
 
     if (!user) throw new Error('User not found.');
 
-    // 1. Resolve limits based on Plan Type
-    let memory = 1024; // Free Plan default: 1GB
-    let cpu = 100;    // Free Plan default: 1 Core
-    let storage = 5120; // Free Plan default: 5GB
+    // 1. Resolve resource limits
+    const maxMem = user.maxMemory || settings?.defaultMaxMemory || 2048;
+    const maxCpu = user.maxCpu || settings?.defaultMaxCpu || 200;
+    const maxStor = user.maxStorage || settings?.defaultMaxStorage || 10240;
 
-    if (options.planType === 'premium') {
-      const maxMem = user.maxMemory || settings?.defaultMaxMemory || 2048;
-      const maxCpu = user.maxCpu || settings?.defaultMaxCpu || 200;
-      const maxStor = user.maxStorage || settings?.defaultMaxStorage || 10240;
-
-      memory = Math.min(options.memory || 2048, maxMem);
-      cpu = Math.min(options.cpu || 200, maxCpu);
-      storage = Math.min(options.storage || 10240, maxStor);
-    }
+    let memory = Math.min(options.memory || 1024, maxMem);
+    let cpu = Math.min(options.cpu || 100, maxCpu);
+    let storage = Math.min(options.storage || 5120, maxStor);
 
     // 2. Resolve Node
     let node: any = null;
@@ -115,7 +108,6 @@ export class ServerProvisioner {
     }
 
     // 5. Create Server Record
-    const isQueued = options.planType === 'free';
     const server = await prisma.server.create({
       data: {
         name: options.name.trim(),
@@ -131,21 +123,13 @@ export class ServerProvisioner {
         StartCommand: startCommand,
         dockerImage: JSON.stringify(imageDocker),
         Installing: true,
-        Queued: isQueued, // Queued for Free Plan, Premium installs immediately
+        Queued: true,
       },
     });
 
-    // 6. Handle Queue Trigger
-    if (isQueued) {
-      logger.info(`ServerProvisioner: Queued free server ${server.UUID} for installation.`);
-      // Run in background through QueueManager
-      QueueManager.triggerDeployment(server.UUID, assignedPorts);
-    } else {
-      logger.info(`ServerProvisioner: Direct deployment for premium server ${server.UUID}.`);
-      // Deploy instantly
-      await prisma.server.update({ where: { id: server.id }, data: { Queued: true } });
-      QueueManager.triggerDeployment(server.UUID, assignedPorts);
-    }
+    // 6. Trigger deployment via QueueManager
+    logger.info(`ServerProvisioner: Queued server ${server.UUID} for installation.`);
+    QueueManager.triggerDeployment(server.UUID, assignedPorts);
 
     return server;
   }

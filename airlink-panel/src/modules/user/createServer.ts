@@ -60,17 +60,17 @@ const userCreateServerModule: Module = {
         const settings = await prisma.settings.findUnique({ where: { id: 1 } });
 
         if (!settings?.allowUserCreateServer) {
-          return res.redirect('/');
+          return res.redirect('/dashboard');
         }
 
         const serverLimit = await resolveUserServerLimit(userId!, settings);
         if (serverLimit === 0) {
-          return res.redirect('/');
+          return res.redirect('/dashboard');
         }
 
         const currentCount = await prisma.server.count({ where: { ownerId: userId } });
         if (currentCount >= serverLimit) {
-          return res.redirect('/?err=SERVER_LIMIT_REACHED');
+          return res.redirect('/dashboard?err=SERVER_LIMIT_REACHED');
         }
 
         const resourceLimits = await resolveUserResourceLimits(userId!, settings);
@@ -89,7 +89,7 @@ const userCreateServerModule: Module = {
         });
       } catch (error) {
         logger.error('Error loading user create server page:', error);
-        return res.redirect('/');
+        return res.redirect('/dashboard');
       }
     });
 
@@ -113,7 +113,7 @@ const userCreateServerModule: Module = {
           return res.status(403).json({ error: `You have reached your server limit of ${serverLimit}.` });
         }
 
-        const { name, description, nodeId, imageId, dockerImage, Memory, Cpu, Storage, planType } = req.body;
+        const { name, description, nodeId, imageId, dockerImage, Memory, Cpu, Storage } = req.body;
 
         if (!name || !imageId || !dockerImage) {
           return res.status(400).json({ error: 'Missing required fields.' });
@@ -125,7 +125,6 @@ const userCreateServerModule: Module = {
           nodeId: nodeId ? parseInt(nodeId) : undefined,
           imageId: parseInt(imageId),
           dockerImage,
-          planType: planType === 'premium' ? 'premium' : 'free',
           memory: Memory ? parseInt(Memory) : undefined,
           cpu: Cpu ? parseInt(Cpu) : undefined,
           storage: Storage ? parseInt(Storage) : undefined,

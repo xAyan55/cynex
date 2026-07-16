@@ -1,5 +1,5 @@
 <%
-  const var_class = typeof class_name !== 'undefined' ? class_name : (typeof class !== 'undefined' ? class : '');
+  const var_class = typeof class_name !== 'undefined' ? class_name : (typeof locals.class !== 'undefined' ? locals.class : '');
   const var_glow = typeof glow !== 'undefined' ? glow : 'none';
   const var_id = typeof id !== 'undefined' ? id : '';
   const var_hover = typeof hover !== 'undefined' ? hover : false;
@@ -9,9 +9,9 @@
     cardClass += 'cynex-glass-hover ';
   }
   if (var_glow === 'green') {
-    cardClass += 'shadow-[0_0_30px_rgba(34,197,94,0.08)] border-green-500/10 ';
+    cardClass += 'shadow-[0_0_30px_rgba(255,255,255,0.03)] border-white/10 ';
   } else if (var_glow === 'purple') {
-    cardClass += 'shadow-[0_0_30px_rgba(139,92,246,0.08)] border-purple-500/10 ';
+    cardClass += 'shadow-[0_0_30px_rgba(255,255,255,0.03)] border-white/10 ';
   }
   cardClass += var_class;
 %>

@@ -1,486 +1,336 @@
-<%- include('./components/header', { title: 'Premium Free Minecraft Hosting' }) %>
+<%- include('./components/header', { title: 'The Complete Minecraft Freedom' }) %>
 
-<main class="min-h-screen bg-[#07070a] text-white relative overflow-hidden font-['General_Sans',sans-serif]">
-  <!-- Decorative background elements -->
-  <div class="absolute top-0 left-1/4 w-[500px] h-[500px] bg-brand-green/5 rounded-full blur-[120px] pointer-events-none animate-glow-pulse"></div>
-  <div class="absolute top-1/3 right-1/4 w-[600px] h-[600px] bg-brand-purple/5 rounded-full blur-[150px] pointer-events-none animate-glow-pulse"></div>
-  <div class="absolute bottom-10 left-1/3 w-[450px] h-[450px] bg-emerald-500/5 rounded-full blur-[100px] pointer-events-none"></div>
+  <% const registerOrDashboard=(typeof user !=='undefined' && user) ? '/dashboard' : '/register' ; %>
 
-  <!-- Header Navbar -->
-  <header class="sticky top-0 z-50 bg-[#07070a]/75 backdrop-blur-xl border-b border-white/5 py-4">
-    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-brand-green to-emerald-400 flex items-center justify-center shadow-lg shadow-brand-green/20">
-          <span class="font-extrabold text-black text-xl">C</span>
-        </div>
-        <span class="text-xl font-bold tracking-tight text-white bg-clip-text">Cynex<span class="text-brand-green text-shadow-glow">GP</span></span>
-      </div>
+    <main
+      class="min-h-screen bg-mono-bg text-mono-text-primary relative overflow-hidden font-['General_Sans',sans-serif]">
 
-      <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-neutral-400">
-        <a href="#features" class="hover:text-white transition-colors">Features</a>
-        <a href="#how-it-works" class="hover:text-white transition-colors">How It Works</a>
-        <a href="#pricing" class="hover:text-white transition-colors">Pricing</a>
-        <a href="#faq" class="hover:text-white transition-colors">FAQ</a>
-      </nav>
-
-      <div class="flex items-center gap-4">
-        <% if (typeof user !== 'undefined' && user) { %>
-          <%- include('./components/ui/Button', { variant: 'primary', label: 'Go to Dashboard', href: '/dashboard' }) %>
-        <% } else { %>
-          <a href="/login" class="text-sm font-semibold text-neutral-300 hover:text-white transition-colors">Sign In</a>
-          <%- include('./components/ui/Button', { variant: 'primary', label: 'Start Free Hosting', href: '/register' }) %>
-        <% } %>
-      </div>
-    </div>
-  </header>
-
-  <!-- Hero Section -->
-  <section class="max-w-7xl mx-auto px-6 pt-20 pb-24 grid lg:grid-cols-12 gap-16 items-center relative z-10">
-    <div class="lg:col-span-7 space-y-8">
-      <div class="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/5 border border-white/10 text-xs font-semibold tracking-wide text-brand-green">
-        <span class="w-2 h-2 rounded-full bg-brand-green animate-ping"></span>
-        FREE SERVER DEPLOYMENT LIVE
-      </div>
-      <h1 class="text-5xl md:text-7xl font-bold tracking-tight leading-[1.08] text-white">
-        Next-Generation <br/>
-        <span class="bg-gradient-to-r from-brand-green to-emerald-300 bg-clip-text text-transparent">Minecraft Hosting</span>
-      </h1>
-      <p class="text-lg text-neutral-400 max-w-xl leading-relaxed">
-        Deploy fully customizable Minecraft servers instantly at zero cost. Scale resources, manage plugins, and play with friends on enterprise-grade hardware without paying a dime.
-      </p>
-      <div class="flex flex-wrap gap-4 pt-2">
-        <%- include('./components/ui/Button', { variant: 'primary', label: 'Create Free Server', href: '/register' }) %>
-        <%- include('./components/ui/Button', { variant: 'secondary', label: 'View Paid Plans', href: '#pricing' }) %>
-      </div>
-
-      <div class="flex gap-10 pt-4 text-left border-t border-white/5 max-w-md">
-        <div>
-          <h4 class="text-3xl font-extrabold text-white">25k+</h4>
-          <p class="text-xs text-neutral-500 font-medium uppercase mt-1">Servers Created</p>
-        </div>
-        <div>
-          <h4 class="text-3xl font-extrabold text-white">99.9%</h4>
-          <p class="text-xs text-neutral-500 font-medium uppercase mt-1">Node Uptime</p>
-        </div>
-        <div>
-          <h4 class="text-3xl font-extrabold text-white">&lt; 15s</h4>
-          <p class="text-xs text-neutral-500 font-medium uppercase mt-1">Deployment Time</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Interactive Mock Dashboard Preview -->
-    <div class="lg:col-span-5 relative">
-      <div class="absolute -inset-1 rounded-2xl bg-gradient-to-tr from-brand-green/20 to-brand-purple/20 blur-xl opacity-75"></div>
-      <div class="cynex-glass rounded-2xl p-6 border border-white/10 relative overflow-hidden">
-        <!-- Window controls -->
-        <div class="flex items-center gap-2 mb-6">
-          <div class="w-3 h-3 rounded-full bg-red-500/50"></div>
-          <div class="w-3 h-3 rounded-full bg-amber-500/50"></div>
-          <div class="w-3 h-3 rounded-full bg-brand-green/50"></div>
-          <span class="text-xs font-semibold text-neutral-500 ml-2">CynexGP Portal</span>
-        </div>
-
-        <div class="space-y-6">
-          <!-- Server Status Header Widget -->
-          <div class="flex justify-between items-start">
-            <div>
-              <h3 class="font-bold text-white text-base">Survival World</h3>
-              <p class="text-xs text-neutral-400 mt-0.5">mc.cynexgp.net:25565</p>
+      <!-- Header Navigation -->
+      <header class="border-b border-mono-border bg-mono-bg/85 backdrop-blur-xl sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
+          <a href="/" class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl bg-mono-accent flex items-center justify-center shadow-lg shadow-black/40">
+              <span class="font-extrabold text-black text-lg">C</span>
             </div>
-            <%- include('./components/ui/Badge', { status: 'online', label: 'Online' }) %>
+            <h1 class="text-mono-text-primary font-bold tracking-tight text-base">Cynex<span
+                class="text-mono-text-secondary font-medium">GP</span></h1>
+          </a>
+
+          <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-mono-text-secondary">
+            <a href="#features" class="hover:text-mono-text-primary transition-colors">Features</a>
+            <a href="#why-us" class="hover:text-mono-text-primary transition-colors">Why CynexGP</a>
+            <% if (typeof user !=='undefined' && user) { %>
+              <a href="/dashboard" class="hover:text-mono-text-primary transition-colors">Dashboard</a>
+              <% } else { %>
+                <a href="https://docs.cynexgp.net" target="_blank"
+                  class="hover:text-mono-text-primary transition-colors">Documentation</a>
+                <% } %>
+                  <a href="#faq" class="hover:text-mono-text-primary transition-colors">FAQ</a>
+          </nav>
+
+          <div class="flex items-center gap-6">
+            <% if (typeof user !=='undefined' && user) { %>
+              <a href="/dashboard"
+                class="text-sm font-semibold text-mono-text-secondary hover:text-mono-text-primary transition-colors">Dashboard</a>
+              <a href="/account"
+                class="text-sm font-semibold text-mono-text-secondary hover:text-mono-text-primary transition-colors">Profile</a>
+              <%- include('./components/ui/button', { variant: 'outline' , label: 'Logout' , href: '/logout' ,
+                class: '!py-1.5' }) %>
+                <% } else { %>
+                  <a href="/login"
+                    class="text-sm font-semibold text-mono-text-secondary hover:text-mono-text-primary transition-colors">Login</a>
+                  <%- include('./components/ui/button', { variant: 'primary' , label: 'Register' , href: '/register' ,
+                    class: '!py-1.5' }) %>
+                    <% } %>
+          </div>
+        </div>
+      </header>
+
+      <!-- Centered Hero Section -->
+      <section
+        class="min-h-[90vh] lg:min-h-[95vh] flex flex-col justify-center items-center relative overflow-hidden bg-mono-bg">
+        <!-- Overlay Layer 0: Minecraft Landscape Background Image -->
+        <div class="absolute inset-0 bg-[url('/assets/bg-w.jpg')] bg-cover bg-center pointer-events-none opacity-50 z-0">
+        </div>
+
+        <!-- Overlay Layer 1: Solid Dark Overlay (55% opacity) -->
+        <div class="absolute inset-0 bg-[#0f0f0f]/55 z-0 pointer-events-none"></div>
+
+        <!-- Overlay Layer 2: Radial gradient fading smoothly to dark at the edges -->
+        <div
+          class="absolute inset-0 bg-[radial-gradient(circle_at_center,transparent_20%,#0f0f0f_80%)] z-0 pointer-events-none">
+        </div>
+
+        <!-- Overlay Layer 3: Vertical Top & Bottom Fades -->
+        <div
+          class="absolute top-0 left-0 right-0 h-32 bg-gradient-to-b from-[#0f0f0f] to-transparent z-0 pointer-events-none">
+        </div>
+        <div
+          class="absolute bottom-0 left-0 right-0 h-40 bg-gradient-to-t from-[#0f0f0f] to-transparent z-0 pointer-events-none">
+        </div>
+
+        <!-- Centered Hero Content -->
+        <div
+          class="max-w-[800px] w-full mx-auto px-6 text-center space-y-8 relative z-10 select-none flex flex-col items-center">
+          <div
+            class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-mono-muted border border-mono-border text-xs font-semibold text-mono-text-primary tracking-wide">
+            <span class="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse"></span>
+            Full-Featured Minecraft Panel
           </div>
 
-          <!-- Server Stats Ring/Usage Bars -->
-          <div class="space-y-4 pt-2">
-            <%- include('./components/ui/Progress', { value: 42, label: 'CPU Usage', color: 'green' }) %>
-            <%- include('./components/ui/Progress', { value: 68, label: 'RAM Allocation (2.7GB / 4.0GB)', color: 'purple' }) %>
-          </div>
+          <h2 class="text-4xl md:text-6xl font-extrabold tracking-tight text-white leading-tight">
+            The Complete <br class="hidden sm:inline" />
+            Minecraft Panel
+          </h2>
 
-          <!-- Active Players Panel -->
-          <div class="bg-white/[0.02] border border-white/5 rounded-xl p-4">
-            <div class="flex justify-between items-center text-xs font-bold text-neutral-400 mb-3">
-              <span>Players Online</span>
-              <span class="text-brand-green">14 / 20</span>
+          <p class="text-sm text-mono-text-secondary leading-relaxed max-w-[600px] mx-auto">
+            Manage servers, users, nodes, locations and more from a powerful, modern and lightweight dashboard.
+          </p>
+
+          <div class="flex flex-wrap items-center justify-center gap-4 pt-2">
+            <%- include('./components/ui/button', { variant: 'primary' , label: 'Get Started' , href:
+              registerOrDashboard,
+              class: '!w-44 !h-11 !justify-center !rounded-xl !bg-white hover:!bg-neutral-100 hover:!shadow-none !text-black'
+              }) %>
+              <%- include('./components/ui/button', { variant: 'secondary' , label: 'Explore Dashboard' ,
+                href: '#features' ,
+                class: '!w-44 !h-11 !justify-center !rounded-xl !bg-transparent !border-mono-border !text-white hover:!bg-white/5 hover:!shadow-none'
+                }) %>
+          </div>
+        </div>
+      </section>
+
+      <!-- Features Grid Section -->
+      <section id="features" class="max-w-7xl mx-auto px-6 py-28 border-t border-mono-border relative z-10 bg-mono-bg">
+        <div class="text-center space-y-4 mb-20">
+          <h3 class="text-xs font-bold uppercase tracking-widest text-mono-text-secondary">Features</h3>
+          <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-mono-text-primary">Everything You Need in One
+            Place</h2>
+          <p class="text-sm text-mono-text-secondary max-w-xl mx-auto">
+            Powerful tools to manage your Minecraft infrastructure with ease.
+          </p>
+        </div>
+
+        <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <!-- Feature Card 1 -->
+          <%- include('./components/ui/Card', { hover: true, class: 'space-y-4' }) %>
+            <div
+              class="w-10 h-10 rounded-xl bg-mono-muted border border-mono-border flex items-center justify-center text-mono-text-primary">
+              <%- icon('cpu', { class: 'w-5 h-5' }) %>
             </div>
-            <div class="flex gap-2.5">
-              <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-brand-purple to-indigo-500 flex items-center justify-center text-xs font-bold text-white">S</div>
-              <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-emerald-400 to-brand-green flex items-center justify-center text-xs font-bold text-black">A</div>
-              <div class="w-8 h-8 rounded-lg bg-neutral-800 flex items-center justify-center text-xs font-bold text-neutral-400">+12</div>
+            <h4 class="text-lg font-bold text-mono-text-primary">Ryzen 9 Performance</h4>
+            <p class="text-sm text-mono-text-secondary leading-relaxed">
+              Optimized node orchestration with enterprise SSD arrays for latency-free block updates.
+            </p>
+        </div>
+
+        <!-- Feature Card 2 -->
+        <%- include('./components/ui/Card', { hover: true, class: 'space-y-4' }) %>
+          <div
+            class="w-10 h-10 rounded-xl bg-mono-muted border border-mono-border flex items-center justify-center text-mono-text-primary">
+            <%- icon('terminal', { class: 'w-5 h-5' }) %>
+          </div>
+          <h4 class="text-lg font-bold text-mono-text-primary">Full Console Access</h4>
+          <p class="text-sm text-mono-text-secondary leading-relaxed">
+            Complete power controls, terminal access, startup arguments, and real-time resource dials.
+          </p>
+          </div>
+
+          <!-- Feature Card 3 -->
+          <%- include('./components/ui/Card', { hover: true, class: 'space-y-4' }) %>
+            <div
+              class="w-10 h-10 rounded-xl bg-mono-muted border border-mono-border flex items-center justify-center text-mono-text-primary">
+              <%- icon('folder-open', { class: 'w-5 h-5' }) %>
+            </div>
+            <h4 class="text-lg font-bold text-mono-text-primary">Advanced SFTP Manager</h4>
+            <p class="text-sm text-mono-text-secondary leading-relaxed">
+              Browse, edit, rename, compress, and duplicate configuration folders directly from the browser sidebar.
+            </p>
+            </div>
+
+            <!-- Feature Card 4 -->
+            <%- include('./components/ui/Card', { hover: true, class: 'space-y-4' }) %>
+              <div
+                class="w-10 h-10 rounded-xl bg-mono-muted border border-mono-border flex items-center justify-center text-mono-text-primary">
+                <%- icon('shield', { class: 'w-5 h-5' }) %>
+              </div>
+              <h4 class="text-lg font-bold text-mono-text-primary">DDoS Protected</h4>
+              <p class="text-sm text-mono-text-secondary leading-relaxed">
+                Robust network filtering and proxy gateways to protect your lobby from latency spikes and attacks.
+              </p>
+              </div>
+
+              <!-- Feature Card 5 -->
+              <%- include('./components/ui/Card', { hover: true, class: 'space-y-4' }) %>
+                <div
+                  class="w-10 h-10 rounded-xl bg-mono-muted border border-mono-border flex items-center justify-center text-mono-text-primary">
+                  <%- icon('puzzle', { class: 'w-5 h-5' }) %>
+                </div>
+                <h4 class="text-lg font-bold text-mono-text-primary">Plugin Installer</h4>
+                <p class="text-sm text-mono-text-secondary leading-relaxed">
+                  Browse Modrinth plugin store directories directly inside the panel to install upgrades in one click.
+                </p>
+                </div>
+
+                <!-- Feature Card 6 -->
+                <%- include('./components/ui/Card', { hover: true, class: 'space-y-4' }) %>
+                  <div
+                    class="w-10 h-10 rounded-xl bg-mono-muted border border-mono-border flex items-center justify-center text-mono-text-primary">
+                    <%- icon('users', { class: 'w-5 h-5' }) %>
+                  </div>
+                  <h4 class="text-lg font-bold text-mono-text-primary">Subuser Invites</h4>
+                  <p class="text-sm text-mono-text-secondary leading-relaxed">
+                    Grant administration access or folder access privileges to developers, admins, and friends.
+                  </p>
+                  </div>
+                  </div>
+      </section>
+
+      <!-- Why CynexGP Section -->
+      <section id="why-us" class="max-w-7xl mx-auto px-6 py-28 border-t border-mono-border relative z-10 bg-mono-bg">
+        <div class="grid lg:grid-cols-12 gap-16 items-center">
+          <div class="lg:col-span-5 space-y-6">
+            <h3 class="text-xs font-bold uppercase tracking-widest text-mono-text-secondary">Visual Audit</h3>
+            <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-mono-text-primary">Designed Like a Tool, Not a
+              Pitch</h2>
+            <p class="text-sm text-mono-text-secondary leading-relaxed">
+              We built CynexGP for server owners who demand clean, uncluttered, and high-performance interfaces. No
+              flashing templates, no bloated scripts—just clean, low-latency control panels.
+            </p>
+            <div class="space-y-4">
+              <div class="flex items-start gap-3.5">
+                <%- icon('check-circle', { class: 'w-5 h-5 text-brand-green mt-0.5 shrink-0' }) %>
+                  <div>
+                    <h4 class="text-sm font-bold text-mono-text-primary">100% Shared Theme</h4>
+                    <p class="text-xs text-mono-text-secondary mt-1">Every element uses identical design variables for
+                      visual cohesion.</p>
+                  </div>
+              </div>
+              <div class="flex items-start gap-3.5">
+                <%- icon('check-circle', { class: 'w-5 h-5 text-brand-green mt-0.5 shrink-0' }) %>
+                  <div>
+                    <h4 class="text-sm font-bold text-mono-text-primary">Zero Bloat</h4>
+                    <p class="text-xs text-mono-text-secondary mt-1">No separate external layout structures. Clean asset
+                      compilation.</p>
+                  </div>
+              </div>
             </div>
           </div>
 
-          <!-- Action bar -->
-          <div class="flex gap-3 pt-2">
-            <button class="flex-1 py-2 bg-red-500/10 border border-red-500/20 hover:bg-red-500/20 text-red-400 text-xs font-bold rounded-xl transition duration-300">Stop</button>
-            <button class="flex-1 py-2 bg-brand-green text-black hover:bg-brand-green-hover text-xs font-bold rounded-xl transition duration-300">Restart</button>
+          <div class="lg:col-span-7">
+            <%- include('./components/ui/Card', { hover: false,
+              class: '!p-0 overflow-hidden border-mono-border shadow-xl' }) %>
+              <div class="px-6 py-5 border-b border-mono-border bg-white/[0.01]">
+                <h4 class="text-sm font-bold text-mono-text-primary">Dashboard Technical Specs</h4>
+              </div>
+              <div class="overflow-x-auto">
+                <table class="w-full text-left text-sm divide-y divide-mono-border">
+                  <thead class="bg-white/[0.02] text-xs font-bold uppercase text-mono-text-secondary">
+                    <tr>
+                      <th class="px-6 py-4">Resource Management</th>
+                      <th class="px-6 py-4">Dashboard Features</th>
+                      <th class="px-6 py-4">Admin Capabilities</th>
+                    </tr>
+                  </thead>
+                  <tbody class="divide-y divide-mono-border text-mono-text-secondary">
+                    <tr class="hover:bg-white/[0.01]">
+                      <td class="px-6 py-4 font-semibold text-mono-text-primary">Node Monitoring</td>
+                      <td class="px-6 py-4">Real-time memory stats, threads & load dials</td>
+                      <td class="px-6 py-4">Allocate CPU boundaries per user instance</td>
+                    </tr>
+                    <tr class="hover:bg-white/[0.01]">
+                      <td class="px-6 py-4 font-semibold text-mono-text-primary">SFTP Integrations</td>
+                      <td class="px-6 py-4">In-browser text editing, config updates</td>
+                      <td class="px-6 py-4">Zip backups, upload schedules</td>
+                    </tr>
+                    <tr class="hover:bg-white/[0.01]">
+                      <td class="px-6 py-4 font-semibold text-mono-text-primary">User Management</td>
+                      <td class="px-6 py-4">Fine-grained invite keys, permissions</td>
+                      <td class="px-6 py-4">Suspension controls, folder limits</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
           </div>
         </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Features Section -->
-  <section id="features" class="max-w-7xl mx-auto px-6 py-28 border-t border-white/5 relative z-10">
-    <div class="text-center space-y-4 max-w-2xl mx-auto mb-20">
-      <h2 class="text-xs font-bold uppercase tracking-widest text-brand-green">Features</h2>
-      <h3 class="text-4xl md:text-5xl font-bold tracking-tight text-white">Full Control, No Strings Attached</h3>
-      <p class="text-neutral-400">Everything you need to configure, extend, and run your multiplayer servers flawlessly.</p>
-    </div>
-
-    <div class="grid md:grid-cols-3 gap-8">
-      <%- include('./components/ui/Card', { hover: true }) %>
-        <div class="w-12 h-12 rounded-xl bg-brand-green/10 flex items-center justify-center mb-6">
-          <%- icon('terminal', { class: 'w-6 h-6 text-brand-green' }) %>
         </div>
-        <h4 class="text-xl font-bold text-white mb-2">Web Console</h4>
-        <p class="text-neutral-400 text-sm leading-relaxed">
-          Monitor your server logs in real-time, execute commands directly, and track server responses with zero latency.
-        </p>
-      </div>
+      </section>
 
-      <%- include('./components/ui/Card', { hover: true }) %>
-        <div class="w-12 h-12 rounded-xl bg-brand-purple/10 flex items-center justify-center mb-6">
-          <%- icon('folder-open', { class: 'w-6 h-6 text-brand-purple' }) %>
+      <!-- FAQ Accordion Section -->
+      <section id="faq" class="max-w-4xl mx-auto px-6 py-28 border-t border-mono-border relative z-10 bg-mono-bg">
+        <div class="text-center space-y-4 mb-20">
+          <h3 class="text-xs font-bold uppercase tracking-widest text-mono-text-secondary">FAQ</h3>
+          <h2 class="text-3xl md:text-5xl font-bold tracking-tight text-mono-text-primary">Frequently Asked Questions
+          </h2>
         </div>
-        <h4 class="text-xl font-bold text-white mb-2">File Manager</h4>
-        <p class="text-neutral-400 text-sm leading-relaxed">
-          Upload worlds, edit configs, install custom mods, and organize files using our responsive web file manager.
-        </p>
-      </div>
 
-      <%- include('./components/ui/Card', { hover: true }) %>
-        <div class="w-12 h-12 rounded-xl bg-emerald-500/10 flex items-center justify-center mb-6">
-          <%- icon('puzzle', { class: 'w-6 h-6 text-emerald-400' }) %>
+        <div class="space-y-4">
+          <% const faqs=[ { q: 'What software eggs are supported?' ,
+            a: 'CynexGP supports Java edition servers (Paper, Purpur, Forge, Fabric), Bedrock Edition, BungeeCord, and pocketmine eggs out of the box.'
+            }, { q: 'How do you monitor node performance?' ,
+            a: 'We balance player instances dynamically across nodes, monitoring CPU cores, NVMe write states, and container statistics.'
+            }, { q: 'Can I import my existing world files?' ,
+            a: 'Yes, using the SFTP credentials tab or the browser file uploader, you can zip and deploy your existing configurations.'
+            }, { q: 'Can I configure subuser access?' ,
+            a: 'Yes, you can create invite keys with specific folder, console, or settings write scopes to add administrators.'
+            } ]; faqs.forEach((faq, index)=> {
+            %>
+            <%- include('./components/ui/Card', { hover: false,
+              class: '!p-5 border-mono-border hover:border-white/15 transition cursor-pointer select-none' }) %>
+              <div class="flex items-center justify-between" onclick="toggleFaq(<%= index %>)">
+                <h4 class="text-sm font-bold text-mono-text-primary">
+                  <%= faq.q %>
+                </h4>
+                <span id="faq-icon-<%= index %>" class="text-mono-text-secondary transition duration-300 transform">
+                  <%- icon('chevron-down', { class: 'w-4 h-4' }) %>
+                </span>
+              </div>
+              <p id="faq-ans-<%= index %>"
+                class="text-xs text-mono-text-secondary mt-3 leading-relaxed hidden border-t border-mono-border/50 pt-3">
+                <%= faq.a %>
+              </p>
         </div>
-        <h4 class="text-xl font-bold text-white mb-2">Plugin Installer</h4>
-        <p class="text-neutral-400 text-sm leading-relaxed">
-          Search and install thousands of plugins directly from Modrinth and Spigot APIs with absolute ease.
-        </p>
-      </div>
-    </div>
-  </section>
-
-  <!-- How It Works Section -->
-  <section id="how-it-works" class="max-w-7xl mx-auto px-6 py-28 border-t border-white/5 relative z-10">
-    <div class="text-center space-y-4 max-w-2xl mx-auto mb-20">
-      <h2 class="text-xs font-bold uppercase tracking-widest text-brand-green">Workflow</h2>
-      <h3 class="text-4xl md:text-5xl font-bold tracking-tight text-white">Three Steps to Play</h3>
-      <p class="text-neutral-400">Get your server up and running in less than a minute.</p>
-    </div>
-
-    <div class="grid md:grid-cols-3 gap-12 relative">
-      <!-- Step 1 -->
-      <div class="space-y-4 relative">
-        <div class="w-10 h-10 rounded-full bg-brand-green/20 border border-brand-green/30 text-brand-green flex items-center justify-center font-bold text-base">1</div>
-        <h4 class="text-xl font-bold text-white pt-2">Create an Account</h4>
-        <p class="text-neutral-400 text-sm leading-relaxed">Sign up instantly with your email address. No credit card details required.</p>
-      </div>
-      <!-- Step 2 -->
-      <div class="space-y-4 relative">
-        <div class="w-10 h-10 rounded-full bg-brand-purple/20 border border-brand-purple/30 text-brand-purple flex items-center justify-center font-bold text-base">2</div>
-        <h4 class="text-xl font-bold text-white pt-2">Configure & Deploy</h4>
-        <p class="text-neutral-400 text-sm leading-relaxed">Choose your server software (Vanilla, Paper, Fabric), versions, RAM limits, and launch.</p>
-      </div>
-      <!-- Step 3 -->
-      <div class="space-y-4 relative">
-        <div class="w-10 h-10 rounded-full bg-emerald-500/20 border border-emerald-500/30 text-emerald-400 flex items-center justify-center font-bold text-base">3</div>
-        <h4 class="text-xl font-bold text-white pt-2">Connect & Share</h4>
-        <p class="text-neutral-400 text-sm leading-relaxed">Copy the server IP, share it with your friends, and jump directly into the game.</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- Pricing Comparison Section -->
-  <section id="pricing" class="max-w-7xl mx-auto px-6 py-28 border-t border-white/5 relative z-10">
-    <div class="text-center space-y-4 max-w-2xl mx-auto mb-16">
-      <h2 class="text-xs font-bold uppercase tracking-widest text-brand-green">Pricing</h2>
-      <h3 class="text-4xl md:text-5xl font-bold tracking-tight text-white">Affordable Hosting Tiers</h3>
-      <p class="text-neutral-400">Choose between our forever-free deployment slots or upgrade to dedicated resource plans.</p>
-
-      <!-- Toggle Switch -->
-      <div class="inline-flex items-center gap-3 bg-white/5 border border-white/10 rounded-full p-1.5 mt-6">
-        <button id="toggle-monthly" class="px-4 py-1.5 rounded-full text-xs font-semibold bg-white/10 text-white transition-all cursor-pointer">Monthly Billing</button>
-        <button id="toggle-yearly" class="px-4 py-1.5 rounded-full text-xs font-semibold text-neutral-400 hover:text-white transition-all cursor-pointer">Yearly Billing (Save 20%)</button>
-      </div>
-    </div>
-
-    <!-- Pricing Grid -->
-    <div class="grid md:grid-cols-3 gap-8">
-      <!-- Free Plan -->
-      <%- include('./components/ui/Card', { hover: false }) %>
-        <div class="space-y-6">
-          <div>
-            <h4 class="text-xl font-bold text-neutral-300">Free Tier</h4>
-            <p class="text-xs text-neutral-500 mt-1">Perfect for playing with 2-5 friends</p>
+        <% }); %>
           </div>
-          <div class="flex items-baseline gap-1">
-            <span class="text-5xl font-extrabold text-white">$0</span>
-            <span class="text-neutral-500 text-sm">/ forever</span>
-          </div>
-          <ul class="space-y-3.5 text-sm text-neutral-400 pt-2 border-t border-white/5">
-            <li class="flex items-center gap-2.5">
-              <%- icon('check', { class: 'w-4 h-4 text-brand-green shrink-0' }) %>
-              1 Server Slot
-            </li>
-            <li class="flex items-center gap-2.5">
-              <%- icon('check', { class: 'w-4 h-4 text-brand-green shrink-0' }) %>
-              1GB RAM & 1 Core CPU
-            </li>
-            <li class="flex items-center gap-2.5">
-              <%- icon('check', { class: 'w-4 h-4 text-brand-green shrink-0' }) %>
-              5GB Storage allocation
-            </li>
-            <li class="flex items-center gap-2.5 text-neutral-500">
-              <%- icon('info', { class: 'w-4 h-4 text-neutral-600 shrink-0' }) %>
-              Simulated deploy queue
-            </li>
-            <li class="flex items-center gap-2.5 text-neutral-500">
-              <%- icon('clock', { class: 'w-4 h-4 text-neutral-600 shrink-0' }) %>
-              Hibernates when idle
-            </li>
-          </ul>
-          <%- include('./components/ui/Button', { variant: 'secondary', label: 'Get Free Server', href: '/register', class: 'w-full pt-4' }) %>
-        </div>
-      </div>
+      </section>
 
-      <!-- Starter Premium Plan -->
-      <%- include('./components/ui/Card', { hover: false, glow: 'green' }) %>
-        <div class="space-y-6">
-          <div class="flex justify-between items-start">
-            <div>
-              <h4 class="text-xl font-bold text-white">Starter Plan</h4>
-              <p class="text-xs text-neutral-400 mt-1">Optimized for survival, zero lag</p>
+      <!-- Footer Section -->
+      <footer class="border-t border-mono-border py-12 bg-mono-bg text-xs text-mono-text-secondary">
+        <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
+          <div class="flex items-center gap-3">
+            <div class="w-7 h-7 rounded-lg bg-mono-accent flex items-center justify-center">
+              <span class="font-extrabold text-black text-sm">C</span>
             </div>
-            <span class="px-2 py-1 rounded bg-brand-green/10 text-brand-green text-[10px] font-bold uppercase tracking-wider">Popular</span>
+            <p>&copy; 2026 CynexGP. All rights reserved.</p>
           </div>
-          <div class="flex items-baseline gap-1">
-            <span class="text-5xl font-extrabold text-white" id="starter-price">$3.99</span>
-            <span class="text-neutral-500 text-sm" id="starter-period">/ month</span>
-          </div>
-          <ul class="space-y-3.5 text-sm text-neutral-400 pt-2 border-t border-white/5">
-            <li class="flex items-center gap-2.5">
-              <%- icon('check', { class: 'w-4 h-4 text-brand-green shrink-0' }) %>
-              3 Server Slots
-            </li>
-            <li class="flex items-center gap-2.5">
-              <%- icon('check', { class: 'w-4 h-4 text-brand-green shrink-0' }) %>
-              4GB Dedicated RAM & 2 Cores
-            </li>
-            <li class="flex items-center gap-2.5">
-              <%- icon('check', { class: 'w-4 h-4 text-brand-green shrink-0' }) %>
-              15GB NVMe SSD storage
-            </li>
-            <li class="flex items-center gap-2.5">
-              <%- icon('check', { class: 'w-4 h-4 text-brand-green shrink-0' }) %>
-              Instant Provisioning (No Queues)
-            </li>
-            <li class="flex items-center gap-2.5">
-              <%- icon('check', { class: 'w-4 h-4 text-brand-green shrink-0' }) %>
-              24/7 Always Online (No Sleep)
-            </li>
-          </ul>
-          <%- include('./components/ui/Button', { variant: 'primary', label: 'Upgrade to Starter', href: '/register', class: 'w-full pt-4' }) %>
-        </div>
-      </div>
 
-      <!-- Pro Premium Plan -->
-      <%- include('./components/ui/Card', { hover: false }) %>
-        <div class="space-y-6">
-          <div>
-            <h4 class="text-xl font-bold text-neutral-300">Pro Plan</h4>
-            <p class="text-xs text-neutral-500 mt-1">Excellent for large groups & modpacks</p>
-          </div>
-          <div class="flex items-baseline gap-1">
-            <span class="text-5xl font-extrabold text-white" id="pro-price">$7.99</span>
-            <span class="text-neutral-500 text-sm" id="pro-period">/ month</span>
-          </div>
-          <ul class="space-y-3.5 text-sm text-neutral-400 pt-2 border-t border-white/5">
-            <li class="flex items-center gap-2.5">
-              <%- icon('check', { class: 'w-4 h-4 text-brand-green shrink-0' }) %>
-              6 Server Slots
-            </li>
-            <li class="flex items-center gap-2.5">
-              <%- icon('check', { class: 'w-4 h-4 text-brand-green shrink-0' }) %>
-              8GB Dedicated RAM & 4 Cores
-            </li>
-            <li class="flex items-center gap-2.5">
-              <%- icon('check', { class: 'w-4 h-4 text-brand-green shrink-0' }) %>
-              30GB NVMe SSD storage
-            </li>
-            <li class="flex items-center gap-2.5">
-              <%- icon('check', { class: 'w-4 h-4 text-brand-green shrink-0' }) %>
-              Instant deployment
-            </li>
-            <li class="flex items-center gap-2.5">
-              <%- icon('check', { class: 'w-4 h-4 text-brand-green shrink-0' }) %>
-              24/7 Always Online
-            </li>
-          </ul>
-          <%- include('./components/ui/Button', { variant: 'secondary', label: 'Upgrade to Pro', href: '/register', class: 'w-full pt-4' }) %>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- Testimonials Section -->
-  <section class="max-w-7xl mx-auto px-6 py-28 border-t border-white/5 relative z-10">
-    <div class="text-center space-y-4 max-w-2xl mx-auto mb-20">
-      <h2 class="text-xs font-bold uppercase tracking-widest text-brand-green">Testimonials</h2>
-      <h3 class="text-4xl md:text-5xl font-bold tracking-tight text-white">Loved by Players & Admins</h3>
-      <p class="text-neutral-400">See what our server owners have to say about CynexGP performance and simplicity.</p>
-    </div>
-
-    <div class="grid md:grid-cols-3 gap-8">
-      <%- include('./components/ui/Card', { hover: true }) %>
-        <div class="flex items-center gap-1.5 mb-4">
-          <% for(let i=0; i<5; i++) { %><%- icon('star', { class: 'w-4 h-4 fill-amber-400 text-amber-400' }) %><% } %>
-        </div>
-        <p class="text-neutral-300 text-sm leading-relaxed mb-6 italic">
-          "I couldn't believe it was actually free. I set up a Paper server in seconds to play with my cousins. It sleeps when no one is playing, which is awesome, and starts back up when we join."
-        </p>
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-purple to-indigo-500 flex items-center justify-center font-bold text-sm text-white">K</div>
-          <div>
-            <h5 class="text-sm font-bold text-white">Kyle Bennett</h5>
-            <p class="text-xs text-neutral-500">Survival Server Owner</p>
+          <div class="flex items-center gap-8 font-semibold">
+            <a href="/terms" class="hover:text-mono-text-primary transition-colors">Terms of Service</a>
+            <a href="/privacy" class="hover:text-mono-text-primary transition-colors">Privacy Policy</a>
+            <div class="flex items-center gap-1.5 bg-white/5 border border-mono-border px-3 py-1 rounded-xl">
+              <span class="w-1.5 h-1.5 rounded-full bg-brand-green animate-pulse"></span>
+              All Systems Operational
+            </div>
           </div>
         </div>
-      </div>
+      </footer>
+    </main>
 
-      <%- include('./components/ui/Card', { hover: true }) %>
-        <div class="flex items-center gap-1.5 mb-4">
-          <% for(let i=0; i<5; i++) { %><%- icon('star', { class: 'w-4 h-4 fill-amber-400 text-amber-400' }) %><% } %>
-        </div>
-        <p class="text-neutral-300 text-sm leading-relaxed mb-6 italic">
-          "The plugin manager is awesome! Searching and downloading Spigot plugins right inside the panel dashboard makes running a server so convenient. I upgraded to Starter for larger RAM limits."
-        </p>
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-brand-green to-emerald-400 flex items-center justify-center font-bold text-sm text-black">M</div>
-          <div>
-            <h5 class="text-sm font-bold text-white">Marcus Vance</h5>
-            <p class="text-xs text-neutral-500">Skyblock Admin</p>
-          </div>
-        </div>
-      </div>
+    <script nonce="<%- nonce %>">
+      // FAQ collapse/expand
+      function toggleFaq(index) {
+        const ans = document.getElementById('faq-ans-' + index);
+        const icon = document.getElementById('faq-icon-' + index);
+        const isHidden = ans.classList.contains('hidden');
 
-      <%- include('./components/ui/Card', { hover: true }) %>
-        <div class="flex items-center gap-1.5 mb-4">
-          <% for(let i=0; i<5; i++) { %><%- icon('star', { class: 'w-4 h-4 fill-amber-400 text-amber-400' }) %><% } %>
-        </div>
-        <p class="text-neutral-300 text-sm leading-relaxed mb-6 italic">
-          "Fantastic UI design. The dark mode glassmorphism dashboard feels super premium. Files open instantly and console command response is fast. 10/10 developer work."
-        </p>
-        <div class="flex items-center gap-3">
-          <div class="w-10 h-10 rounded-full bg-neutral-800 flex items-center justify-center font-bold text-sm text-neutral-400">J</div>
-          <div>
-            <h5 class="text-sm font-bold text-white">Jessica Hall</h5>
-            <p class="text-xs text-neutral-500">BungeeCord Developer</p>
-          </div>
-        </div>
-      </div>
-    </div>
-  </section>
+        if (isHidden) {
+          ans.classList.remove('hidden');
+          icon.classList.add('rotate-180');
+        } else {
+          ans.classList.add('hidden');
+          icon.classList.remove('rotate-180');
+        }
+      }
+    </script>
 
-  <!-- FAQ Section -->
-  <section id="faq" class="max-w-4xl mx-auto px-6 py-28 border-t border-white/5 relative z-10">
-    <div class="text-center space-y-4 mb-20">
-      <h2 class="text-xs font-bold uppercase tracking-widest text-brand-green">FAQ</h2>
-      <h3 class="text-4xl md:text-5xl font-bold tracking-tight text-white">Common Questions</h3>
-    </div>
-
-    <div class="space-y-4">
-      <% 
-        const faqs = [
-          { q: 'Is CynexGP hosting really free?', a: 'Yes! Our Free Tier slot provides 1GB of dedicated RAM, 5GB storage, and a single core, letting you play with friends forever at zero cost.' },
-          { q: 'How does server hibernation work?', a: 'To conserve resource pools on our free nodes, inactive free servers sleep when player count drops to zero for 10 minutes. The server wakes up instantly when you send a start command or join request.' },
-          { q: 'Can I upload my own custom worlds and mods?', a: 'Absolutely. Using our web-based File Manager or SFTP credentials, you have full access to files, mod libraries, configurations, and world folders.' },
-          { q: 'How does the provisioning queue work?', a: 'Free servers are placed in a deployment queue on creation to manage node loads. Once it reaches position #1, the server installs automatically on a node picked by our NodeAllocator.' },
-          { q: 'Can I upgrade my free server to a premium plan?', a: 'Yes. Upgrading is seamless. Your files and world database are preserved, the resource limits are automatically expanded in our database, and queue checks are removed.' }
-        ];
-      %>
-      <% faqs.forEach((faq, index) => { %>
-        <div class="cynex-glass rounded-xl overflow-hidden border border-white/5">
-          <button class="w-full flex justify-between items-center px-6 py-5 text-left font-bold text-white hover:bg-white/[0.02] transition duration-200 cursor-pointer" onclick="toggleFaq(<%= index %>)">
-            <span><%= faq.q %></span>
-            <svg id="faq-icon-<%= index %>" class="w-5 h-5 text-neutral-400 transition-transform duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </button>
-          <div id="faq-ans-<%= index %>" class="hidden px-6 pb-6 text-sm text-neutral-400 leading-relaxed border-t border-white/5 pt-4">
-            <%= faq.a %>
-          </div>
-        </div>
-      <% }); %>
-    </div>
-  </section>
-
-  <!-- Footer Section -->
-  <footer class="border-t border-white/5 py-12 bg-black/40 text-neutral-500 text-sm">
-    <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
-      <div class="flex items-center gap-3">
-        <div class="w-8 h-8 rounded-lg bg-brand-green/20 flex items-center justify-center">
-          <span class="font-bold text-brand-green text-sm">C</span>
-        </div>
-        <span class="text-base font-bold text-white">CynexGP</span>
-      </div>
-      <p>&copy; 2026 CynexGP. All rights reserved. Completely independent, not associated with Mojang or Microsoft.</p>
-      <div class="flex gap-6 text-neutral-400 font-medium">
-        <a href="#" class="hover:text-white transition">Terms of Service</a>
-        <a href="#" class="hover:text-white transition">Privacy Policy</a>
-      </div>
-    </div>
-  </footer>
-</main>
-
-<script nonce="<%- nonce %>">
-  // Pricing toggle logic
-  const toggleMonthly = document.getElementById('toggle-monthly');
-  const toggleYearly = document.getElementById('toggle-yearly');
-  
-  const starterPrice = document.getElementById('starter-price');
-  const starterPeriod = document.getElementById('starter-period');
-  const proPrice = document.getElementById('pro-price');
-  const proPeriod = document.getElementById('pro-period');
-
-  toggleMonthly.addEventListener('click', () => {
-    toggleMonthly.classList.add('bg-white/10', 'text-white');
-    toggleMonthly.classList.remove('text-neutral-400');
-    toggleYearly.classList.remove('bg-white/10', 'text-white');
-    toggleYearly.classList.add('text-neutral-400');
-    
-    starterPrice.textContent = '$3.99';
-    starterPeriod.textContent = '/ month';
-    proPrice.textContent = '$7.99';
-    proPeriod.textContent = '/ month';
-  });
-
-  toggleYearly.addEventListener('click', () => {
-    toggleYearly.classList.add('bg-white/10', 'text-white');
-    toggleYearly.classList.remove('text-neutral-400');
-    toggleMonthly.classList.remove('bg-white/10', 'text-white');
-    toggleMonthly.classList.add('text-neutral-400');
-    
-    starterPrice.textContent = '$39.99';
-    starterPeriod.textContent = '/ year';
-    proPrice.textContent = '$79.99';
-    proPeriod.textContent = '/ year';
-  });
-
-  // FAQ collapse/expand
-  function toggleFaq(index) {
-    const ans = document.getElementById('faq-ans-' + index);
-    const icon = document.getElementById('faq-icon-' + index);
-    const isHidden = ans.classList.contains('hidden');
-    
-    if (isHidden) {
-      ans.classList.remove('hidden');
-      icon.classList.add('rotate-180');
-    } else {
-      ans.classList.add('hidden');
-      icon.classList.remove('rotate-180');
-    }
-  }
-</script>
-
-<%- include('./components/footer') %>
+    <%- include('./components/footer') %>

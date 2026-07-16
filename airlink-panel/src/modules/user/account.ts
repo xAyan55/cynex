@@ -468,7 +468,7 @@ const accountModule: Module = {
           res.render('user/credits', { user, req, settings, version: pkg.version });
         } catch (error) {
           logger.error('Error loading credits page:', error);
-          res.redirect('/');
+          res.redirect('/dashboard');
         }
       },
     );
