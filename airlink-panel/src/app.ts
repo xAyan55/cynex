@@ -50,7 +50,8 @@ import {
   notFoundHandler,
   renderErrorPage,
 } from './handlers/errorPages';
-import { initializeProviders } from './services/monetization/providers';
+import { initializeProviders, ProviderRegistry } from './services/monetization/providers';
+import { ConfigService } from './services/config/ConfigService';
 import { NotificationQueue } from './services/monetization/NotificationQueue';
 
 
@@ -528,6 +529,16 @@ app.use(errorPageHandler);
 (async () => {
   try {
     await databaseLoader();
+    try {
+      const monConfig = await ConfigService.monetization();
+      for (const provider of ProviderRegistry.getAll()) {
+        await provider.reloadConfiguration(monConfig);
+      }
+      logger.info('Loaded monetization configurations into providers.');
+    } catch (err) {
+      logger.warn('Failed to load monetization configs into providers:', err);
+    }
+
     try {
       const s = await prisma.settings.findUnique({ where: { id: 1 } });
       if (s?.behindReverseProxy) {

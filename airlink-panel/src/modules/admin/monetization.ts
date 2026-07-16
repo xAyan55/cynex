@@ -168,9 +168,10 @@ const monetizationAdminModule: Module = {
 
           await ConfigService.updateCategory(ConfigCategory.MONETIZATION, sanitized);
 
-          // Trigger configuration reload for registry providers
+          // Trigger configuration reload for registry providers with full configuration
+          const fullConfig = await ConfigService.monetization();
           for (const provider of ProviderRegistry.getAll()) {
-            await provider.reloadConfiguration(sanitized);
+            await provider.reloadConfiguration(fullConfig);
           }
 
           await AuditService.log({

@@ -512,6 +512,7 @@
   forms.forEach(form => {
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
+      e.stopPropagation();
       const category = form.getAttribute('data-category');
       const formData = new FormData(form);
       const data = {};
@@ -584,6 +585,7 @@
 
   async function saveOffer(e) {
     e.preventDefault();
+    e.stopPropagation();
     const id = document.getElementById('offerId').value;
     const name = document.getElementById('offerName').value;
     const type = document.getElementById('offerType').value;
@@ -661,3 +663,5 @@
     }
   }
 </script>
+
+<%- include('../../components/footer') %>
