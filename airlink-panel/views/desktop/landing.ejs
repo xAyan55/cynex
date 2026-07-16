@@ -9,11 +9,8 @@
       <header class="border-b border-mono-border bg-mono-bg/85 backdrop-blur-xl sticky top-0 z-50">
         <div class="max-w-7xl mx-auto px-6 h-16 flex items-center justify-between">
           <a href="/" class="flex items-center gap-3">
-            <div class="w-9 h-9 rounded-xl bg-mono-accent flex items-center justify-center shadow-lg shadow-black/40">
-              <span class="font-extrabold text-black text-lg">C</span>
-            </div>
-            <h1 class="text-mono-text-primary font-bold tracking-tight text-base">Cynex<span
-                class="text-mono-text-secondary font-medium">GP</span></h1>
+            <img src="<%= settings.logo ? (settings.logo.startsWith('/') ? settings.logo : '/' + settings.logo) : '/assets/logo.png' %>" alt="Logo" class="w-9 h-9 rounded-xl object-contain shadow-lg shadow-black/40">
+            <h1 class="text-mono-text-primary font-bold tracking-tight text-base"><%= settings.title || 'CynexGP' %></h1>
           </a>
 
           <nav class="hidden md:flex items-center gap-8 text-sm font-semibold text-mono-text-secondary">
@@ -298,10 +295,8 @@
       <footer class="border-t border-mono-border py-12 bg-mono-bg text-xs text-mono-text-secondary">
         <div class="max-w-7xl mx-auto px-6 flex flex-col md:flex-row justify-between items-center gap-6">
           <div class="flex items-center gap-3">
-            <div class="w-7 h-7 rounded-lg bg-mono-accent flex items-center justify-center">
-              <span class="font-extrabold text-black text-sm">C</span>
-            </div>
-            <p>&copy; 2026 CynexGP. All rights reserved.</p>
+            <img src="<%= settings.logo ? (settings.logo.startsWith('/') ? settings.logo : '/' + settings.logo) : '/assets/logo.png' %>" alt="Logo" class="w-7 h-7 rounded-lg object-contain">
+            <p>&copy; 2026 <%= settings.title || 'CynexGP' %>. All rights reserved.</p>
           </div>
 
           <div class="flex items-center gap-8 font-semibold">
