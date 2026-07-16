@@ -325,6 +325,7 @@ app.use(
     skip: () => !getSecurityCache().rateLimitEnabled,
     standardHeaders: true,
     legacyHeaders: false,
+    validate: { xForwardedForHeader: false }
   }),
 );
 

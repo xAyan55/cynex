@@ -340,7 +340,11 @@
     fadeContentOut();
   }, true);
 
-  document.addEventListener('submit', function () {
+  document.addEventListener('submit', function (e) {
+    var form = e.target;
+    if (form && (form.classList.contains('config-form') || form.classList.contains('monetization-form') || form.hasAttribute('data-ajax'))) {
+      return;
+    }
     markNavigation();
     fadeContentOut();
   }, true);

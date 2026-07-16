@@ -8,6 +8,7 @@ const searchLimiter = rateLimit({
   max: 60,
   standardHeaders: true,
   legacyHeaders: false,
+  validate: { xForwardedForHeader: false }
 });
 
 export function createSearchRoutes(modrinthClient: ModrinthClient): Router {

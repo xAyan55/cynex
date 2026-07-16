@@ -405,7 +405,7 @@
 <div id="offerModal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
   <div class="bg-[#141414] border border-white/5 w-full max-w-lg rounded-2xl shadow-2xl p-6">
     <h3 id="modalTitle" class="text-lg font-bold text-white mb-4">Add Offer</h3>
-    <form id="offerForm" onsubmit="saveOffer(event)">
+    <form id="offerForm">
       <input type="hidden" id="offerId" name="id">
       <div class="space-y-4">
         <div>
@@ -535,7 +535,7 @@
       } catch (err) {
         showToast('Error sending configurations updates.', true);
       }
-    });
+    }, true);
   });
 
   function showToast(message, isError = false) {
@@ -553,6 +553,10 @@
   // Manage Offers Modals & Calls
   const offerModal = document.getElementById('offerModal');
   const offerForm = document.getElementById('offerForm');
+
+  if (offerForm) {
+    offerForm.addEventListener('submit', saveOffer, true);
+  }
 
   function openOfferModal() {
     offerForm.reset();
