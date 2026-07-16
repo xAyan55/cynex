@@ -1,0 +1,93 @@
+<%- include('../components/header', { title: 'Store' }) %>
+<main class="h-screen m-auto bg-mono-bg text-white">
+  <div class="flex h-screen">
+    <div class="w-60 h-full"><%- include('../components/template') %></div>
+    <div id="page-content" class="flex-1 overflow-y-auto pt-16">
+      <div class="px-12 pt-8 pb-12 space-y-8">
+        <div class="flex items-center justify-between">
+          <div>
+            <h1 class="text-xl font-bold tracking-tight">Store</h1>
+            <p class="text-sm text-neutral-400 mt-1">Purchase additional resources with your coins.</p>
+          </div>
+          <div class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5">
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>
+            <span class="text-sm font-bold text-white"><%= balance.toLocaleString() %> coins</span>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
+          <% if (!products || products.length === 0) { %>
+            <div class="col-span-full flex flex-col items-center justify-center py-20 text-center cynex-glass rounded-2xl border border-white/5">
+              <div class="w-16 h-16 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center mb-6">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-neutral-400" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-12 0v-7.5a.75.75 0 0 1 .75-.75h3a.75.75 0 0 1 .75.75V21m-6 0h18M3 9l9-6 9 6"/></svg>
+              </div>
+              <h2 class="text-base font-bold">No Products Available</h2>
+              <p class="text-sm text-neutral-400 mt-2 max-w-sm">The store is empty right now. Check back later for new offers.</p>
+            </div>
+          <% } else { %>
+            <% products.forEach(function(product) { %>
+              <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4 hover:border-white/15 transition-all">
+                <div class="flex items-start justify-between">
+                  <div class="flex items-center gap-3">
+                    <div class="p-2.5 rounded-xl bg-brand-green/10 border border-brand-green/20 text-brand-green shrink-0">
+                      <%- icon(product.icon || 'package', { class: 'w-5 h-5' }) %>
+                    </div>
+                    <div>
+                      <h3 class="text-sm font-bold text-white"><%= product.name %></h3>
+                      <% if (product.description) { %><p class="text-xs text-neutral-400 mt-0.5"><%= product.description %></p><% } %>
+                    </div>
+                  </div>
+                  <% if (product.featured) { %>
+                    <span class="text-xs font-bold text-amber-400 bg-amber-500/10 border border-amber-500/20 px-2 py-0.5 rounded-full">Featured</span>
+                  <% } %>
+                </div>
+                <div class="flex items-center justify-between pt-2 border-t border-white/5">
+                  <span class="text-sm font-bold text-white"><%= product.price.toLocaleString() %> <span class="text-xs text-neutral-400 font-normal">coins</span></span>
+                  <button onclick="purchase(<%= product.id %>)" class="px-4 py-2 rounded-xl text-xs font-bold bg-brand-green text-black hover:bg-brand-green-hover transition cursor-pointer">Buy</button>
+                </div>
+              </div>
+            <% }); %>
+          <% } %>
+        </div>
+
+        <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4">
+          <h2 class="text-sm font-bold text-white">Your Resources</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+              <p class="text-xs text-neutral-400">RAM</p>
+              <p class="text-lg font-bold text-white mt-1"><%= (ram.available / 1024).toFixed(1) %> GB</p>
+              <p class="text-xs text-neutral-500 mt-0.5"><%= (ram.used / 1024).toFixed(1) %> used / <%= (ram.allocated / 1024).toFixed(1) %> allocated</p>
+            </div>
+            <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+              <p class="text-xs text-neutral-400">CPU</p>
+              <p class="text-lg font-bold text-white mt-1"><%= cpu.available %>%</p>
+              <p class="text-xs text-neutral-500 mt-0.5"><%= cpu.used %>% used / <%= cpu.allocated %>% allocated</p>
+            </div>
+            <div class="bg-white/5 rounded-xl p-4 border border-white/5">
+              <p class="text-xs text-neutral-400">Disk</p>
+              <p class="text-lg font-bold text-white mt-1"><%= (disk.available / 1024).toFixed(1) %> GB</p>
+              <p class="text-xs text-neutral-500 mt-0.5"><%= (disk.used / 1024).toFixed(1) %> used / <%= (disk.allocated / 1024).toFixed(1) %> allocated</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+<script nonce="<%- nonce %>">
+function purchase(productId) {
+  if (!confirm('Confirm purchase?')) return;
+  fetch('/store/buy/' + productId, { method: 'POST' })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      if (data.success) {
+        alert('Purchased ' + data.product + ' for ' + data.coinCost + ' coins!');
+        window.location.reload();
+      } else {
+        alert(data.error || 'Purchase failed.');
+      }
+    })
+    .catch(function() { alert('Network error.'); });
+}
+</script>
+<%- include('../components/footer') %>
