@@ -9,7 +9,65 @@
 * 🟢 You can import this file directly.
 */
 
+export const AllocationType = {
+  RAM: 'RAM',
+  CPU: 'CPU',
+  DISK: 'DISK',
+  BACKUP_SLOTS: 'BACKUP_SLOTS',
+  DATABASE_SLOTS: 'DATABASE_SLOTS',
+  PORTS: 'PORTS',
+  SERVER_SLOTS: 'SERVER_SLOTS'
+} as const
+
+export type AllocationType = (typeof AllocationType)[keyof typeof AllocationType]
 
 
-// This file is empty because there are no enums in the schema.
-export {}
+export const AllocationSource = {
+  DEFAULT: 'DEFAULT',
+  PURCHASE: 'PURCHASE',
+  COUPON: 'COUPON',
+  ADMIN_ADJUSTMENT: 'ADMIN_ADJUSTMENT'
+} as const
+
+export type AllocationSource = (typeof AllocationSource)[keyof typeof AllocationSource]
+
+
+export const WalletTransactionType = {
+  PURCHASE: 'PURCHASE',
+  ADMIN_ADJUSTMENT: 'ADMIN_ADJUSTMENT',
+  COUPON: 'COUPON',
+  REWARD: 'REWARD',
+  REFUND: 'REFUND',
+  RENEWAL: 'RENEWAL',
+  STORE_PURCHASE: 'STORE_PURCHASE'
+} as const
+
+export type WalletTransactionType = (typeof WalletTransactionType)[keyof typeof WalletTransactionType]
+
+
+export const ActionType = {
+  ADD_COINS: 'ADD_COINS',
+  ADD_RAM: 'ADD_RAM',
+  ADD_CPU: 'ADD_CPU',
+  ADD_DISK: 'ADD_DISK',
+  ADD_BACKUP_SLOTS: 'ADD_BACKUP_SLOTS',
+  ADD_SERVER_SLOTS: 'ADD_SERVER_SLOTS',
+  ADD_PORTS: 'ADD_PORTS',
+  ADD_DATABASES: 'ADD_DATABASES',
+  SERVER_UPGRADE: 'SERVER_UPGRADE',
+  SERVER_RENEW: 'SERVER_RENEW'
+} as const
+
+export type ActionType = (typeof ActionType)[keyof typeof ActionType]
+
+
+export const ConfigCategory = {
+  ECONOMY: 'ECONOMY',
+  STORE: 'STORE',
+  DEFAULTS: 'DEFAULTS',
+  RENEWALS: 'RENEWALS',
+  LIMITS: 'LIMITS',
+  UI: 'UI'
+} as const
+
+export type ConfigCategory = (typeof ConfigCategory)[keyof typeof ConfigCategory]

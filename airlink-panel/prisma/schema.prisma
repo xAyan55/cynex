@@ -7,6 +7,63 @@ datasource db {
   provider = "sqlite"
 }
 
+// ──────────────────────────────────────────
+// Enums
+// ──────────────────────────────────────────
+
+enum AllocationType {
+  RAM
+  CPU
+  DISK
+  BACKUP_SLOTS
+  DATABASE_SLOTS
+  PORTS
+  SERVER_SLOTS
+}
+
+enum AllocationSource {
+  DEFAULT
+  PURCHASE
+  COUPON
+  ADMIN_ADJUSTMENT
+}
+
+enum WalletTransactionType {
+  PURCHASE
+  ADMIN_ADJUSTMENT
+  COUPON
+  REWARD
+  REFUND
+  RENEWAL
+  STORE_PURCHASE
+}
+
+enum ActionType {
+  ADD_COINS
+  ADD_RAM
+  ADD_CPU
+  ADD_DISK
+  ADD_BACKUP_SLOTS
+  ADD_SERVER_SLOTS
+  ADD_PORTS
+  ADD_DATABASES
+  SERVER_UPGRADE
+  SERVER_RENEW
+}
+
+enum ConfigCategory {
+  ECONOMY
+  STORE
+  DEFAULTS
+  RENEWALS
+  LIMITS
+  UI
+}
+
+// ──────────────────────────────────────────
+// Existing models (minimal changes)
+// ──────────────────────────────────────────
+
 model Users {
   id            Int              @id @default(autoincrement())
   email         String           @unique
@@ -16,19 +73,22 @@ model Users {
   description   String?          @default("No About Me")
   avatar        String?
   permissions   String?          @default("[]")
-  serverLimit   Int?             @default(0)
-  maxMemory     Int?             @default(0)
-  maxCpu        Int?             @default(0)
-  maxStorage    Int?             @default(0)
   loginAttempts Int              @default(0)
   lockedUntil   DateTime?
   createdAt     DateTime         @default(now())
   updatedAt     DateTime         @updatedAt
 
-  servers       Server[]
-  folders       ServerFolder[]
-  apiKeys       ApiKey[]
-  loginHistory  LoginHistory[]
+  wallet              Wallet?
+  allocations         UserAllocation[]
+  storePurchases      StorePurchase[]
+  couponRedemptions   CouponRedemption[]
+  auditLogsAsUser     AuditLog[]     @relation("AuditLogUser")
+  auditLogsAsAdmin    AuditLog[]     @relation("AuditLogAdmin")
+  walletTransactions  WalletTransaction[]  @relation("WalletTransactionAdmin")
+  servers             Server[]
+  folders             ServerFolder[]
+  apiKeys             ApiKey[]
+  loginHistory        LoginHistory[]
 }
 
 model Session {
@@ -46,6 +106,7 @@ model Server {
   name             String
   description      String?
   createdAt        DateTime           @default(now())
+  expiresAt        DateTime?
   Ports            String
   Memory           Int
   Cpu              Int
@@ -58,9 +119,11 @@ model Server {
   Installing       Boolean            @default(true)
   Queued           Boolean            @default(true)
   Suspended        Boolean            @default(false)
+  version          Int                @default(0)
   ownerId          Int
   nodeId           Int
   imageId          Int
+
   node             Node               @relation(fields: [nodeId], references: [id])
   owner            Users              @relation(fields: [ownerId], references: [id])
   image            Images             @relation(fields: [imageId], references: [id])
@@ -126,10 +189,6 @@ model settings {
   bannedIps                 String   @default("[]")
   allowUserCreateServer     Boolean  @default(false)
   allowUserDeleteServer     Boolean  @default(false)
-  defaultServerLimit        Int      @default(0)
-  defaultMaxMemory          Int      @default(512)
-  defaultMaxCpu             Int      @default(100)
-  defaultMaxStorage         Int      @default(5120)
   loginWallpaper            String?
   registerWallpaper         String?
   loginMaxAttempts          Int      @default(5)
@@ -241,4 +300,163 @@ model SftpCredential {
   expiresAt DateTime?
   createdAt DateTime @default(now())
   server    Server   @relation(fields: [serverId], references: [UUID], onDelete: Cascade)
+}
+
+// ──────────────────────────────────────────
+// New Economy Models
+// ──────────────────────────────────────────
+
+/// Wallet is a cached balance. WalletTransaction is the immutable ledger.
+/// Both are updated atomically inside the same Prisma transaction.
+model Wallet {
+  id        Int      @id @default(autoincrement())
+  userId    Int      @unique
+  balance   Int      @default(0)
+  version   Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user         Users                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  transactions WalletTransaction[]
+}
+
+/// Immutable ledger — every balance change creates one record.
+model WalletTransaction {
+  id          Int                   @id @default(autoincrement())
+  walletId    Int
+  amount      Int
+  type        WalletTransactionType
+  reason      String
+  referenceId String?
+  adminId     Int?
+  createdAt   DateTime              @default(now())
+
+  wallet Wallet @relation(fields: [walletId], references: [id], onDelete: Cascade)
+  admin  Users? @relation("WalletTransactionAdmin", fields: [adminId], references: [id])
+}
+
+/// Each record represents a resource grant (default, purchase, coupon, admin adjustment).
+/// Allocated = SUM(amount) where source != DEFAULT + defaults from config.
+/// Used = SUM(server.Memory/Cpu/Storage) for active servers.
+/// Available = Allocated - Used.
+model UserAllocation {
+  id          Int              @id @default(autoincrement())
+  userId      Int
+  type        AllocationType
+  amount      Int
+  source      AllocationSource
+  referenceId String?
+  createdAt   DateTime         @default(now())
+
+  user Users @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type])
+}
+
+/// Data-driven store products. Future products require only a DB row + reward handler.
+model StoreProduct {
+  id                 Int        @id @default(autoincrement())
+  name               String
+  description        String?
+  actionType         ActionType
+  actionValue        Int
+  price              Int
+  icon               String?
+  featured           Boolean    @default(false)
+  hidden             Boolean    @default(false)
+  maxPurchasePerUser Int?
+  displayOrder       Int        @default(0)
+  enabled            Boolean    @default(true)
+  createdAt          DateTime   @default(now())
+
+  purchases StorePurchase[]
+}
+
+model StorePurchase {
+  id          Int        @id @default(autoincrement())
+  userId      Int
+  productId   Int?
+  serverId    String?
+  actionType  ActionType
+  actionValue Int
+  coinCost    Int
+  createdAt   DateTime   @default(now())
+
+  product StoreProduct? @relation(fields: [productId], references: [id])
+  user    Users         @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+/// Coupons support scheduled promotions via startsAt/expiresAt.
+/// Redeeming dispatches through the same RewardPipeline as Store purchases.
+model Coupon {
+  id            Int              @id @default(autoincrement())
+  code          String           @unique
+  description   String?
+  actionType    ActionType
+  actionValue   Int
+  maxUses       Int              @default(0)
+  perUserLimit  Int              @default(1)
+  startsAt      DateTime?
+  expiresAt     DateTime?
+  enabled       Boolean          @default(true)
+  createdAt     DateTime         @default(now())
+
+  redemptions CouponRedemption[]
+}
+
+model CouponRedemption {
+  id        Int      @id @default(autoincrement())
+  couponId  Int
+  userId    Int
+  createdAt DateTime @default(now())
+
+  coupon Coupon @relation(fields: [couponId], references: [id], onDelete: Cascade)
+  user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([couponId, userId])
+}
+
+/// Typed, grouped configuration. ConfigService exposes typed accessors (no magic strings).
+model Config {
+  id          Int            @id @default(autoincrement())
+  category    ConfigCategory
+  key         String
+  value       Json
+  description String?
+
+  @@unique([category, key])
+}
+
+/// Immutable audit trail. Every important action logs before/after state.
+model AuditLog {
+  id          Int      @id @default(autoincrement())
+  userId      Int?
+  adminId     Int?
+  action      String
+  details     Json?
+  referenceId String?
+  ipAddress   String?
+  createdAt   DateTime @default(now())
+
+  user  Users? @relation("AuditLogUser", fields: [userId], references: [id])
+  admin Users? @relation("AuditLogAdmin", fields: [adminId], references: [id])
+
+  @@index([createdAt])
+  @@index([action])
+  @@index([userId])
+}
+
+/// Future-proof plan model — enables plan-based server creation and upgrades.
+model Plan {
+  id          Int      @id @default(autoincrement())
+  name        String
+  memory      Int
+  cpu         Int
+  disk        Int
+  backupSlots Int      @default(0)
+  ports       Int      @default(0)
+  price       Int
+  enabled     Boolean  @default(true)
+  sortOrder   Int      @default(0)
+  createdAt   DateTime @default(now())
 }

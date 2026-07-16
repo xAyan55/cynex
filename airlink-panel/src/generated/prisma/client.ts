@@ -114,3 +114,58 @@ export type Backup = Prisma.BackupModel
  * 
  */
 export type SftpCredential = Prisma.SftpCredentialModel
+/**
+ * Model Wallet
+ * Wallet is a cached balance. WalletTransaction is the immutable ledger.
+ * Both are updated atomically inside the same Prisma transaction.
+ */
+export type Wallet = Prisma.WalletModel
+/**
+ * Model WalletTransaction
+ * Immutable ledger — every balance change creates one record.
+ */
+export type WalletTransaction = Prisma.WalletTransactionModel
+/**
+ * Model UserAllocation
+ * Each record represents a resource grant (default, purchase, coupon, admin adjustment).
+ * Allocated = SUM(amount) where source != DEFAULT + defaults from config.
+ * Used = SUM(server.Memory/Cpu/Storage) for active servers.
+ * Available = Allocated - Used.
+ */
+export type UserAllocation = Prisma.UserAllocationModel
+/**
+ * Model StoreProduct
+ * Data-driven store products. Future products require only a DB row + reward handler.
+ */
+export type StoreProduct = Prisma.StoreProductModel
+/**
+ * Model StorePurchase
+ * 
+ */
+export type StorePurchase = Prisma.StorePurchaseModel
+/**
+ * Model Coupon
+ * Coupons support scheduled promotions via startsAt/expiresAt.
+ * Redeeming dispatches through the same RewardPipeline as Store purchases.
+ */
+export type Coupon = Prisma.CouponModel
+/**
+ * Model CouponRedemption
+ * 
+ */
+export type CouponRedemption = Prisma.CouponRedemptionModel
+/**
+ * Model Config
+ * Typed, grouped configuration. ConfigService exposes typed accessors (no magic strings).
+ */
+export type Config = Prisma.ConfigModel
+/**
+ * Model AuditLog
+ * Immutable audit trail. Every important action logs before/after state.
+ */
+export type AuditLog = Prisma.AuditLogModel
+/**
+ * Model Plan
+ * Future-proof plan model — enables plan-based server creation and upgrades.
+ */
+export type Plan = Prisma.PlanModel

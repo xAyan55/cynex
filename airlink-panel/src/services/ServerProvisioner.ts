@@ -2,6 +2,9 @@ import prisma from '../db';
 import logger from '../handlers/logger';
 import { NodeAllocator } from './NodeAllocator';
 import { QueueManager } from './QueueManager';
+import { ResourceService } from './ResourceService';
+import { ConfigService } from './config/ConfigService';
+import { AllocationType } from '../generated/prisma/client';
 import {
   getUsedExternalPorts,
   parseImagePortRequirements,
@@ -36,9 +39,15 @@ export class ServerProvisioner {
     if (!user) throw new Error('User not found.');
 
     // 1. Resolve resource limits
-    const maxMem = user.maxMemory || settings?.defaultMaxMemory || 2048;
-    const maxCpu = user.maxCpu || settings?.defaultMaxCpu || 200;
-    const maxStor = user.maxStorage || settings?.defaultMaxStorage || 10240;
+    const defaults = await ConfigService.defaults();
+    const [availMem, availCpu, availDisk] = await Promise.all([
+      ResourceService.getAvailable(userId, AllocationType.RAM),
+      ResourceService.getAvailable(userId, AllocationType.CPU),
+      ResourceService.getAvailable(userId, AllocationType.DISK),
+    ]);
+    const maxMem = availMem > 0 ? availMem : (defaults.defaultMemory || 2048);
+    const maxCpu = availCpu > 0 ? availCpu : (defaults.defaultCpu || 200);
+    const maxStor = availDisk > 0 ? availDisk : (defaults.defaultDisk || 10240);
 
     let memory = Math.min(options.memory || 1024, maxMem);
     let cpu = Math.min(options.cpu || 100, maxCpu);

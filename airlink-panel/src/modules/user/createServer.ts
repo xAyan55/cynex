@@ -22,19 +22,27 @@ function pickAvailablePorts(allocatedPorts: number[], usedPorts: number[], count
   return picked;
 }
 
-async function resolveUserServerLimit(userId: number, settings: any): Promise<number> {
-  const user = await prisma.users.findUnique({ where: { id: userId } });
-  if (!user) return 0;
-  if (user.serverLimit !== null && user.serverLimit !== undefined) return user.serverLimit;
-  return settings?.defaultServerLimit ?? 0;
+import { ResourceService } from '../../services/ResourceService';
+import { ConfigService } from '../../services/config/ConfigService';
+import { AllocationType } from '../../generated/prisma/client';
+
+async function resolveUserServerLimit(userId: number, _settings: any): Promise<number> {
+  const limits = await ConfigService.limits();
+  const allocated = await ResourceService.getAllocated(userId, AllocationType.SERVER_SLOTS);
+  return Math.max(0, limits.maxServers - allocated);
 }
 
-async function resolveUserResourceLimits(userId: number, settings: any) {
-  const user = await prisma.users.findUnique({ where: { id: userId } });
+async function resolveUserResourceLimits(userId: number, _settings: any) {
+  const defaults = await ConfigService.defaults();
+  const [availMem, availCpu, availDisk] = await Promise.all([
+    ResourceService.getAvailable(userId, AllocationType.RAM),
+    ResourceService.getAvailable(userId, AllocationType.CPU),
+    ResourceService.getAvailable(userId, AllocationType.DISK),
+  ]);
   return {
-    maxMemory: user?.maxMemory ?? settings?.defaultMaxMemory ?? 512,
-    maxCpu: user?.maxCpu ?? settings?.defaultMaxCpu ?? 100,
-    maxStorage: user?.maxStorage ?? settings?.defaultMaxStorage ?? 5120,
+    maxMemory: availMem > 0 ? availMem : (defaults.defaultMemory || 512),
+    maxCpu: availCpu > 0 ? availCpu : (defaults.defaultCpu || 100),
+    maxStorage: availDisk > 0 ? availDisk : (defaults.defaultDisk || 5120),
   };
 }
 

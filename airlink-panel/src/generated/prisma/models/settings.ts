@@ -31,10 +31,6 @@ export type SettingsAvgAggregateOutputType = {
   uploadLimit: number | null
   sftpPort: number | null
   rateLimitRpm: number | null
-  defaultServerLimit: number | null
-  defaultMaxMemory: number | null
-  defaultMaxCpu: number | null
-  defaultMaxStorage: number | null
   loginMaxAttempts: number | null
   loginLockoutMinutes: number | null
 }
@@ -44,10 +40,6 @@ export type SettingsSumAggregateOutputType = {
   uploadLimit: number | null
   sftpPort: number | null
   rateLimitRpm: number | null
-  defaultServerLimit: number | null
-  defaultMaxMemory: number | null
-  defaultMaxCpu: number | null
-  defaultMaxStorage: number | null
   loginMaxAttempts: number | null
   loginLockoutMinutes: number | null
 }
@@ -73,10 +65,6 @@ export type SettingsMinAggregateOutputType = {
   bannedIps: string | null
   allowUserCreateServer: boolean | null
   allowUserDeleteServer: boolean | null
-  defaultServerLimit: number | null
-  defaultMaxMemory: number | null
-  defaultMaxCpu: number | null
-  defaultMaxStorage: number | null
   loginWallpaper: string | null
   registerWallpaper: string | null
   loginMaxAttempts: number | null
@@ -109,10 +97,6 @@ export type SettingsMaxAggregateOutputType = {
   bannedIps: string | null
   allowUserCreateServer: boolean | null
   allowUserDeleteServer: boolean | null
-  defaultServerLimit: number | null
-  defaultMaxMemory: number | null
-  defaultMaxCpu: number | null
-  defaultMaxStorage: number | null
   loginWallpaper: string | null
   registerWallpaper: string | null
   loginMaxAttempts: number | null
@@ -145,10 +129,6 @@ export type SettingsCountAggregateOutputType = {
   bannedIps: number
   allowUserCreateServer: number
   allowUserDeleteServer: number
-  defaultServerLimit: number
-  defaultMaxMemory: number
-  defaultMaxCpu: number
-  defaultMaxStorage: number
   loginWallpaper: number
   registerWallpaper: number
   loginMaxAttempts: number
@@ -167,10 +147,6 @@ export type SettingsAvgAggregateInputType = {
   uploadLimit?: true
   sftpPort?: true
   rateLimitRpm?: true
-  defaultServerLimit?: true
-  defaultMaxMemory?: true
-  defaultMaxCpu?: true
-  defaultMaxStorage?: true
   loginMaxAttempts?: true
   loginLockoutMinutes?: true
 }
@@ -180,10 +156,6 @@ export type SettingsSumAggregateInputType = {
   uploadLimit?: true
   sftpPort?: true
   rateLimitRpm?: true
-  defaultServerLimit?: true
-  defaultMaxMemory?: true
-  defaultMaxCpu?: true
-  defaultMaxStorage?: true
   loginMaxAttempts?: true
   loginLockoutMinutes?: true
 }
@@ -209,10 +181,6 @@ export type SettingsMinAggregateInputType = {
   bannedIps?: true
   allowUserCreateServer?: true
   allowUserDeleteServer?: true
-  defaultServerLimit?: true
-  defaultMaxMemory?: true
-  defaultMaxCpu?: true
-  defaultMaxStorage?: true
   loginWallpaper?: true
   registerWallpaper?: true
   loginMaxAttempts?: true
@@ -245,10 +213,6 @@ export type SettingsMaxAggregateInputType = {
   bannedIps?: true
   allowUserCreateServer?: true
   allowUserDeleteServer?: true
-  defaultServerLimit?: true
-  defaultMaxMemory?: true
-  defaultMaxCpu?: true
-  defaultMaxStorage?: true
   loginWallpaper?: true
   registerWallpaper?: true
   loginMaxAttempts?: true
@@ -281,10 +245,6 @@ export type SettingsCountAggregateInputType = {
   bannedIps?: true
   allowUserCreateServer?: true
   allowUserDeleteServer?: true
-  defaultServerLimit?: true
-  defaultMaxMemory?: true
-  defaultMaxCpu?: true
-  defaultMaxStorage?: true
   loginWallpaper?: true
   registerWallpaper?: true
   loginMaxAttempts?: true
@@ -404,10 +364,6 @@ export type SettingsGroupByOutputType = {
   bannedIps: string
   allowUserCreateServer: boolean
   allowUserDeleteServer: boolean
-  defaultServerLimit: number
-  defaultMaxMemory: number
-  defaultMaxCpu: number
-  defaultMaxStorage: number
   loginWallpaper: string | null
   registerWallpaper: string | null
   loginMaxAttempts: number
@@ -463,10 +419,6 @@ export type settingsWhereInput = {
   bannedIps?: Prisma.StringFilter<"settings"> | string
   allowUserCreateServer?: Prisma.BoolFilter<"settings"> | boolean
   allowUserDeleteServer?: Prisma.BoolFilter<"settings"> | boolean
-  defaultServerLimit?: Prisma.IntFilter<"settings"> | number
-  defaultMaxMemory?: Prisma.IntFilter<"settings"> | number
-  defaultMaxCpu?: Prisma.IntFilter<"settings"> | number
-  defaultMaxStorage?: Prisma.IntFilter<"settings"> | number
   loginWallpaper?: Prisma.StringNullableFilter<"settings"> | string | null
   registerWallpaper?: Prisma.StringNullableFilter<"settings"> | string | null
   loginMaxAttempts?: Prisma.IntFilter<"settings"> | number
@@ -499,10 +451,6 @@ export type settingsOrderByWithRelationInput = {
   bannedIps?: Prisma.SortOrder
   allowUserCreateServer?: Prisma.SortOrder
   allowUserDeleteServer?: Prisma.SortOrder
-  defaultServerLimit?: Prisma.SortOrder
-  defaultMaxMemory?: Prisma.SortOrder
-  defaultMaxCpu?: Prisma.SortOrder
-  defaultMaxStorage?: Prisma.SortOrder
   loginWallpaper?: Prisma.SortOrderInput | Prisma.SortOrder
   registerWallpaper?: Prisma.SortOrderInput | Prisma.SortOrder
   loginMaxAttempts?: Prisma.SortOrder
@@ -538,10 +486,6 @@ export type settingsWhereUniqueInput = Prisma.AtLeast<{
   bannedIps?: Prisma.StringFilter<"settings"> | string
   allowUserCreateServer?: Prisma.BoolFilter<"settings"> | boolean
   allowUserDeleteServer?: Prisma.BoolFilter<"settings"> | boolean
-  defaultServerLimit?: Prisma.IntFilter<"settings"> | number
-  defaultMaxMemory?: Prisma.IntFilter<"settings"> | number
-  defaultMaxCpu?: Prisma.IntFilter<"settings"> | number
-  defaultMaxStorage?: Prisma.IntFilter<"settings"> | number
   loginWallpaper?: Prisma.StringNullableFilter<"settings"> | string | null
   registerWallpaper?: Prisma.StringNullableFilter<"settings"> | string | null
   loginMaxAttempts?: Prisma.IntFilter<"settings"> | number
@@ -574,10 +518,6 @@ export type settingsOrderByWithAggregationInput = {
   bannedIps?: Prisma.SortOrder
   allowUserCreateServer?: Prisma.SortOrder
   allowUserDeleteServer?: Prisma.SortOrder
-  defaultServerLimit?: Prisma.SortOrder
-  defaultMaxMemory?: Prisma.SortOrder
-  defaultMaxCpu?: Prisma.SortOrder
-  defaultMaxStorage?: Prisma.SortOrder
   loginWallpaper?: Prisma.SortOrderInput | Prisma.SortOrder
   registerWallpaper?: Prisma.SortOrderInput | Prisma.SortOrder
   loginMaxAttempts?: Prisma.SortOrder
@@ -618,10 +558,6 @@ export type settingsScalarWhereWithAggregatesInput = {
   bannedIps?: Prisma.StringWithAggregatesFilter<"settings"> | string
   allowUserCreateServer?: Prisma.BoolWithAggregatesFilter<"settings"> | boolean
   allowUserDeleteServer?: Prisma.BoolWithAggregatesFilter<"settings"> | boolean
-  defaultServerLimit?: Prisma.IntWithAggregatesFilter<"settings"> | number
-  defaultMaxMemory?: Prisma.IntWithAggregatesFilter<"settings"> | number
-  defaultMaxCpu?: Prisma.IntWithAggregatesFilter<"settings"> | number
-  defaultMaxStorage?: Prisma.IntWithAggregatesFilter<"settings"> | number
   loginWallpaper?: Prisma.StringNullableWithAggregatesFilter<"settings"> | string | null
   registerWallpaper?: Prisma.StringNullableWithAggregatesFilter<"settings"> | string | null
   loginMaxAttempts?: Prisma.IntWithAggregatesFilter<"settings"> | number
@@ -653,10 +589,6 @@ export type settingsCreateInput = {
   bannedIps?: string
   allowUserCreateServer?: boolean
   allowUserDeleteServer?: boolean
-  defaultServerLimit?: number
-  defaultMaxMemory?: number
-  defaultMaxCpu?: number
-  defaultMaxStorage?: number
   loginWallpaper?: string | null
   registerWallpaper?: string | null
   loginMaxAttempts?: number
@@ -689,10 +621,6 @@ export type settingsUncheckedCreateInput = {
   bannedIps?: string
   allowUserCreateServer?: boolean
   allowUserDeleteServer?: boolean
-  defaultServerLimit?: number
-  defaultMaxMemory?: number
-  defaultMaxCpu?: number
-  defaultMaxStorage?: number
   loginWallpaper?: string | null
   registerWallpaper?: string | null
   loginMaxAttempts?: number
@@ -724,10 +652,6 @@ export type settingsUpdateInput = {
   bannedIps?: Prisma.StringFieldUpdateOperationsInput | string
   allowUserCreateServer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   allowUserDeleteServer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  defaultServerLimit?: Prisma.IntFieldUpdateOperationsInput | number
-  defaultMaxMemory?: Prisma.IntFieldUpdateOperationsInput | number
-  defaultMaxCpu?: Prisma.IntFieldUpdateOperationsInput | number
-  defaultMaxStorage?: Prisma.IntFieldUpdateOperationsInput | number
   loginWallpaper?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registerWallpaper?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loginMaxAttempts?: Prisma.IntFieldUpdateOperationsInput | number
@@ -760,10 +684,6 @@ export type settingsUncheckedUpdateInput = {
   bannedIps?: Prisma.StringFieldUpdateOperationsInput | string
   allowUserCreateServer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   allowUserDeleteServer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  defaultServerLimit?: Prisma.IntFieldUpdateOperationsInput | number
-  defaultMaxMemory?: Prisma.IntFieldUpdateOperationsInput | number
-  defaultMaxCpu?: Prisma.IntFieldUpdateOperationsInput | number
-  defaultMaxStorage?: Prisma.IntFieldUpdateOperationsInput | number
   loginWallpaper?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registerWallpaper?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loginMaxAttempts?: Prisma.IntFieldUpdateOperationsInput | number
@@ -796,10 +716,6 @@ export type settingsCreateManyInput = {
   bannedIps?: string
   allowUserCreateServer?: boolean
   allowUserDeleteServer?: boolean
-  defaultServerLimit?: number
-  defaultMaxMemory?: number
-  defaultMaxCpu?: number
-  defaultMaxStorage?: number
   loginWallpaper?: string | null
   registerWallpaper?: string | null
   loginMaxAttempts?: number
@@ -831,10 +747,6 @@ export type settingsUpdateManyMutationInput = {
   bannedIps?: Prisma.StringFieldUpdateOperationsInput | string
   allowUserCreateServer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   allowUserDeleteServer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  defaultServerLimit?: Prisma.IntFieldUpdateOperationsInput | number
-  defaultMaxMemory?: Prisma.IntFieldUpdateOperationsInput | number
-  defaultMaxCpu?: Prisma.IntFieldUpdateOperationsInput | number
-  defaultMaxStorage?: Prisma.IntFieldUpdateOperationsInput | number
   loginWallpaper?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registerWallpaper?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loginMaxAttempts?: Prisma.IntFieldUpdateOperationsInput | number
@@ -867,10 +779,6 @@ export type settingsUncheckedUpdateManyInput = {
   bannedIps?: Prisma.StringFieldUpdateOperationsInput | string
   allowUserCreateServer?: Prisma.BoolFieldUpdateOperationsInput | boolean
   allowUserDeleteServer?: Prisma.BoolFieldUpdateOperationsInput | boolean
-  defaultServerLimit?: Prisma.IntFieldUpdateOperationsInput | number
-  defaultMaxMemory?: Prisma.IntFieldUpdateOperationsInput | number
-  defaultMaxCpu?: Prisma.IntFieldUpdateOperationsInput | number
-  defaultMaxStorage?: Prisma.IntFieldUpdateOperationsInput | number
   loginWallpaper?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   registerWallpaper?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   loginMaxAttempts?: Prisma.IntFieldUpdateOperationsInput | number
@@ -903,10 +811,6 @@ export type settingsCountOrderByAggregateInput = {
   bannedIps?: Prisma.SortOrder
   allowUserCreateServer?: Prisma.SortOrder
   allowUserDeleteServer?: Prisma.SortOrder
-  defaultServerLimit?: Prisma.SortOrder
-  defaultMaxMemory?: Prisma.SortOrder
-  defaultMaxCpu?: Prisma.SortOrder
-  defaultMaxStorage?: Prisma.SortOrder
   loginWallpaper?: Prisma.SortOrder
   registerWallpaper?: Prisma.SortOrder
   loginMaxAttempts?: Prisma.SortOrder
@@ -923,10 +827,6 @@ export type settingsAvgOrderByAggregateInput = {
   uploadLimit?: Prisma.SortOrder
   sftpPort?: Prisma.SortOrder
   rateLimitRpm?: Prisma.SortOrder
-  defaultServerLimit?: Prisma.SortOrder
-  defaultMaxMemory?: Prisma.SortOrder
-  defaultMaxCpu?: Prisma.SortOrder
-  defaultMaxStorage?: Prisma.SortOrder
   loginMaxAttempts?: Prisma.SortOrder
   loginLockoutMinutes?: Prisma.SortOrder
 }
@@ -952,10 +852,6 @@ export type settingsMaxOrderByAggregateInput = {
   bannedIps?: Prisma.SortOrder
   allowUserCreateServer?: Prisma.SortOrder
   allowUserDeleteServer?: Prisma.SortOrder
-  defaultServerLimit?: Prisma.SortOrder
-  defaultMaxMemory?: Prisma.SortOrder
-  defaultMaxCpu?: Prisma.SortOrder
-  defaultMaxStorage?: Prisma.SortOrder
   loginWallpaper?: Prisma.SortOrder
   registerWallpaper?: Prisma.SortOrder
   loginMaxAttempts?: Prisma.SortOrder
@@ -988,10 +884,6 @@ export type settingsMinOrderByAggregateInput = {
   bannedIps?: Prisma.SortOrder
   allowUserCreateServer?: Prisma.SortOrder
   allowUserDeleteServer?: Prisma.SortOrder
-  defaultServerLimit?: Prisma.SortOrder
-  defaultMaxMemory?: Prisma.SortOrder
-  defaultMaxCpu?: Prisma.SortOrder
-  defaultMaxStorage?: Prisma.SortOrder
   loginWallpaper?: Prisma.SortOrder
   registerWallpaper?: Prisma.SortOrder
   loginMaxAttempts?: Prisma.SortOrder
@@ -1008,10 +900,6 @@ export type settingsSumOrderByAggregateInput = {
   uploadLimit?: Prisma.SortOrder
   sftpPort?: Prisma.SortOrder
   rateLimitRpm?: Prisma.SortOrder
-  defaultServerLimit?: Prisma.SortOrder
-  defaultMaxMemory?: Prisma.SortOrder
-  defaultMaxCpu?: Prisma.SortOrder
-  defaultMaxStorage?: Prisma.SortOrder
   loginMaxAttempts?: Prisma.SortOrder
   loginLockoutMinutes?: Prisma.SortOrder
 }
@@ -1039,10 +927,6 @@ export type settingsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   bannedIps?: boolean
   allowUserCreateServer?: boolean
   allowUserDeleteServer?: boolean
-  defaultServerLimit?: boolean
-  defaultMaxMemory?: boolean
-  defaultMaxCpu?: boolean
-  defaultMaxStorage?: boolean
   loginWallpaper?: boolean
   registerWallpaper?: boolean
   loginMaxAttempts?: boolean
@@ -1075,10 +959,6 @@ export type settingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   bannedIps?: boolean
   allowUserCreateServer?: boolean
   allowUserDeleteServer?: boolean
-  defaultServerLimit?: boolean
-  defaultMaxMemory?: boolean
-  defaultMaxCpu?: boolean
-  defaultMaxStorage?: boolean
   loginWallpaper?: boolean
   registerWallpaper?: boolean
   loginMaxAttempts?: boolean
@@ -1111,10 +991,6 @@ export type settingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   bannedIps?: boolean
   allowUserCreateServer?: boolean
   allowUserDeleteServer?: boolean
-  defaultServerLimit?: boolean
-  defaultMaxMemory?: boolean
-  defaultMaxCpu?: boolean
-  defaultMaxStorage?: boolean
   loginWallpaper?: boolean
   registerWallpaper?: boolean
   loginMaxAttempts?: boolean
@@ -1147,10 +1023,6 @@ export type settingsSelectScalar = {
   bannedIps?: boolean
   allowUserCreateServer?: boolean
   allowUserDeleteServer?: boolean
-  defaultServerLimit?: boolean
-  defaultMaxMemory?: boolean
-  defaultMaxCpu?: boolean
-  defaultMaxStorage?: boolean
   loginWallpaper?: boolean
   registerWallpaper?: boolean
   loginMaxAttempts?: boolean
@@ -1162,7 +1034,7 @@ export type settingsSelectScalar = {
   airlinkCloudBackupEnabled?: boolean
 }
 
-export type settingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "logo" | "favicon" | "theme" | "lightTheme" | "darkTheme" | "language" | "allowRegistration" | "uploadLimit" | "createdAt" | "updatedAt" | "sftpPort" | "virusTotalApiKey" | "rateLimitEnabled" | "rateLimitRpm" | "bannedIps" | "allowUserCreateServer" | "allowUserDeleteServer" | "defaultServerLimit" | "defaultMaxMemory" | "defaultMaxCpu" | "defaultMaxStorage" | "loginWallpaper" | "registerWallpaper" | "loginMaxAttempts" | "loginLockoutMinutes" | "enforceDaemonHttps" | "behindReverseProxy" | "hashApiKeys" | "airlinkCloudApiKey" | "airlinkCloudBackupEnabled", ExtArgs["result"]["settings"]>
+export type settingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "logo" | "favicon" | "theme" | "lightTheme" | "darkTheme" | "language" | "allowRegistration" | "uploadLimit" | "createdAt" | "updatedAt" | "sftpPort" | "virusTotalApiKey" | "rateLimitEnabled" | "rateLimitRpm" | "bannedIps" | "allowUserCreateServer" | "allowUserDeleteServer" | "loginWallpaper" | "registerWallpaper" | "loginMaxAttempts" | "loginLockoutMinutes" | "enforceDaemonHttps" | "behindReverseProxy" | "hashApiKeys" | "airlinkCloudApiKey" | "airlinkCloudBackupEnabled", ExtArgs["result"]["settings"]>
 
 export type $settingsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "settings"
@@ -1188,10 +1060,6 @@ export type $settingsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     bannedIps: string
     allowUserCreateServer: boolean
     allowUserDeleteServer: boolean
-    defaultServerLimit: number
-    defaultMaxMemory: number
-    defaultMaxCpu: number
-    defaultMaxStorage: number
     loginWallpaper: string | null
     registerWallpaper: string | null
     loginMaxAttempts: number
@@ -1644,10 +1512,6 @@ export interface settingsFieldRefs {
   readonly bannedIps: Prisma.FieldRef<"settings", 'String'>
   readonly allowUserCreateServer: Prisma.FieldRef<"settings", 'Boolean'>
   readonly allowUserDeleteServer: Prisma.FieldRef<"settings", 'Boolean'>
-  readonly defaultServerLimit: Prisma.FieldRef<"settings", 'Int'>
-  readonly defaultMaxMemory: Prisma.FieldRef<"settings", 'Int'>
-  readonly defaultMaxCpu: Prisma.FieldRef<"settings", 'Int'>
-  readonly defaultMaxStorage: Prisma.FieldRef<"settings", 'Int'>
   readonly loginWallpaper: Prisma.FieldRef<"settings", 'String'>
   readonly registerWallpaper: Prisma.FieldRef<"settings", 'String'>
   readonly loginMaxAttempts: Prisma.FieldRef<"settings", 'Int'>

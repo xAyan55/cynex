@@ -31,6 +31,7 @@ export type ServerAvgAggregateOutputType = {
   Memory: number | null
   Cpu: number | null
   Storage: number | null
+  version: number | null
   ownerId: number | null
   nodeId: number | null
   imageId: number | null
@@ -41,6 +42,7 @@ export type ServerSumAggregateOutputType = {
   Memory: number | null
   Cpu: number | null
   Storage: number | null
+  version: number | null
   ownerId: number | null
   nodeId: number | null
   imageId: number | null
@@ -52,6 +54,7 @@ export type ServerMinAggregateOutputType = {
   name: string | null
   description: string | null
   createdAt: Date | null
+  expiresAt: Date | null
   Ports: string | null
   Memory: number | null
   Cpu: number | null
@@ -63,6 +66,7 @@ export type ServerMinAggregateOutputType = {
   Installing: boolean | null
   Queued: boolean | null
   Suspended: boolean | null
+  version: number | null
   ownerId: number | null
   nodeId: number | null
   imageId: number | null
@@ -74,6 +78,7 @@ export type ServerMaxAggregateOutputType = {
   name: string | null
   description: string | null
   createdAt: Date | null
+  expiresAt: Date | null
   Ports: string | null
   Memory: number | null
   Cpu: number | null
@@ -85,6 +90,7 @@ export type ServerMaxAggregateOutputType = {
   Installing: boolean | null
   Queued: boolean | null
   Suspended: boolean | null
+  version: number | null
   ownerId: number | null
   nodeId: number | null
   imageId: number | null
@@ -96,6 +102,7 @@ export type ServerCountAggregateOutputType = {
   name: number
   description: number
   createdAt: number
+  expiresAt: number
   Ports: number
   Memory: number
   Cpu: number
@@ -107,6 +114,7 @@ export type ServerCountAggregateOutputType = {
   Installing: number
   Queued: number
   Suspended: number
+  version: number
   ownerId: number
   nodeId: number
   imageId: number
@@ -119,6 +127,7 @@ export type ServerAvgAggregateInputType = {
   Memory?: true
   Cpu?: true
   Storage?: true
+  version?: true
   ownerId?: true
   nodeId?: true
   imageId?: true
@@ -129,6 +138,7 @@ export type ServerSumAggregateInputType = {
   Memory?: true
   Cpu?: true
   Storage?: true
+  version?: true
   ownerId?: true
   nodeId?: true
   imageId?: true
@@ -140,6 +150,7 @@ export type ServerMinAggregateInputType = {
   name?: true
   description?: true
   createdAt?: true
+  expiresAt?: true
   Ports?: true
   Memory?: true
   Cpu?: true
@@ -151,6 +162,7 @@ export type ServerMinAggregateInputType = {
   Installing?: true
   Queued?: true
   Suspended?: true
+  version?: true
   ownerId?: true
   nodeId?: true
   imageId?: true
@@ -162,6 +174,7 @@ export type ServerMaxAggregateInputType = {
   name?: true
   description?: true
   createdAt?: true
+  expiresAt?: true
   Ports?: true
   Memory?: true
   Cpu?: true
@@ -173,6 +186,7 @@ export type ServerMaxAggregateInputType = {
   Installing?: true
   Queued?: true
   Suspended?: true
+  version?: true
   ownerId?: true
   nodeId?: true
   imageId?: true
@@ -184,6 +198,7 @@ export type ServerCountAggregateInputType = {
   name?: true
   description?: true
   createdAt?: true
+  expiresAt?: true
   Ports?: true
   Memory?: true
   Cpu?: true
@@ -195,6 +210,7 @@ export type ServerCountAggregateInputType = {
   Installing?: true
   Queued?: true
   Suspended?: true
+  version?: true
   ownerId?: true
   nodeId?: true
   imageId?: true
@@ -293,6 +309,7 @@ export type ServerGroupByOutputType = {
   name: string
   description: string | null
   createdAt: Date
+  expiresAt: Date | null
   Ports: string
   Memory: number
   Cpu: number
@@ -304,6 +321,7 @@ export type ServerGroupByOutputType = {
   Installing: boolean
   Queued: boolean
   Suspended: boolean
+  version: number
   ownerId: number
   nodeId: number
   imageId: number
@@ -338,6 +356,7 @@ export type ServerWhereInput = {
   name?: Prisma.StringFilter<"Server"> | string
   description?: Prisma.StringNullableFilter<"Server"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Server"> | Date | string
+  expiresAt?: Prisma.DateTimeNullableFilter<"Server"> | Date | string | null
   Ports?: Prisma.StringFilter<"Server"> | string
   Memory?: Prisma.IntFilter<"Server"> | number
   Cpu?: Prisma.IntFilter<"Server"> | number
@@ -349,6 +368,7 @@ export type ServerWhereInput = {
   Installing?: Prisma.BoolFilter<"Server"> | boolean
   Queued?: Prisma.BoolFilter<"Server"> | boolean
   Suspended?: Prisma.BoolFilter<"Server"> | boolean
+  version?: Prisma.IntFilter<"Server"> | number
   ownerId?: Prisma.IntFilter<"Server"> | number
   nodeId?: Prisma.IntFilter<"Server"> | number
   imageId?: Prisma.IntFilter<"Server"> | number
@@ -366,6 +386,7 @@ export type ServerOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   Ports?: Prisma.SortOrder
   Memory?: Prisma.SortOrder
   Cpu?: Prisma.SortOrder
@@ -377,6 +398,7 @@ export type ServerOrderByWithRelationInput = {
   Installing?: Prisma.SortOrder
   Queued?: Prisma.SortOrder
   Suspended?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   nodeId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
@@ -397,6 +419,7 @@ export type ServerWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"Server"> | string
   description?: Prisma.StringNullableFilter<"Server"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Server"> | Date | string
+  expiresAt?: Prisma.DateTimeNullableFilter<"Server"> | Date | string | null
   Ports?: Prisma.StringFilter<"Server"> | string
   Memory?: Prisma.IntFilter<"Server"> | number
   Cpu?: Prisma.IntFilter<"Server"> | number
@@ -408,6 +431,7 @@ export type ServerWhereUniqueInput = Prisma.AtLeast<{
   Installing?: Prisma.BoolFilter<"Server"> | boolean
   Queued?: Prisma.BoolFilter<"Server"> | boolean
   Suspended?: Prisma.BoolFilter<"Server"> | boolean
+  version?: Prisma.IntFilter<"Server"> | number
   ownerId?: Prisma.IntFilter<"Server"> | number
   nodeId?: Prisma.IntFilter<"Server"> | number
   imageId?: Prisma.IntFilter<"Server"> | number
@@ -425,6 +449,7 @@ export type ServerOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  expiresAt?: Prisma.SortOrderInput | Prisma.SortOrder
   Ports?: Prisma.SortOrder
   Memory?: Prisma.SortOrder
   Cpu?: Prisma.SortOrder
@@ -436,6 +461,7 @@ export type ServerOrderByWithAggregationInput = {
   Installing?: Prisma.SortOrder
   Queued?: Prisma.SortOrder
   Suspended?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   nodeId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
@@ -455,6 +481,7 @@ export type ServerScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"Server"> | string
   description?: Prisma.StringNullableWithAggregatesFilter<"Server"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Server"> | Date | string
+  expiresAt?: Prisma.DateTimeNullableWithAggregatesFilter<"Server"> | Date | string | null
   Ports?: Prisma.StringWithAggregatesFilter<"Server"> | string
   Memory?: Prisma.IntWithAggregatesFilter<"Server"> | number
   Cpu?: Prisma.IntWithAggregatesFilter<"Server"> | number
@@ -466,6 +493,7 @@ export type ServerScalarWhereWithAggregatesInput = {
   Installing?: Prisma.BoolWithAggregatesFilter<"Server"> | boolean
   Queued?: Prisma.BoolWithAggregatesFilter<"Server"> | boolean
   Suspended?: Prisma.BoolWithAggregatesFilter<"Server"> | boolean
+  version?: Prisma.IntWithAggregatesFilter<"Server"> | number
   ownerId?: Prisma.IntWithAggregatesFilter<"Server"> | number
   nodeId?: Prisma.IntWithAggregatesFilter<"Server"> | number
   imageId?: Prisma.IntWithAggregatesFilter<"Server"> | number
@@ -476,6 +504,7 @@ export type ServerCreateInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -487,6 +516,7 @@ export type ServerCreateInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   sftpCredential?: Prisma.SftpCredentialCreateNestedOneWithoutServerInput
   node: Prisma.NodeCreateNestedOneWithoutServersInput
   owner: Prisma.UsersCreateNestedOneWithoutServersInput
@@ -501,6 +531,7 @@ export type ServerUncheckedCreateInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -512,6 +543,7 @@ export type ServerUncheckedCreateInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   ownerId: number
   nodeId: number
   imageId: number
@@ -525,6 +557,7 @@ export type ServerUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -536,6 +569,7 @@ export type ServerUpdateInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   sftpCredential?: Prisma.SftpCredentialUpdateOneWithoutServerNestedInput
   node?: Prisma.NodeUpdateOneRequiredWithoutServersNestedInput
   owner?: Prisma.UsersUpdateOneRequiredWithoutServersNestedInput
@@ -550,6 +584,7 @@ export type ServerUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -561,6 +596,7 @@ export type ServerUncheckedUpdateInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -575,6 +611,7 @@ export type ServerCreateManyInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -586,6 +623,7 @@ export type ServerCreateManyInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   ownerId: number
   nodeId: number
   imageId: number
@@ -596,6 +634,7 @@ export type ServerUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -607,6 +646,7 @@ export type ServerUpdateManyMutationInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type ServerUncheckedUpdateManyInput = {
@@ -615,6 +655,7 @@ export type ServerUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -626,6 +667,7 @@ export type ServerUncheckedUpdateManyInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -647,6 +689,7 @@ export type ServerCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  expiresAt?: Prisma.SortOrder
   Ports?: Prisma.SortOrder
   Memory?: Prisma.SortOrder
   Cpu?: Prisma.SortOrder
@@ -658,6 +701,7 @@ export type ServerCountOrderByAggregateInput = {
   Installing?: Prisma.SortOrder
   Queued?: Prisma.SortOrder
   Suspended?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   nodeId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
@@ -668,6 +712,7 @@ export type ServerAvgOrderByAggregateInput = {
   Memory?: Prisma.SortOrder
   Cpu?: Prisma.SortOrder
   Storage?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   nodeId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
@@ -679,6 +724,7 @@ export type ServerMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  expiresAt?: Prisma.SortOrder
   Ports?: Prisma.SortOrder
   Memory?: Prisma.SortOrder
   Cpu?: Prisma.SortOrder
@@ -690,6 +736,7 @@ export type ServerMaxOrderByAggregateInput = {
   Installing?: Prisma.SortOrder
   Queued?: Prisma.SortOrder
   Suspended?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   nodeId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
@@ -701,6 +748,7 @@ export type ServerMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   description?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
+  expiresAt?: Prisma.SortOrder
   Ports?: Prisma.SortOrder
   Memory?: Prisma.SortOrder
   Cpu?: Prisma.SortOrder
@@ -712,6 +760,7 @@ export type ServerMinOrderByAggregateInput = {
   Installing?: Prisma.SortOrder
   Queued?: Prisma.SortOrder
   Suspended?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   nodeId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
@@ -722,6 +771,7 @@ export type ServerSumOrderByAggregateInput = {
   Memory?: Prisma.SortOrder
   Cpu?: Prisma.SortOrder
   Storage?: Prisma.SortOrder
+  version?: Prisma.SortOrder
   ownerId?: Prisma.SortOrder
   nodeId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
@@ -905,6 +955,7 @@ export type ServerCreateWithoutOwnerInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -916,6 +967,7 @@ export type ServerCreateWithoutOwnerInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   sftpCredential?: Prisma.SftpCredentialCreateNestedOneWithoutServerInput
   node: Prisma.NodeCreateNestedOneWithoutServersInput
   image: Prisma.ImagesCreateNestedOneWithoutServersInput
@@ -929,6 +981,7 @@ export type ServerUncheckedCreateWithoutOwnerInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -940,6 +993,7 @@ export type ServerUncheckedCreateWithoutOwnerInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   nodeId: number
   imageId: number
   sftpCredential?: Prisma.SftpCredentialUncheckedCreateNestedOneWithoutServerInput
@@ -981,6 +1035,7 @@ export type ServerScalarWhereInput = {
   name?: Prisma.StringFilter<"Server"> | string
   description?: Prisma.StringNullableFilter<"Server"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Server"> | Date | string
+  expiresAt?: Prisma.DateTimeNullableFilter<"Server"> | Date | string | null
   Ports?: Prisma.StringFilter<"Server"> | string
   Memory?: Prisma.IntFilter<"Server"> | number
   Cpu?: Prisma.IntFilter<"Server"> | number
@@ -992,6 +1047,7 @@ export type ServerScalarWhereInput = {
   Installing?: Prisma.BoolFilter<"Server"> | boolean
   Queued?: Prisma.BoolFilter<"Server"> | boolean
   Suspended?: Prisma.BoolFilter<"Server"> | boolean
+  version?: Prisma.IntFilter<"Server"> | number
   ownerId?: Prisma.IntFilter<"Server"> | number
   nodeId?: Prisma.IntFilter<"Server"> | number
   imageId?: Prisma.IntFilter<"Server"> | number
@@ -1002,6 +1058,7 @@ export type ServerCreateWithoutImageInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -1013,6 +1070,7 @@ export type ServerCreateWithoutImageInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   sftpCredential?: Prisma.SftpCredentialCreateNestedOneWithoutServerInput
   node: Prisma.NodeCreateNestedOneWithoutServersInput
   owner: Prisma.UsersCreateNestedOneWithoutServersInput
@@ -1026,6 +1084,7 @@ export type ServerUncheckedCreateWithoutImageInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -1037,6 +1096,7 @@ export type ServerUncheckedCreateWithoutImageInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   ownerId: number
   nodeId: number
   sftpCredential?: Prisma.SftpCredentialUncheckedCreateNestedOneWithoutServerInput
@@ -1074,6 +1134,7 @@ export type ServerCreateWithoutNodeInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -1085,6 +1146,7 @@ export type ServerCreateWithoutNodeInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   sftpCredential?: Prisma.SftpCredentialCreateNestedOneWithoutServerInput
   owner: Prisma.UsersCreateNestedOneWithoutServersInput
   image: Prisma.ImagesCreateNestedOneWithoutServersInput
@@ -1098,6 +1160,7 @@ export type ServerUncheckedCreateWithoutNodeInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -1109,6 +1172,7 @@ export type ServerUncheckedCreateWithoutNodeInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   ownerId: number
   imageId: number
   sftpCredential?: Prisma.SftpCredentialUncheckedCreateNestedOneWithoutServerInput
@@ -1146,6 +1210,7 @@ export type ServerCreateWithoutFolderInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -1157,6 +1222,7 @@ export type ServerCreateWithoutFolderInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   sftpCredential?: Prisma.SftpCredentialCreateNestedOneWithoutServerInput
   node: Prisma.NodeCreateNestedOneWithoutServersInput
   owner: Prisma.UsersCreateNestedOneWithoutServersInput
@@ -1170,6 +1236,7 @@ export type ServerUncheckedCreateWithoutFolderInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -1181,6 +1248,7 @@ export type ServerUncheckedCreateWithoutFolderInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   ownerId: number
   nodeId: number
   imageId: number
@@ -1209,6 +1277,7 @@ export type ServerUpdateWithoutFolderInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1220,6 +1289,7 @@ export type ServerUpdateWithoutFolderInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   sftpCredential?: Prisma.SftpCredentialUpdateOneWithoutServerNestedInput
   node?: Prisma.NodeUpdateOneRequiredWithoutServersNestedInput
   owner?: Prisma.UsersUpdateOneRequiredWithoutServersNestedInput
@@ -1233,6 +1303,7 @@ export type ServerUncheckedUpdateWithoutFolderInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1244,6 +1315,7 @@ export type ServerUncheckedUpdateWithoutFolderInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1256,6 +1328,7 @@ export type ServerCreateWithoutBackupsInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -1267,6 +1340,7 @@ export type ServerCreateWithoutBackupsInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   sftpCredential?: Prisma.SftpCredentialCreateNestedOneWithoutServerInput
   node: Prisma.NodeCreateNestedOneWithoutServersInput
   owner: Prisma.UsersCreateNestedOneWithoutServersInput
@@ -1280,6 +1354,7 @@ export type ServerUncheckedCreateWithoutBackupsInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -1291,6 +1366,7 @@ export type ServerUncheckedCreateWithoutBackupsInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   ownerId: number
   nodeId: number
   imageId: number
@@ -1319,6 +1395,7 @@ export type ServerUpdateWithoutBackupsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1330,6 +1407,7 @@ export type ServerUpdateWithoutBackupsInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   sftpCredential?: Prisma.SftpCredentialUpdateOneWithoutServerNestedInput
   node?: Prisma.NodeUpdateOneRequiredWithoutServersNestedInput
   owner?: Prisma.UsersUpdateOneRequiredWithoutServersNestedInput
@@ -1343,6 +1421,7 @@ export type ServerUncheckedUpdateWithoutBackupsInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1354,6 +1433,7 @@ export type ServerUncheckedUpdateWithoutBackupsInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1366,6 +1446,7 @@ export type ServerCreateWithoutSftpCredentialInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -1377,6 +1458,7 @@ export type ServerCreateWithoutSftpCredentialInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   node: Prisma.NodeCreateNestedOneWithoutServersInput
   owner: Prisma.UsersCreateNestedOneWithoutServersInput
   image: Prisma.ImagesCreateNestedOneWithoutServersInput
@@ -1390,6 +1472,7 @@ export type ServerUncheckedCreateWithoutSftpCredentialInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -1401,6 +1484,7 @@ export type ServerUncheckedCreateWithoutSftpCredentialInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   ownerId: number
   nodeId: number
   imageId: number
@@ -1429,6 +1513,7 @@ export type ServerUpdateWithoutSftpCredentialInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1440,6 +1525,7 @@ export type ServerUpdateWithoutSftpCredentialInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   node?: Prisma.NodeUpdateOneRequiredWithoutServersNestedInput
   owner?: Prisma.UsersUpdateOneRequiredWithoutServersNestedInput
   image?: Prisma.ImagesUpdateOneRequiredWithoutServersNestedInput
@@ -1453,6 +1539,7 @@ export type ServerUncheckedUpdateWithoutSftpCredentialInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1464,6 +1551,7 @@ export type ServerUncheckedUpdateWithoutSftpCredentialInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1477,6 +1565,7 @@ export type ServerCreateManyOwnerInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -1488,6 +1577,7 @@ export type ServerCreateManyOwnerInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   nodeId: number
   imageId: number
 }
@@ -1497,6 +1587,7 @@ export type ServerUpdateWithoutOwnerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1508,6 +1599,7 @@ export type ServerUpdateWithoutOwnerInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   sftpCredential?: Prisma.SftpCredentialUpdateOneWithoutServerNestedInput
   node?: Prisma.NodeUpdateOneRequiredWithoutServersNestedInput
   image?: Prisma.ImagesUpdateOneRequiredWithoutServersNestedInput
@@ -1521,6 +1613,7 @@ export type ServerUncheckedUpdateWithoutOwnerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1532,6 +1625,7 @@ export type ServerUncheckedUpdateWithoutOwnerInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
   sftpCredential?: Prisma.SftpCredentialUncheckedUpdateOneWithoutServerNestedInput
@@ -1545,6 +1639,7 @@ export type ServerUncheckedUpdateManyWithoutOwnerInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1556,6 +1651,7 @@ export type ServerUncheckedUpdateManyWithoutOwnerInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -1566,6 +1662,7 @@ export type ServerCreateManyImageInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -1577,6 +1674,7 @@ export type ServerCreateManyImageInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   ownerId: number
   nodeId: number
 }
@@ -1586,6 +1684,7 @@ export type ServerUpdateWithoutImageInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1597,6 +1696,7 @@ export type ServerUpdateWithoutImageInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   sftpCredential?: Prisma.SftpCredentialUpdateOneWithoutServerNestedInput
   node?: Prisma.NodeUpdateOneRequiredWithoutServersNestedInput
   owner?: Prisma.UsersUpdateOneRequiredWithoutServersNestedInput
@@ -1610,6 +1710,7 @@ export type ServerUncheckedUpdateWithoutImageInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1621,6 +1722,7 @@ export type ServerUncheckedUpdateWithoutImageInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   sftpCredential?: Prisma.SftpCredentialUncheckedUpdateOneWithoutServerNestedInput
@@ -1634,6 +1736,7 @@ export type ServerUncheckedUpdateManyWithoutImageInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1645,6 +1748,7 @@ export type ServerUncheckedUpdateManyWithoutImageInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -1655,6 +1759,7 @@ export type ServerCreateManyNodeInput = {
   name: string
   description?: string | null
   createdAt?: Date | string
+  expiresAt?: Date | string | null
   Ports: string
   Memory: number
   Cpu: number
@@ -1666,6 +1771,7 @@ export type ServerCreateManyNodeInput = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: number
   ownerId: number
   imageId: number
 }
@@ -1675,6 +1781,7 @@ export type ServerUpdateWithoutNodeInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1686,6 +1793,7 @@ export type ServerUpdateWithoutNodeInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   sftpCredential?: Prisma.SftpCredentialUpdateOneWithoutServerNestedInput
   owner?: Prisma.UsersUpdateOneRequiredWithoutServersNestedInput
   image?: Prisma.ImagesUpdateOneRequiredWithoutServersNestedInput
@@ -1699,6 +1807,7 @@ export type ServerUncheckedUpdateWithoutNodeInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1710,6 +1819,7 @@ export type ServerUncheckedUpdateWithoutNodeInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
   sftpCredential?: Prisma.SftpCredentialUncheckedUpdateOneWithoutServerNestedInput
@@ -1723,6 +1833,7 @@ export type ServerUncheckedUpdateManyWithoutNodeInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  expiresAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   Ports?: Prisma.StringFieldUpdateOperationsInput | string
   Memory?: Prisma.IntFieldUpdateOperationsInput | number
   Cpu?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1734,6 +1845,7 @@ export type ServerUncheckedUpdateManyWithoutNodeInput = {
   Installing?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  version?: Prisma.IntFieldUpdateOperationsInput | number
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
 }
@@ -1775,6 +1887,7 @@ export type ServerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   name?: boolean
   description?: boolean
   createdAt?: boolean
+  expiresAt?: boolean
   Ports?: boolean
   Memory?: boolean
   Cpu?: boolean
@@ -1786,6 +1899,7 @@ export type ServerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: boolean
   ownerId?: boolean
   nodeId?: boolean
   imageId?: boolean
@@ -1804,6 +1918,7 @@ export type ServerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   name?: boolean
   description?: boolean
   createdAt?: boolean
+  expiresAt?: boolean
   Ports?: boolean
   Memory?: boolean
   Cpu?: boolean
@@ -1815,6 +1930,7 @@ export type ServerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: boolean
   ownerId?: boolean
   nodeId?: boolean
   imageId?: boolean
@@ -1829,6 +1945,7 @@ export type ServerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   name?: boolean
   description?: boolean
   createdAt?: boolean
+  expiresAt?: boolean
   Ports?: boolean
   Memory?: boolean
   Cpu?: boolean
@@ -1840,6 +1957,7 @@ export type ServerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: boolean
   ownerId?: boolean
   nodeId?: boolean
   imageId?: boolean
@@ -1854,6 +1972,7 @@ export type ServerSelectScalar = {
   name?: boolean
   description?: boolean
   createdAt?: boolean
+  expiresAt?: boolean
   Ports?: boolean
   Memory?: boolean
   Cpu?: boolean
@@ -1865,12 +1984,13 @@ export type ServerSelectScalar = {
   Installing?: boolean
   Queued?: boolean
   Suspended?: boolean
+  version?: boolean
   ownerId?: boolean
   nodeId?: boolean
   imageId?: boolean
 }
 
-export type ServerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "UUID" | "name" | "description" | "createdAt" | "Ports" | "Memory" | "Cpu" | "Storage" | "Variables" | "StartCommand" | "dockerImage" | "allowStartupEdit" | "Installing" | "Queued" | "Suspended" | "ownerId" | "nodeId" | "imageId", ExtArgs["result"]["server"]>
+export type ServerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "UUID" | "name" | "description" | "createdAt" | "expiresAt" | "Ports" | "Memory" | "Cpu" | "Storage" | "Variables" | "StartCommand" | "dockerImage" | "allowStartupEdit" | "Installing" | "Queued" | "Suspended" | "version" | "ownerId" | "nodeId" | "imageId", ExtArgs["result"]["server"]>
 export type ServerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sftpCredential?: boolean | Prisma.Server$sftpCredentialArgs<ExtArgs>
   node?: boolean | Prisma.NodeDefaultArgs<ExtArgs>
@@ -1907,6 +2027,7 @@ export type $ServerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     name: string
     description: string | null
     createdAt: Date
+    expiresAt: Date | null
     Ports: string
     Memory: number
     Cpu: number
@@ -1918,6 +2039,7 @@ export type $ServerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     Installing: boolean
     Queued: boolean
     Suspended: boolean
+    version: number
     ownerId: number
     nodeId: number
     imageId: number
@@ -2355,6 +2477,7 @@ export interface ServerFieldRefs {
   readonly name: Prisma.FieldRef<"Server", 'String'>
   readonly description: Prisma.FieldRef<"Server", 'String'>
   readonly createdAt: Prisma.FieldRef<"Server", 'DateTime'>
+  readonly expiresAt: Prisma.FieldRef<"Server", 'DateTime'>
   readonly Ports: Prisma.FieldRef<"Server", 'String'>
   readonly Memory: Prisma.FieldRef<"Server", 'Int'>
   readonly Cpu: Prisma.FieldRef<"Server", 'Int'>
@@ -2366,6 +2489,7 @@ export interface ServerFieldRefs {
   readonly Installing: Prisma.FieldRef<"Server", 'Boolean'>
   readonly Queued: Prisma.FieldRef<"Server", 'Boolean'>
   readonly Suspended: Prisma.FieldRef<"Server", 'Boolean'>
+  readonly version: Prisma.FieldRef<"Server", 'Int'>
   readonly ownerId: Prisma.FieldRef<"Server", 'Int'>
   readonly nodeId: Prisma.FieldRef<"Server", 'Int'>
   readonly imageId: Prisma.FieldRef<"Server", 'Int'>

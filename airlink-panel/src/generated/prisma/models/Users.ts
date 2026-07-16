@@ -28,19 +28,11 @@ export type AggregateUsers = {
 
 export type UsersAvgAggregateOutputType = {
   id: number | null
-  serverLimit: number | null
-  maxMemory: number | null
-  maxCpu: number | null
-  maxStorage: number | null
   loginAttempts: number | null
 }
 
 export type UsersSumAggregateOutputType = {
   id: number | null
-  serverLimit: number | null
-  maxMemory: number | null
-  maxCpu: number | null
-  maxStorage: number | null
   loginAttempts: number | null
 }
 
@@ -53,10 +45,6 @@ export type UsersMinAggregateOutputType = {
   description: string | null
   avatar: string | null
   permissions: string | null
-  serverLimit: number | null
-  maxMemory: number | null
-  maxCpu: number | null
-  maxStorage: number | null
   loginAttempts: number | null
   lockedUntil: Date | null
   createdAt: Date | null
@@ -72,10 +60,6 @@ export type UsersMaxAggregateOutputType = {
   description: string | null
   avatar: string | null
   permissions: string | null
-  serverLimit: number | null
-  maxMemory: number | null
-  maxCpu: number | null
-  maxStorage: number | null
   loginAttempts: number | null
   lockedUntil: Date | null
   createdAt: Date | null
@@ -91,10 +75,6 @@ export type UsersCountAggregateOutputType = {
   description: number
   avatar: number
   permissions: number
-  serverLimit: number
-  maxMemory: number
-  maxCpu: number
-  maxStorage: number
   loginAttempts: number
   lockedUntil: number
   createdAt: number
@@ -105,19 +85,11 @@ export type UsersCountAggregateOutputType = {
 
 export type UsersAvgAggregateInputType = {
   id?: true
-  serverLimit?: true
-  maxMemory?: true
-  maxCpu?: true
-  maxStorage?: true
   loginAttempts?: true
 }
 
 export type UsersSumAggregateInputType = {
   id?: true
-  serverLimit?: true
-  maxMemory?: true
-  maxCpu?: true
-  maxStorage?: true
   loginAttempts?: true
 }
 
@@ -130,10 +102,6 @@ export type UsersMinAggregateInputType = {
   description?: true
   avatar?: true
   permissions?: true
-  serverLimit?: true
-  maxMemory?: true
-  maxCpu?: true
-  maxStorage?: true
   loginAttempts?: true
   lockedUntil?: true
   createdAt?: true
@@ -149,10 +117,6 @@ export type UsersMaxAggregateInputType = {
   description?: true
   avatar?: true
   permissions?: true
-  serverLimit?: true
-  maxMemory?: true
-  maxCpu?: true
-  maxStorage?: true
   loginAttempts?: true
   lockedUntil?: true
   createdAt?: true
@@ -168,10 +132,6 @@ export type UsersCountAggregateInputType = {
   description?: true
   avatar?: true
   permissions?: true
-  serverLimit?: true
-  maxMemory?: true
-  maxCpu?: true
-  maxStorage?: true
   loginAttempts?: true
   lockedUntil?: true
   createdAt?: true
@@ -274,10 +234,6 @@ export type UsersGroupByOutputType = {
   description: string | null
   avatar: string | null
   permissions: string | null
-  serverLimit: number | null
-  maxMemory: number | null
-  maxCpu: number | null
-  maxStorage: number | null
   loginAttempts: number
   lockedUntil: Date | null
   createdAt: Date
@@ -316,14 +272,17 @@ export type UsersWhereInput = {
   description?: Prisma.StringNullableFilter<"Users"> | string | null
   avatar?: Prisma.StringNullableFilter<"Users"> | string | null
   permissions?: Prisma.StringNullableFilter<"Users"> | string | null
-  serverLimit?: Prisma.IntNullableFilter<"Users"> | number | null
-  maxMemory?: Prisma.IntNullableFilter<"Users"> | number | null
-  maxCpu?: Prisma.IntNullableFilter<"Users"> | number | null
-  maxStorage?: Prisma.IntNullableFilter<"Users"> | number | null
   loginAttempts?: Prisma.IntFilter<"Users"> | number
   lockedUntil?: Prisma.DateTimeNullableFilter<"Users"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Users"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Users"> | Date | string
+  wallet?: Prisma.XOR<Prisma.WalletNullableScalarRelationFilter, Prisma.WalletWhereInput> | null
+  allocations?: Prisma.UserAllocationListRelationFilter
+  storePurchases?: Prisma.StorePurchaseListRelationFilter
+  couponRedemptions?: Prisma.CouponRedemptionListRelationFilter
+  auditLogsAsUser?: Prisma.AuditLogListRelationFilter
+  auditLogsAsAdmin?: Prisma.AuditLogListRelationFilter
+  walletTransactions?: Prisma.WalletTransactionListRelationFilter
   servers?: Prisma.ServerListRelationFilter
   folders?: Prisma.ServerFolderListRelationFilter
   apiKeys?: Prisma.ApiKeyListRelationFilter
@@ -339,14 +298,17 @@ export type UsersOrderByWithRelationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   permissions?: Prisma.SortOrderInput | Prisma.SortOrder
-  serverLimit?: Prisma.SortOrderInput | Prisma.SortOrder
-  maxMemory?: Prisma.SortOrderInput | Prisma.SortOrder
-  maxCpu?: Prisma.SortOrderInput | Prisma.SortOrder
-  maxStorage?: Prisma.SortOrderInput | Prisma.SortOrder
   loginAttempts?: Prisma.SortOrder
   lockedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  wallet?: Prisma.WalletOrderByWithRelationInput
+  allocations?: Prisma.UserAllocationOrderByRelationAggregateInput
+  storePurchases?: Prisma.StorePurchaseOrderByRelationAggregateInput
+  couponRedemptions?: Prisma.CouponRedemptionOrderByRelationAggregateInput
+  auditLogsAsUser?: Prisma.AuditLogOrderByRelationAggregateInput
+  auditLogsAsAdmin?: Prisma.AuditLogOrderByRelationAggregateInput
+  walletTransactions?: Prisma.WalletTransactionOrderByRelationAggregateInput
   servers?: Prisma.ServerOrderByRelationAggregateInput
   folders?: Prisma.ServerFolderOrderByRelationAggregateInput
   apiKeys?: Prisma.ApiKeyOrderByRelationAggregateInput
@@ -365,14 +327,17 @@ export type UsersWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"Users"> | string | null
   avatar?: Prisma.StringNullableFilter<"Users"> | string | null
   permissions?: Prisma.StringNullableFilter<"Users"> | string | null
-  serverLimit?: Prisma.IntNullableFilter<"Users"> | number | null
-  maxMemory?: Prisma.IntNullableFilter<"Users"> | number | null
-  maxCpu?: Prisma.IntNullableFilter<"Users"> | number | null
-  maxStorage?: Prisma.IntNullableFilter<"Users"> | number | null
   loginAttempts?: Prisma.IntFilter<"Users"> | number
   lockedUntil?: Prisma.DateTimeNullableFilter<"Users"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Users"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Users"> | Date | string
+  wallet?: Prisma.XOR<Prisma.WalletNullableScalarRelationFilter, Prisma.WalletWhereInput> | null
+  allocations?: Prisma.UserAllocationListRelationFilter
+  storePurchases?: Prisma.StorePurchaseListRelationFilter
+  couponRedemptions?: Prisma.CouponRedemptionListRelationFilter
+  auditLogsAsUser?: Prisma.AuditLogListRelationFilter
+  auditLogsAsAdmin?: Prisma.AuditLogListRelationFilter
+  walletTransactions?: Prisma.WalletTransactionListRelationFilter
   servers?: Prisma.ServerListRelationFilter
   folders?: Prisma.ServerFolderListRelationFilter
   apiKeys?: Prisma.ApiKeyListRelationFilter
@@ -388,10 +353,6 @@ export type UsersOrderByWithAggregationInput = {
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   avatar?: Prisma.SortOrderInput | Prisma.SortOrder
   permissions?: Prisma.SortOrderInput | Prisma.SortOrder
-  serverLimit?: Prisma.SortOrderInput | Prisma.SortOrder
-  maxMemory?: Prisma.SortOrderInput | Prisma.SortOrder
-  maxCpu?: Prisma.SortOrderInput | Prisma.SortOrder
-  maxStorage?: Prisma.SortOrderInput | Prisma.SortOrder
   loginAttempts?: Prisma.SortOrder
   lockedUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -415,10 +376,6 @@ export type UsersScalarWhereWithAggregatesInput = {
   description?: Prisma.StringNullableWithAggregatesFilter<"Users"> | string | null
   avatar?: Prisma.StringNullableWithAggregatesFilter<"Users"> | string | null
   permissions?: Prisma.StringNullableWithAggregatesFilter<"Users"> | string | null
-  serverLimit?: Prisma.IntNullableWithAggregatesFilter<"Users"> | number | null
-  maxMemory?: Prisma.IntNullableWithAggregatesFilter<"Users"> | number | null
-  maxCpu?: Prisma.IntNullableWithAggregatesFilter<"Users"> | number | null
-  maxStorage?: Prisma.IntNullableWithAggregatesFilter<"Users"> | number | null
   loginAttempts?: Prisma.IntWithAggregatesFilter<"Users"> | number
   lockedUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"Users"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Users"> | Date | string
@@ -433,14 +390,17 @@ export type UsersCreateInput = {
   description?: string | null
   avatar?: string | null
   permissions?: string | null
-  serverLimit?: number | null
-  maxMemory?: number | null
-  maxCpu?: number | null
-  maxStorage?: number | null
   loginAttempts?: number
   lockedUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
   servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
@@ -456,14 +416,17 @@ export type UsersUncheckedCreateInput = {
   description?: string | null
   avatar?: string | null
   permissions?: string | null
-  serverLimit?: number | null
-  maxMemory?: number | null
-  maxCpu?: number | null
-  maxStorage?: number | null
   loginAttempts?: number
   lockedUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
   servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
@@ -478,14 +441,17 @@ export type UsersUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  serverLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxMemory?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxCpu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxStorage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
   servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
@@ -501,14 +467,17 @@ export type UsersUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  serverLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxMemory?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxCpu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxStorage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
   servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
@@ -524,10 +493,6 @@ export type UsersCreateManyInput = {
   description?: string | null
   avatar?: string | null
   permissions?: string | null
-  serverLimit?: number | null
-  maxMemory?: number | null
-  maxCpu?: number | null
-  maxStorage?: number | null
   loginAttempts?: number
   lockedUntil?: Date | string | null
   createdAt?: Date | string
@@ -542,10 +507,6 @@ export type UsersUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  serverLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxMemory?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxCpu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxStorage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -561,10 +522,6 @@ export type UsersUncheckedUpdateManyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  serverLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxMemory?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxCpu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxStorage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -580,10 +537,6 @@ export type UsersCountOrderByAggregateInput = {
   description?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   permissions?: Prisma.SortOrder
-  serverLimit?: Prisma.SortOrder
-  maxMemory?: Prisma.SortOrder
-  maxCpu?: Prisma.SortOrder
-  maxStorage?: Prisma.SortOrder
   loginAttempts?: Prisma.SortOrder
   lockedUntil?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -592,10 +545,6 @@ export type UsersCountOrderByAggregateInput = {
 
 export type UsersAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  serverLimit?: Prisma.SortOrder
-  maxMemory?: Prisma.SortOrder
-  maxCpu?: Prisma.SortOrder
-  maxStorage?: Prisma.SortOrder
   loginAttempts?: Prisma.SortOrder
 }
 
@@ -608,10 +557,6 @@ export type UsersMaxOrderByAggregateInput = {
   description?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   permissions?: Prisma.SortOrder
-  serverLimit?: Prisma.SortOrder
-  maxMemory?: Prisma.SortOrder
-  maxCpu?: Prisma.SortOrder
-  maxStorage?: Prisma.SortOrder
   loginAttempts?: Prisma.SortOrder
   lockedUntil?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -627,10 +572,6 @@ export type UsersMinOrderByAggregateInput = {
   description?: Prisma.SortOrder
   avatar?: Prisma.SortOrder
   permissions?: Prisma.SortOrder
-  serverLimit?: Prisma.SortOrder
-  maxMemory?: Prisma.SortOrder
-  maxCpu?: Prisma.SortOrder
-  maxStorage?: Prisma.SortOrder
   loginAttempts?: Prisma.SortOrder
   lockedUntil?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -639,10 +580,6 @@ export type UsersMinOrderByAggregateInput = {
 
 export type UsersSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  serverLimit?: Prisma.SortOrder
-  maxMemory?: Prisma.SortOrder
-  maxCpu?: Prisma.SortOrder
-  maxStorage?: Prisma.SortOrder
   loginAttempts?: Prisma.SortOrder
 }
 
@@ -666,14 +603,6 @@ export type NullableStringFieldUpdateOperationsInput = {
 
 export type BoolFieldUpdateOperationsInput = {
   set?: boolean
-}
-
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
 }
 
 export type IntFieldUpdateOperationsInput = {
@@ -750,6 +679,110 @@ export type UsersUpdateOneRequiredWithoutLoginHistoryNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutLoginHistoryInput, Prisma.UsersUpdateWithoutLoginHistoryInput>, Prisma.UsersUncheckedUpdateWithoutLoginHistoryInput>
 }
 
+export type UsersCreateNestedOneWithoutWalletInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutWalletInput, Prisma.UsersUncheckedCreateWithoutWalletInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutWalletInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneRequiredWithoutWalletNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutWalletInput, Prisma.UsersUncheckedCreateWithoutWalletInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutWalletInput
+  upsert?: Prisma.UsersUpsertWithoutWalletInput
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutWalletInput, Prisma.UsersUpdateWithoutWalletInput>, Prisma.UsersUncheckedUpdateWithoutWalletInput>
+}
+
+export type UsersCreateNestedOneWithoutWalletTransactionsInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutWalletTransactionsInput, Prisma.UsersUncheckedCreateWithoutWalletTransactionsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutWalletTransactionsInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneWithoutWalletTransactionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutWalletTransactionsInput, Prisma.UsersUncheckedCreateWithoutWalletTransactionsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutWalletTransactionsInput
+  upsert?: Prisma.UsersUpsertWithoutWalletTransactionsInput
+  disconnect?: Prisma.UsersWhereInput | boolean
+  delete?: Prisma.UsersWhereInput | boolean
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutWalletTransactionsInput, Prisma.UsersUpdateWithoutWalletTransactionsInput>, Prisma.UsersUncheckedUpdateWithoutWalletTransactionsInput>
+}
+
+export type UsersCreateNestedOneWithoutAllocationsInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutAllocationsInput, Prisma.UsersUncheckedCreateWithoutAllocationsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutAllocationsInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneRequiredWithoutAllocationsNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutAllocationsInput, Prisma.UsersUncheckedCreateWithoutAllocationsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutAllocationsInput
+  upsert?: Prisma.UsersUpsertWithoutAllocationsInput
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutAllocationsInput, Prisma.UsersUpdateWithoutAllocationsInput>, Prisma.UsersUncheckedUpdateWithoutAllocationsInput>
+}
+
+export type UsersCreateNestedOneWithoutStorePurchasesInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutStorePurchasesInput, Prisma.UsersUncheckedCreateWithoutStorePurchasesInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutStorePurchasesInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneRequiredWithoutStorePurchasesNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutStorePurchasesInput, Prisma.UsersUncheckedCreateWithoutStorePurchasesInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutStorePurchasesInput
+  upsert?: Prisma.UsersUpsertWithoutStorePurchasesInput
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutStorePurchasesInput, Prisma.UsersUpdateWithoutStorePurchasesInput>, Prisma.UsersUncheckedUpdateWithoutStorePurchasesInput>
+}
+
+export type UsersCreateNestedOneWithoutCouponRedemptionsInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutCouponRedemptionsInput, Prisma.UsersUncheckedCreateWithoutCouponRedemptionsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutCouponRedemptionsInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneRequiredWithoutCouponRedemptionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutCouponRedemptionsInput, Prisma.UsersUncheckedCreateWithoutCouponRedemptionsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutCouponRedemptionsInput
+  upsert?: Prisma.UsersUpsertWithoutCouponRedemptionsInput
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutCouponRedemptionsInput, Prisma.UsersUpdateWithoutCouponRedemptionsInput>, Prisma.UsersUncheckedUpdateWithoutCouponRedemptionsInput>
+}
+
+export type UsersCreateNestedOneWithoutAuditLogsAsUserInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutAuditLogsAsUserInput, Prisma.UsersUncheckedCreateWithoutAuditLogsAsUserInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutAuditLogsAsUserInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersCreateNestedOneWithoutAuditLogsAsAdminInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutAuditLogsAsAdminInput, Prisma.UsersUncheckedCreateWithoutAuditLogsAsAdminInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutAuditLogsAsAdminInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneWithoutAuditLogsAsUserNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutAuditLogsAsUserInput, Prisma.UsersUncheckedCreateWithoutAuditLogsAsUserInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutAuditLogsAsUserInput
+  upsert?: Prisma.UsersUpsertWithoutAuditLogsAsUserInput
+  disconnect?: Prisma.UsersWhereInput | boolean
+  delete?: Prisma.UsersWhereInput | boolean
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutAuditLogsAsUserInput, Prisma.UsersUpdateWithoutAuditLogsAsUserInput>, Prisma.UsersUncheckedUpdateWithoutAuditLogsAsUserInput>
+}
+
+export type UsersUpdateOneWithoutAuditLogsAsAdminNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutAuditLogsAsAdminInput, Prisma.UsersUncheckedCreateWithoutAuditLogsAsAdminInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutAuditLogsAsAdminInput
+  upsert?: Prisma.UsersUpsertWithoutAuditLogsAsAdminInput
+  disconnect?: Prisma.UsersWhereInput | boolean
+  delete?: Prisma.UsersWhereInput | boolean
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutAuditLogsAsAdminInput, Prisma.UsersUpdateWithoutAuditLogsAsAdminInput>, Prisma.UsersUncheckedUpdateWithoutAuditLogsAsAdminInput>
+}
+
 export type UsersCreateWithoutServersInput = {
   email: string
   username?: string | null
@@ -758,14 +791,17 @@ export type UsersCreateWithoutServersInput = {
   description?: string | null
   avatar?: string | null
   permissions?: string | null
-  serverLimit?: number | null
-  maxMemory?: number | null
-  maxCpu?: number | null
-  maxStorage?: number | null
   loginAttempts?: number
   lockedUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
@@ -780,14 +816,17 @@ export type UsersUncheckedCreateWithoutServersInput = {
   description?: string | null
   avatar?: string | null
   permissions?: string | null
-  serverLimit?: number | null
-  maxMemory?: number | null
-  maxCpu?: number | null
-  maxStorage?: number | null
   loginAttempts?: number
   lockedUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
@@ -817,14 +856,17 @@ export type UsersUpdateWithoutServersInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  serverLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxMemory?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxCpu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxStorage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
@@ -839,14 +881,17 @@ export type UsersUncheckedUpdateWithoutServersInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  serverLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxMemory?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxCpu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxStorage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
@@ -860,14 +905,17 @@ export type UsersCreateWithoutFoldersInput = {
   description?: string | null
   avatar?: string | null
   permissions?: string | null
-  serverLimit?: number | null
-  maxMemory?: number | null
-  maxCpu?: number | null
-  maxStorage?: number | null
   loginAttempts?: number
   lockedUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
   servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
@@ -882,14 +930,17 @@ export type UsersUncheckedCreateWithoutFoldersInput = {
   description?: string | null
   avatar?: string | null
   permissions?: string | null
-  serverLimit?: number | null
-  maxMemory?: number | null
-  maxCpu?: number | null
-  maxStorage?: number | null
   loginAttempts?: number
   lockedUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
   servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
@@ -919,14 +970,17 @@ export type UsersUpdateWithoutFoldersInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  serverLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxMemory?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxCpu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxStorage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
   servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
@@ -941,14 +995,17 @@ export type UsersUncheckedUpdateWithoutFoldersInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  serverLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxMemory?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxCpu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxStorage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
   servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
@@ -962,14 +1019,17 @@ export type UsersCreateWithoutApiKeysInput = {
   description?: string | null
   avatar?: string | null
   permissions?: string | null
-  serverLimit?: number | null
-  maxMemory?: number | null
-  maxCpu?: number | null
-  maxStorage?: number | null
   loginAttempts?: number
   lockedUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
   servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
@@ -984,14 +1044,17 @@ export type UsersUncheckedCreateWithoutApiKeysInput = {
   description?: string | null
   avatar?: string | null
   permissions?: string | null
-  serverLimit?: number | null
-  maxMemory?: number | null
-  maxCpu?: number | null
-  maxStorage?: number | null
   loginAttempts?: number
   lockedUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
   servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
@@ -1021,14 +1084,17 @@ export type UsersUpdateWithoutApiKeysInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  serverLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxMemory?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxCpu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxStorage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
   servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
@@ -1043,14 +1109,17 @@ export type UsersUncheckedUpdateWithoutApiKeysInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  serverLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxMemory?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxCpu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxStorage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
   servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
@@ -1064,14 +1133,17 @@ export type UsersCreateWithoutLoginHistoryInput = {
   description?: string | null
   avatar?: string | null
   permissions?: string | null
-  serverLimit?: number | null
-  maxMemory?: number | null
-  maxCpu?: number | null
-  maxStorage?: number | null
   loginAttempts?: number
   lockedUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
   servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
   folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
@@ -1086,14 +1158,17 @@ export type UsersUncheckedCreateWithoutLoginHistoryInput = {
   description?: string | null
   avatar?: string | null
   permissions?: string | null
-  serverLimit?: number | null
-  maxMemory?: number | null
-  maxCpu?: number | null
-  maxStorage?: number | null
   loginAttempts?: number
   lockedUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
   servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
   folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
   apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
@@ -1123,14 +1198,17 @@ export type UsersUpdateWithoutLoginHistoryInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  serverLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxMemory?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxCpu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxStorage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
   servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
   folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
@@ -1145,17 +1223,818 @@ export type UsersUncheckedUpdateWithoutLoginHistoryInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  serverLimit?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxMemory?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxCpu?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
-  maxStorage?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
   lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
   servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
   folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
   apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UsersCreateWithoutWalletInput = {
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutWalletInput = {
+  id?: number
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutWalletInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutWalletInput, Prisma.UsersUncheckedCreateWithoutWalletInput>
+}
+
+export type UsersUpsertWithoutWalletInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutWalletInput, Prisma.UsersUncheckedUpdateWithoutWalletInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutWalletInput, Prisma.UsersUncheckedCreateWithoutWalletInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutWalletInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutWalletInput, Prisma.UsersUncheckedUpdateWithoutWalletInput>
+}
+
+export type UsersUpdateWithoutWalletInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutWalletInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UsersCreateWithoutWalletTransactionsInput = {
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutWalletTransactionsInput = {
+  id?: number
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutWalletTransactionsInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutWalletTransactionsInput, Prisma.UsersUncheckedCreateWithoutWalletTransactionsInput>
+}
+
+export type UsersUpsertWithoutWalletTransactionsInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutWalletTransactionsInput, Prisma.UsersUncheckedUpdateWithoutWalletTransactionsInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutWalletTransactionsInput, Prisma.UsersUncheckedCreateWithoutWalletTransactionsInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutWalletTransactionsInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutWalletTransactionsInput, Prisma.UsersUncheckedUpdateWithoutWalletTransactionsInput>
+}
+
+export type UsersUpdateWithoutWalletTransactionsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutWalletTransactionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UsersCreateWithoutAllocationsInput = {
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutAllocationsInput = {
+  id?: number
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutAllocationsInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutAllocationsInput, Prisma.UsersUncheckedCreateWithoutAllocationsInput>
+}
+
+export type UsersUpsertWithoutAllocationsInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutAllocationsInput, Prisma.UsersUncheckedUpdateWithoutAllocationsInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutAllocationsInput, Prisma.UsersUncheckedCreateWithoutAllocationsInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutAllocationsInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutAllocationsInput, Prisma.UsersUncheckedUpdateWithoutAllocationsInput>
+}
+
+export type UsersUpdateWithoutAllocationsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutAllocationsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UsersCreateWithoutStorePurchasesInput = {
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutStorePurchasesInput = {
+  id?: number
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutStorePurchasesInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutStorePurchasesInput, Prisma.UsersUncheckedCreateWithoutStorePurchasesInput>
+}
+
+export type UsersUpsertWithoutStorePurchasesInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutStorePurchasesInput, Prisma.UsersUncheckedUpdateWithoutStorePurchasesInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutStorePurchasesInput, Prisma.UsersUncheckedCreateWithoutStorePurchasesInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutStorePurchasesInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutStorePurchasesInput, Prisma.UsersUncheckedUpdateWithoutStorePurchasesInput>
+}
+
+export type UsersUpdateWithoutStorePurchasesInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutStorePurchasesInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UsersCreateWithoutCouponRedemptionsInput = {
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutCouponRedemptionsInput = {
+  id?: number
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutCouponRedemptionsInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutCouponRedemptionsInput, Prisma.UsersUncheckedCreateWithoutCouponRedemptionsInput>
+}
+
+export type UsersUpsertWithoutCouponRedemptionsInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutCouponRedemptionsInput, Prisma.UsersUncheckedUpdateWithoutCouponRedemptionsInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutCouponRedemptionsInput, Prisma.UsersUncheckedCreateWithoutCouponRedemptionsInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutCouponRedemptionsInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutCouponRedemptionsInput, Prisma.UsersUncheckedUpdateWithoutCouponRedemptionsInput>
+}
+
+export type UsersUpdateWithoutCouponRedemptionsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutCouponRedemptionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UsersCreateWithoutAuditLogsAsUserInput = {
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutAuditLogsAsUserInput = {
+  id?: number
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutAuditLogsAsUserInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutAuditLogsAsUserInput, Prisma.UsersUncheckedCreateWithoutAuditLogsAsUserInput>
+}
+
+export type UsersCreateWithoutAuditLogsAsAdminInput = {
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutAuditLogsAsAdminInput = {
+  id?: number
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutAuditLogsAsAdminInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutAuditLogsAsAdminInput, Prisma.UsersUncheckedCreateWithoutAuditLogsAsAdminInput>
+}
+
+export type UsersUpsertWithoutAuditLogsAsUserInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutAuditLogsAsUserInput, Prisma.UsersUncheckedUpdateWithoutAuditLogsAsUserInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutAuditLogsAsUserInput, Prisma.UsersUncheckedCreateWithoutAuditLogsAsUserInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutAuditLogsAsUserInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutAuditLogsAsUserInput, Prisma.UsersUncheckedUpdateWithoutAuditLogsAsUserInput>
+}
+
+export type UsersUpdateWithoutAuditLogsAsUserInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutAuditLogsAsUserInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UsersUpsertWithoutAuditLogsAsAdminInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutAuditLogsAsAdminInput, Prisma.UsersUncheckedUpdateWithoutAuditLogsAsAdminInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutAuditLogsAsAdminInput, Prisma.UsersUncheckedCreateWithoutAuditLogsAsAdminInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutAuditLogsAsAdminInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutAuditLogsAsAdminInput, Prisma.UsersUncheckedUpdateWithoutAuditLogsAsAdminInput>
+}
+
+export type UsersUpdateWithoutAuditLogsAsAdminInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutAuditLogsAsAdminInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
 }
 
 
@@ -1164,6 +2043,12 @@ export type UsersUncheckedUpdateWithoutLoginHistoryInput = {
  */
 
 export type UsersCountOutputType = {
+  allocations: number
+  storePurchases: number
+  couponRedemptions: number
+  auditLogsAsUser: number
+  auditLogsAsAdmin: number
+  walletTransactions: number
   servers: number
   folders: number
   apiKeys: number
@@ -1171,6 +2056,12 @@ export type UsersCountOutputType = {
 }
 
 export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  allocations?: boolean | UsersCountOutputTypeCountAllocationsArgs
+  storePurchases?: boolean | UsersCountOutputTypeCountStorePurchasesArgs
+  couponRedemptions?: boolean | UsersCountOutputTypeCountCouponRedemptionsArgs
+  auditLogsAsUser?: boolean | UsersCountOutputTypeCountAuditLogsAsUserArgs
+  auditLogsAsAdmin?: boolean | UsersCountOutputTypeCountAuditLogsAsAdminArgs
+  walletTransactions?: boolean | UsersCountOutputTypeCountWalletTransactionsArgs
   servers?: boolean | UsersCountOutputTypeCountServersArgs
   folders?: boolean | UsersCountOutputTypeCountFoldersArgs
   apiKeys?: boolean | UsersCountOutputTypeCountApiKeysArgs
@@ -1185,6 +2076,48 @@ export type UsersCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extens
    * Select specific fields to fetch from the UsersCountOutputType
    */
   select?: Prisma.UsersCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountAllocationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserAllocationWhereInput
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountStorePurchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.StorePurchaseWhereInput
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountCouponRedemptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.CouponRedemptionWhereInput
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountAuditLogsAsUserArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountAuditLogsAsAdminArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.AuditLogWhereInput
+}
+
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountWalletTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.WalletTransactionWhereInput
 }
 
 /**
@@ -1225,14 +2158,17 @@ export type UsersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   description?: boolean
   avatar?: boolean
   permissions?: boolean
-  serverLimit?: boolean
-  maxMemory?: boolean
-  maxCpu?: boolean
-  maxStorage?: boolean
   loginAttempts?: boolean
   lockedUntil?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  wallet?: boolean | Prisma.Users$walletArgs<ExtArgs>
+  allocations?: boolean | Prisma.Users$allocationsArgs<ExtArgs>
+  storePurchases?: boolean | Prisma.Users$storePurchasesArgs<ExtArgs>
+  couponRedemptions?: boolean | Prisma.Users$couponRedemptionsArgs<ExtArgs>
+  auditLogsAsUser?: boolean | Prisma.Users$auditLogsAsUserArgs<ExtArgs>
+  auditLogsAsAdmin?: boolean | Prisma.Users$auditLogsAsAdminArgs<ExtArgs>
+  walletTransactions?: boolean | Prisma.Users$walletTransactionsArgs<ExtArgs>
   servers?: boolean | Prisma.Users$serversArgs<ExtArgs>
   folders?: boolean | Prisma.Users$foldersArgs<ExtArgs>
   apiKeys?: boolean | Prisma.Users$apiKeysArgs<ExtArgs>
@@ -1249,10 +2185,6 @@ export type UsersSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   description?: boolean
   avatar?: boolean
   permissions?: boolean
-  serverLimit?: boolean
-  maxMemory?: boolean
-  maxCpu?: boolean
-  maxStorage?: boolean
   loginAttempts?: boolean
   lockedUntil?: boolean
   createdAt?: boolean
@@ -1268,10 +2200,6 @@ export type UsersSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   description?: boolean
   avatar?: boolean
   permissions?: boolean
-  serverLimit?: boolean
-  maxMemory?: boolean
-  maxCpu?: boolean
-  maxStorage?: boolean
   loginAttempts?: boolean
   lockedUntil?: boolean
   createdAt?: boolean
@@ -1287,18 +2215,21 @@ export type UsersSelectScalar = {
   description?: boolean
   avatar?: boolean
   permissions?: boolean
-  serverLimit?: boolean
-  maxMemory?: boolean
-  maxCpu?: boolean
-  maxStorage?: boolean
   loginAttempts?: boolean
   lockedUntil?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UsersOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "username" | "password" | "isAdmin" | "description" | "avatar" | "permissions" | "serverLimit" | "maxMemory" | "maxCpu" | "maxStorage" | "loginAttempts" | "lockedUntil" | "createdAt" | "updatedAt", ExtArgs["result"]["users"]>
+export type UsersOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "username" | "password" | "isAdmin" | "description" | "avatar" | "permissions" | "loginAttempts" | "lockedUntil" | "createdAt" | "updatedAt", ExtArgs["result"]["users"]>
 export type UsersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  wallet?: boolean | Prisma.Users$walletArgs<ExtArgs>
+  allocations?: boolean | Prisma.Users$allocationsArgs<ExtArgs>
+  storePurchases?: boolean | Prisma.Users$storePurchasesArgs<ExtArgs>
+  couponRedemptions?: boolean | Prisma.Users$couponRedemptionsArgs<ExtArgs>
+  auditLogsAsUser?: boolean | Prisma.Users$auditLogsAsUserArgs<ExtArgs>
+  auditLogsAsAdmin?: boolean | Prisma.Users$auditLogsAsAdminArgs<ExtArgs>
+  walletTransactions?: boolean | Prisma.Users$walletTransactionsArgs<ExtArgs>
   servers?: boolean | Prisma.Users$serversArgs<ExtArgs>
   folders?: boolean | Prisma.Users$foldersArgs<ExtArgs>
   apiKeys?: boolean | Prisma.Users$apiKeysArgs<ExtArgs>
@@ -1311,6 +2242,13 @@ export type UsersIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
 export type $UsersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Users"
   objects: {
+    wallet: Prisma.$WalletPayload<ExtArgs> | null
+    allocations: Prisma.$UserAllocationPayload<ExtArgs>[]
+    storePurchases: Prisma.$StorePurchasePayload<ExtArgs>[]
+    couponRedemptions: Prisma.$CouponRedemptionPayload<ExtArgs>[]
+    auditLogsAsUser: Prisma.$AuditLogPayload<ExtArgs>[]
+    auditLogsAsAdmin: Prisma.$AuditLogPayload<ExtArgs>[]
+    walletTransactions: Prisma.$WalletTransactionPayload<ExtArgs>[]
     servers: Prisma.$ServerPayload<ExtArgs>[]
     folders: Prisma.$ServerFolderPayload<ExtArgs>[]
     apiKeys: Prisma.$ApiKeyPayload<ExtArgs>[]
@@ -1325,10 +2263,6 @@ export type $UsersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     description: string | null
     avatar: string | null
     permissions: string | null
-    serverLimit: number | null
-    maxMemory: number | null
-    maxCpu: number | null
-    maxStorage: number | null
     loginAttempts: number
     lockedUntil: Date | null
     createdAt: Date
@@ -1727,6 +2661,13 @@ readonly fields: UsersFieldRefs;
  */
 export interface Prisma__UsersClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  wallet<T extends Prisma.Users$walletArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$walletArgs<ExtArgs>>): Prisma.Prisma__WalletClient<runtime.Types.Result.GetResult<Prisma.$WalletPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  allocations<T extends Prisma.Users$allocationsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$allocationsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserAllocationPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  storePurchases<T extends Prisma.Users$storePurchasesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$storePurchasesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$StorePurchasePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  couponRedemptions<T extends Prisma.Users$couponRedemptionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$couponRedemptionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CouponRedemptionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  auditLogsAsUser<T extends Prisma.Users$auditLogsAsUserArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$auditLogsAsUserArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  auditLogsAsAdmin<T extends Prisma.Users$auditLogsAsAdminArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$auditLogsAsAdminArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AuditLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  walletTransactions<T extends Prisma.Users$walletTransactionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$walletTransactionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WalletTransactionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   servers<T extends Prisma.Users$serversArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$serversArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServerPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   folders<T extends Prisma.Users$foldersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$foldersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ServerFolderPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   apiKeys<T extends Prisma.Users$apiKeysArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$apiKeysArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$ApiKeyPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
@@ -1768,10 +2709,6 @@ export interface UsersFieldRefs {
   readonly description: Prisma.FieldRef<"Users", 'String'>
   readonly avatar: Prisma.FieldRef<"Users", 'String'>
   readonly permissions: Prisma.FieldRef<"Users", 'String'>
-  readonly serverLimit: Prisma.FieldRef<"Users", 'Int'>
-  readonly maxMemory: Prisma.FieldRef<"Users", 'Int'>
-  readonly maxCpu: Prisma.FieldRef<"Users", 'Int'>
-  readonly maxStorage: Prisma.FieldRef<"Users", 'Int'>
   readonly loginAttempts: Prisma.FieldRef<"Users", 'Int'>
   readonly lockedUntil: Prisma.FieldRef<"Users", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Users", 'DateTime'>
@@ -2164,6 +3101,169 @@ export type UsersDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Users to delete.
    */
   limit?: number
+}
+
+/**
+ * Users.wallet
+ */
+export type Users$walletArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Wallet
+   */
+  select?: Prisma.WalletSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Wallet
+   */
+  omit?: Prisma.WalletOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WalletInclude<ExtArgs> | null
+  where?: Prisma.WalletWhereInput
+}
+
+/**
+ * Users.allocations
+ */
+export type Users$allocationsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserAllocation
+   */
+  select?: Prisma.UserAllocationSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserAllocation
+   */
+  omit?: Prisma.UserAllocationOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserAllocationInclude<ExtArgs> | null
+  where?: Prisma.UserAllocationWhereInput
+  orderBy?: Prisma.UserAllocationOrderByWithRelationInput | Prisma.UserAllocationOrderByWithRelationInput[]
+  cursor?: Prisma.UserAllocationWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserAllocationScalarFieldEnum | Prisma.UserAllocationScalarFieldEnum[]
+}
+
+/**
+ * Users.storePurchases
+ */
+export type Users$storePurchasesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the StorePurchase
+   */
+  select?: Prisma.StorePurchaseSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the StorePurchase
+   */
+  omit?: Prisma.StorePurchaseOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.StorePurchaseInclude<ExtArgs> | null
+  where?: Prisma.StorePurchaseWhereInput
+  orderBy?: Prisma.StorePurchaseOrderByWithRelationInput | Prisma.StorePurchaseOrderByWithRelationInput[]
+  cursor?: Prisma.StorePurchaseWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.StorePurchaseScalarFieldEnum | Prisma.StorePurchaseScalarFieldEnum[]
+}
+
+/**
+ * Users.couponRedemptions
+ */
+export type Users$couponRedemptionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the CouponRedemption
+   */
+  select?: Prisma.CouponRedemptionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the CouponRedemption
+   */
+  omit?: Prisma.CouponRedemptionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.CouponRedemptionInclude<ExtArgs> | null
+  where?: Prisma.CouponRedemptionWhereInput
+  orderBy?: Prisma.CouponRedemptionOrderByWithRelationInput | Prisma.CouponRedemptionOrderByWithRelationInput[]
+  cursor?: Prisma.CouponRedemptionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.CouponRedemptionScalarFieldEnum | Prisma.CouponRedemptionScalarFieldEnum[]
+}
+
+/**
+ * Users.auditLogsAsUser
+ */
+export type Users$auditLogsAsUserArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * Users.auditLogsAsAdmin
+ */
+export type Users$auditLogsAsAdminArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the AuditLog
+   */
+  select?: Prisma.AuditLogSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the AuditLog
+   */
+  omit?: Prisma.AuditLogOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.AuditLogInclude<ExtArgs> | null
+  where?: Prisma.AuditLogWhereInput
+  orderBy?: Prisma.AuditLogOrderByWithRelationInput | Prisma.AuditLogOrderByWithRelationInput[]
+  cursor?: Prisma.AuditLogWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.AuditLogScalarFieldEnum | Prisma.AuditLogScalarFieldEnum[]
+}
+
+/**
+ * Users.walletTransactions
+ */
+export type Users$walletTransactionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the WalletTransaction
+   */
+  select?: Prisma.WalletTransactionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the WalletTransaction
+   */
+  omit?: Prisma.WalletTransactionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.WalletTransactionInclude<ExtArgs> | null
+  where?: Prisma.WalletTransactionWhereInput
+  orderBy?: Prisma.WalletTransactionOrderByWithRelationInput | Prisma.WalletTransactionOrderByWithRelationInput[]
+  cursor?: Prisma.WalletTransactionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.WalletTransactionScalarFieldEnum | Prisma.WalletTransactionScalarFieldEnum[]
 }
 
 /**

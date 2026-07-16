@@ -65,7 +65,17 @@ export const ModelName = {
   Addon: 'Addon',
   AddonSetting: 'AddonSetting',
   Backup: 'Backup',
-  SftpCredential: 'SftpCredential'
+  SftpCredential: 'SftpCredential',
+  Wallet: 'Wallet',
+  WalletTransaction: 'WalletTransaction',
+  UserAllocation: 'UserAllocation',
+  StoreProduct: 'StoreProduct',
+  StorePurchase: 'StorePurchase',
+  Coupon: 'Coupon',
+  CouponRedemption: 'CouponRedemption',
+  Config: 'Config',
+  AuditLog: 'AuditLog',
+  Plan: 'Plan'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -90,10 +100,6 @@ export const UsersScalarFieldEnum = {
   description: 'description',
   avatar: 'avatar',
   permissions: 'permissions',
-  serverLimit: 'serverLimit',
-  maxMemory: 'maxMemory',
-  maxCpu: 'maxCpu',
-  maxStorage: 'maxStorage',
   loginAttempts: 'loginAttempts',
   lockedUntil: 'lockedUntil',
   createdAt: 'createdAt',
@@ -121,6 +127,7 @@ export const ServerScalarFieldEnum = {
   name: 'name',
   description: 'description',
   createdAt: 'createdAt',
+  expiresAt: 'expiresAt',
   Ports: 'Ports',
   Memory: 'Memory',
   Cpu: 'Cpu',
@@ -132,6 +139,7 @@ export const ServerScalarFieldEnum = {
   Installing: 'Installing',
   Queued: 'Queued',
   Suspended: 'Suspended',
+  version: 'version',
   ownerId: 'ownerId',
   nodeId: 'nodeId',
   imageId: 'imageId'
@@ -201,10 +209,6 @@ export const SettingsScalarFieldEnum = {
   bannedIps: 'bannedIps',
   allowUserCreateServer: 'allowUserCreateServer',
   allowUserDeleteServer: 'allowUserDeleteServer',
-  defaultServerLimit: 'defaultServerLimit',
-  defaultMaxMemory: 'defaultMaxMemory',
-  defaultMaxCpu: 'defaultMaxCpu',
-  defaultMaxStorage: 'defaultMaxStorage',
   loginWallpaper: 'loginWallpaper',
   registerWallpaper: 'registerWallpaper',
   loginMaxAttempts: 'loginMaxAttempts',
@@ -331,6 +335,147 @@ export const SftpCredentialScalarFieldEnum = {
 export type SftpCredentialScalarFieldEnum = (typeof SftpCredentialScalarFieldEnum)[keyof typeof SftpCredentialScalarFieldEnum]
 
 
+export const WalletScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  balance: 'balance',
+  version: 'version',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type WalletScalarFieldEnum = (typeof WalletScalarFieldEnum)[keyof typeof WalletScalarFieldEnum]
+
+
+export const WalletTransactionScalarFieldEnum = {
+  id: 'id',
+  walletId: 'walletId',
+  amount: 'amount',
+  type: 'type',
+  reason: 'reason',
+  referenceId: 'referenceId',
+  adminId: 'adminId',
+  createdAt: 'createdAt'
+} as const
+
+export type WalletTransactionScalarFieldEnum = (typeof WalletTransactionScalarFieldEnum)[keyof typeof WalletTransactionScalarFieldEnum]
+
+
+export const UserAllocationScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  type: 'type',
+  amount: 'amount',
+  source: 'source',
+  referenceId: 'referenceId',
+  createdAt: 'createdAt'
+} as const
+
+export type UserAllocationScalarFieldEnum = (typeof UserAllocationScalarFieldEnum)[keyof typeof UserAllocationScalarFieldEnum]
+
+
+export const StoreProductScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  actionType: 'actionType',
+  actionValue: 'actionValue',
+  price: 'price',
+  icon: 'icon',
+  featured: 'featured',
+  hidden: 'hidden',
+  maxPurchasePerUser: 'maxPurchasePerUser',
+  displayOrder: 'displayOrder',
+  enabled: 'enabled',
+  createdAt: 'createdAt'
+} as const
+
+export type StoreProductScalarFieldEnum = (typeof StoreProductScalarFieldEnum)[keyof typeof StoreProductScalarFieldEnum]
+
+
+export const StorePurchaseScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  productId: 'productId',
+  serverId: 'serverId',
+  actionType: 'actionType',
+  actionValue: 'actionValue',
+  coinCost: 'coinCost',
+  createdAt: 'createdAt'
+} as const
+
+export type StorePurchaseScalarFieldEnum = (typeof StorePurchaseScalarFieldEnum)[keyof typeof StorePurchaseScalarFieldEnum]
+
+
+export const CouponScalarFieldEnum = {
+  id: 'id',
+  code: 'code',
+  description: 'description',
+  actionType: 'actionType',
+  actionValue: 'actionValue',
+  maxUses: 'maxUses',
+  perUserLimit: 'perUserLimit',
+  startsAt: 'startsAt',
+  expiresAt: 'expiresAt',
+  enabled: 'enabled',
+  createdAt: 'createdAt'
+} as const
+
+export type CouponScalarFieldEnum = (typeof CouponScalarFieldEnum)[keyof typeof CouponScalarFieldEnum]
+
+
+export const CouponRedemptionScalarFieldEnum = {
+  id: 'id',
+  couponId: 'couponId',
+  userId: 'userId',
+  createdAt: 'createdAt'
+} as const
+
+export type CouponRedemptionScalarFieldEnum = (typeof CouponRedemptionScalarFieldEnum)[keyof typeof CouponRedemptionScalarFieldEnum]
+
+
+export const ConfigScalarFieldEnum = {
+  id: 'id',
+  category: 'category',
+  key: 'key',
+  value: 'value',
+  description: 'description'
+} as const
+
+export type ConfigScalarFieldEnum = (typeof ConfigScalarFieldEnum)[keyof typeof ConfigScalarFieldEnum]
+
+
+export const AuditLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  adminId: 'adminId',
+  action: 'action',
+  details: 'details',
+  referenceId: 'referenceId',
+  ipAddress: 'ipAddress',
+  createdAt: 'createdAt'
+} as const
+
+export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]
+
+
+export const PlanScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  memory: 'memory',
+  cpu: 'cpu',
+  disk: 'disk',
+  backupSlots: 'backupSlots',
+  ports: 'ports',
+  price: 'price',
+  enabled: 'enabled',
+  sortOrder: 'sortOrder',
+  createdAt: 'createdAt'
+} as const
+
+export type PlanScalarFieldEnum = (typeof PlanScalarFieldEnum)[keyof typeof PlanScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -339,10 +484,42 @@ export const SortOrder = {
 export type SortOrder = (typeof SortOrder)[keyof typeof SortOrder]
 
 
+export const JsonNullValueInput = {
+  JsonNull: JsonNull
+} as const
+
+export type JsonNullValueInput = (typeof JsonNullValueInput)[keyof typeof JsonNullValueInput]
+
+
+export const NullableJsonNullValueInput = {
+  DbNull: DbNull,
+  JsonNull: JsonNull
+} as const
+
+export type NullableJsonNullValueInput = (typeof NullableJsonNullValueInput)[keyof typeof NullableJsonNullValueInput]
+
+
 export const NullsOrder = {
   first: 'first',
   last: 'last'
 } as const
 
 export type NullsOrder = (typeof NullsOrder)[keyof typeof NullsOrder]
+
+
+export const JsonNullValueFilter = {
+  DbNull: DbNull,
+  JsonNull: JsonNull,
+  AnyNull: AnyNull
+} as const
+
+export type JsonNullValueFilter = (typeof JsonNullValueFilter)[keyof typeof JsonNullValueFilter]
+
+
+export const QueryMode = {
+  default: 'default',
+  insensitive: 'insensitive'
+} as const
+
+export type QueryMode = (typeof QueryMode)[keyof typeof QueryMode]
 

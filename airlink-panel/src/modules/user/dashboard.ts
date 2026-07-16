@@ -102,11 +102,7 @@ const dashboardModule: Module = {
             include: { members: true },
             orderBy: { createdAt: 'asc' },
           });
-          const settings2 = await prisma.settings.findUnique({ where: { id: 1 } });
-          const userServerLimit = user.serverLimit !== null && user.serverLimit !== undefined
-            ? user.serverLimit
-            : (settings2?.defaultServerLimit ?? 0);
-          const canCreateServer = !user.isAdmin && (settings2?.allowUserCreateServer ?? false) && userServerLimit > 0;
+          const canCreateServer = !user.isAdmin && (settings?.allowUserCreateServer ?? false);
 
           return res.render('user/dashboard', {
             errorMessage: {
@@ -239,11 +235,7 @@ const dashboardModule: Module = {
           orderBy: { createdAt: 'asc' },
         });
 
-        const settings2 = await prisma.settings.findUnique({ where: { id: 1 } });
-        const userServerLimit = user.serverLimit !== null && user.serverLimit !== undefined
-          ? user.serverLimit
-          : (settings2?.defaultServerLimit ?? 0);
-        const canCreateServer = !user.isAdmin && (settings2?.allowUserCreateServer ?? false) && userServerLimit > 0;
+        const canCreateServer = !user.isAdmin && (settings?.allowUserCreateServer ?? false);
 
         res.render('user/dashboard', {
           errorMessage,
