@@ -78,7 +78,7 @@
           <div class="p-2 rounded-lg bg-amber-500/10 border border-amber-500/20 text-amber-400"><%- icon('archive', { class: 'w-4 h-4' }) %></div>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium text-white">Backup Slots</p>
-            <p class="text-[10px] text-neutral-400">Allocated: <%= backupSlots %></p>
+            <p class="text-[10px] text-neutral-400">Allocated: <%= typeof backupSlots !== 'undefined' ? backupSlots : 0 %></p>
           </div>
           <span class="text-xs font-bold text-brand-green shrink-0"><%= storeConfig.backupSlotPrice %>/ea</span>
         </div>
@@ -95,7 +95,7 @@
           <div class="p-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20 text-cyan-400"><%- icon('database', { class: 'w-4 h-4' }) %></div>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium text-white">Database Slots</p>
-            <p class="text-[10px] text-neutral-400">Allocated: <%= databaseSlots %></p>
+            <p class="text-[10px] text-neutral-400">Allocated: <%= typeof databaseSlots !== 'undefined' ? databaseSlots : 0 %></p>
           </div>
           <span class="text-xs font-bold text-brand-green shrink-0"><%= storeConfig.databaseSlotPrice %>/ea</span>
         </div>
@@ -112,7 +112,7 @@
           <div class="p-2 rounded-lg bg-rose-500/10 border border-rose-500/20 text-rose-400"><%- icon('network', { class: 'w-4 h-4' }) %></div>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium text-white">Ports</p>
-            <p class="text-[10px] text-neutral-400">Allocated: <%= ports %></p>
+            <p class="text-[10px] text-neutral-400">Allocated: <%= typeof ports !== 'undefined' ? ports : 0 %></p>
           </div>
           <span class="text-xs font-bold text-brand-green shrink-0"><%= storeConfig.portPrice %>/ea</span>
         </div>
@@ -129,7 +129,7 @@
           <div class="p-2 rounded-lg bg-indigo-500/10 border border-indigo-500/20 text-indigo-400"><%- icon('server', { class: 'w-4 h-4' }) %></div>
           <div class="flex-1 min-w-0">
             <p class="text-sm font-medium text-white">Server Slots</p>
-            <p class="text-[10px] text-neutral-400">Allocated: <%= serverSlots %></p>
+            <p class="text-[10px] text-neutral-400">Allocated: <%= typeof serverSlots !== 'undefined' ? serverSlots : 0 %></p>
           </div>
           <span class="text-xs font-bold text-brand-green shrink-0"><%= storeConfig.databaseSlotPrice %>/ea</span>
         </div>

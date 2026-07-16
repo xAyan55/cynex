@@ -34,11 +34,11 @@
         <!-- Quick Actions -->
         <div class="flex flex-wrap gap-3">
           <% if (canCreateServer) { %>
-            <%- include('../components/ui/Button', { variant: 'primary', label: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Create Server', href: '/create-server' }) %>
+            <%- include('../components/ui/button', { variant: 'primary', label: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4v16m8-8H4"/></svg> Create Server', href: '/create-server' }) %>
           <% } %>
-          <%- include('../components/ui/Button', { variant: 'secondary', label: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-12 0v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-6 0h18M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 9l9-6 9 6"/></svg> Go to Store', href: '/store' }) %>
-          <%- include('../components/ui/Button', { variant: 'secondary', label: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3"/></svg> Wallet', href: '/wallet' }) %>
-          <%- include('../components/ui/Button', { variant: 'secondary', label: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.75L4.5 4.5l5.25 5.25M21 14.25a4.5 4.5 0 00-.9-2.75l-1.35-2.75-5.25 5.25"/></svg> Instances', href: '/instances' }) %>
+           <%- include('../components/ui/button', { variant: 'secondary', label: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M13.5 21v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-12 0v-7.5a.75.75 0 01.75-.75h3a.75.75 0 01.75.75V21m-6 0h18M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0012 9.75c-2.551 0-5.056.2-7.5.582V21M3 9l9-6 9 6"/></svg> Go to Store', href: '/store' }) %>
+          <%- include('../components/ui/button', { variant: 'secondary', label: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a2.25 2.25 0 00-2.25-2.25H15a3 3 0 11-6 0H5.25A2.25 2.25 0 003 12m18 0v6a2.25 2.25 0 01-2.25 2.25H5.25A2.25 2.25 0 013 18v-6m18 0V9M3 12V9m18 0a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 9m18 0V6a2.25 2.25 0 00-2.25-2.25H5.25A2.25 2.25 0 003 6v3"/></svg> Wallet', href: '/wallet' }) %>
+          <%- include('../components/ui/button', { variant: 'secondary', label: '<svg class="w-4 h-4 shrink-0" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.25 14.25h13.5m-13.5 0a3 3 0 01-3-3m3 3a3 3 0 100 6h13.5a3 3 0 100-6m-16.5-3a3 3 0 013-3h13.5a3 3 0 013 3m-19.5 0a4.5 4.5 0 01.9-2.75L4.5 4.5l5.25 5.25M21 14.25a4.5 4.5 0 00-.9-2.75l-1.35-2.75-5.25 5.25"/></svg> Instances', href: '/instances' }) %>
         </div>
 
         <!-- Header Controls Row -->
@@ -100,7 +100,7 @@
               Deploy your first free server slot instantly or ask your panel administrator to allocate one for you.
             </p>
             <% if (canCreateServer) { %>
-              <%- include('../components/ui/Button', { variant: 'primary', label: 'Create a Server Now', href: '/create-server', class: 'mt-6' }) %>
+              <%- include('../components/ui/button', { variant: 'primary', label: 'Create a Server Now', href: '/create-server', class: 'mt-6' }) %>
             <% } %>
           </div>
         <% } else { %>
