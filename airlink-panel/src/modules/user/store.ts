@@ -31,6 +31,7 @@ const storeModule: Module = {
         ]);
 
         res.render('user/store', {
+          user: req.session!.user,
           req,
           products,
           balance,

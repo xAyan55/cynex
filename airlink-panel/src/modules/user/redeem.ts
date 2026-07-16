@@ -22,7 +22,7 @@ const redeemModule: Module = {
       try {
         const userId = req.session!.user!.id;
         const balance = await WalletService.getBalance(userId);
-        res.render('user/redeem', { req, balance, title: 'Redeem Coupon', error: null, success: null });
+        res.render('user/redeem', { user: req.session!.user, req, balance, title: 'Redeem Coupon', error: null, success: null });
       } catch (error) {
         logger.error('Redeem page error:', error);
         res.status(500).send('Error loading page.');
@@ -35,7 +35,7 @@ const redeemModule: Module = {
         const { code } = req.body;
         if (!code || typeof code !== 'string') {
           return res.render('user/redeem', {
-            req, balance: await WalletService.getBalance(userId), title: 'Redeem Coupon',
+            user: req.session!.user, req, balance: await WalletService.getBalance(userId), title: 'Redeem Coupon',
             error: 'Please enter a coupon code.', success: null,
           });
         }
@@ -44,13 +44,13 @@ const redeemModule: Module = {
         const balance = await WalletService.getBalance(userId);
 
         res.render('user/redeem', {
-          req, balance, title: 'Redeem Coupon', error: null, success: result,
+          user: req.session!.user, req, balance, title: 'Redeem Coupon', error: null, success: result,
         });
       } catch (error: any) {
         const userId = req.session!.user!.id;
         const balance = await WalletService.getBalance(userId);
         res.render('user/redeem', {
-          req, balance, title: 'Redeem Coupon',
+          user: req.session!.user, req, balance, title: 'Redeem Coupon',
           error: error.message || 'Redemption failed.', success: null,
         });
       }
