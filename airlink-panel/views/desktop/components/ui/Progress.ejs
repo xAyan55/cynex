@@ -2,7 +2,7 @@
   const var_value = typeof value !== 'undefined' ? Number(value) : 0;
   const var_label = typeof label !== 'undefined' ? label : '';
   const var_color = typeof color !== 'undefined' ? color : 'green';
-  const var_class = typeof class_name !== 'undefined' ? class_name : (typeof locals.class !== 'undefined' ? locals.class : '');
+  const var_class = typeof class_name !== 'undefined' ? class_name : (typeof locals['class'] !== 'undefined' ? locals['class'] : '');
 
   let trackColor = 'bg-white/5';
   let barColor = 'bg-brand-green shadow-[0_0_10px_rgba(255,255,255,0.1)]';

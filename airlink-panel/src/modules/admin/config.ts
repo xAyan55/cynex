@@ -27,7 +27,7 @@ const adminModule: Module = {
   info: {
     name: 'Admin Config Module',
     description: 'Configuration and coupon management for the admin panel.',
-    version: '3.0.0',
+    version: '2.0.0',
     moduleVersion: '1.0.0',
     author: 'CynexGP',
     license: 'MIT',

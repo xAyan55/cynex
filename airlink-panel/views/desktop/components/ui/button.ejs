@@ -2,7 +2,7 @@
   const var_variant = typeof variant !== 'undefined' ? variant : 'secondary';
   const var_label = typeof label !== 'undefined' ? label : '';
   const var_href = typeof href !== 'undefined' ? href : null;
-  const var_class = typeof class_name !== 'undefined' ? class_name : (typeof locals.class !== 'undefined' ? locals.class : '');
+  const var_class = typeof class_name !== 'undefined' ? class_name : (typeof locals['class'] !== 'undefined' ? locals['class'] : '');
   const var_id = typeof id !== 'undefined' ? id : '';
   const var_attrs = typeof attrs !== 'undefined' ? attrs : '';
 
