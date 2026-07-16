@@ -177,7 +177,7 @@ const monetizationAdminModule: Module = {
             action: 'monetization.config_updated',
             adminId: req.session.user?.id,
             details: { updatedKeys: Object.keys(sanitized) } as any,
-            ipAddress: paramStr(req.ip)
+            ipAddress: req.ip || '0.0.0.0'
           });
 
           res.json({ success: true });
@@ -241,7 +241,7 @@ const monetizationAdminModule: Module = {
             adminId: req.session.user?.id,
             details: { offerId: offer.id, name: offer.name } as any,
             referenceId: String(offer.id),
-            ipAddress: paramStr(req.ip)
+            ipAddress: req.ip || '0.0.0.0'
           });
 
           res.json({ success: true, offer });
@@ -309,7 +309,7 @@ const monetizationAdminModule: Module = {
             adminId: req.session.user?.id,
             details: { offerId: id, name } as any,
             referenceId: String(id),
-            ipAddress: paramStr(req.ip)
+            ipAddress: req.ip || '0.0.0.0'
           });
 
           res.json({ success: true });
@@ -339,7 +339,7 @@ const monetizationAdminModule: Module = {
             adminId: req.session.user?.id,
             details: { offerId: id, name: existing.name } as any,
             referenceId: String(id),
-            ipAddress: paramStr(req.ip)
+            ipAddress: req.ip || '0.0.0.0'
           });
 
           res.json({ success: true });
@@ -403,7 +403,7 @@ const monetizationAdminModule: Module = {
             adminId: req.session.user?.id,
             details: { logId: id, resolvedStatus: status } as any,
             referenceId: String(id),
-            ipAddress: paramStr(req.ip)
+            ipAddress: req.ip || '0.0.0.0'
           });
 
           res.json({ success: true });

@@ -34,7 +34,7 @@ export class AdsterraProvider implements MonetizationProvider {
 
   async generateLink(user: any, offer: any, targetUrl: string, options?: any): Promise<string> {
     // Adsterra operates via script insertion and direct smartlinks rather than standard redirect links
-    return this.config.smartlinkUrl || targetUrl;
+    return this.config.smartlinkId || targetUrl;
   }
 
   async verifyCallback(req: Request): Promise<boolean> {
@@ -58,11 +58,11 @@ export class AdsterraProvider implements MonetizationProvider {
   renderConfigurationFields(): Array<{ key: string; label: string; type: string; default?: any }> {
     return [
       { key: 'publisherId', label: 'Publisher ID', type: 'text' },
-      { key: 'smartlinkUrl', label: 'Smartlink Direct URL', type: 'text' },
+      { key: 'smartlinkId', label: 'Smartlink Direct URL', type: 'text' },
       { key: 'popunderId', label: 'Popunder Unit ID', type: 'text' },
       { key: 'socialBarId', label: 'Social Bar Unit ID', type: 'text' },
-      { key: 'banner728x90Id', label: '728x90 Banner Unit ID', type: 'text' },
-      { key: 'banner300x250Id', label: '300x250 Banner Unit ID', type: 'text' }
+      { key: '728x90Id', label: '728x90 Banner Unit ID', type: 'text' },
+      { key: '300x250Id', label: '300x250 Banner Unit ID', type: 'text' }
     ];
   }
 
