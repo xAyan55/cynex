@@ -7,6 +7,7 @@ import { ConfigService } from '../../services/config/ConfigService';
 import { ConfigCategory, ProviderType, RewardType, EarnType, EarnStatus, FraudStatus, FraudSeverity } from '../../generated/prisma/client';
 import { AuditService } from '../../services/AuditService';
 import { ProviderRegistry } from '../../services/monetization/providers/ProviderRegistry';
+import { invalidateMonetizationConfigCache } from '../../services/monetization/MonetizationConfigCache';
 
 function paramStr(val: string | string[]): string {
   return Array.isArray(val) ? val[0] : val;
@@ -173,6 +174,8 @@ const monetizationAdminModule: Module = {
           for (const provider of ProviderRegistry.getAll()) {
             await provider.reloadConfiguration(fullConfig);
           }
+
+          invalidateMonetizationConfigCache();
 
           await AuditService.log({
             action: 'monetization.config_updated',

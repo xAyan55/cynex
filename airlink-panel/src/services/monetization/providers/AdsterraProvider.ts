@@ -58,11 +58,18 @@ export class AdsterraProvider implements MonetizationProvider {
   renderConfigurationFields(): Array<{ key: string; label: string; type: string; default?: any }> {
     return [
       { key: 'publisherId', label: 'Publisher ID', type: 'text' },
-      { key: 'smartlinkId', label: 'Smartlink Direct URL', type: 'text' },
+      { key: 'domain', label: 'Default Domain', type: 'text' },
+      { key: 'smartlinkId', label: 'Smartlink Direct URL / ID', type: 'text' },
       { key: 'popunderId', label: 'Popunder Unit ID', type: 'text' },
       { key: 'socialBarId', label: 'Social Bar Unit ID', type: 'text' },
-      { key: '728x90Id', label: '728x90 Banner Unit ID', type: 'text' },
-      { key: '300x250Id', label: '300x250 Banner Unit ID', type: 'text' }
+      { key: 'nativeBannerId', label: 'Native Banner Unit ID', type: 'text' },
+      { key: 'bannerId', label: 'Banner Unit ID', type: 'text' },
+      { key: '468x60Id', label: '468×60 Banner Unit ID', type: 'text' },
+      { key: '300x250Id', label: '300×250 Banner Unit ID', type: 'text' },
+      { key: '160x300Id', label: '160×300 Banner Unit ID', type: 'text' },
+      { key: '160x600Id', label: '160×600 Banner Unit ID', type: 'text' },
+      { key: '320x50Id', label: '320×50 Banner Unit ID', type: 'text' },
+      { key: '728x90Id', label: '728×90 Banner Unit ID', type: 'text' },
     ];
   }
 

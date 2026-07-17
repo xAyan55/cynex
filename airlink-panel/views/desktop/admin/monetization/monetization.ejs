@@ -17,6 +17,7 @@
         <div class="flex gap-0.5 mb-6 border-b border-neutral-200 dark:border-neutral-700/40 overflow-x-auto">
           <button type="button" data-tab="general" class="mon-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('settings', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>General</button>
           <button type="button" data-tab="providers" class="mon-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('network', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Providers</button>
+          <button type="button" data-tab="placements" class="mon-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('layout', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Placements</button>
           <button type="button" data-tab="offers" class="mon-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('package', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Offers</button>
           <button type="button" data-tab="rewards" class="mon-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('gift', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Rewards</button>
           <button type="button" data-tab="economy" class="mon-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('coins', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Economy</button>
@@ -132,6 +133,50 @@
               </form>
             </div>
           <% }); %>
+        </div>
+
+        <!-- ═══ PLACEMENTS TAB ═════════════════════════════════════════════════ -->
+        <div id="tab-panel-placements" class="tab-content-panel hidden space-y-5">
+          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
+            <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Ad Placement Configuration</h2>
+            <p class="text-xs text-neutral-500 px-5 pt-3">Choose which ad format appears on each page. Select an empty option to disable ads on that page. Each format requires the corresponding Zone ID to be configured in the provider settings.</p>
+            <form class="monetization-form" data-category="monetization">
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
+                <% var placements = [
+                  { key: 'placementDashboardTop', label: 'Dashboard Top' },
+                  { key: 'placementDashboardBottom', label: 'Dashboard Bottom' },
+                  { key: 'placementSidebar', label: 'Sidebar' },
+                  { key: 'placementEarnPage', label: 'Earn Page' },
+                  { key: 'placementStore', label: 'Store' },
+                  { key: 'placementWallet', label: 'Wallet' },
+                  { key: 'placementPurchases', label: 'Purchases' },
+                  { key: 'placementInstances', label: 'Instances' }
+                ]; %>
+                <% placements.forEach(function(p) { %>
+                  <div>
+                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2"><%= p.label %></label>
+                    <select name="<%= p.key %>" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                      <option value="" <%= !monetization[p.key] ? 'selected' : '' %>>Disabled</option>
+                      <option value="popunder" <%= monetization[p.key] === 'popunder' ? 'selected' : '' %>>Popunder</option>
+                      <option value="native" <%= monetization[p.key] === 'native' ? 'selected' : '' %>>Native Banner</option>
+                      <option value="banner" <%= monetization[p.key] === 'banner' ? 'selected' : '' %>>Banner</option>
+                      <option value="smartlink" <%= monetization[p.key] === 'smartlink' ? 'selected' : '' %>>Smartlink</option>
+                      <option value="socialbar" <%= monetization[p.key] === 'socialbar' ? 'selected' : '' %>>Social Bar</option>
+                      <option value="300x250" <%= monetization[p.key] === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                      <option value="728x90" <%= monetization[p.key] === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
+                      <option value="468x60" <%= monetization[p.key] === '468x60' ? 'selected' : '' %>>468×60 Banner</option>
+                      <option value="320x50" <%= monetization[p.key] === '320x50' ? 'selected' : '' %>>320×50 Mobile Banner</option>
+                      <option value="160x300" <%= monetization[p.key] === '160x300' ? 'selected' : '' %>>160×300 Skyscraper</option>
+                      <option value="160x600" <%= monetization[p.key] === '160x600' ? 'selected' : '' %>>160×600 Wide Skyscraper</option>
+                    </select>
+                  </div>
+                <% }); %>
+              </div>
+              <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end gap-3">
+                <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Placements</button>
+              </div>
+            </form>
+          </div>
         </div>
 
         <!-- ═══ OFFERS TAB ═════════════════════════════════════════════════════ -->

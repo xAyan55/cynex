@@ -1,0 +1,7 @@
+<% if (typeof adPlacements !== 'undefined' && adPlacements && adPlacements.length > 0) { %>
+  <div class="cynex-ads" data-cynex-ads>
+  <% adPlacements.forEach(function(ad) { %>
+    <div class="cynex-ad-container" data-cynex-ad-placement="<%= ad.placement %>" data-cynex-ad-format="<%= ad.format %>" data-cynex-ad-zone="<%= ad.zoneId %>"></div>
+  <% }); %>
+  </div>
+<% } %>

@@ -53,6 +53,8 @@ import {
 import { initializeProviders, ProviderRegistry } from './services/monetization/providers';
 import { ConfigService } from './services/config/ConfigService';
 import { NotificationQueue } from './services/monetization/NotificationQueue';
+import { getMonetizationConfigCached } from './services/monetization/MonetizationConfigCache';
+import { getActivePlacements } from './services/monetization/AdPlacementHelper';
 
 
 loadEnv();
@@ -190,8 +192,13 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     'https://cdn.jsdelivr.net',
     'https://cdnjs.cloudflare.com',
     'https://*.adsterra.com',
-    'https://*.adsrterra.com',
     'https://*.adsterracdn.com',
+    'https://*.highperformanceformat.com',
+  ];
+  const cdnFrames = [
+    'https://*.adsterra.com',
+    'https://*.adsterracdn.com',
+    'https://*.highperformanceformat.com',
   ];
   const cdnStyles = [
     'https://cdn.jsdelivr.net',
@@ -250,6 +257,9 @@ app.use((req: Request, res: Response, next: NextFunction) => {
             '\'strict-dynamic\'',
             ...cdnScripts,
           ],
+
+          // Frames — needed for Adsterra banner/native/popunder iframes
+          frameSrc: ['\'self\'', ...cdnFrames],
 
           // Inline event handlers (onclick, onchange, etc.) cannot carry nonces.
           // 'unsafe-inline' here is scoped only to attributes, not to <script>
@@ -423,7 +433,7 @@ interface GlobalWithCustomProperties extends NodeJS.Global {
 
 declare const global: GlobalWithCustomProperties;
 
-app.use((_req, res, next) => {
+app.use(async (_req, res, next) => {
   res.locals.name = name;
   res.locals.airlinkVersion = cynexgpVersion;
   res.locals.icon = icon;
@@ -436,6 +446,16 @@ app.use((_req, res, next) => {
     undefined,
     false,
   );
+
+  // Load monetization config from cache + compute ad placements for this path
+  try {
+    const monCfg = await getMonetizationConfigCached();
+    res.locals.monetizationConfig = monCfg;
+    res.locals.adPlacements = getActivePlacements(monCfg, _req.path);
+  } catch {
+    res.locals.monetizationConfig = null;
+    res.locals.adPlacements = [];
+  }
 
   const viewportCookie = (_req as any).cookies?.viewport_mode;
   const isMobileViewport = viewportCookie === 'mobile';

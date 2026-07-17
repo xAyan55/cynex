@@ -103,6 +103,16 @@ export interface MonetizationConfig {
   adsterra160x600Id: string;
   adsterra320x50Id: string;
   adsterra728x90Id: string;
+
+  // Ad Placements — which ad formats appear on which pages
+  placementDashboardTop: string;      // format id or '' for disabled
+  placementDashboardBottom: string;
+  placementSidebar: string;
+  placementEarnPage: string;
+  placementStore: string;
+  placementWallet: string;
+  placementPurchases: string;
+  placementInstances: string;
   
   // AFK
   coinsPerAfkMinute: number;
@@ -224,6 +234,16 @@ export const defaultValues: Record<string, Record<string, unknown>> = {
     adsterra160x600Id: '',
     adsterra320x50Id: '',
     adsterra728x90Id: '',
+
+    // Ad placements — empty string = disabled on that page
+    placementDashboardTop: '',
+    placementDashboardBottom: '',
+    placementSidebar: '',
+    placementEarnPage: '',
+    placementStore: '',
+    placementWallet: '',
+    placementPurchases: '',
+    placementInstances: '',
     
     // AFK
     coinsPerAfkMinute: 2,
