@@ -7,7 +7,7 @@
   function removeContainer(container) {
     if (container && container.parentNode) {
       container.parentNode.removeChild(container);
-      log('Removed container');
+      log('Removed empty container');
     }
   }
 
@@ -15,12 +15,20 @@
   var popunderReady = false;
   var popunderCooldown = false;
 
-  function injectNative(container) {
-    var zoneId = container.getAttribute('data-cynex-zone');
-    var placement = container.getAttribute('data-cynex-placement');
-    if (!zoneId) { removeContainer(container); return; }
+  /* ── Native ads ────────────────────────────────────────── */
+  /* Process one container at a time so window.atOptions is  */
+  /* correct for each invoke.js (avoids overwrite bug).      */
+  function processNativeQueue() {
+    var container = document.querySelector(
+      '[data-cynex-format="native"]:not([data-cynex-done])'
+    );
+    if (!container) return;
 
-    log('Injecting native at ' + placement);
+    container.setAttribute('data-cynex-done', '1');
+    var zoneId = container.getAttribute('data-cynex-zone');
+    if (!zoneId) { removeContainer(container); processNativeQueue(); return; }
+
+    log('Injecting native at ' + (container.getAttribute('data-cynex-placement') || '?'));
 
     window.atOptions = {
       key: zoneId,
@@ -32,13 +40,14 @@
 
     var s = document.createElement('script');
     s.src = 'https://www.highperformanceformat.com/' + encodeURIComponent(zoneId) + '/invoke.js';
-    s.async = false;
-    s.onerror = function() { log('Native script error ' + placement); removeContainer(container); };
+    s.onload  = processNativeQueue;
+    s.onerror = function() { log('Native script error'); removeContainer(container); processNativeQueue(); };
     container.appendChild(s);
   }
 
+  /* ── Social bar ────────────────────────────────────────── */
   function injectSocial() {
-    if (socialInjected) { log('Social bar already injected'); return; }
+    if (socialInjected) return;
 
     var wrappers = document.querySelectorAll('[data-cynex-format="socialbar"]');
     if (wrappers.length === 0) return;
@@ -47,7 +56,7 @@
     socialInjected = true;
 
     var w = window.adsterra_w = window.adsterra_w || {};
-    wrappers.forEach(function(wrapper) {
+    Array.prototype.forEach.call(wrappers, function(wrapper) {
       var zoneId = wrapper.getAttribute('data-cynex-zone');
       if (zoneId) w['zone_' + zoneId] = { id: zoneId };
     });
@@ -59,8 +68,9 @@
     document.body.appendChild(s);
   }
 
+  /* ── Popunder ──────────────────────────────────────────── */
   function injectPopunder() {
-    if (popunderCooldown) { log('Popunder on cooldown'); return; }
+    if (popunderCooldown) return;
 
     var wrappers = document.querySelectorAll('[data-cynex-format="popunder"]');
     if (wrappers.length === 0) return;
@@ -69,7 +79,7 @@
     popunderReady = true;
 
     var w = window.adsterra_w = window.adsterra_w || {};
-    wrappers.forEach(function(wrapper) {
+    Array.prototype.forEach.call(wrappers, function(wrapper) {
       var zoneId = wrapper.getAttribute('data-cynex-zone');
       if (zoneId) w['zone_' + zoneId] = { id: zoneId };
     });
@@ -92,18 +102,12 @@
     setTimeout(function() { popunderCooldown = false; }, seconds * 1000);
   }
 
+  /* ── Init ──────────────────────────────────────────────── */
   function init() {
     log('Scanning for ad wrappers');
-
     injectSocial();
     injectPopunder();
-
-    var nativeWrappers = document.querySelectorAll('[data-cynex-format="native"]');
-    nativeWrappers.forEach(function(w) {
-      if (w.getAttribute('data-cynex-injected') === '1') return;
-      w.setAttribute('data-cynex-injected', '1');
-      injectNative(w);
-    });
+    processNativeQueue();
   }
 
   if (document.readyState === 'loading') {
@@ -117,7 +121,7 @@
     init();
   });
 
-  window.__cynexReloadAds = init;
+  window.__cynexReloadAds       = init;
   window.__cynexTriggerPopunder = triggerPopunder;
 
   document.addEventListener('click', function(e) {

@@ -192,6 +192,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     'https://*.adsterra.com',
     'https://*.adsterracdn.com',
     'https://*.highperformanceformat.com',
+    'https://*.effectivecpmnetwork.com',
     'https://*.trafficfactor.com',
     'https://*.adsterratools.com',
     'https://*.adsterra.biz',
