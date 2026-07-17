@@ -24,7 +24,7 @@
         </div>
 
         <!-- Notification messages -->
-        <div id="earnToast" class="hidden fixed bottom-5 right-5 bg-green-500 text-black px-4 py-2 rounded-xl text-sm font-semibold shadow-lg z-50"></div>
+        <div id="earnToast" class="hidden fixed bottom-5 right-5 bg-green-500 text-black px-4 py-2 rounded-xl text-sm font-semibold shadow-lg z-50">        </div>
 
         <!-- ═══ OVERVIEW TAB ══════════════════════════════════════════════════ -->
         <div id="earn-panel-overview" class="earn-content-panel hidden space-y-6">
@@ -94,6 +94,8 @@
           </div>
         </div>
 
+        <%= renderPlacement('earnNative') %>
+
         <!-- ═══ AFK TAB ═══════════════════════════════════════════════════════ -->
         <div id="earn-panel-afk" class="earn-content-panel hidden space-y-6">
           <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 p-8 max-w-lg mx-auto text-center space-y-6">
@@ -131,6 +133,8 @@
           </div>
         </div>
 
+        <%= renderPlacement('earn300x250') %>
+
         <!-- ═══ STREAK TAB ════════════════════════════════════════════════════ -->
         <div id="earn-panel-streak" class="earn-content-panel hidden space-y-6">
           <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 p-6 max-w-lg mx-auto text-center space-y-6">
@@ -162,6 +166,8 @@
             <button onclick="claimStreak()" class="w-full py-3 bg-white text-black hover:bg-neutral-200 text-xs font-bold rounded-xl transition shadow">Claim Daily Reward</button>
           </div>
         </div>
+
+        <%= renderPlacement('earn728x90') %>
 
         <!-- ═══ HISTORY TAB ═══════════════════════════════════════════════════ -->
         <div id="earn-panel-history" class="earn-content-panel hidden space-y-6">
@@ -229,7 +235,6 @@
     </div>
   </div>
 
-  <%- include('../components/monetization/ad-placements') %>
 </main>
 
 <script nonce="<%- nonce %>">

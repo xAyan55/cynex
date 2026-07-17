@@ -54,7 +54,7 @@ import { initializeProviders, ProviderRegistry } from './services/monetization/p
 import { ConfigService } from './services/config/ConfigService';
 import { NotificationQueue } from './services/monetization/NotificationQueue';
 import { getMonetizationConfigCached } from './services/monetization/MonetizationConfigCache';
-import { getActivePlacements } from './services/monetization/AdPlacementHelper';
+import { renderPlacement, renderSmartlink } from './services/monetization/AdPlacementHelper';
 
 
 loadEnv();
@@ -467,14 +467,20 @@ app.use(async (_req, res, next) => {
     false,
   );
 
-  // Load monetization config from cache + compute ad placements for this path
+  // Load monetization config and attach renderPlacement helper
   try {
     const monCfg = await getMonetizationConfigCached();
     res.locals.monetizationConfig = monCfg;
-    res.locals.adPlacements = getActivePlacements(monCfg, _req.path);
+    res.locals.renderPlacement = function(placementName: string) {
+      return renderPlacement(monCfg, placementName);
+    };
+    res.locals.renderSmartlink = function() {
+      return renderSmartlink(monCfg);
+    };
   } catch {
     res.locals.monetizationConfig = null;
-    res.locals.adPlacements = [];
+    res.locals.renderPlacement = function() { return ''; };
+    res.locals.renderSmartlink = function() { return ''; };
   }
 
   const viewportCookie = (_req as any).cookies?.viewport_mode;

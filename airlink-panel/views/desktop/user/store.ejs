@@ -22,6 +22,8 @@
           <button onclick="switchTab('renew')" id="tab-renew" class="tab-btn px-5 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer text-neutral-400 hover:text-white">Server Renewal</button>
         </div>
 
+        <%= renderPlacement('storeTop') %>
+
         <!-- ============ RESOURCE STORE ============ -->
         <div id="panel-resources" class="tab-panel space-y-6">
           <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
@@ -287,6 +289,8 @@
           <% } %>
         </div>
 
+        <%= renderPlacement('storeMiddle') %>
+
         <!-- ============ SERVER UPGRADE ============ -->
         <div id="panel-upgrade" class="tab-panel hidden space-y-6">
           <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-6">
@@ -446,7 +450,7 @@
     </div>
   </div>
 
-  <%- include('../components/monetization/ad-placements') %>
+  <%= renderPlacement('storeBottom') %>
 </main>
 
 <%- include('../components/modal') %>

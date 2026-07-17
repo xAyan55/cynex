@@ -104,15 +104,28 @@ export interface MonetizationConfig {
   adsterra320x50Id: string;
   adsterra728x90Id: string;
 
-  // Ad Placements — which ad formats appear on which pages
-  placementDashboardTop: string;      // format id or '' for disabled
-  placementDashboardBottom: string;
-  placementSidebar: string;
-  placementEarnPage: string;
-  placementStore: string;
-  placementWallet: string;
-  placementPurchases: string;
-  placementInstances: string;
+  // Ad Placements — each maps to a format name (or '' = disabled)
+  placementDashboardHeader: string;   // 728x90 below page title
+  placementDashboardMiddle: string;   // 300x250 between stats and server list
+  placementDashboardBottom: string;   // 728x90 after server list
+  placementInstancesTop: string;      // responsive banner below page title
+  placementInstancesMiddle: string;   // native between filters and server list
+  placementInstancesBottom: string;   // 728x90 bottom
+  placementEarnNative: string;        // native between link section and AFK
+  placementEarn300x250: string;       // 300x250 between AFK and streak
+  placementEarn728x90: string;        // 728x90 below streak
+  placementStoreTop: string;          // responsive banner
+  placementStoreMiddle: string;       // native
+  placementStoreBottom: string;       // 728x90
+  placementWalletTop: string;         // responsive banner
+  placementWalletBottom: string;      // 300x250
+  placementPurchasesBottom: string;   // native
+  placementRedeemBelow: string;       // 300x250 below coupon form
+  placementSidebarSmartlink: string;  // smartlink button only
+  placementFooter728x90: string;      // optional global footer
+  placementPopunder: string;          // popunder (trigger-based, never visible)
+  placementSocialbar: string;         // social bar (official Adsterra script)
+  popunderCooldownSeconds: number;
   
   // AFK
   coinsPerAfkMinute: number;
@@ -235,15 +248,28 @@ export const defaultValues: Record<string, Record<string, unknown>> = {
     adsterra320x50Id: '',
     adsterra728x90Id: '',
 
-    // Ad placements — empty string = disabled on that page
-    placementDashboardTop: 'popunder',
+    // Ad placements — empty string = disabled
+    placementDashboardHeader: '',
+    placementDashboardMiddle: '',
     placementDashboardBottom: '',
-    placementSidebar: '300x250',
-    placementEarnPage: 'popunder',
-    placementStore: 'banner',
-    placementWallet: 'smartlink',
-    placementPurchases: '',
-    placementInstances: '',
+    placementInstancesTop: '',
+    placementInstancesMiddle: '',
+    placementInstancesBottom: '',
+    placementEarnNative: '',
+    placementEarn300x250: '',
+    placementEarn728x90: '',
+    placementStoreTop: '',
+    placementStoreMiddle: '',
+    placementStoreBottom: '',
+    placementWalletTop: '',
+    placementWalletBottom: '',
+    placementPurchasesBottom: '',
+    placementRedeemBelow: '',
+    placementSidebarSmartlink: '',
+    placementFooter728x90: '',
+    placementPopunder: '',
+    placementSocialbar: '',
+    popunderCooldownSeconds: 300,
     
     // AFK
     coinsPerAfkMinute: 2,

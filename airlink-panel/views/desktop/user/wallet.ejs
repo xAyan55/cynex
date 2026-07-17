@@ -18,6 +18,8 @@
           </div>
         </div>
 
+        <%= renderPlacement('walletTop') %>
+
         <!-- Balance Card -->
         <div class="cynex-glass rounded-2xl border border-white/5 p-8 relative overflow-hidden">
           <div class="absolute -top-10 -right-10 w-40 h-40 bg-brand-green/5 rounded-full blur-3xl"></div>
@@ -168,7 +170,7 @@
     </div>
   </div>
 
-  <%- include('../components/monetization/ad-placements') %>
+  <%= renderPlacement('walletBottom') %>
 </main>
 
 <script nonce="<%- nonce %>">

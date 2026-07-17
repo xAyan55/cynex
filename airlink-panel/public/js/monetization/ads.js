@@ -4,70 +4,73 @@
   var debug = window.location.search.indexOf('cynex_ad_debug=1') !== -1;
   if (debug) console.log('[CynexAds] Debug mode enabled');
 
-  function log(msg, data) {
+  function log(msg) {
     if (!debug) return;
-    console.log('[CynexAds] ' + msg, data || '');
+    console.log('[CynexAds] ' + msg);
   }
 
-  function injectAds() {
-    var containers = document.querySelectorAll('.cynex-ad-container[data-cynex-ad-zone]');
-    log('Found ' + containers.length + ' ad containers');
-    if (!containers.length) {
-      log('No ad containers found on this page');
+  var injectedScripts = {};
+
+  function removeContainer(container) {
+    if (container && container.parentNode) {
+      container.parentNode.removeChild(container);
+      log('Removed failed ad container');
+    }
+  }
+
+  function injectAd(container) {
+    if (!container) return;
+    var format = container.getAttribute('data-cynex-format');
+    var zoneId = container.getAttribute('data-cynex-zone');
+    var placement = container.getAttribute('data-cynex-placement');
+
+    if (!zoneId || zoneId.trim() === '') {
+      log('Skipping ' + placement + ': no zone ID');
+      removeContainer(container);
       return;
     }
 
-    containers.forEach(function(container) {
-      var format = container.getAttribute('data-cynex-ad-format');
-      var zoneId = container.getAttribute('data-cynex-ad-zone');
-      var placement = container.getAttribute('data-cynex-ad-placement');
+    log('Injecting ' + format + ' at ' + placement + ' zone=' + zoneId);
 
-      if (!zoneId || zoneId.trim() === '') {
-        log('Skipping ' + placement + ': no zone ID');
-        return;
-      }
+    if (format === 'smartlink') {
+      var wrapper = document.createElement('div');
+      wrapper.className = 'cynex-ad-inline';
+      var a = document.createElement('a');
+      a.href = 'https://www.highperformanceformat.com/' + encodeURIComponent(zoneId) + '/invoke';
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white text-sm font-medium transition border border-neutral-700/50';
+      a.textContent = 'Sponsored';
+      wrapper.appendChild(a);
+      container.appendChild(wrapper);
+      return;
+    }
 
-      log('Injecting ' + format + ' ad at ' + placement + ', zone=' + zoneId);
+    var scriptSrc = null;
+    var adsterraWidget = false;
 
-      if (format === 'smartlink') {
-        var a = document.createElement('a');
-        a.href = 'https://www.highperformanceformat.com/' + encodeURIComponent(zoneId) + '/invoke';
-        a.target = '_blank';
-        a.rel = 'noopener';
-        a.className = 'ad-smartlink block w-full text-center text-sm text-neutral-500 hover:text-neutral-300 transition py-4';
-        a.textContent = 'Sponsored Link';
-        container.appendChild(a);
-        log('Rendered smartlink for zone ' + zoneId);
-        return;
-      }
+    if (format === 'popunder' || format === 'socialbar') {
+      adsterraWidget = true;
+      scriptSrc = 'https://www.adsterracdn.com/script.js';
+    } else {
+      scriptSrc = 'https://www.highperformanceformat.com/' + encodeURIComponent(zoneId) + '/invoke.js';
+    }
 
-      try {
-        if (format === 'popunder' || format === 'socialbar') {
-          var w = window.adsterra_w = window.adsterra_w || {};
-          w['zone_' + zoneId] = { id: zoneId };
-          var s = document.createElement('script');
-          s.type = 'text/javascript';
-          s.src = 'https://www.adsterracdn.com/script.js';
-          s.async = true;
-          s.setAttribute('data-cynex-ad', format);
-          s.onerror = function() { log('Failed to load adsterra script for ' + format); };
-          container.appendChild(s);
-          log('Appended adsterra widget script for ' + format);
-          return;
-        }
+    if (injectedScripts[scriptSrc]) {
+      log('Script already loaded: ' + scriptSrc);
+      return;
+    }
 
+    try {
+      if (adsterraWidget) {
+        var w = window.adsterra_w = window.adsterra_w || {};
+        w['zone_' + zoneId] = { id: zoneId };
+      } else {
         var dims = { w: 728, h: 90 };
-        switch (format) {
-          case '468x60':  dims = { w: 468, h: 60 }; break;
-          case '300x250': dims = { w: 300, h: 250 }; break;
-          case '160x300': dims = { w: 160, h: 300 }; break;
-          case '160x600': dims = { w: 160, h: 600 }; break;
-          case '320x50':  dims = { w: 320, h: 50 }; break;
-          case '728x90':  dims = { w: 728, h: 90 }; break;
-          case 'native':  dims = { w: 300, h: 250 }; break;
-          case 'banner':  dims = { w: 728, h: 90 }; break;
-        }
-
+        var attrW = container.getAttribute('data-cynex-width');
+        var attrH = container.getAttribute('data-cynex-height');
+        if (attrW) dims.w = parseInt(attrW, 10);
+        if (attrH) dims.h = parseInt(attrH, 10);
         window.atOptions = window.atOptions || {};
         window.atOptions = {
           key: zoneId,
@@ -76,38 +79,67 @@
           width: dims.w,
           params: {}
         };
-
-        var s = document.createElement('script');
-        s.type = 'text/javascript';
-        s.src = 'https://www.highperformanceformat.com/' + encodeURIComponent(zoneId) + '/invoke.js';
-        s.async = true;
-        s.setAttribute('data-cynex-ad', format);
-        s.onerror = function() { log('Failed to load highperformanceformat script for ' + format); };
-        container.appendChild(s);
-        log('Appended highperformanceformat script for ' + format + ' (' + dims.w + 'x' + dims.h + ')');
-      } catch (err) {
-        log('Error injecting ad for ' + placement + ': ' + (err.message || err));
       }
+
+      var s = document.createElement('script');
+      s.type = 'text/javascript';
+      s.src = scriptSrc;
+      s.async = true;
+      s.setAttribute('data-cynex-ad-placement', placement);
+      s.onerror = function() {
+        log('Script load error for ' + placement + ' at ' + scriptSrc);
+        removeContainer(container);
+      };
+
+      injectedScripts[scriptSrc] = true;
+      container.appendChild(s);
+      log('Script appended for ' + placement);
+
+      var cleanupTimer = setTimeout(function() {
+        var hasContent = container.querySelector('iframe, a, img, object, embed');
+        if (!hasContent && container.childNodes.length <= 1) {
+          log('No ad content detected after timeout, cleaning up ' + placement);
+          removeContainer(container);
+        }
+      }, 8000);
+
+      s.onload = function() {
+        clearTimeout(cleanupTimer);
+        log('Script loaded for ' + placement);
+      };
+    } catch (err) {
+      log('Error injecting ad: ' + (err.message || err));
+      removeContainer(container);
+    }
+  }
+
+  function injectAllAds() {
+    var wrappers = document.querySelectorAll('.cynex-ad-wrapper[data-cynex-zone]');
+    log('Found ' + wrappers.length + ' ad wrappers');
+    wrappers.forEach(function(w) {
+      if (w.getAttribute('data-cynex-injected') === '1') return;
+      w.setAttribute('data-cynex-injected', '1');
+      injectAd(w);
     });
   }
 
   function run() {
     if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', injectAds);
+      document.addEventListener('DOMContentLoaded', injectAllAds);
     } else {
-      injectAds();
+      injectAllAds();
     }
   }
 
   run();
 
   document.addEventListener('al:navigated', function() {
-    log('SPA navigation detected, re-injecting ads');
+    log('SPA navigation - re-injecting');
     run();
   });
 
-  window.__cynexReloadAds = injectAds;
+  window.__cynexReloadAds = injectAllAds;
   if (debug) {
-    console.log('[CynexAds] Ready. Call __cynexReloadAds() to re-inject. Add ?cynex_ad_debug=1 to URL for debug.');
+    console.log('[CynexAds] Ready. Call __cynexReloadAds() to re-inject. Use ?cynex_ad_debug=1 for debug.');
   }
 })();

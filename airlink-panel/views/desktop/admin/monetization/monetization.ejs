@@ -139,38 +139,205 @@
         <div id="tab-panel-placements" class="tab-content-panel hidden space-y-5">
           <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 shadow-sm dark:shadow-none">
             <h2 class="text-[13px] font-medium text-neutral-800 dark:text-white px-5 py-3.5 bg-neutral-50 dark:bg-white/5 rounded-t-xl border-b border-neutral-200 dark:border-white/5">Ad Placement Configuration</h2>
-            <p class="text-xs text-neutral-500 px-5 pt-3">Choose which ad format appears on each page. Select an empty option to disable ads on that page. Each format requires the corresponding Zone ID to be configured in the provider settings.</p>
+            <p class="text-xs text-neutral-500 px-5 pt-3">Choose which ad format appears at each position. Select "Disabled" to remove the placement. Each format requires its Zone ID configured in the Providers tab.</p>
             <form class="monetization-form" data-category="monetization">
+              <div class="px-5 py-3 bg-neutral-50/50 dark:bg-white/[0.02] border-b border-neutral-200 dark:border-white/5">
+                <p class="text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Dashboard</p>
+              </div>
               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
-                <% var placements = [
-                  { key: 'placementDashboardTop', label: 'Dashboard Top' },
-                  { key: 'placementDashboardBottom', label: 'Dashboard Bottom' },
-                  { key: 'placementSidebar', label: 'Sidebar' },
-                  { key: 'placementEarnPage', label: 'Earn Page' },
-                  { key: 'placementStore', label: 'Store' },
-                  { key: 'placementWallet', label: 'Wallet' },
-                  { key: 'placementPurchases', label: 'Purchases' },
-                  { key: 'placementInstances', label: 'Instances' }
-                ]; %>
-                <% placements.forEach(function(p) { %>
-                  <div>
-                    <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2"><%= p.label %></label>
-                    <select name="<%= p.key %>" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
-                      <option value="" <%= !monetization[p.key] ? 'selected' : '' %>>Disabled</option>
-                      <option value="popunder" <%= monetization[p.key] === 'popunder' ? 'selected' : '' %>>Popunder</option>
-                      <option value="native" <%= monetization[p.key] === 'native' ? 'selected' : '' %>>Native Banner</option>
-                      <option value="banner" <%= monetization[p.key] === 'banner' ? 'selected' : '' %>>Banner</option>
-                      <option value="smartlink" <%= monetization[p.key] === 'smartlink' ? 'selected' : '' %>>Smartlink</option>
-                      <option value="socialbar" <%= monetization[p.key] === 'socialbar' ? 'selected' : '' %>>Social Bar</option>
-                      <option value="300x250" <%= monetization[p.key] === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
-                      <option value="728x90" <%= monetization[p.key] === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
-                      <option value="468x60" <%= monetization[p.key] === '468x60' ? 'selected' : '' %>>468×60 Banner</option>
-                      <option value="320x50" <%= monetization[p.key] === '320x50' ? 'selected' : '' %>>320×50 Mobile Banner</option>
-                      <option value="160x300" <%= monetization[p.key] === '160x300' ? 'selected' : '' %>>160×300 Skyscraper</option>
-                      <option value="160x600" <%= monetization[p.key] === '160x600' ? 'selected' : '' %>>160×600 Wide Skyscraper</option>
-                    </select>
-                  </div>
-                <% }); %>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Header (below title)</label>
+                  <select name="placementDashboardHeader" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementDashboardHeader ? 'selected' : '' %>>Disabled</option>
+                    <option value="728x90" <%= monetization.placementDashboardHeader === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
+                    <option value="banner" <%= monetization.placementDashboardHeader === 'banner' ? 'selected' : '' %>>Responsive Banner</option>
+                    <option value="300x250" <%= monetization.placementDashboardHeader === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                    <option value="native" <%= monetization.placementDashboardHeader === 'native' ? 'selected' : '' %>>Native Banner</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Middle (between stats & servers)</label>
+                  <select name="placementDashboardMiddle" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementDashboardMiddle ? 'selected' : '' %>>Disabled</option>
+                    <option value="300x250" <%= monetization.placementDashboardMiddle === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                    <option value="native" <%= monetization.placementDashboardMiddle === 'native' ? 'selected' : '' %>>Native Banner</option>
+                    <option value="728x90" <%= monetization.placementDashboardMiddle === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Bottom (after server list)</label>
+                  <select name="placementDashboardBottom" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementDashboardBottom ? 'selected' : '' %>>Disabled</option>
+                    <option value="728x90" <%= monetization.placementDashboardBottom === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
+                    <option value="banner" <%= monetization.placementDashboardBottom === 'banner' ? 'selected' : '' %>>Responsive Banner</option>
+                    <option value="native" <%= monetization.placementDashboardBottom === 'native' ? 'selected' : '' %>>Native Banner</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="px-5 py-3 bg-neutral-50/50 dark:bg-white/[0.02] border-y border-neutral-200 dark:border-white/5">
+                <p class="text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Instances</p>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Top (below title)</label>
+                  <select name="placementInstancesTop" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementInstancesTop ? 'selected' : '' %>>Disabled</option>
+                    <option value="banner" <%= monetization.placementInstancesTop === 'banner' ? 'selected' : '' %>>Responsive Banner</option>
+                    <option value="728x90" <%= monetization.placementInstancesTop === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
+                    <option value="300x250" <%= monetization.placementInstancesTop === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Middle (between filters & list)</label>
+                  <select name="placementInstancesMiddle" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementInstancesMiddle ? 'selected' : '' %>>Disabled</option>
+                    <option value="native" <%= monetization.placementInstancesMiddle === 'native' ? 'selected' : '' %>>Native Banner</option>
+                    <option value="300x250" <%= monetization.placementInstancesMiddle === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Bottom</label>
+                  <select name="placementInstancesBottom" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementInstancesBottom ? 'selected' : '' %>>Disabled</option>
+                    <option value="728x90" <%= monetization.placementInstancesBottom === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
+                    <option value="banner" <%= monetization.placementInstancesBottom === 'banner' ? 'selected' : '' %>>Responsive Banner</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="px-5 py-3 bg-neutral-50/50 dark:bg-white/[0.02] border-y border-neutral-200 dark:border-white/5">
+                <p class="text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Earn</p>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">After Link Section (Native)</label>
+                  <select name="placementEarnNative" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementEarnNative ? 'selected' : '' %>>Disabled</option>
+                    <option value="native" <%= monetization.placementEarnNative === 'native' ? 'selected' : '' %>>Native Banner</option>
+                    <option value="300x250" <%= monetization.placementEarnNative === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                    <option value="728x90" <%= monetization.placementEarnNative === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">After AFK Section (300×250)</label>
+                  <select name="placementEarn300x250" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementEarn300x250 ? 'selected' : '' %>>Disabled</option>
+                    <option value="300x250" <%= monetization.placementEarn300x250 === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                    <option value="native" <%= monetization.placementEarn300x250 === 'native' ? 'selected' : '' %>>Native Banner</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Below Streak (728×90)</label>
+                  <select name="placementEarn728x90" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementEarn728x90 ? 'selected' : '' %>>Disabled</option>
+                    <option value="728x90" <%= monetization.placementEarn728x90 === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
+                    <option value="banner" <%= monetization.placementEarn728x90 === 'banner' ? 'selected' : '' %>>Responsive Banner</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="px-5 py-3 bg-neutral-50/50 dark:bg-white/[0.02] border-y border-neutral-200 dark:border-white/5">
+                <p class="text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Store, Wallet, Purchases, Redeem</p>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Store Top</label>
+                  <select name="placementStoreTop" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementStoreTop ? 'selected' : '' %>>Disabled</option>
+                    <option value="banner" <%= monetization.placementStoreTop === 'banner' ? 'selected' : '' %>>Responsive Banner</option>
+                    <option value="728x90" <%= monetization.placementStoreTop === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
+                    <option value="300x250" <%= monetization.placementStoreTop === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Store Middle</label>
+                  <select name="placementStoreMiddle" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementStoreMiddle ? 'selected' : '' %>>Disabled</option>
+                    <option value="native" <%= monetization.placementStoreMiddle === 'native' ? 'selected' : '' %>>Native Banner</option>
+                    <option value="300x250" <%= monetization.placementStoreMiddle === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Store Bottom</label>
+                  <select name="placementStoreBottom" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementStoreBottom ? 'selected' : '' %>>Disabled</option>
+                    <option value="728x90" <%= monetization.placementStoreBottom === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
+                    <option value="banner" <%= monetization.placementStoreBottom === 'banner' ? 'selected' : '' %>>Responsive Banner</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Wallet Top</label>
+                  <select name="placementWalletTop" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementWalletTop ? 'selected' : '' %>>Disabled</option>
+                    <option value="banner" <%= monetization.placementWalletTop === 'banner' ? 'selected' : '' %>>Responsive Banner</option>
+                    <option value="728x90" <%= monetization.placementWalletTop === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Wallet Bottom</label>
+                  <select name="placementWalletBottom" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementWalletBottom ? 'selected' : '' %>>Disabled</option>
+                    <option value="300x250" <%= monetization.placementWalletBottom === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                    <option value="native" <%= monetization.placementWalletBottom === 'native' ? 'selected' : '' %>>Native Banner</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Purchases Bottom</label>
+                  <select name="placementPurchasesBottom" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementPurchasesBottom ? 'selected' : '' %>>Disabled</option>
+                    <option value="native" <%= monetization.placementPurchasesBottom === 'native' ? 'selected' : '' %>>Native Banner</option>
+                    <option value="300x250" <%= monetization.placementPurchasesBottom === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Redeem (below coupon form)</label>
+                  <select name="placementRedeemBelow" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementRedeemBelow ? 'selected' : '' %>>Disabled</option>
+                    <option value="300x250" <%= monetization.placementRedeemBelow === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                    <option value="native" <%= monetization.placementRedeemBelow === 'native' ? 'selected' : '' %>>Native Banner</option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="px-5 py-3 bg-neutral-50/50 dark:bg-white/[0.02] border-y border-neutral-200 dark:border-white/5">
+                <p class="text-xs font-semibold text-neutral-600 dark:text-neutral-400 uppercase tracking-wider">Global</p>
+              </div>
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 px-5 py-5">
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Sidebar Smartlink</label>
+                  <select name="placementSidebarSmartlink" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementSidebarSmartlink ? 'selected' : '' %>>Disabled</option>
+                    <option value="smartlink" <%= monetization.placementSidebarSmartlink === 'smartlink' ? 'selected' : '' %>>Smartlink Button</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Global Footer (728×90)</label>
+                  <select name="placementFooter728x90" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementFooter728x90 ? 'selected' : '' %>>Disabled</option>
+                    <option value="728x90" <%= monetization.placementFooter728x90 === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
+                    <option value="banner" <%= monetization.placementFooter728x90 === 'banner' ? 'selected' : '' %>>Responsive Banner</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Popunder (invisible, trigger-based)</label>
+                  <select name="placementPopunder" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementPopunder ? 'selected' : '' %>>Disabled</option>
+                    <option value="popunder" <%= monetization.placementPopunder === 'popunder' ? 'selected' : '' %>>Popunder</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Social Bar (official script)</label>
+                  <select name="placementSocialbar" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementSocialbar ? 'selected' : '' %>>Disabled</option>
+                    <option value="socialbar" <%= monetization.placementSocialbar === 'socialbar' ? 'selected' : '' %>>Social Bar</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Popunder Cooldown (seconds)</label>
+                  <input type="number" name="popunderCooldownSeconds" value="<%= monetization.popunderCooldownSeconds %>"
+                    class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                </div>
               </div>
               <div class="px-5 pb-5 border-t border-neutral-200 dark:border-white/5 pt-4 flex justify-end gap-3">
                 <button type="submit" class="rounded-xl bg-neutral-900 dark:bg-white hover:bg-neutral-700 dark:hover:bg-neutral-200 text-white dark:text-neutral-900 px-5 py-2 text-sm font-medium shadow-sm transition">Save Placements</button>
