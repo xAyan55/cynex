@@ -28,6 +28,8 @@
           <%- include('../components/ui/StatCard', { title: 'Suspended', value: suspendedCount, icon_name: 'ban', color: 'blue' }) %>
         </div>
 
+        <%= renderPlacement('instancesTop') %>
+
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/[0.01] border border-white/5 p-6 rounded-2xl">
           <div>
             <h1 class="text-xl font-bold tracking-tight text-white">All Instances</h1>
@@ -48,7 +50,6 @@
           </div>
         </div>
 
-        <%= renderPlacement('instancesTop') %>
         <%= renderPlacement('instancesMiddle') %>
 
         <% if (servers.length === 0) { %>

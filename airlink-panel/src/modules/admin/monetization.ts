@@ -162,7 +162,7 @@ const monetizationAdminModule: Module = {
           for (const [key, value] of Object.entries(req.body)) {
             if (value === 'true') sanitized[key] = true;
             else if (value === 'false') sanitized[key] = false;
-            else if (value === '' || value === null || value === undefined) continue;
+            else if (value === '' || value === null || value === undefined) sanitized[key] = '';
             else if (!isNaN(Number(value))) sanitized[key] = Number(value);
             else sanitized[key] = value;
           }

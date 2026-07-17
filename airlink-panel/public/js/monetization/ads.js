@@ -2,144 +2,133 @@
   'use strict';
 
   var debug = window.location.search.indexOf('cynex_ad_debug=1') !== -1;
-  if (debug) console.log('[CynexAds] Debug mode enabled');
-
-  function log(msg) {
-    if (!debug) return;
-    console.log('[CynexAds] ' + msg);
-  }
-
-  var injectedScripts = {};
+  function log(msg) { if (debug) console.log('[CynexAds] ' + msg); }
 
   function removeContainer(container) {
     if (container && container.parentNode) {
       container.parentNode.removeChild(container);
-      log('Removed failed ad container');
+      log('Removed container');
     }
   }
 
-  function injectAd(container) {
-    if (!container) return;
-    var format = container.getAttribute('data-cynex-format');
+  var socialInjected = false;
+  var popunderReady = false;
+  var popunderCooldown = false;
+
+  function injectNative(container) {
     var zoneId = container.getAttribute('data-cynex-zone');
     var placement = container.getAttribute('data-cynex-placement');
+    if (!zoneId) { removeContainer(container); return; }
 
-    if (!zoneId || zoneId.trim() === '') {
-      log('Skipping ' + placement + ': no zone ID');
-      removeContainer(container);
-      return;
-    }
+    log('Injecting native at ' + placement);
 
-    log('Injecting ' + format + ' at ' + placement + ' zone=' + zoneId);
+    window.atOptions = {
+      key: zoneId,
+      format: 'iframe',
+      height: 300,
+      width: 300,
+      params: {}
+    };
 
-    if (format === 'smartlink') {
-      var wrapper = document.createElement('div');
-      wrapper.className = 'cynex-ad-inline';
-      var a = document.createElement('a');
-      a.href = 'https://www.highperformanceformat.com/' + encodeURIComponent(zoneId) + '/invoke';
-      a.target = '_blank';
-      a.rel = 'noopener';
-      a.className = 'inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-neutral-800 hover:bg-neutral-700 text-neutral-300 hover:text-white text-sm font-medium transition border border-neutral-700/50';
-      a.textContent = 'Sponsored';
-      wrapper.appendChild(a);
-      container.appendChild(wrapper);
-      return;
-    }
-
-    var scriptSrc = null;
-    var adsterraWidget = false;
-
-    if (format === 'popunder' || format === 'socialbar') {
-      adsterraWidget = true;
-      scriptSrc = 'https://www.adsterracdn.com/script.js';
-    } else {
-      scriptSrc = 'https://www.highperformanceformat.com/' + encodeURIComponent(zoneId) + '/invoke.js';
-    }
-
-    if (injectedScripts[scriptSrc]) {
-      log('Script already loaded: ' + scriptSrc);
-      return;
-    }
-
-    try {
-      if (adsterraWidget) {
-        var w = window.adsterra_w = window.adsterra_w || {};
-        w['zone_' + zoneId] = { id: zoneId };
-      } else {
-        var dims = { w: 728, h: 90 };
-        var attrW = container.getAttribute('data-cynex-width');
-        var attrH = container.getAttribute('data-cynex-height');
-        if (attrW) dims.w = parseInt(attrW, 10);
-        if (attrH) dims.h = parseInt(attrH, 10);
-        window.atOptions = window.atOptions || {};
-        window.atOptions = {
-          key: zoneId,
-          format: 'iframe',
-          height: dims.h,
-          width: dims.w,
-          params: {}
-        };
-      }
-
-      var s = document.createElement('script');
-      s.type = 'text/javascript';
-      s.src = scriptSrc;
-      s.async = true;
-      s.setAttribute('data-cynex-ad-placement', placement);
-      s.onerror = function() {
-        log('Script load error for ' + placement + ' at ' + scriptSrc);
-        removeContainer(container);
-      };
-
-      injectedScripts[scriptSrc] = true;
-      container.appendChild(s);
-      log('Script appended for ' + placement);
-
-      var cleanupTimer = setTimeout(function() {
-        var hasContent = container.querySelector('iframe, a, img, object, embed');
-        if (!hasContent && container.childNodes.length <= 1) {
-          log('No ad content detected after timeout, cleaning up ' + placement);
-          removeContainer(container);
-        }
-      }, 8000);
-
-      s.onload = function() {
-        clearTimeout(cleanupTimer);
-        log('Script loaded for ' + placement);
-      };
-    } catch (err) {
-      log('Error injecting ad: ' + (err.message || err));
-      removeContainer(container);
-    }
+    var s = document.createElement('script');
+    s.src = 'https://www.highperformanceformat.com/' + encodeURIComponent(zoneId) + '/invoke.js';
+    s.async = false;
+    s.onerror = function() { log('Native script error ' + placement); removeContainer(container); };
+    container.appendChild(s);
   }
 
-  function injectAllAds() {
-    var wrappers = document.querySelectorAll('.cynex-ad-wrapper[data-cynex-zone]');
-    log('Found ' + wrappers.length + ' ad wrappers');
-    wrappers.forEach(function(w) {
-      if (w.getAttribute('data-cynex-injected') === '1') return;
-      w.setAttribute('data-cynex-injected', '1');
-      injectAd(w);
+  function injectSocial() {
+    if (socialInjected) { log('Social bar already injected'); return; }
+
+    var wrappers = document.querySelectorAll('[data-cynex-format="socialbar"]');
+    if (wrappers.length === 0) return;
+
+    log('Injecting social bar');
+    socialInjected = true;
+
+    var w = window.adsterra_w = window.adsterra_w || {};
+    wrappers.forEach(function(wrapper) {
+      var zoneId = wrapper.getAttribute('data-cynex-zone');
+      if (zoneId) w['zone_' + zoneId] = { id: zoneId };
+    });
+
+    var s = document.createElement('script');
+    s.src = 'https://www.adsterracdn.com/script.js';
+    s.async = true;
+    s.onerror = function() { log('Social bar script error'); };
+    document.body.appendChild(s);
+  }
+
+  function injectPopunder() {
+    if (popunderCooldown) { log('Popunder on cooldown'); return; }
+
+    var wrappers = document.querySelectorAll('[data-cynex-format="popunder"]');
+    if (wrappers.length === 0) return;
+
+    log('Preparing popunder trigger');
+    popunderReady = true;
+
+    var w = window.adsterra_w = window.adsterra_w || {};
+    wrappers.forEach(function(wrapper) {
+      var zoneId = wrapper.getAttribute('data-cynex-zone');
+      if (zoneId) w['zone_' + zoneId] = { id: zoneId };
     });
   }
 
-  function run() {
-    if (document.readyState === 'loading') {
-      document.addEventListener('DOMContentLoaded', injectAllAds);
-    } else {
-      injectAllAds();
-    }
+  function triggerPopunder() {
+    if (!popunderReady || popunderCooldown) return;
+    popunderCooldown = true;
+
+    log('Triggering popunder');
+
+    var s = document.createElement('script');
+    s.src = 'https://www.adsterracdn.com/script.js';
+    s.async = true;
+    s.onerror = function() { log('Popunder script error'); };
+    document.body.appendChild(s);
+
+    var cooldownEl = document.querySelector('[data-cynex-placement="popunderCooldownSeconds"]');
+    var seconds = cooldownEl ? parseInt(cooldownEl.textContent, 10) : 300;
+    setTimeout(function() { popunderCooldown = false; }, seconds * 1000);
   }
 
-  run();
+  function init() {
+    log('Scanning for ad wrappers');
+
+    injectSocial();
+    injectPopunder();
+
+    var nativeWrappers = document.querySelectorAll('[data-cynex-format="native"]');
+    nativeWrappers.forEach(function(w) {
+      if (w.getAttribute('data-cynex-injected') === '1') return;
+      w.setAttribute('data-cynex-injected', '1');
+      injectNative(w);
+    });
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+  } else {
+    init();
+  }
 
   document.addEventListener('al:navigated', function() {
-    log('SPA navigation - re-injecting');
-    run();
+    log('SPA navigation - re-scanning');
+    init();
   });
 
-  window.__cynexReloadAds = injectAllAds;
+  window.__cynexReloadAds = init;
+  window.__cynexTriggerPopunder = triggerPopunder;
+
+  document.addEventListener('click', function(e) {
+    var smartlink = e.target.closest('.cynex-ad-smartlink');
+    if (smartlink) {
+      log('Smartlink clicked');
+      triggerPopunder();
+    }
+  });
+
   if (debug) {
-    console.log('[CynexAds] Ready. Call __cynexReloadAds() to re-inject. Use ?cynex_ad_debug=1 for debug.');
+    console.log('[CynexAds] Ready. Call __cynexReloadAds() to re-scan. Use ?cynex_ad_debug=1 for debug.');
   }
 })();

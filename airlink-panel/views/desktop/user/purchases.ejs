@@ -25,6 +25,8 @@
           </div>
         </div>
 
+        <%= renderPlacement('purchasesBottom') %>
+
         <%
           const totalSpent = purchases ? purchases.reduce(function(sum, p) { return sum + (p.coinCost || 0); }, 0) : 0;
           const uniqueProducts = purchases ? purchases.length : 0;
@@ -126,7 +128,6 @@
     </div>
   </div>
 
-  <%= renderPlacement('purchasesBottom') %>
 </main>
 
 <script nonce="<%- nonce %>">
