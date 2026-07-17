@@ -28,7 +28,7 @@
           <%- include('../components/ui/StatCard', { title: 'Suspended', value: suspendedCount, icon_name: 'ban', color: 'blue' }) %>
         </div>
 
-        <%= renderPlacement('instancesTop') %>
+        <%- renderPlacement('instancesTop') %>
 
         <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-white/[0.01] border border-white/5 p-6 rounded-2xl">
           <div>
@@ -50,7 +50,7 @@
           </div>
         </div>
 
-        <%= renderPlacement('instancesMiddle') %>
+        <%- renderPlacement('instancesMiddle') %>
 
         <% if (servers.length === 0) { %>
           <div class="flex flex-col items-center justify-center py-20 text-center cynex-glass rounded-2xl border border-white/5">
@@ -182,7 +182,7 @@
     </div>
   </div>
 
-  <%= renderPlacement('instancesBottom') %>
+  <%- renderPlacement('instancesBottom') %>
 </main>
 
 <!-- Upgrade Modal -->

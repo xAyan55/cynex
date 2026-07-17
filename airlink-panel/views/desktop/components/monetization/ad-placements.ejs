@@ -3,6 +3,6 @@
 <%
 var _placementName = typeof placement !== 'undefined' ? placement : '';
 if (_placementName && typeof renderPlacement === 'function') {
-  %><%= renderPlacement(_placementName) %><%
+  %><%- renderPlacement(_placementName) %><%
 }
 %>
