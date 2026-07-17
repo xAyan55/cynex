@@ -236,12 +236,12 @@ export const defaultValues: Record<string, Record<string, unknown>> = {
     adsterra728x90Id: '',
 
     // Ad placements — empty string = disabled on that page
-    placementDashboardTop: '',
+    placementDashboardTop: 'popunder',
     placementDashboardBottom: '',
-    placementSidebar: '',
-    placementEarnPage: '',
-    placementStore: '',
-    placementWallet: '',
+    placementSidebar: '300x250',
+    placementEarnPage: 'popunder',
+    placementStore: 'banner',
+    placementWallet: 'smartlink',
     placementPurchases: '',
     placementInstances: '',
     
