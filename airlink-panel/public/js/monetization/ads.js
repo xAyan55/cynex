@@ -15,33 +15,50 @@
   var popunderReady = false;
   var popunderCooldown = false;
 
-  /* ── Native ads ────────────────────────────────────────── */
+  /* ── Ad format dimensions for atOptions ────────────────── */
+  var AD_DIMENSIONS = {
+    native:   { w: 300, h: 300 },
+    banner:   { w: 728, h: 90 },
+    '728x90': { w: 728, h: 90 },
+    '300x250': { w: 300, h: 250 },
+    '468x60': { w: 468, h: 60 },
+    '160x300': { w: 160, h: 300 },
+    '160x600': { w: 160, h: 600 },
+    '320x50': { w: 320, h: 50 },
+  };
+
+  /* ── Ad queue (all atOptions-based formats) ────────────── */
   /* Process one container at a time so window.atOptions is  */
   /* correct for each invoke.js (avoids overwrite bug).      */
-  function processNativeQueue() {
+  function processAdQueue() {
     var container = document.querySelector(
-      '[data-cynex-format="native"]:not([data-cynex-done])'
+      '[data-cynex-format]:not([data-cynex-done])' +
+      ':not([data-cynex-format="socialbar"])' +
+      ':not([data-cynex-format="popunder"])'
     );
     if (!container) return;
 
     container.setAttribute('data-cynex-done', '1');
     var zoneId = container.getAttribute('data-cynex-zone');
-    if (!zoneId) { removeContainer(container); processNativeQueue(); return; }
+    if (!zoneId) { removeContainer(container); processAdQueue(); return; }
 
-    log('Injecting native at ' + (container.getAttribute('data-cynex-placement') || '?'));
+    var format = container.getAttribute('data-cynex-format');
+    var dims = AD_DIMENSIONS[format] || AD_DIMENSIONS['728x90'];
+
+    log('Injecting ' + format + ' at ' + (container.getAttribute('data-cynex-placement') || '?'));
 
     window.atOptions = {
       key: zoneId,
       format: 'iframe',
-      height: 300,
-      width: 300,
+      height: dims.h,
+      width: dims.w,
       params: {}
     };
 
     var s = document.createElement('script');
     s.src = 'https://www.highperformanceformat.com/' + encodeURIComponent(zoneId) + '/invoke.js';
-    s.onload  = processNativeQueue;
-    s.onerror = function() { log('Native script error'); removeContainer(container); processNativeQueue(); };
+    s.onload  = processAdQueue;
+    s.onerror = function() { log('Script error for ' + format); removeContainer(container); processAdQueue(); };
     container.appendChild(s);
   }
 
@@ -107,7 +124,7 @@
     log('Scanning for ad wrappers');
     injectSocial();
     injectPopunder();
-    processNativeQueue();
+    processAdQueue();
   }
 
   if (document.readyState === 'loading') {

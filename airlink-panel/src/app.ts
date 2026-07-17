@@ -195,6 +195,8 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     'https://*.effectivecpmnetwork.com',
     'https://*.trafficfactor.com',
     'https://*.adsterratools.com',
+    'https://*.adsterratech.com',
+    'https://*.adsterra.net',
     'https://*.adsterra.biz',
     'https://*.popadscdn.com',
     'https://*.popads.net',
