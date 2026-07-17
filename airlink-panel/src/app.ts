@@ -188,17 +188,26 @@ app.use((req: Request, res: Response, next: NextFunction) => {
   //   fonts:   api.fontshare.com, cdn.fontshare.com, fonts.googleapis.com
   //   scripts: cdn.jsdelivr.net, cdnjs.cloudflare.com
   //   styles:  cdn.jsdelivr.net (xterm.css)
+  const adsterraDomains = [
+    'https://*.adsterra.com',
+    'https://*.adsterracdn.com',
+    'https://*.highperformanceformat.com',
+    'https://*.trafficfactor.com',
+    'https://*.adsterratools.com',
+    'https://*.adsterra.biz',
+    'https://*.popadscdn.com',
+    'https://*.popads.net',
+    'https://*.exclickads.com',
+  ];
   const cdnScripts = [
     'https://cdn.jsdelivr.net',
     'https://cdnjs.cloudflare.com',
-    'https://*.adsterra.com',
-    'https://*.adsterracdn.com',
-    'https://*.highperformanceformat.com',
+    ...adsterraDomains,
   ];
   const cdnFrames = [
-    'https://*.adsterra.com',
-    'https://*.adsterracdn.com',
-    'https://*.highperformanceformat.com',
+    'https://cdn.jsdelivr.net',
+    'https://cdnjs.cloudflare.com',
+    ...adsterraDomains,
   ];
   const cdnStyles = [
     'https://cdn.jsdelivr.net',
@@ -258,8 +267,18 @@ app.use((req: Request, res: Response, next: NextFunction) => {
             ...cdnScripts,
           ],
 
+          // Workers — needed if Adsterra scripts use Service Workers or Web Workers
+          workerSrc: ['\'self\'', ...adsterraDomains],
+
           // Frames — needed for Adsterra banner/native/popunder iframes
           frameSrc: ['\'self\'', ...cdnFrames],
+
+          // child-src is the CSP Level 2 predecessor of frame-src + worker-src.
+          // Some legacy browsers (Chrome < 40, Safari < 10) use child-src
+          // instead of frame-src for iframe navigations. Setting both ensures
+          // Adsterra iframes are never blocked by a legacy fallback to
+          // default-src 'self'.
+          childSrc: ['\'self\'', ...cdnFrames],
 
           // Inline event handlers (onclick, onchange, etc.) cannot carry nonces.
           // 'unsafe-inline' here is scoped only to attributes, not to <script>
@@ -283,6 +302,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
           connectSrc: [
             '\'self\'',
             ...(isHttps ? ['wss:'] : ['ws:', 'wss:']),
+            ...adsterraDomains,
           ],
 
           // Prevent the panel from being embedded in any frame anywhere.
