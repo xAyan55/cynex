@@ -358,7 +358,21 @@ const monetizationAdminModule: Module = {
         try {
           const providerSlug = paramStr(req.params.provider).toLowerCase();
           const provider = ProviderRegistry.get(providerSlug);
-          
+
+          // Load monetization config and pass provider-specific keys (strip provider prefix)
+          const monConfig = await ConfigService.monetization();
+          const providerConfig: Record<string, any> = {};
+          const prefix = providerSlug;
+          for (const [key, value] of Object.entries(monConfig)) {
+            if (key.toLowerCase().startsWith(prefix)) {
+              // Strip the provider prefix: e.g. "adsterraPublisherId" -> "publisherId"
+              const stripped = key.slice(prefix.length);
+              const unprefixed = stripped.charAt(0).toLowerCase() + stripped.slice(1);
+              providerConfig[unprefixed] = value;
+            }
+          }
+          await provider.reloadConfiguration(providerConfig);
+
           const health = await provider.healthCheck();
 
           // Create a health check log entry

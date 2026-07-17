@@ -16,12 +16,10 @@ type JsonValue = Prisma.JsonValue;
 
 function parseJson<T>(value: JsonValue, fallback: T): T {
   if (value === null || value === undefined) return fallback;
-  if (typeof value === 'object') return value as unknown as T;
-  try {
-    return JSON.parse(value as string) as T;
-  } catch {
-    return fallback;
-  }
+  // Prisma already deserializes Json fields into proper JS types.
+  // Return primitives directly — JSON.parse on a bare string like "abc" fails
+  // because it's not valid JSON (would need quotes: '"abc"').
+  return value as unknown as T;
 }
 
 function buildConfig<T>(rows: { key: string; value: JsonValue }[], defaults: Record<string, unknown>): T {
