@@ -19,13 +19,42 @@
           const onlineCount = servers.filter(s => s.status === 'running').length;
           const offlineCount = servers.filter(s => s.status === 'stopped' || s.status === 'unknown').length;
           const suspendedCount = servers.filter(s => s.status === 'suspended').length;
-        %>
 
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-          <%- include('../components/ui/StatCard', { title: 'Total Servers', value: totalCount, icon_name: 'server', color: 'green' }) %>
-          <%- include('../components/ui/StatCard', { title: 'Online', value: onlineCount, icon_name: 'activity', color: 'purple' }) %>
-          <%- include('../components/ui/StatCard', { title: 'Offline', value: offlineCount, icon_name: 'power', color: 'blue' }) %>
-          <%- include('../components/ui/StatCard', { title: 'Suspended', value: suspendedCount, icon_name: 'ban', color: 'blue' }) %>
+          const onlinePct = totalCount > 0 ? Math.round((onlineCount / totalCount) * 100) : 0;
+          const offlinePct = totalCount > 0 ? Math.round((offlineCount / totalCount) * 100) : 0;
+          const suspendedPct = totalCount > 0 ? Math.round((suspendedCount / totalCount) * 100) : 0;
+        %>
+        <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-6">
+          <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Infrastructure Status</p>
+              <h2 class="text-xl font-bold text-white mt-1">Operational Overview</h2>
+            </div>
+            <div class="flex flex-wrap gap-4 text-xs font-semibold">
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-emerald-500/10 text-emerald-400 border border-emerald-500/15">
+                <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+                Online: <%= onlineCount %>
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-white/5 text-neutral-400 border border-white/5">
+                <span class="w-2 h-2 rounded-full bg-neutral-400"></span>
+                Offline: <%= offlineCount %>
+              </span>
+              <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-amber-500/10 text-amber-400 border border-amber-500/15">
+                <span class="w-2 h-2 rounded-full bg-amber-500"></span>
+                Suspended: <%= suspendedCount %>
+              </span>
+            </div>
+          </div>
+          <!-- Segmented Multi-colored Progress Bar -->
+          <div class="w-full h-2.5 bg-white/5 rounded-full overflow-hidden flex">
+            <% if (totalCount === 0) { %>
+              <div class="h-full bg-neutral-500 rounded-full w-full"></div>
+            <% } else { %>
+              <div class="h-full bg-emerald-500" style="width: <%= onlinePct %>%" title="Online: <%= onlinePct %>%"></div>
+              <div class="h-full bg-amber-500" style="width: <%= suspendedPct %>%" title="Suspended: <%= suspendedPct %>%"></div>
+              <div class="h-full bg-neutral-600" style="width: <%= offlinePct %>%" title="Offline: <%= offlinePct %>%"></div>
+            <% } %>
+          </div>
         </div>
 
         <%- renderPlacement('instancesTop') %>
@@ -79,8 +108,19 @@
                 const daysLeft = server.expiresAt ? Math.max(0, Math.ceil((new Date(server.expiresAt).getTime() - Date.now()) / (1000 * 60 * 60 * 24))) : null;
                 const isExpiringSoon = daysLeft !== null && daysLeft <= 7 && daysLeft > 0;
                 const isExpired = daysLeft !== null && daysLeft <= 0;
+
+                // Border classes and glows based on status
+                let statusBorderClass = 'border-l-4 border-l-neutral-700';
+                let shadowGlowClass = 'hover:shadow-md';
+                if (server.status === 'running') {
+                  statusBorderClass = 'border-l-4 border-l-emerald-500';
+                  shadowGlowClass = 'hover:shadow-[0_0_20px_rgba(16,185,129,0.05)] hover:border-emerald-500/20';
+                } else if (server.status === 'suspended') {
+                  statusBorderClass = 'border-l-4 border-l-amber-500';
+                  shadowGlowClass = 'hover:shadow-[0_0_20px_rgba(245,158,11,0.05)] hover:border-amber-500/20';
+                }
               %>
-              <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4 hover:border-white/15 transition-all server-card"
+              <div class="cynex-glass rounded-2xl border border-white/5 <%= statusBorderClass %> p-6 space-y-4 hover:border-white/15 transition-all duration-300 <%= shadowGlowClass %> server-card"
                    data-name="<%= server.name.toLowerCase() %>"
                    data-status="<%= server.status %>">
                 <div class="flex items-start justify-between">
@@ -96,14 +136,14 @@
                   <span class="font-medium"><%= server.node.address %>:<%= server.node.port %></span>
                 </div>
 
-                <div class="space-y-3">
+                <div class="space-y-3 bg-white/[0.01] p-3.5 rounded-xl border border-white/5">
                   <div>
                     <div class="flex items-center justify-between mb-1.5">
                       <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">RAM</span>
                       <span class="text-[11px] font-semibold text-neutral-400"><%= server.ramUsed || '0MB' %> / <%= server.Memory >= 1024 ? (server.Memory / 1024).toFixed(1) + ' GB' : server.Memory + ' MB' %></span>
                     </div>
-                    <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                      <div class="progress-bar h-full rounded-full <%= ramPercent > 90 ? 'bg-red-500' : (ramPercent > 70 ? 'bg-amber-500' : 'bg-brand-green') %>" style="width: <%= ramPercent %>%"></div>
+                    <div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                      <div class="progress-bar h-full rounded-full <%= ramPercent > 90 ? 'bg-red-500' : (ramPercent > 70 ? 'bg-amber-500' : 'bg-emerald-500') %>" style="width: <%= ramPercent %>%"></div>
                     </div>
                   </div>
                   <div>
@@ -111,8 +151,8 @@
                       <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">CPU</span>
                       <span class="text-[11px] font-semibold text-neutral-400"><%= Math.round(Number(server.cpuUsage || 0)) %>% / <%= server.Cpu %>%</span>
                     </div>
-                    <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                      <div class="progress-bar h-full rounded-full <%= cpuPercent > 90 ? 'bg-red-500' : (cpuPercent > 70 ? 'bg-amber-500' : 'bg-brand-green') %>" style="width: <%= cpuPercent %>%"></div>
+                    <div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                      <div class="progress-bar h-full rounded-full <%= cpuPercent > 90 ? 'bg-red-500' : (cpuPercent > 70 ? 'bg-amber-500' : 'bg-emerald-500') %>" style="width: <%= cpuPercent %>%"></div>
                     </div>
                   </div>
                   <div>
@@ -120,8 +160,8 @@
                       <span class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Disk</span>
                       <span class="text-[11px] font-semibold text-neutral-400"><%= server.diskUsed || '0MB' %> / <%= server.Storage >= 1024 ? (server.Storage / 1024).toFixed(1) + ' GB' : server.Storage + ' MB' %></span>
                     </div>
-                    <div class="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
-                      <div class="progress-bar h-full rounded-full <%= diskPercent > 90 ? 'bg-red-500' : (diskPercent > 70 ? 'bg-amber-500' : 'bg-brand-green') %>" style="width: <%= diskPercent %>%"></div>
+                    <div class="w-full h-1 bg-white/5 rounded-full overflow-hidden">
+                      <div class="progress-bar h-full rounded-full <%= diskPercent > 90 ? 'bg-red-500' : (diskPercent > 70 ? 'bg-amber-500' : 'bg-emerald-500') %>" style="width: <%= diskPercent %>%"></div>
                     </div>
                   </div>
                 </div>
@@ -133,34 +173,31 @@
                   </span>
                 </div>
 
-                <div class="pt-3 border-t border-white/5 space-y-3">
-                  <div class="flex items-center gap-2">
-                    <a href="/server/<%= server.UUID %>" class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-white/5 border border-white/10 hover:bg-white/10 text-xs font-semibold text-neutral-300 transition cursor-pointer">
+                <div class="pt-3 border-t border-white/5 space-y-2">
+                  <div class="flex items-center gap-1.5 bg-white/[0.02] p-1 rounded-xl border border-white/5">
+                    <a href="/server/<%= server.UUID %>" class="flex-1 inline-flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-semibold text-neutral-300 transition cursor-pointer">
                       <%- icon('settings', { class: 'w-3.5 h-3.5' }) %> Manage
                     </a>
                     <% if (!server.Suspended) { %>
-                      <button onclick="handlePower('<%= server.UUID %>', 'start')" class="p-2 bg-brand-green/10 border border-brand-green/20 hover:bg-brand-green hover:text-black rounded-xl text-brand-green transition-all cursor-pointer" title="Start">
+                      <button onclick="handlePower('<%= server.UUID %>', 'start')" class="p-2 bg-emerald-500/10 hover:bg-emerald-500 hover:text-black rounded-lg text-emerald-400 transition-all cursor-pointer" title="Start">
                         <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
                       </button>
-                      <button onclick="handlePower('<%= server.UUID %>', 'stop')" class="p-2 bg-red-500/10 border border-red-500/20 hover:bg-red-500 hover:text-white rounded-xl text-red-400 transition-all cursor-pointer" title="Stop">
+                      <button onclick="handlePower('<%= server.UUID %>', 'stop')" class="p-2 bg-red-500/10 hover:bg-red-500 hover:text-white rounded-lg text-red-400 transition-all cursor-pointer" title="Stop">
                         <svg class="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24"><path d="M6 6h12v12H6z"/></svg>
                       </button>
-                      <button onclick="handlePower('<%= server.UUID %>', 'restart')" class="p-2 bg-amber-500/10 border border-amber-500/20 hover:bg-amber-500 hover:text-black rounded-xl text-amber-400 transition-all cursor-pointer" title="Restart">
+                      <button onclick="handlePower('<%= server.UUID %>', 'restart')" class="p-2 bg-amber-500/10 hover:bg-amber-500 hover:text-black rounded-lg text-amber-400 transition-all cursor-pointer" title="Restart">
                         <%- icon('refresh-cw', { class: 'w-3.5 h-3.5' }) %>
-                      </button>
-                      <button onclick="handlePower('<%= server.UUID %>', 'kill')" class="p-2 bg-red-500/10 border border-red-500/20 hover:bg-red-500 hover:text-white rounded-xl text-red-400 transition-all cursor-pointer" title="Kill">
-                        <%- icon('zap', { class: 'w-3.5 h-3.5' }) %>
                       </button>
                     <% } %>
                   </div>
-                  <div class="flex items-center gap-2">
-                    <button onclick="openActionModal('upgrade', '<%= server.UUID %>', '<%= server.name %>', <%= server.Memory %>, <%= server.Cpu %>, <%= server.Storage %>)" class="flex-1 px-3 py-2 rounded-xl bg-blue-500/10 border border-blue-500/20 hover:bg-blue-500/20 text-xs font-semibold text-blue-400 transition cursor-pointer">
+                  <div class="flex items-center gap-1.5">
+                    <button onclick="openActionModal('upgrade', '<%= server.UUID %>', '<%= server.name %>', <%= server.Memory %>, <%= server.Cpu %>, <%= server.Storage %>)" class="flex-1 py-1.5 rounded-lg bg-blue-500/5 hover:bg-blue-500/10 text-[11px] font-semibold text-blue-400 border border-blue-500/10 transition cursor-pointer">
                       Upgrade
                     </button>
-                    <button onclick="openActionModal('downgrade', '<%= server.UUID %>', '<%= server.name %>', <%= server.Memory %>, <%= server.Cpu %>, <%= server.Storage %>)" class="flex-1 px-3 py-2 rounded-xl bg-orange-500/10 border border-orange-500/20 hover:bg-orange-500/20 text-xs font-semibold text-orange-400 transition cursor-pointer">
+                    <button onclick="openActionModal('downgrade', '<%= server.UUID %>', '<%= server.name %>', <%= server.Memory %>, <%= server.Cpu %>, <%= server.Storage %>)" class="flex-1 py-1.5 rounded-lg bg-orange-500/5 hover:bg-orange-500/10 text-[11px] font-semibold text-orange-400 border border-orange-500/10 transition cursor-pointer">
                       Downgrade
                     </button>
-                    <button onclick="openActionModal('renew', '<%= server.UUID %>', '<%= server.name %>', '<%= expiryText %>')" class="flex-1 px-3 py-2 rounded-xl bg-purple-500/10 border border-purple-500/20 hover:bg-purple-500/20 text-xs font-semibold text-purple-400 transition cursor-pointer">
+                    <button onclick="openActionModal('renew', '<%= server.UUID %>', '<%= server.name %>', '<%= expiryText %>')" class="flex-1 py-1.5 rounded-lg bg-purple-500/5 hover:bg-purple-500/10 text-[11px] font-semibold text-purple-400 border border-purple-500/10 transition cursor-pointer">
                       Renew
                     </button>
                   </div>

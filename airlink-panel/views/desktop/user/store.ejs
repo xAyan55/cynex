@@ -16,10 +16,11 @@
           </div>
         </div>
 
-        <div class="flex items-center gap-1 bg-white/5 border border-white/10 rounded-xl p-1 w-fit">
-          <button onclick="switchTab('resources')" id="tab-resources" class="tab-btn px-5 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer bg-brand-green text-black">Resource Store</button>
-          <button onclick="switchTab('upgrade')" id="tab-upgrade" class="tab-btn px-5 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer text-neutral-400 hover:text-white">Server Upgrade</button>
-          <button onclick="switchTab('renew')" id="tab-renew" class="tab-btn px-5 py-2 rounded-lg text-sm font-medium transition-all cursor-pointer text-neutral-400 hover:text-white">Server Renewal</button>
+        <!-- Store Navigation tabs -->
+        <div class="flex gap-1.5 p-1.5 bg-white/[0.02] border border-white/5 rounded-2xl w-fit">
+          <button onclick="switchTab('resources')" id="tab-resources" class="tab-btn px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer bg-white text-black">Resource Store</button>
+          <button onclick="switchTab('upgrade')" id="tab-upgrade" class="tab-btn px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer text-neutral-400 hover:text-white">Server Upgrade</button>
+          <button onclick="switchTab('renew')" id="tab-renew" class="tab-btn px-5 py-2.5 rounded-xl text-xs font-bold transition-all duration-300 cursor-pointer text-neutral-400 hover:text-white">Server Renewal</button>
         </div>
 
         <%- renderPlacement('storeTop') %>
@@ -29,8 +30,9 @@
           <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
 
             <!-- RAM -->
-            <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4">
-              <div class="flex items-center gap-3">
+            <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4 hover:shadow-[0_0_20px_rgba(59,130,246,0.06)] hover:border-blue-500/20 transition-all duration-300 relative overflow-hidden group">
+              <div class="absolute -right-6 -bottom-6 w-20 h-20 bg-blue-500/5 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500"></div>
+              <div class="flex items-center gap-3 relative z-10">
                 <div class="p-2.5 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400">
                   <%- icon('cpu', { class: 'w-5 h-5' }) %>
                 </div>
@@ -39,16 +41,16 @@
                   <p class="text-xs text-neutral-400">Memory allocation</p>
                 </div>
               </div>
-              <div class="space-y-1.5">
+              <div class="space-y-1.5 relative z-10">
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Allocated</span><span class="text-sm font-bold text-white"><%= ram.allocated.toLocaleString() %> MB</span></div>
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Used</span><span class="text-sm font-bold text-white"><%= ram.used.toLocaleString() %> MB</span></div>
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Available</span><span class="text-sm font-bold text-brand-green"><%= ram.available.toLocaleString() %> MB</span></div>
               </div>
-              <div class="border-t border-white/5 pt-3 space-y-3">
+              <div class="border-t border-white/5 pt-3 space-y-3 relative z-10">
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Price per MB</span><span class="text-sm font-bold text-white"><%= storeConfig.ramPricePerMb %> coins</span></div>
                 <div class="flex items-center gap-2">
                   <button onclick="stepper('ram-amount', -1)" class="shrink-0 w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10 transition cursor-pointer text-sm font-bold">−</button>
-                  <input type="number" id="ram-amount" min="1" value="1" data-price="<%= storeConfig.ramPricePerMb %>" data-key="ram" class="resource-input flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white text-center outline-none focus:border-brand-green/30" oninput="updateResourceCard(this)">
+                  <input type="number" id="ram-amount" min="1" value="1" data-price="<%= storeConfig.ramPricePerMb %>" data-key="ram" class="resource-input flex-1 bg-white/5 border border-white/10 rounded-xl px-3 py-2 text-sm text-white text-center outline-none focus:border-brand-green/30 animate-none" oninput="updateResourceCard(this)">
                   <button onclick="stepper('ram-amount', 1)" class="shrink-0 w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10 transition cursor-pointer text-sm font-bold">+</button>
                   <span class="text-xs text-neutral-400 shrink-0">MB</span>
                 </div>
@@ -63,8 +65,9 @@
             </div>
 
             <!-- CPU -->
-            <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4">
-              <div class="flex items-center gap-3">
+            <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4 hover:shadow-[0_0_20px_rgba(168,85,247,0.06)] hover:border-purple-500/20 transition-all duration-300 relative overflow-hidden group">
+              <div class="absolute -right-6 -bottom-6 w-20 h-20 bg-purple-500/5 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500"></div>
+              <div class="flex items-center gap-3 relative z-10">
                 <div class="p-2.5 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400">
                   <%- icon('zap', { class: 'w-5 h-5' }) %>
                 </div>
@@ -73,12 +76,12 @@
                   <p class="text-xs text-neutral-400">Processor allocation</p>
                 </div>
               </div>
-              <div class="space-y-1.5">
+              <div class="space-y-1.5 relative z-10">
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Allocated</span><span class="text-sm font-bold text-white"><%= cpu.allocated %>%</span></div>
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Used</span><span class="text-sm font-bold text-white"><%= cpu.used %>%</span></div>
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Available</span><span class="text-sm font-bold text-brand-green"><%= cpu.available %>%</span></div>
               </div>
-              <div class="border-t border-white/5 pt-3 space-y-3">
+              <div class="border-t border-white/5 pt-3 space-y-3 relative z-10">
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Price per %</span><span class="text-sm font-bold text-white"><%= storeConfig.cpuPricePerPercent %> coins</span></div>
                 <div class="flex items-center gap-2">
                   <button onclick="stepper('cpu-amount', -1)" class="shrink-0 w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10 transition cursor-pointer text-sm font-bold">−</button>
@@ -97,8 +100,9 @@
             </div>
 
             <!-- Disk -->
-            <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4">
-              <div class="flex items-center gap-3">
+            <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4 hover:shadow-[0_0_20px_rgba(16,185,129,0.06)] hover:border-emerald-500/20 transition-all duration-300 relative overflow-hidden group">
+              <div class="absolute -right-6 -bottom-6 w-20 h-20 bg-emerald-500/5 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500"></div>
+              <div class="flex items-center gap-3 relative z-10">
                 <div class="p-2.5 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400">
                   <%- icon('hard-drive', { class: 'w-5 h-5' }) %>
                 </div>
@@ -107,12 +111,12 @@
                   <p class="text-xs text-neutral-400">Storage allocation</p>
                 </div>
               </div>
-              <div class="space-y-1.5">
+              <div class="space-y-1.5 relative z-10">
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Allocated</span><span class="text-sm font-bold text-white"><%= disk.allocated.toLocaleString() %> MB</span></div>
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Used</span><span class="text-sm font-bold text-white"><%= disk.used.toLocaleString() %> MB</span></div>
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Available</span><span class="text-sm font-bold text-brand-green"><%= disk.available.toLocaleString() %> MB</span></div>
               </div>
-              <div class="border-t border-white/5 pt-3 space-y-3">
+              <div class="border-t border-white/5 pt-3 space-y-3 relative z-10">
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Price per MB</span><span class="text-sm font-bold text-white"><%= storeConfig.diskPricePerMb %> coins</span></div>
                 <div class="flex items-center gap-2">
                   <button onclick="stepper('disk-amount', -1)" class="shrink-0 w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10 transition cursor-pointer text-sm font-bold">−</button>
@@ -131,8 +135,9 @@
             </div>
 
             <!-- Backup Slots -->
-            <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4">
-              <div class="flex items-center gap-3">
+            <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4 hover:shadow-[0_0_20px_rgba(245,158,11,0.06)] hover:border-amber-500/20 transition-all duration-300 relative overflow-hidden group">
+              <div class="absolute -right-6 -bottom-6 w-20 h-20 bg-amber-500/5 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500"></div>
+              <div class="flex items-center gap-3 relative z-10">
                 <div class="p-2.5 rounded-xl bg-amber-500/10 border border-amber-500/20 text-amber-400">
                   <%- icon('archive', { class: 'w-5 h-5' }) %>
                 </div>
@@ -141,10 +146,10 @@
                   <p class="text-xs text-neutral-400">Backup capacity</p>
                 </div>
               </div>
-              <div class="space-y-1.5">
+              <div class="space-y-1.5 relative z-10">
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Allocated</span><span class="text-sm font-bold text-white"><%= typeof backupSlots !== 'undefined' ? backupSlots : 0 %> slot(s)</span></div>
               </div>
-              <div class="border-t border-white/5 pt-3 space-y-3">
+              <div class="border-t border-white/5 pt-3 space-y-3 relative z-10">
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Price per slot</span><span class="text-sm font-bold text-white"><%= storeConfig.backupSlotPrice %> coins</span></div>
                 <div class="flex items-center gap-2">
                   <button onclick="stepper('backup-amount', -1)" class="shrink-0 w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10 transition cursor-pointer text-sm font-bold">−</button>
@@ -163,8 +168,9 @@
             </div>
 
             <!-- Database Slots -->
-            <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4">
-              <div class="flex items-center gap-3">
+            <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4 hover:shadow-[0_0_20px_rgba(6,182,212,0.06)] hover:border-cyan-500/20 transition-all duration-300 relative overflow-hidden group">
+              <div class="absolute -right-6 -bottom-6 w-20 h-20 bg-cyan-500/5 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500"></div>
+              <div class="flex items-center gap-3 relative z-10">
                 <div class="p-2.5 rounded-xl bg-cyan-500/10 border border-cyan-500/20 text-cyan-400">
                   <%- icon('database', { class: 'w-5 h-5' }) %>
                 </div>
@@ -173,10 +179,10 @@
                   <p class="text-xs text-neutral-400">Database capacity</p>
                 </div>
               </div>
-              <div class="space-y-1.5">
+              <div class="space-y-1.5 relative z-10">
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Allocated</span><span class="text-sm font-bold text-white"><%= typeof databaseSlots !== 'undefined' ? databaseSlots : 0 %> slot(s)</span></div>
               </div>
-              <div class="border-t border-white/5 pt-3 space-y-3">
+              <div class="border-t border-white/5 pt-3 space-y-3 relative z-10">
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Price per slot</span><span class="text-sm font-bold text-white"><%= storeConfig.databaseSlotPrice %> coins</span></div>
                 <div class="flex items-center gap-2">
                   <button onclick="stepper('database-amount', -1)" class="shrink-0 w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10 transition cursor-pointer text-sm font-bold">−</button>
@@ -195,8 +201,9 @@
             </div>
 
             <!-- Ports -->
-            <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4">
-              <div class="flex items-center gap-3">
+            <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4 hover:shadow-[0_0_20px_rgba(244,63,94,0.06)] hover:border-rose-500/20 transition-all duration-300 relative overflow-hidden group">
+              <div class="absolute -right-6 -bottom-6 w-20 h-20 bg-rose-500/5 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500"></div>
+              <div class="flex items-center gap-3 relative z-10">
                 <div class="p-2.5 rounded-xl bg-rose-500/10 border border-rose-500/20 text-rose-400">
                   <%- icon('plug', { class: 'w-5 h-5' }) %>
                 </div>
@@ -205,10 +212,10 @@
                   <p class="text-xs text-neutral-400">Network ports</p>
                 </div>
               </div>
-              <div class="space-y-1.5">
+              <div class="space-y-1.5 relative z-10">
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Allocated</span><span class="text-sm font-bold text-white"><%= typeof ports !== 'undefined' ? ports : 0 %> port(s)</span></div>
               </div>
-              <div class="border-t border-white/5 pt-3 space-y-3">
+              <div class="border-t border-white/5 pt-3 space-y-3 relative z-10">
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Price per port</span><span class="text-sm font-bold text-white"><%= storeConfig.portPrice %> coins</span></div>
                 <div class="flex items-center gap-2">
                   <button onclick="stepper('port-amount', -1)" class="shrink-0 w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10 transition cursor-pointer text-sm font-bold">−</button>
@@ -227,8 +234,9 @@
             </div>
 
             <!-- Server Slots -->
-            <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4">
-              <div class="flex items-center gap-3">
+            <div class="cynex-glass rounded-2xl border border-white/5 p-6 space-y-4 hover:shadow-[0_0_20px_rgba(99,102,241,0.06)] hover:border-indigo-500/20 transition-all duration-300 relative overflow-hidden group">
+              <div class="absolute -right-6 -bottom-6 w-20 h-20 bg-indigo-500/5 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500"></div>
+              <div class="flex items-center gap-3 relative z-10">
                 <div class="p-2.5 rounded-xl bg-indigo-500/10 border border-indigo-500/20 text-indigo-400">
                   <%- icon('server', { class: 'w-5 h-5' }) %>
                 </div>
@@ -237,10 +245,10 @@
                   <p class="text-xs text-neutral-400">Server capacity</p>
                 </div>
               </div>
-              <div class="space-y-1.5">
+              <div class="space-y-1.5 relative z-10">
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Allocated</span><span class="text-sm font-bold text-white"><%= typeof serverSlots !== 'undefined' ? serverSlots : 0 %> slot(s)</span></div>
               </div>
-              <div class="border-t border-white/5 pt-3 space-y-3">
+              <div class="border-t border-white/5 pt-3 space-y-3 relative z-10">
                 <div class="flex justify-between text-xs"><span class="text-neutral-400">Price per slot</span><span class="text-sm font-bold text-white"><%= storeConfig.databaseSlotPrice %> coins</span></div>
                 <div class="flex items-center gap-2">
                   <button onclick="stepper('server-amount', -1)" class="shrink-0 w-8 h-8 rounded-lg bg-white/5 border border-white/10 text-white flex items-center justify-center hover:bg-white/10 transition cursor-pointer text-sm font-bold">−</button>
@@ -450,6 +458,17 @@
     </div>
   </div>
 
+  <!-- Floating Balance tracker pinned to screen -->
+  <div class="fixed bottom-6 right-6 z-50 pointer-events-auto">
+    <div class="cynex-glass border border-white/10 rounded-2xl px-4 py-3 flex items-center gap-2.5 shadow-2xl hover:scale-105 transition-all duration-300">
+      <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-amber-400 animate-spin" style="animation-duration: 4s" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1.41 16.09V20h-2.67v-1.93c-1.71-.36-3.16-1.46-3.27-3.4h1.96c.1 1.05.82 1.87 2.65 1.87 1.96 0 2.4-.98 2.4-1.59 0-.83-.44-1.61-2.67-2.14-2.48-.6-4.18-1.62-4.18-3.67 0-1.72 1.39-2.84 3.11-3.21V4h2.67v1.95c1.86.45 2.79 1.86 2.85 3.39H14.3c-.05-1.11-.64-1.87-2.22-1.87-1.5 0-2.4.68-2.4 1.64 0 .84.65 1.39 2.67 1.91s4.18 1.39 4.18 3.91c-.01 1.83-1.38 2.83-3.12 3.16z"/></svg>
+      <div class="text-right">
+        <p class="text-[9px] font-bold text-neutral-500 uppercase tracking-wider leading-none">Your Balance</p>
+        <p id="floatingBalance" class="text-sm font-black text-white leading-none mt-1"><%= balance.toLocaleString() %> <span class="text-neutral-400 font-bold text-[10px]">coins</span></p>
+      </div>
+    </div>
+  </div>
+
   <%- renderPlacement('storeBottom') %>
 </main>
 
@@ -478,16 +497,25 @@ var CPU = <%- JSON.stringify(cpu) %>;
 var DISK = <%- JSON.stringify(disk) %>;
 var selectedRenewDays = 0;
 
+function updateBalanceDisplay(newBal) {
+  CURRENT_BALANCE = newBal;
+  const str = newBal.toLocaleString() + ' coins';
+  const el = document.getElementById('balanceDisplay');
+  if (el) el.textContent = str;
+  const floatEl = document.getElementById('floatingBalance');
+  if (floatEl) floatEl.innerHTML = newBal.toLocaleString() + ' <span class="text-neutral-400 font-bold text-[10px]">coins</span>';
+}
+
 function switchTab(tab) {
   document.querySelectorAll('.tab-panel').forEach(function(p) { p.classList.add('hidden'); });
   document.querySelectorAll('.tab-btn').forEach(function(b) {
-    b.classList.remove('bg-brand-green', 'text-black');
-    b.classList.add('text-neutral-400');
+    b.classList.remove('bg-white', 'text-black');
+    b.classList.add('text-neutral-400', 'hover:text-white');
   });
   document.getElementById('panel-' + tab).classList.remove('hidden');
   var btn = document.getElementById('tab-' + tab);
-  btn.classList.add('bg-brand-green', 'text-black');
-  btn.classList.remove('text-neutral-400');
+  btn.classList.add('bg-white', 'text-black');
+  btn.classList.remove('text-neutral-400', 'hover:text-white');
 }
 
 function stepper(inputId, delta) {
@@ -543,8 +571,7 @@ function buyResource(type, btnEl) {
         btnEl.disabled = false;
         btnEl.textContent = 'Buy';
         if (data.success) {
-          CURRENT_BALANCE = data.newBalance;
-          document.getElementById('balanceDisplay').textContent = CURRENT_BALANCE.toLocaleString() + ' coins';
+          updateBalanceDisplay(data.newBalance);
           window.modal.confirm({
             title: 'Purchase Successful',
             body: 'Purchased ' + amount + ' ' + label + ' for ' + total.toLocaleString() + ' coins.',
@@ -574,8 +601,7 @@ function purchaseProduct(id, name, price) {
     onConfirm: function() {
       fetch('/store/buy/' + id, { method: 'POST' }).then(function(r) { return r.json(); }).then(function(data) {
         if (data.success) {
-          CURRENT_BALANCE = CURRENT_BALANCE - price;
-          document.getElementById('balanceDisplay').textContent = CURRENT_BALANCE.toLocaleString() + ' coins';
+          updateBalanceDisplay(CURRENT_BALANCE - price);
           window.modal.confirm({
             title: 'Purchase Successful',
             body: 'Purchased ' + name + ' for ' + price.toLocaleString() + ' coins.',
@@ -691,8 +717,7 @@ function submitUpgrade() {
         btn.disabled = false;
         btn.textContent = 'Upgrade Server';
         if (data.success) {
-          CURRENT_BALANCE = data.newBalance;
-          document.getElementById('balanceDisplay').textContent = CURRENT_BALANCE.toLocaleString() + ' coins';
+          updateBalanceDisplay(data.newBalance);
           window.modal.confirm({
             title: 'Upgrade Successful',
             body: 'Server upgraded for ' + data.coinCost + ' coins.',
@@ -794,8 +819,7 @@ function submitRenew() {
         btn.disabled = false;
         btn.textContent = 'Renew Server';
         if (data.success) {
-          CURRENT_BALANCE = data.newBalance;
-          document.getElementById('balanceDisplay').textContent = CURRENT_BALANCE.toLocaleString() + ' coins';
+          updateBalanceDisplay(data.newBalance);
           window.modal.confirm({
             title: 'Renewal Successful',
             body: 'Server renewed for ' + data.coinCost + ' coins. New expiry: ' + formatDate(new Date(data.expiresAt)) + '.',

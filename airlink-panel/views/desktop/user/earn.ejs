@@ -7,20 +7,20 @@
       
       <!-- Top banner header -->
       <div class="px-8 pt-5">
-        <h1 class="text-base font-medium text-neutral-800 dark:text-white">Earning Hub</h1>
-        <p class="mt-0.5 text-sm text-neutral-500">Earn coins by completing link tasks, staying AFK, and claiming daily rewards.</p>
+        <h1 class="text-xl font-bold text-white">Earning Hub</h1>
+        <p class="mt-0.5 text-xs text-neutral-400">Earn coins by completing link tasks, staying AFK, and claiming daily rewards.</p>
       </div>
 
       <div class="px-8 mt-5">
         
         <!-- Tab bar -->
-        <div class="flex gap-0.5 mb-6 border-b border-neutral-200 dark:border-neutral-700/40 overflow-x-auto">
-          <button type="button" data-tab="overview" class="earn-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('layout-grid', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Overview</button>
-          <button type="button" data-tab="offers" class="earn-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('package', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Offers</button>
-          <button type="button" data-tab="afk" class="earn-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('clock', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>AFK Rewards</button>
-          <button type="button" data-tab="streak" class="earn-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('calendar-check', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Daily Streak</button>
-          <button type="button" data-tab="history" class="earn-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('file-text', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>History</button>
-          <button type="button" data-tab="leaderboard" class="earn-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('trophy', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Leaderboard</button>
+        <div class="flex gap-1.5 mb-8 p-1.5 bg-white/[0.02] border border-white/5 rounded-2xl overflow-x-auto scrollbar-none">
+          <button type="button" data-tab="overview" class="earn-tab-btn flex items-center gap-2 px-5 py-3 text-xs font-bold transition-all duration-300 rounded-xl hover:text-white text-neutral-400 whitespace-nowrap cursor-pointer"><%- icon('layout-grid', { class: 'w-4 h-4' }) %>Overview</button>
+          <button type="button" data-tab="offers" class="earn-tab-btn flex items-center gap-2 px-5 py-3 text-xs font-bold transition-all duration-300 rounded-xl hover:text-white text-neutral-400 whitespace-nowrap cursor-pointer"><%- icon('package', { class: 'w-4 h-4' }) %>Offers</button>
+          <button type="button" data-tab="afk" class="earn-tab-btn flex items-center gap-2 px-5 py-3 text-xs font-bold transition-all duration-300 rounded-xl hover:text-white text-neutral-400 whitespace-nowrap cursor-pointer"><%- icon('clock', { class: 'w-4 h-4' }) %>AFK Rewards</button>
+          <button type="button" data-tab="streak" class="earn-tab-btn flex items-center gap-2 px-5 py-3 text-xs font-bold transition-all duration-300 rounded-xl hover:text-white text-neutral-400 whitespace-nowrap cursor-pointer"><%- icon('calendar-check', { class: 'w-4 h-4' }) %>Daily Streak</button>
+          <button type="button" data-tab="history" class="earn-tab-btn flex items-center gap-2 px-5 py-3 text-xs font-bold transition-all duration-300 rounded-xl hover:text-white text-neutral-400 whitespace-nowrap cursor-pointer"><%- icon('file-text', { class: 'w-4 h-4' }) %>History</button>
+          <button type="button" data-tab="leaderboard" class="earn-tab-btn flex items-center gap-2 px-5 py-3 text-xs font-bold transition-all duration-300 rounded-xl hover:text-white text-neutral-400 whitespace-nowrap cursor-pointer"><%- icon('trophy', { class: 'w-4 h-4' }) %>Leaderboard</button>
         </div>
 
         <!-- Notification messages -->
@@ -29,26 +29,67 @@
         <!-- ═══ OVERVIEW TAB ══════════════════════════════════════════════════ -->
         <div id="earn-panel-overview" class="earn-content-panel hidden space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <%- include('../components/ui/StatCard', { title: 'Current Balance', value: balance.toLocaleString(), icon_name: 'wallet', color: 'green' }) %>
-            <%- include('../components/ui/StatCard', { title: 'Earned Today', value: stats.todayEarned.toLocaleString(), icon_name: 'sun', color: 'blue' }) %>
-            <%- include('../components/ui/StatCard', { title: 'Lifetime Earnings', value: stats.lifetimeEarned.toLocaleString(), icon_name: 'gift', color: 'purple' }) %>
+            <!-- Balance Card -->
+            <div class="cynex-glass rounded-2xl border border-white/5 p-6 relative overflow-hidden group hover:border-white/10 transition-all duration-300">
+              <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl"></div>
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Current Balance</p>
+                  <h3 class="text-2xl font-extrabold text-white mt-1"><%= balance.toLocaleString() %></h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                  <%- icon('wallet', { class: 'w-5 h-5' }) %>
+                </div>
+              </div>
+              <p class="text-xs text-neutral-400">Total spendable coins</p>
+            </div>
+
+            <!-- Earned Today Card -->
+            <div class="cynex-glass rounded-2xl border border-white/5 p-6 relative overflow-hidden group hover:border-white/10 transition-all duration-300">
+              <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-blue-500/5 rounded-full blur-2xl"></div>
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Earned Today</p>
+                  <h3 class="text-2xl font-extrabold text-white mt-1"><%= stats.todayEarned.toLocaleString() %></h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center">
+                  <%- icon('sun', { class: 'w-5 h-5' }) %>
+                </div>
+              </div>
+              <p class="text-xs text-neutral-400">Coins accumulated today</p>
+            </div>
+
+            <!-- Lifetime Earnings Card -->
+            <div class="cynex-glass rounded-2xl border border-white/5 p-6 relative overflow-hidden group hover:border-white/10 transition-all duration-300">
+              <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-purple-500/5 rounded-full blur-2xl"></div>
+              <div class="flex items-center justify-between mb-2">
+                <div>
+                  <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Lifetime Earnings</p>
+                  <h3 class="text-2xl font-extrabold text-white mt-1"><%= stats.lifetimeEarned.toLocaleString() %></h3>
+                </div>
+                <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center">
+                  <%- icon('gift', { class: 'w-5 h-5' }) %>
+                </div>
+              </div>
+              <p class="text-xs text-neutral-400">Total coins earned ever</p>
+            </div>
           </div>
 
           <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
             <!-- Recent activity -->
-            <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 p-5 lg:col-span-2">
+            <div class="cynex-glass rounded-xl border border-white/5 p-5 lg:col-span-2">
               <h2 class="text-sm font-bold text-white mb-4">Recent Earning Actions</h2>
-              <div class="divide-y divide-neutral-200 dark:divide-white/5">
+              <div class="divide-y divide-white/5">
                 <% if (recentActivity.length === 0) { %>
                   <p class="py-4 text-sm text-neutral-500 text-center">No completions recorded yet.</p>
                 <% } else { %>
                   <% recentActivity.forEach(act => { %>
                     <div class="py-3 flex justify-between items-center text-sm">
                       <div>
-                        <p class="font-medium text-neutral-800 dark:text-neutral-200"><%= act.offer?.name || 'AFK Session' %></p>
-                        <p class="text-xs text-neutral-500"><%= new Date(act.createdAt).toLocaleString() %></p>
+                        <p class="font-semibold text-neutral-200"><%= act.offer?.name || 'AFK Session' %></p>
+                        <p class="text-xs text-neutral-500 mt-0.5"><%= new Date(act.createdAt).toLocaleString() %></p>
                       </div>
-                      <span class="text-green-400 font-semibold font-mono">+<%= act.coinsAwarded %> coins</span>
+                      <span class="text-emerald-400 font-bold font-mono">+<%= act.coinsAwarded %> coins</span>
                     </div>
                   <% }); %>
                 <% } %>
@@ -56,13 +97,16 @@
             </div>
             
             <!-- Quick Actions widget -->
-            <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 p-5">
-              <h2 class="text-sm font-bold text-white mb-4">Quick Actions</h2>
-              <div class="space-y-3">
-                <a href="/store" class="block w-full py-2.5 bg-white text-black hover:bg-neutral-200 text-center text-xs font-bold rounded-xl transition">
+            <div class="cynex-glass rounded-xl border border-white/5 p-5 flex flex-col justify-between">
+              <div>
+                <h2 class="text-sm font-bold text-white mb-2">Quick Actions</h2>
+                <p class="text-xs text-neutral-400">Head to the store to trade your accumulated coins for upgraded server slots and specs.</p>
+              </div>
+              <div class="space-y-3 mt-6">
+                <a href="/store" class="block w-full py-3 bg-white text-black hover:bg-neutral-200 text-center text-xs font-bold rounded-xl transition duration-300">
                   Go to Store
                 </a>
-                <button onclick="switchTab('offers')" class="w-full py-2.5 bg-white/5 border border-white/10 hover:bg-white/10 text-center text-xs font-bold rounded-xl transition">
+                <button onclick="switchTab('offers')" class="w-full py-3 bg-white/5 border border-white/10 hover:bg-white/10 text-center text-xs font-bold rounded-xl transition duration-300 text-white cursor-pointer">
                   Browse Offers
                 </button>
               </div>
@@ -74,20 +118,24 @@
         <div id="earn-panel-offers" class="earn-content-panel hidden space-y-6">
           <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <% offers.forEach(offer => { %>
-              <div class="bg-white dark:bg-white/5 border border-neutral-200 dark:border-white/5 rounded-xl p-5 hover:border-white/10 transition relative">
-                <h3 class="font-bold text-white text-base"><%= offer.name %></h3>
-                <p class="text-xs text-neutral-500 mt-1 uppercase tracking-wider"><%= offer.provider %> task</p>
-                <p class="text-sm text-neutral-400 mt-3"><%= offer.description || 'Complete the task steps to claim your reward.' %></p>
-                
-                <div class="mt-4 flex flex-wrap gap-1">
-                  <% offer.rewards.forEach(r => { %>
-                    <span class="bg-green-500/10 text-green-400 text-xs px-2.5 py-0.5 rounded border border-green-500/20 font-semibold">+<%= r.amount %> <%= r.rewardType %></span>
-                  <% }); %>
+              <div class="cynex-glass border border-white/5 rounded-xl p-5 hover:border-white/10 transition relative flex flex-col justify-between h-56">
+                <div>
+                  <h3 class="font-bold text-white text-base truncate"><%= offer.name %></h3>
+                  <p class="text-[9px] text-neutral-500 mt-0.5 uppercase tracking-wider font-bold"><%= offer.provider %> task</p>
+                  <p class="text-xs text-neutral-400 mt-3 line-clamp-3"><%= offer.description || 'Complete the task steps to claim your reward.' %></p>
                 </div>
+                
+                <div>
+                  <div class="mt-4 flex flex-wrap gap-1">
+                    <% offer.rewards.forEach(r => { %>
+                      <span class="bg-emerald-500/10 text-emerald-400 text-[10px] px-2.5 py-0.5 rounded border border-emerald-500/20 font-bold">+<%= r.amount %> <%= r.rewardType %></span>
+                    <% }); %>
+                  </div>
 
-                <div class="mt-5 border-t border-white/5 pt-4 flex justify-between items-center">
-                  <span class="text-xs text-neutral-500"><%- icon('clock', { class: 'w-3 h-3 inline mr-1' }) %>Cooldown: <%= offer.cooldown %>s</span>
-                  <button onclick="startOffer(<%= offer.id %>)" class="px-4 py-2 bg-white text-black hover:bg-neutral-200 text-xs font-bold rounded-xl transition shadow">Start Task</button>
+                  <div class="mt-4 border-t border-white/5 pt-3 flex justify-between items-center text-[10px]">
+                    <span class="text-neutral-500 flex items-center gap-1"><%- icon('clock', { class: 'w-3 h-3' }) %>Cooldown: <%= offer.cooldown %>s</span>
+                    <button onclick="startOffer(<%= offer.id %>)" class="px-3.5 py-1.5 bg-white text-black hover:bg-neutral-200 font-bold rounded-lg transition shadow cursor-pointer">Start Task</button>
+                  </div>
                 </div>
               </div>
             <% }); %>
@@ -98,37 +146,46 @@
 
         <!-- ═══ AFK TAB ═══════════════════════════════════════════════════════ -->
         <div id="earn-panel-afk" class="earn-content-panel hidden space-y-6">
-          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 p-8 max-w-lg mx-auto text-center space-y-6">
-            <h2 class="text-lg font-bold text-white">AFK Rewards System</h2>
-            <p class="text-sm text-neutral-400">Earning matches Visibility and Active State indicators. Earning will auto-pause if you switch tabs or lose page focus.</p>
+          <div class="cynex-glass rounded-2xl border border-white/5 p-8 max-w-lg mx-auto text-center space-y-8 relative overflow-hidden">
+            <div class="absolute -right-20 -top-20 w-60 h-60 bg-emerald-500/5 rounded-full blur-3xl"></div>
+            
+            <div>
+              <h2 class="text-lg font-bold text-white">AFK Rewards Engine</h2>
+              <p class="text-xs text-neutral-400 mt-1">Earning matches Visibility and Active State indicators. Earning will auto-pause if you switch tabs or lose page focus.</p>
+            </div>
 
-            <div class="h-28 flex items-center justify-center bg-white/[0.02] border border-white/5 rounded-2xl relative">
-              <span id="afkTimer" class="text-4xl font-mono font-bold text-white select-none">00:00:00</span>
+            <!-- Glowing Digital Timer Ring -->
+            <div class="relative w-48 h-48 mx-auto flex items-center justify-center bg-white/[0.01] border border-white/5 rounded-full shadow-inner shadow-black">
+              <!-- Radial outer track/border animation when active -->
+              <div id="timerPulseRing" class="absolute inset-0 rounded-full border border-white/5 transition-all duration-1000"></div>
+              
+              <div class="text-center relative z-10">
+                <span id="afkTimer" class="text-3xl font-mono font-bold text-white select-none">00:00:00</span>
+                <div id="afkStatusDot" class="flex items-center justify-center gap-1.5 mt-2">
+                  <span class="w-2 h-2 rounded-full bg-red-500 inline-block animate-pulse"></span>
+                  <span id="afkStatusLabel" class="text-[9px] text-neutral-500 font-bold uppercase tracking-wider">Inactive</span>
+                </div>
+              </div>
             </div>
 
             <div class="grid grid-cols-3 gap-4 text-center">
-              <div class="bg-white/5 p-3 rounded-xl border border-white/5">
-                <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Coins/Min</p>
-                <p class="text-lg font-bold text-white font-mono"><%= monetization.coinsPerAfkMinute %></p>
+              <div class="bg-white/5 p-3.5 rounded-xl border border-white/5">
+                <p class="text-[9px] text-neutral-500 uppercase tracking-widest font-bold mb-1">Coins/Min</p>
+                <p class="text-base font-bold text-white font-mono"><%= monetization.coinsPerAfkMinute %></p>
               </div>
-              <div class="bg-white/5 p-3 rounded-xl border border-white/5">
-                <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Earned Session</p>
-                <p id="sessionEarned" class="text-lg font-bold text-white font-mono">0</p>
+              <div class="bg-white/5 p-3.5 rounded-xl border border-white/5">
+                <p class="text-[9px] text-neutral-500 uppercase tracking-widest font-bold mb-1">Earned Session</p>
+                <p id="sessionEarned" class="text-base font-bold text-white font-mono">0</p>
               </div>
-              <div class="bg-white/5 p-3 rounded-xl border border-white/5">
-                <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Daily Cap</p>
-                <p class="text-lg font-bold text-white font-mono"><%= monetization.maxAfkMinutesPerDay %>m</p>
+              <div class="bg-white/5 p-3.5 rounded-xl border border-white/5">
+                <p class="text-[9px] text-neutral-500 uppercase tracking-widest font-bold mb-1">Daily Cap</p>
+                <p class="text-base font-bold text-white font-mono"><%= monetization.maxAfkMinutesPerDay %>m</p>
               </div>
             </div>
 
-            <div id="afkStatusDot" class="flex items-center justify-center gap-2 py-2">
-              <span class="w-2.5 h-2.5 rounded-full bg-red-500 inline-block animate-pulse"></span>
-              <span id="afkStatusLabel" class="text-xs text-neutral-500 font-semibold uppercase">Inactive</span>
-            </div>
-
-            <div class="flex gap-3 justify-center">
-              <button id="startAfkBtn" onclick="startAfk()" class="px-5 py-2.5 bg-white text-black hover:bg-neutral-200 text-xs font-bold rounded-xl transition shadow">Start AFK Earning</button>
-              <button id="stopAfkBtn" onclick="stopAfk()" class="hidden px-5 py-2.5 bg-red-500 text-black hover:bg-red-600 text-xs font-bold rounded-xl transition shadow">Stop Session</button>
+            <div class="flex gap-3 justify-center relative z-10">
+              <button id="startAfkBtn" onclick="startAfk()" class="px-6 py-3 bg-white text-black hover:bg-neutral-200 text-xs font-bold rounded-xl transition duration-300 shadow cursor-pointer">Start AFK Earning</button>
+              <button id="stopAfkBtn" onclick="stopAfk()" class="hidden px-6 py-3 bg-red-500 hover:bg-red-600 text-white text-xs font-bold rounded-xl transition duration-300 shadow cursor-pointer">Stop Session</button>
             </div>
           </div>
         </div>
@@ -137,33 +194,37 @@
 
         <!-- ═══ STREAK TAB ════════════════════════════════════════════════════ -->
         <div id="earn-panel-streak" class="earn-content-panel hidden space-y-6">
-          <div class="bg-white dark:bg-white/5 rounded-xl border border-neutral-200 dark:border-white/5 p-6 max-w-lg mx-auto text-center space-y-6">
-            <h2 class="text-base font-bold text-white">Daily Streak Reward</h2>
-            <p class="text-sm text-neutral-400">Claim your rewards consecutive days to unlock larger milestones.</p>
+          <div class="cynex-glass rounded-2xl border border-white/5 p-6 max-w-lg mx-auto text-center space-y-6">
+            <div>
+              <h2 class="text-base font-bold text-white">Daily Streak Calendar</h2>
+              <p class="text-xs text-neutral-400 mt-1">Claim your rewards consecutive days to unlock larger milestones.</p>
+            </div>
 
-            <div class="flex justify-around items-center py-4 bg-white/[0.02] border border-white/5 rounded-2xl">
+            <div class="flex justify-around items-center py-5 bg-white/[0.01] border border-white/5 rounded-2xl">
               <div>
-                <p class="text-xs text-neutral-500 uppercase mb-1">Current Streak</p>
-                <p class="text-3xl font-bold text-white font-mono"><%= streak.currentStreak %> Days</p>
+                <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Current Streak</p>
+                <p class="text-3xl font-extrabold text-white font-mono"><%= streak.currentStreak %> Days</p>
               </div>
               <div class="h-10 w-px bg-white/5"></div>
               <div>
-                <p class="text-xs text-neutral-500 uppercase mb-1">Best Streak</p>
-                <p class="text-3xl font-bold text-white font-mono"><%= streak.bestStreak %> Days</p>
+                <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Best Streak</p>
+                <p class="text-3xl font-extrabold text-neutral-400 font-mono"><%= streak.bestStreak %> Days</p>
               </div>
             </div>
 
             <!-- Milestone progression calendar -->
             <div class="grid grid-cols-5 gap-3">
               <% [1, 3, 7, 14, 30].forEach(day => { %>
-                <div class="p-3 rounded-xl border border-white/5 <%= streak.currentStreak >= day ? 'bg-green-500/10 border-green-500/20 text-green-400' : 'bg-white/5 text-neutral-500' %>">
-                  <p class="text-xs font-semibold">Day <%= day %></p>
-                  <p class="text-lg font-bold font-mono mt-1">+<%= monetization['streakDay' + day + 'Reward'] %></p>
+                <% const claimed = streak.currentStreak >= day; %>
+                <div class="p-3.5 rounded-xl border flex flex-col justify-between h-24 transition-all duration-300 <%= claimed ? 'bg-emerald-500/10 border-emerald-500/25 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.05)]' : 'bg-white/5 border-white/5 text-neutral-500' %>">
+                  <div class="text-[10px] font-bold tracking-wider uppercase">Day <%= day %></div>
+                  <div class="text-lg font-black font-mono">+<%= monetization['streakDay' + day + 'Reward'] %></div>
+                  <div class="text-[9px] font-medium tracking-wide uppercase"><%= claimed ? 'Claimed' : 'Locked' %></div>
                 </div>
               <% }); %>
             </div>
 
-            <button onclick="claimStreak()" class="w-full py-3 bg-white text-black hover:bg-neutral-200 text-xs font-bold rounded-xl transition shadow">Claim Daily Reward</button>
+            <button onclick="claimStreak()" class="w-full py-3.5 bg-white text-black hover:bg-neutral-100 text-xs font-bold rounded-xl transition duration-300 shadow cursor-pointer">Claim Daily Reward</button>
           </div>
         </div>
 
@@ -246,11 +307,11 @@
     window.switchTab = function(tabId) {
       tabs.forEach(tab => {
         if (tab.getAttribute('data-tab') === tabId) {
-          tab.classList.add('border-white', 'text-white');
-          tab.classList.remove('border-transparent', 'text-neutral-400');
+          tab.classList.add('bg-white/[0.08]', 'text-white');
+          tab.classList.remove('text-neutral-400');
         } else {
-          tab.classList.remove('border-white', 'text-white');
-          tab.classList.add('border-transparent', 'text-neutral-400');
+          tab.classList.remove('bg-white/[0.08]', 'text-white');
+          tab.classList.add('text-neutral-400');
         }
       });
 
@@ -379,6 +440,12 @@
         document.getElementById('afkStatusLabel').className = 'text-xs text-green-400 font-semibold uppercase';
 
         afkInterval = setInterval(updateAfkTimer, 1000);
+        
+        const ring = document.getElementById('timerPulseRing');
+        if (ring) {
+          ring.className = 'absolute inset-0 rounded-full border-2 border-emerald-500/20 shadow-[0_0_20px_rgba(16,185,129,0.15)] animate-pulse';
+        }
+
         showEarnToast('AFK Earning session started.');
       } else {
         showEarnToast(data.error || 'Failed to start AFK session.', true);
@@ -448,6 +515,11 @@
     afkSessionToken = null;
     document.getElementById('startAfkBtn').classList.remove('hidden');
     document.getElementById('stopAfkBtn').classList.add('hidden');
+    
+    const ring = document.getElementById('timerPulseRing');
+    if (ring) {
+      ring.className = 'absolute inset-0 rounded-full border border-white/5';
+    }
     
     const statusDot = document.getElementById('afkStatusDot').querySelector('span');
     statusDot.className = 'w-2.5 h-2.5 rounded-full bg-red-500 inline-block animate-pulse';

@@ -6,7 +6,7 @@
       <div class="px-12 pt-8 pb-12 space-y-8 max-w-2xl">
         <div class="flex items-center justify-between">
           <div>
-            <h1 class="text-xl font-bold tracking-tight">Redeem Coupon</h1>
+            <h1 class="text-xl font-bold tracking-tight text-white">Redeem Coupon</h1>
             <p class="text-sm text-neutral-400 mt-1">Enter a coupon code to claim rewards.</p>
           </div>
           <div class="flex items-center gap-2 bg-white/5 border border-white/10 rounded-xl px-4 py-2.5">
@@ -15,28 +15,46 @@
           </div>
         </div>
 
+        <%- renderPlacement('redeemTop') %>
+
         <% if (error) { %>
-          <div class="rounded-xl bg-red-500/10 border border-red-500/20 px-5 py-4">
+          <div class="rounded-xl bg-red-500/10 border border-red-500/20 px-5 py-4 animate-shake">
             <p class="text-sm font-semibold text-red-400"><%= error %></p>
           </div>
         <% } %>
 
         <% if (success) { %>
-          <div class="rounded-xl bg-brand-green/10 border border-brand-green/20 px-5 py-4">
+          <div class="rounded-xl bg-brand-green/10 border border-brand-green/20 px-5 py-4 animate-bounce">
             <p class="text-sm font-semibold text-brand-green">Coupon redeemed successfully!</p>
-            <p class="text-xs text-neutral-400 mt-1">You received <%= success.rewardAmount %> of <%= success.rewardType %>.</p>
+            <p class="text-xs text-neutral-400 mt-1 font-medium">You received <%= success.rewardAmount %> of <%= success.rewardType %>.</p>
           </div>
         <% } %>
 
-        <div class="cynex-glass rounded-2xl border border-white/5 p-8">
-          <form method="POST" action="/redeem" class="space-y-6">
-            <div>
-              <label class="text-sm font-bold text-white block mb-2">Coupon Code</label>
-              <input type="text" name="code" placeholder="ENTER CODE HERE" required
-                class="w-full border border-white/10 rounded-xl bg-white/5 px-4 py-3 text-sm text-white outline-none focus:border-brand-green/30 placeholder:text-neutral-500 font-mono uppercase tracking-widest box-border">
+        <%- renderPlacement('redeemMiddle') %>
+
+        <!-- Ticket Shape Card -->
+        <div class="cynex-glass rounded-3xl border border-white/5 p-8 relative overflow-hidden shadow-2xl hover:border-white/10 transition-all duration-300 group">
+          <!-- Ticket Side Cutouts -->
+          <div class="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-mono-bg border border-white/5 z-20"></div>
+          <div class="absolute -right-3 top-1/2 -translate-y-1/2 w-6 h-6 rounded-full bg-mono-bg border border-white/5 z-20"></div>
+
+          <!-- Ambient blur bg -->
+          <div class="absolute -right-10 -bottom-10 w-40 h-40 bg-purple-500/5 rounded-full blur-3xl"></div>
+
+          <form id="redeemForm" method="POST" action="/redeem" class="space-y-6 relative z-10">
+            <div class="text-center pb-4 border-b border-dashed border-white/10">
+              <h2 class="text-base font-bold text-white uppercase tracking-wider">Voucher Ticket</h2>
+              <p class="text-xs text-neutral-500 mt-1">Claim your bonus coins or subscription keys</p>
             </div>
-            <button type="submit" class="w-full px-4 py-3 rounded-xl text-sm font-bold bg-brand-green text-black hover:bg-brand-green-hover transition cursor-pointer">
-              Redeem
+            
+            <div>
+              <label class="text-xs font-bold text-neutral-400 block mb-2 uppercase tracking-wider">Coupon Code</label>
+              <input type="text" name="code" placeholder="ENTER CODE HERE" required
+                class="w-full border border-white/10 rounded-xl bg-white/5 px-4 py-3.5 text-sm text-white text-center outline-none focus:border-brand-green/30 placeholder:text-neutral-500 font-mono uppercase tracking-widest box-border">
+            </div>
+            
+            <button type="submit" id="redeemBtn" class="w-full px-4 py-3.5 rounded-xl text-sm font-bold bg-brand-green text-black hover:bg-brand-green-hover transition duration-300 cursor-pointer">
+              Redeem Code
             </button>
           </form>
         </div>
@@ -46,4 +64,14 @@
     </div>
   </div>
 </main>
+<script nonce="<%- nonce %>">
+  document.getElementById('redeemForm')?.addEventListener('submit', function() {
+    const btn = document.getElementById('redeemBtn');
+    if (btn) {
+      btn.disabled = true;
+      btn.textContent = 'VALIDATING TICKET...';
+      btn.className = 'w-full px-4 py-3.5 rounded-xl text-sm font-bold bg-white/5 border border-white/10 text-neutral-400 cursor-not-allowed';
+    }
+  });
+</script>
 <%- include('../components/footer') %>

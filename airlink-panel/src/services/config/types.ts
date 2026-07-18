@@ -118,8 +118,13 @@ export interface MonetizationConfig {
   placementStoreMiddle: string;       // native
   placementStoreBottom: string;       // 728x90
   placementWalletTop: string;         // responsive banner
+  placementWalletMiddle: string;      // native/300x250 middle
   placementWalletBottom: string;      // 300x250
+  placementPurchasesTop: string;      // responsive banner
+  placementPurchasesMiddle: string;   // 300x250 middle
   placementPurchasesBottom: string;   // native
+  placementRedeemTop: string;         // responsive banner
+  placementRedeemMiddle: string;      // native/300x250 middle
   placementRedeemBelow: string;       // 300x250 below coupon form
   placementSidebarSmartlink: string;  // smartlink button only
   placementFooter728x90: string;      // optional global footer
@@ -262,8 +267,13 @@ export const defaultValues: Record<string, Record<string, unknown>> = {
     placementStoreMiddle: '',
     placementStoreBottom: '',
     placementWalletTop: '',
+    placementWalletMiddle: '',
     placementWalletBottom: '',
+    placementPurchasesTop: '',
+    placementPurchasesMiddle: '',
     placementPurchasesBottom: '',
+    placementRedeemTop: '',
+    placementRedeemMiddle: '',
     placementRedeemBelow: '',
     placementSidebarSmartlink: '',
     placementFooter728x90: '',

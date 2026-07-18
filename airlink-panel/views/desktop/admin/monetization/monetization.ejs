@@ -275,11 +275,35 @@
                   </select>
                 </div>
                 <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Wallet Middle</label>
+                  <select name="placementWalletMiddle" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementWalletMiddle ? 'selected' : '' %>>Disabled</option>
+                    <option value="300x250" <%= monetization.placementWalletMiddle === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                    <option value="native" <%= monetization.placementWalletMiddle === 'native' ? 'selected' : '' %>>Native Banner</option>
+                  </select>
+                </div>
+                <div>
                   <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Wallet Bottom</label>
                   <select name="placementWalletBottom" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
                     <option value="" <%= !monetization.placementWalletBottom ? 'selected' : '' %>>Disabled</option>
                     <option value="300x250" <%= monetization.placementWalletBottom === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
                     <option value="native" <%= monetization.placementWalletBottom === 'native' ? 'selected' : '' %>>Native Banner</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Purchases Top</label>
+                  <select name="placementPurchasesTop" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementPurchasesTop ? 'selected' : '' %>>Disabled</option>
+                    <option value="banner" <%= monetization.placementPurchasesTop === 'banner' ? 'selected' : '' %>>Responsive Banner</option>
+                    <option value="728x90" <%= monetization.placementPurchasesTop === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Purchases Middle</label>
+                  <select name="placementPurchasesMiddle" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementPurchasesMiddle ? 'selected' : '' %>>Disabled</option>
+                    <option value="300x250" <%= monetization.placementPurchasesMiddle === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                    <option value="native" <%= monetization.placementPurchasesMiddle === 'native' ? 'selected' : '' %>>Native Banner</option>
                   </select>
                 </div>
                 <div>
@@ -291,7 +315,23 @@
                   </select>
                 </div>
                 <div>
-                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Redeem (below coupon form)</label>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Redeem Top</label>
+                  <select name="placementRedeemTop" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementRedeemTop ? 'selected' : '' %>>Disabled</option>
+                    <option value="banner" <%= monetization.placementRedeemTop === 'banner' ? 'selected' : '' %>>Responsive Banner</option>
+                    <option value="728x90" <%= monetization.placementRedeemTop === '728x90' ? 'selected' : '' %>>728×90 Leaderboard</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Redeem Middle</label>
+                  <select name="placementRedeemMiddle" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
+                    <option value="" <%= !monetization.placementRedeemMiddle ? 'selected' : '' %>>Disabled</option>
+                    <option value="300x250" <%= monetization.placementRedeemMiddle === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>
+                    <option value="native" <%= monetization.placementRedeemMiddle === 'native' ? 'selected' : '' %>>Native Banner</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-neutral-700 dark:text-white mb-2">Redeem Bottom (below coupon form)</label>
                   <select name="placementRedeemBelow" class="rounded-xl border border-neutral-200 dark:border-neutral-600/30 focus:border-neutral-400 dark:focus:border-white/70 focus:ring-1 focus:outline-none text-sm w-full bg-neutral-100 dark:bg-neutral-700/20 px-4 py-2 text-neutral-800 dark:text-white transition-colors">
                     <option value="" <%= !monetization.placementRedeemBelow ? 'selected' : '' %>>Disabled</option>
                     <option value="300x250" <%= monetization.placementRedeemBelow === '300x250' ? 'selected' : '' %>>300×250 Rectangle</option>

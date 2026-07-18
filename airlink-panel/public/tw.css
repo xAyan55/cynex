@@ -17,6 +17,25 @@
   --color-mono-focus: rgba(229, 229, 229, 0.25);
   --color-mono-disabled: rgba(255, 255, 255, 0.25);
 
+  /* Shared Design Tokens */
+  --color-surface-1: #0f0f0f;
+  --color-surface-2: #1a1a1a;
+  --color-surface-3: #222222;
+  --color-surface-hover: #2a2a2a;
+  --color-text-primary: #f0f0f0;
+  --color-text-secondary: #a3a3a3;
+  --color-text-muted: #666666;
+  --color-accent: #f5f5f5;
+  --color-brand-coin: #f59e0b;
+  
+  --color-success: #10b981;
+  --color-warning: #f59e0b;
+  --color-danger: #ef4444;
+  --color-info: #3b82f6;
+
+  --color-border-subtle: rgba(255, 255, 255, 0.08);
+  --color-border-focus: rgba(255, 255, 255, 0.2);
+
   /* Map brand highlights to monochrome accents */
   --color-brand-green: var(--color-mono-accent);
   --color-brand-green-hover: #ffffff;
