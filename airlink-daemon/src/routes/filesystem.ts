@@ -103,8 +103,8 @@ export async function handleFsSize(req: Request): Promise<Response> {
   if ('error' in result) return result.error;
   if (result.driver) return lxcError();
 
+  const { id } = result;
   const params = new URL(req.url).searchParams;
-  const id = params.get('id');
   const path = params.get('path') ?? '/';
 
   try {
@@ -120,7 +120,7 @@ export async function handleFsInfo(req: Request): Promise<Response> {
   if ('error' in result) return result.error;
   if (result.driver) return lxcError();
 
-  const id = new URL(req.url).searchParams.get('id');
+  const { id } = result;
 
   try {
     const contents = (await listDir(id, '/')) as {
