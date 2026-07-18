@@ -38,8 +38,21 @@
    * or ad-blocker).
    */
   function watchContainerForBlockedAd(container) {
-    // Give invoke.js a moment to inject its iframe
+    var format = container.getAttribute('data-cynex-format');
+    // Give invoke.js a moment to inject its content
     setTimeout(function() {
+      if (format === 'native') {
+        var zoneId = container.getAttribute('data-cynex-zone');
+        var targetDiv = document.getElementById('container-' + zoneId);
+        if (!targetDiv || !targetDiv.hasChildNodes()) {
+          log('No native ad content created for ' + (container.getAttribute('data-cynex-placement') || '?'));
+          removeContainer(container);
+        } else {
+          log('Native ad successfully loaded');
+        }
+        return;
+      }
+
       var iframe = container.querySelector('iframe');
       if (!iframe) {
         // invoke.js didn't create an iframe — remove container
@@ -109,13 +122,19 @@
 
     log('Injecting ' + format + ' at ' + (container.getAttribute('data-cynex-placement') || '?'));
 
-    window.atOptions = {
-      key: zoneId,
-      format: 'iframe',
-      height: dims.h,
-      width: dims.w,
-      params: {}
-    };
+    if (format === 'native') {
+      var targetDiv = document.createElement('div');
+      targetDiv.id = 'container-' + zoneId;
+      container.appendChild(targetDiv);
+    } else {
+      window.atOptions = {
+        key: zoneId,
+        format: 'iframe',
+        height: dims.h,
+        width: dims.w,
+        params: {}
+      };
+    }
 
     var s = document.createElement('script');
     s.src = 'https://www.highperformanceformat.com/' + encodeURIComponent(zoneId) + '/invoke.js';
