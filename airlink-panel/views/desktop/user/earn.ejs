@@ -31,13 +31,13 @@
           <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
             <!-- Balance Card -->
             <div class="cynex-glass rounded-2xl border border-white/5 p-6 relative overflow-hidden group hover:border-white/10 transition-all duration-300">
-              <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-emerald-500/5 rounded-full blur-2xl"></div>
+              <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/5 rounded-full blur-2xl"></div>
               <div class="flex items-center justify-between mb-2">
                 <div>
                   <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Current Balance</p>
                   <h3 class="text-2xl font-extrabold text-white mt-1"><%= balance.toLocaleString() %></h3>
                 </div>
-                <div class="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center">
+                <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-white flex items-center justify-center">
                   <%- icon('wallet', { class: 'w-5 h-5' }) %>
                 </div>
               </div>
@@ -46,13 +46,13 @@
 
             <!-- Earned Today Card -->
             <div class="cynex-glass rounded-2xl border border-white/5 p-6 relative overflow-hidden group hover:border-white/10 transition-all duration-300">
-              <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-blue-500/5 rounded-full blur-2xl"></div>
+              <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/5 rounded-full blur-2xl"></div>
               <div class="flex items-center justify-between mb-2">
                 <div>
                   <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Earned Today</p>
                   <h3 class="text-2xl font-extrabold text-white mt-1"><%= stats.todayEarned.toLocaleString() %></h3>
                 </div>
-                <div class="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 text-blue-400 flex items-center justify-center">
+                <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-white flex items-center justify-center">
                   <%- icon('sun', { class: 'w-5 h-5' }) %>
                 </div>
               </div>
@@ -61,13 +61,13 @@
 
             <!-- Lifetime Earnings Card -->
             <div class="cynex-glass rounded-2xl border border-white/5 p-6 relative overflow-hidden group hover:border-white/10 transition-all duration-300">
-              <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-purple-500/5 rounded-full blur-2xl"></div>
+              <div class="absolute -right-6 -bottom-6 w-24 h-24 bg-white/5 rounded-full blur-2xl"></div>
               <div class="flex items-center justify-between mb-2">
                 <div>
                   <p class="text-[10px] font-bold text-neutral-500 uppercase tracking-wider">Lifetime Earnings</p>
                   <h3 class="text-2xl font-extrabold text-white mt-1"><%= stats.lifetimeEarned.toLocaleString() %></h3>
                 </div>
-                <div class="w-10 h-10 rounded-xl bg-purple-500/10 border border-purple-500/20 text-purple-400 flex items-center justify-center">
+                <div class="w-10 h-10 rounded-xl bg-white/5 border border-white/10 text-white flex items-center justify-center">
                   <%- icon('gift', { class: 'w-5 h-5' }) %>
                 </div>
               </div>
@@ -89,7 +89,7 @@
                         <p class="font-semibold text-neutral-200"><%= act.offer?.name || 'AFK Session' %></p>
                         <p class="text-xs text-neutral-500 mt-0.5"><%= new Date(act.createdAt).toLocaleString() %></p>
                       </div>
-                      <span class="text-emerald-400 font-bold font-mono">+<%= act.coinsAwarded %> coins</span>
+                      <span class="text-white font-bold font-mono">+<%= act.coinsAwarded %> coins</span>
                     </div>
                   <% }); %>
                 <% } %>
@@ -185,7 +185,7 @@
 
             <div class="flex gap-3 justify-center relative z-10">
               <button id="startAfkBtn" onclick="startAfk()" class="px-6 py-3 bg-white text-black hover:bg-neutral-200 text-xs font-bold rounded-xl transition duration-300 shadow cursor-pointer">Start AFK Earning</button>
-              <button id="stopAfkBtn" onclick="stopAfk()" class="hidden px-6 py-3 bg-red-500 hover:bg-red-600 text-white text-xs font-bold rounded-xl transition duration-300 shadow cursor-pointer">Stop Session</button>
+              <button id="stopAfkBtn" onclick="stopAfk()" class="hidden px-6 py-3 bg-white/10 hover:bg-white/20 border border-white/10 text-white text-xs font-bold rounded-xl transition duration-300 shadow cursor-pointer">Stop Session</button>
             </div>
           </div>
         </div>
@@ -216,7 +216,7 @@
             <div class="grid grid-cols-5 gap-3">
               <% [1, 3, 7, 14, 30].forEach(day => { %>
                 <% const claimed = streak.currentStreak >= day; %>
-                <div class="p-3.5 rounded-xl border flex flex-col justify-between h-24 transition-all duration-300 <%= claimed ? 'bg-emerald-500/10 border-emerald-500/25 text-emerald-400 shadow-[0_0_15px_rgba(16,185,129,0.05)]' : 'bg-white/5 border-white/5 text-neutral-500' %>">
+                <div class="p-3.5 rounded-xl border flex flex-col justify-between h-24 transition-all duration-300 <%= claimed ? 'bg-white/10 border-white/20 text-white shadow-[0_0_15px_rgba(255,255,255,0.05)]' : 'bg-white/5 border-white/5 text-neutral-500' %>">
                   <div class="text-[10px] font-bold tracking-wider uppercase">Day <%= day %></div>
                   <div class="text-lg font-black font-mono">+<%= monetization['streakDay' + day + 'Reward'] %></div>
                   <div class="text-[9px] font-medium tracking-wide uppercase"><%= claimed ? 'Claimed' : 'Locked' %></div>
@@ -284,7 +284,7 @@
                       <img src="<%= user.avatar ? user.avatar : 'https://api.dicebear.com/9.x/thumbs/svg?seed=' + encodeURIComponent(user.username) %>" class="w-8 h-8 rounded-lg border border-white/5 object-cover">
                       <p class="font-medium text-white"><%= user.username %></p>
                     </div>
-                    <span class="text-green-400 font-mono font-semibold"><%= user.totalEarned %> coins</span>
+                    <span class="text-white font-mono font-semibold"><%= user.totalEarned %> coins</span>
                   </div>
                 <% }); %>
               <% } %>
