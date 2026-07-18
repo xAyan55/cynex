@@ -102,6 +102,7 @@ model Users {
   streak              UserStreak?          @relation("UserStreakRelation")
   fraudLogs           MonetizationFraudLog[] @relation("UserFraudLogs")
   earnPrefs           UserEarnPreferences?  @relation("UserEarnPrefs")
+  linkvertiseSessions LinkvertiseSession[]
 }
 
 model Session {
@@ -809,6 +810,40 @@ model NodeCapability {
   cgroupVersion   String?
   storageDriver   String?
   features        String   @default("[]") // JSON string of feature flags
+}
+
+model LinkvertiseSession {
+  id           Int      @id @default(autoincrement())
+  token        String   @unique
+  userId       Int
+  campaign     String
+  placement    String
+  rewardType   String
+  rewardAmount Int
+  destination  String
+  status       String   // CREATED, VISITED, COMPLETED, VERIFIED, PENDING_REWARD, REWARDED, FAILED, EXPIRED
+  ip           String?
+  userAgent    String?
+  retryCount   Int      @default(0)
+  errorMessage String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+  completedAt  DateTime?
+
+  user         Users    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  completions  LinkvertiseCompletion[]
+}
+
+model LinkvertiseCompletion {
+  id          Int      @id @default(autoincrement())
+  sessionId   Int
+  ipAddress   String?
+  userAgent   String?
+  signature   String
+  timestamp   DateTime
+  verifiedAt  DateTime @default(now())
+
+  session     LinkvertiseSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
 }
 
 

@@ -293,6 +293,7 @@ export type UsersWhereInput = {
   streak?: Prisma.XOR<Prisma.UserStreakNullableScalarRelationFilter, Prisma.UserStreakWhereInput> | null
   fraudLogs?: Prisma.MonetizationFraudLogListRelationFilter
   earnPrefs?: Prisma.XOR<Prisma.UserEarnPreferencesNullableScalarRelationFilter, Prisma.UserEarnPreferencesWhereInput> | null
+  linkvertiseSessions?: Prisma.LinkvertiseSessionListRelationFilter
 }
 
 export type UsersOrderByWithRelationInput = {
@@ -325,6 +326,7 @@ export type UsersOrderByWithRelationInput = {
   streak?: Prisma.UserStreakOrderByWithRelationInput
   fraudLogs?: Prisma.MonetizationFraudLogOrderByRelationAggregateInput
   earnPrefs?: Prisma.UserEarnPreferencesOrderByWithRelationInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionOrderByRelationAggregateInput
 }
 
 export type UsersWhereUniqueInput = Prisma.AtLeast<{
@@ -360,6 +362,7 @@ export type UsersWhereUniqueInput = Prisma.AtLeast<{
   streak?: Prisma.XOR<Prisma.UserStreakNullableScalarRelationFilter, Prisma.UserStreakWhereInput> | null
   fraudLogs?: Prisma.MonetizationFraudLogListRelationFilter
   earnPrefs?: Prisma.XOR<Prisma.UserEarnPreferencesNullableScalarRelationFilter, Prisma.UserEarnPreferencesWhereInput> | null
+  linkvertiseSessions?: Prisma.LinkvertiseSessionListRelationFilter
 }, "id" | "email" | "username">
 
 export type UsersOrderByWithAggregationInput = {
@@ -429,6 +432,7 @@ export type UsersCreateInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateInput = {
@@ -461,6 +465,7 @@ export type UsersUncheckedCreateInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersUpdateInput = {
@@ -492,6 +497,7 @@ export type UsersUpdateInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateInput = {
@@ -524,6 +530,7 @@ export type UsersUncheckedUpdateInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateManyInput = {
@@ -909,6 +916,20 @@ export type UsersUpdateOneRequiredWithoutEarnPrefsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutEarnPrefsInput, Prisma.UsersUpdateWithoutEarnPrefsInput>, Prisma.UsersUncheckedUpdateWithoutEarnPrefsInput>
 }
 
+export type UsersCreateNestedOneWithoutLinkvertiseSessionsInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutLinkvertiseSessionsInput, Prisma.UsersUncheckedCreateWithoutLinkvertiseSessionsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutLinkvertiseSessionsInput
+  connect?: Prisma.UsersWhereUniqueInput
+}
+
+export type UsersUpdateOneRequiredWithoutLinkvertiseSessionsNestedInput = {
+  create?: Prisma.XOR<Prisma.UsersCreateWithoutLinkvertiseSessionsInput, Prisma.UsersUncheckedCreateWithoutLinkvertiseSessionsInput>
+  connectOrCreate?: Prisma.UsersCreateOrConnectWithoutLinkvertiseSessionsInput
+  upsert?: Prisma.UsersUpsertWithoutLinkvertiseSessionsInput
+  connect?: Prisma.UsersWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UsersUpdateToOneWithWhereWithoutLinkvertiseSessionsInput, Prisma.UsersUpdateWithoutLinkvertiseSessionsInput>, Prisma.UsersUncheckedUpdateWithoutLinkvertiseSessionsInput>
+}
+
 export type UsersCreateWithoutServersInput = {
   email: string
   username?: string | null
@@ -937,6 +958,7 @@ export type UsersCreateWithoutServersInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutServersInput = {
@@ -968,6 +990,7 @@ export type UsersUncheckedCreateWithoutServersInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutServersInput = {
@@ -1014,6 +1037,7 @@ export type UsersUpdateWithoutServersInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutServersInput = {
@@ -1045,6 +1069,7 @@ export type UsersUncheckedUpdateWithoutServersInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutFoldersInput = {
@@ -1075,6 +1100,7 @@ export type UsersCreateWithoutFoldersInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutFoldersInput = {
@@ -1106,6 +1132,7 @@ export type UsersUncheckedCreateWithoutFoldersInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutFoldersInput = {
@@ -1152,6 +1179,7 @@ export type UsersUpdateWithoutFoldersInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutFoldersInput = {
@@ -1183,6 +1211,7 @@ export type UsersUncheckedUpdateWithoutFoldersInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutApiKeysInput = {
@@ -1213,6 +1242,7 @@ export type UsersCreateWithoutApiKeysInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutApiKeysInput = {
@@ -1244,6 +1274,7 @@ export type UsersUncheckedCreateWithoutApiKeysInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutApiKeysInput = {
@@ -1290,6 +1321,7 @@ export type UsersUpdateWithoutApiKeysInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutApiKeysInput = {
@@ -1321,6 +1353,7 @@ export type UsersUncheckedUpdateWithoutApiKeysInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutLoginHistoryInput = {
@@ -1351,6 +1384,7 @@ export type UsersCreateWithoutLoginHistoryInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutLoginHistoryInput = {
@@ -1382,6 +1416,7 @@ export type UsersUncheckedCreateWithoutLoginHistoryInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutLoginHistoryInput = {
@@ -1428,6 +1463,7 @@ export type UsersUpdateWithoutLoginHistoryInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutLoginHistoryInput = {
@@ -1459,6 +1495,7 @@ export type UsersUncheckedUpdateWithoutLoginHistoryInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutWalletInput = {
@@ -1489,6 +1526,7 @@ export type UsersCreateWithoutWalletInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutWalletInput = {
@@ -1520,6 +1558,7 @@ export type UsersUncheckedCreateWithoutWalletInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutWalletInput = {
@@ -1566,6 +1605,7 @@ export type UsersUpdateWithoutWalletInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutWalletInput = {
@@ -1597,6 +1637,7 @@ export type UsersUncheckedUpdateWithoutWalletInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutWalletTransactionsInput = {
@@ -1627,6 +1668,7 @@ export type UsersCreateWithoutWalletTransactionsInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutWalletTransactionsInput = {
@@ -1658,6 +1700,7 @@ export type UsersUncheckedCreateWithoutWalletTransactionsInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutWalletTransactionsInput = {
@@ -1704,6 +1747,7 @@ export type UsersUpdateWithoutWalletTransactionsInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutWalletTransactionsInput = {
@@ -1735,6 +1779,7 @@ export type UsersUncheckedUpdateWithoutWalletTransactionsInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutAllocationsInput = {
@@ -1765,6 +1810,7 @@ export type UsersCreateWithoutAllocationsInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutAllocationsInput = {
@@ -1796,6 +1842,7 @@ export type UsersUncheckedCreateWithoutAllocationsInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutAllocationsInput = {
@@ -1842,6 +1889,7 @@ export type UsersUpdateWithoutAllocationsInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutAllocationsInput = {
@@ -1873,6 +1921,7 @@ export type UsersUncheckedUpdateWithoutAllocationsInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutStorePurchasesInput = {
@@ -1903,6 +1952,7 @@ export type UsersCreateWithoutStorePurchasesInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutStorePurchasesInput = {
@@ -1934,6 +1984,7 @@ export type UsersUncheckedCreateWithoutStorePurchasesInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutStorePurchasesInput = {
@@ -1980,6 +2031,7 @@ export type UsersUpdateWithoutStorePurchasesInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutStorePurchasesInput = {
@@ -2011,6 +2063,7 @@ export type UsersUncheckedUpdateWithoutStorePurchasesInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutCouponRedemptionsInput = {
@@ -2041,6 +2094,7 @@ export type UsersCreateWithoutCouponRedemptionsInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutCouponRedemptionsInput = {
@@ -2072,6 +2126,7 @@ export type UsersUncheckedCreateWithoutCouponRedemptionsInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutCouponRedemptionsInput = {
@@ -2118,6 +2173,7 @@ export type UsersUpdateWithoutCouponRedemptionsInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutCouponRedemptionsInput = {
@@ -2149,6 +2205,7 @@ export type UsersUncheckedUpdateWithoutCouponRedemptionsInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutAuditLogsAsUserInput = {
@@ -2179,6 +2236,7 @@ export type UsersCreateWithoutAuditLogsAsUserInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutAuditLogsAsUserInput = {
@@ -2210,6 +2268,7 @@ export type UsersUncheckedCreateWithoutAuditLogsAsUserInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutAuditLogsAsUserInput = {
@@ -2245,6 +2304,7 @@ export type UsersCreateWithoutAuditLogsAsAdminInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutAuditLogsAsAdminInput = {
@@ -2276,6 +2336,7 @@ export type UsersUncheckedCreateWithoutAuditLogsAsAdminInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutAuditLogsAsAdminInput = {
@@ -2322,6 +2383,7 @@ export type UsersUpdateWithoutAuditLogsAsUserInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutAuditLogsAsUserInput = {
@@ -2353,6 +2415,7 @@ export type UsersUncheckedUpdateWithoutAuditLogsAsUserInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUpsertWithoutAuditLogsAsAdminInput = {
@@ -2394,6 +2457,7 @@ export type UsersUpdateWithoutAuditLogsAsAdminInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutAuditLogsAsAdminInput = {
@@ -2425,6 +2489,7 @@ export type UsersUncheckedUpdateWithoutAuditLogsAsAdminInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutNotificationsInput = {
@@ -2455,6 +2520,7 @@ export type UsersCreateWithoutNotificationsInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutNotificationsInput = {
@@ -2486,6 +2552,7 @@ export type UsersUncheckedCreateWithoutNotificationsInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutNotificationsInput = {
@@ -2532,6 +2599,7 @@ export type UsersUpdateWithoutNotificationsInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutNotificationsInput = {
@@ -2563,6 +2631,7 @@ export type UsersUncheckedUpdateWithoutNotificationsInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutEarnSessionsInput = {
@@ -2593,6 +2662,7 @@ export type UsersCreateWithoutEarnSessionsInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutEarnSessionsInput = {
@@ -2624,6 +2694,7 @@ export type UsersUncheckedCreateWithoutEarnSessionsInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutEarnSessionsInput = {
@@ -2670,6 +2741,7 @@ export type UsersUpdateWithoutEarnSessionsInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutEarnSessionsInput = {
@@ -2701,6 +2773,7 @@ export type UsersUncheckedUpdateWithoutEarnSessionsInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutAfkSessionsInput = {
@@ -2731,6 +2804,7 @@ export type UsersCreateWithoutAfkSessionsInput = {
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutAfkSessionsInput = {
@@ -2762,6 +2836,7 @@ export type UsersUncheckedCreateWithoutAfkSessionsInput = {
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutAfkSessionsInput = {
@@ -2808,6 +2883,7 @@ export type UsersUpdateWithoutAfkSessionsInput = {
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutAfkSessionsInput = {
@@ -2839,6 +2915,7 @@ export type UsersUncheckedUpdateWithoutAfkSessionsInput = {
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutStreakInput = {
@@ -2869,6 +2946,7 @@ export type UsersCreateWithoutStreakInput = {
   afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutStreakInput = {
@@ -2900,6 +2978,7 @@ export type UsersUncheckedCreateWithoutStreakInput = {
   afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutStreakInput = {
@@ -2946,6 +3025,7 @@ export type UsersUpdateWithoutStreakInput = {
   afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutStreakInput = {
@@ -2977,6 +3057,7 @@ export type UsersUncheckedUpdateWithoutStreakInput = {
   afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutFraudLogsInput = {
@@ -3007,6 +3088,7 @@ export type UsersCreateWithoutFraudLogsInput = {
   afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutFraudLogsInput = {
@@ -3038,6 +3120,7 @@ export type UsersUncheckedCreateWithoutFraudLogsInput = {
   afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutFraudLogsInput = {
@@ -3084,6 +3167,7 @@ export type UsersUpdateWithoutFraudLogsInput = {
   afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutFraudLogsInput = {
@@ -3115,6 +3199,7 @@ export type UsersUncheckedUpdateWithoutFraudLogsInput = {
   afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
 }
 
 export type UsersCreateWithoutEarnPrefsInput = {
@@ -3145,6 +3230,7 @@ export type UsersCreateWithoutEarnPrefsInput = {
   afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionCreateNestedManyWithoutUserInput
 }
 
 export type UsersUncheckedCreateWithoutEarnPrefsInput = {
@@ -3176,6 +3262,7 @@ export type UsersUncheckedCreateWithoutEarnPrefsInput = {
   afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
   streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedCreateNestedManyWithoutUserInput
 }
 
 export type UsersCreateOrConnectWithoutEarnPrefsInput = {
@@ -3222,6 +3309,7 @@ export type UsersUpdateWithoutEarnPrefsInput = {
   afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUpdateManyWithoutUserNestedInput
 }
 
 export type UsersUncheckedUpdateWithoutEarnPrefsInput = {
@@ -3253,6 +3341,149 @@ export type UsersUncheckedUpdateWithoutEarnPrefsInput = {
   afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
   streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
   fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  linkvertiseSessions?: Prisma.LinkvertiseSessionUncheckedUpdateManyWithoutUserNestedInput
+}
+
+export type UsersCreateWithoutLinkvertiseSessionsInput = {
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesCreateNestedOneWithoutUserInput
+}
+
+export type UsersUncheckedCreateWithoutLinkvertiseSessionsInput = {
+  id?: number
+  email: string
+  username?: string | null
+  password: string
+  isAdmin?: boolean
+  description?: string | null
+  avatar?: string | null
+  permissions?: string | null
+  loginAttempts?: number
+  lockedUntil?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  wallet?: Prisma.WalletUncheckedCreateNestedOneWithoutUserInput
+  allocations?: Prisma.UserAllocationUncheckedCreateNestedManyWithoutUserInput
+  storePurchases?: Prisma.StorePurchaseUncheckedCreateNestedManyWithoutUserInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedCreateNestedManyWithoutUserInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedCreateNestedManyWithoutAdminInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedCreateNestedManyWithoutAdminInput
+  servers?: Prisma.ServerUncheckedCreateNestedManyWithoutOwnerInput
+  folders?: Prisma.ServerFolderUncheckedCreateNestedManyWithoutOwnerInput
+  apiKeys?: Prisma.ApiKeyUncheckedCreateNestedManyWithoutUserInput
+  loginHistory?: Prisma.LoginHistoryUncheckedCreateNestedManyWithoutUserInput
+  notifications?: Prisma.NotificationUncheckedCreateNestedManyWithoutUserInput
+  earnSessions?: Prisma.EarnSessionUncheckedCreateNestedManyWithoutUserInput
+  afkSessions?: Prisma.AfkSessionUncheckedCreateNestedManyWithoutUserInput
+  streak?: Prisma.UserStreakUncheckedCreateNestedOneWithoutUserInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedCreateNestedManyWithoutUserInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedCreateNestedOneWithoutUserInput
+}
+
+export type UsersCreateOrConnectWithoutLinkvertiseSessionsInput = {
+  where: Prisma.UsersWhereUniqueInput
+  create: Prisma.XOR<Prisma.UsersCreateWithoutLinkvertiseSessionsInput, Prisma.UsersUncheckedCreateWithoutLinkvertiseSessionsInput>
+}
+
+export type UsersUpsertWithoutLinkvertiseSessionsInput = {
+  update: Prisma.XOR<Prisma.UsersUpdateWithoutLinkvertiseSessionsInput, Prisma.UsersUncheckedUpdateWithoutLinkvertiseSessionsInput>
+  create: Prisma.XOR<Prisma.UsersCreateWithoutLinkvertiseSessionsInput, Prisma.UsersUncheckedCreateWithoutLinkvertiseSessionsInput>
+  where?: Prisma.UsersWhereInput
+}
+
+export type UsersUpdateToOneWithWhereWithoutLinkvertiseSessionsInput = {
+  where?: Prisma.UsersWhereInput
+  data: Prisma.XOR<Prisma.UsersUpdateWithoutLinkvertiseSessionsInput, Prisma.UsersUncheckedUpdateWithoutLinkvertiseSessionsInput>
+}
+
+export type UsersUpdateWithoutLinkvertiseSessionsInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUpdateOneWithoutUserNestedInput
+}
+
+export type UsersUncheckedUpdateWithoutLinkvertiseSessionsInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  username?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  password?: Prisma.StringFieldUpdateOperationsInput | string
+  isAdmin?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  avatar?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  permissions?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  loginAttempts?: Prisma.IntFieldUpdateOperationsInput | number
+  lockedUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  wallet?: Prisma.WalletUncheckedUpdateOneWithoutUserNestedInput
+  allocations?: Prisma.UserAllocationUncheckedUpdateManyWithoutUserNestedInput
+  storePurchases?: Prisma.StorePurchaseUncheckedUpdateManyWithoutUserNestedInput
+  couponRedemptions?: Prisma.CouponRedemptionUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsUser?: Prisma.AuditLogUncheckedUpdateManyWithoutUserNestedInput
+  auditLogsAsAdmin?: Prisma.AuditLogUncheckedUpdateManyWithoutAdminNestedInput
+  walletTransactions?: Prisma.WalletTransactionUncheckedUpdateManyWithoutAdminNestedInput
+  servers?: Prisma.ServerUncheckedUpdateManyWithoutOwnerNestedInput
+  folders?: Prisma.ServerFolderUncheckedUpdateManyWithoutOwnerNestedInput
+  apiKeys?: Prisma.ApiKeyUncheckedUpdateManyWithoutUserNestedInput
+  loginHistory?: Prisma.LoginHistoryUncheckedUpdateManyWithoutUserNestedInput
+  notifications?: Prisma.NotificationUncheckedUpdateManyWithoutUserNestedInput
+  earnSessions?: Prisma.EarnSessionUncheckedUpdateManyWithoutUserNestedInput
+  afkSessions?: Prisma.AfkSessionUncheckedUpdateManyWithoutUserNestedInput
+  streak?: Prisma.UserStreakUncheckedUpdateOneWithoutUserNestedInput
+  fraudLogs?: Prisma.MonetizationFraudLogUncheckedUpdateManyWithoutUserNestedInput
+  earnPrefs?: Prisma.UserEarnPreferencesUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -3275,6 +3506,7 @@ export type UsersCountOutputType = {
   earnSessions: number
   afkSessions: number
   fraudLogs: number
+  linkvertiseSessions: number
 }
 
 export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -3292,6 +3524,7 @@ export type UsersCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   earnSessions?: boolean | UsersCountOutputTypeCountEarnSessionsArgs
   afkSessions?: boolean | UsersCountOutputTypeCountAfkSessionsArgs
   fraudLogs?: boolean | UsersCountOutputTypeCountFraudLogsArgs
+  linkvertiseSessions?: boolean | UsersCountOutputTypeCountLinkvertiseSessionsArgs
 }
 
 /**
@@ -3402,6 +3635,13 @@ export type UsersCountOutputTypeCountFraudLogsArgs<ExtArgs extends runtime.Types
   where?: Prisma.MonetizationFraudLogWhereInput
 }
 
+/**
+ * UsersCountOutputType without action
+ */
+export type UsersCountOutputTypeCountLinkvertiseSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.LinkvertiseSessionWhereInput
+}
+
 
 export type UsersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -3433,6 +3673,7 @@ export type UsersSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   streak?: boolean | Prisma.Users$streakArgs<ExtArgs>
   fraudLogs?: boolean | Prisma.Users$fraudLogsArgs<ExtArgs>
   earnPrefs?: boolean | Prisma.Users$earnPrefsArgs<ExtArgs>
+  linkvertiseSessions?: boolean | Prisma.Users$linkvertiseSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["users"]>
 
@@ -3500,6 +3741,7 @@ export type UsersInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   streak?: boolean | Prisma.Users$streakArgs<ExtArgs>
   fraudLogs?: boolean | Prisma.Users$fraudLogsArgs<ExtArgs>
   earnPrefs?: boolean | Prisma.Users$earnPrefsArgs<ExtArgs>
+  linkvertiseSessions?: boolean | Prisma.Users$linkvertiseSessionsArgs<ExtArgs>
   _count?: boolean | Prisma.UsersCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type UsersIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -3525,6 +3767,7 @@ export type $UsersPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     streak: Prisma.$UserStreakPayload<ExtArgs> | null
     fraudLogs: Prisma.$MonetizationFraudLogPayload<ExtArgs>[]
     earnPrefs: Prisma.$UserEarnPreferencesPayload<ExtArgs> | null
+    linkvertiseSessions: Prisma.$LinkvertiseSessionPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: number
@@ -3950,6 +4193,7 @@ export interface Prisma__UsersClient<T, Null = never, ExtArgs extends runtime.Ty
   streak<T extends Prisma.Users$streakArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$streakArgs<ExtArgs>>): Prisma.Prisma__UserStreakClient<runtime.Types.Result.GetResult<Prisma.$UserStreakPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   fraudLogs<T extends Prisma.Users$fraudLogsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$fraudLogsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MonetizationFraudLogPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   earnPrefs<T extends Prisma.Users$earnPrefsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$earnPrefsArgs<ExtArgs>>): Prisma.Prisma__UserEarnPreferencesClient<runtime.Types.Result.GetResult<Prisma.$UserEarnPreferencesPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  linkvertiseSessions<T extends Prisma.Users$linkvertiseSessionsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Users$linkvertiseSessionsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$LinkvertiseSessionPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -4772,6 +5016,30 @@ export type Users$earnPrefsArgs<ExtArgs extends runtime.Types.Extensions.Interna
    */
   include?: Prisma.UserEarnPreferencesInclude<ExtArgs> | null
   where?: Prisma.UserEarnPreferencesWhereInput
+}
+
+/**
+ * Users.linkvertiseSessions
+ */
+export type Users$linkvertiseSessionsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the LinkvertiseSession
+   */
+  select?: Prisma.LinkvertiseSessionSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the LinkvertiseSession
+   */
+  omit?: Prisma.LinkvertiseSessionOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.LinkvertiseSessionInclude<ExtArgs> | null
+  where?: Prisma.LinkvertiseSessionWhereInput
+  orderBy?: Prisma.LinkvertiseSessionOrderByWithRelationInput | Prisma.LinkvertiseSessionOrderByWithRelationInput[]
+  cursor?: Prisma.LinkvertiseSessionWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.LinkvertiseSessionScalarFieldEnum | Prisma.LinkvertiseSessionScalarFieldEnum[]
 }
 
 /**

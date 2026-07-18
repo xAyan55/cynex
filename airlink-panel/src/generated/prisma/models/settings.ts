@@ -33,6 +33,10 @@ export type SettingsAvgAggregateOutputType = {
   rateLimitRpm: number | null
   loginMaxAttempts: number | null
   loginLockoutMinutes: number | null
+  defaultServerLimit: number | null
+  defaultMaxMemory: number | null
+  defaultMaxCpu: number | null
+  defaultMaxStorage: number | null
 }
 
 export type SettingsSumAggregateOutputType = {
@@ -42,6 +46,10 @@ export type SettingsSumAggregateOutputType = {
   rateLimitRpm: number | null
   loginMaxAttempts: number | null
   loginLockoutMinutes: number | null
+  defaultServerLimit: number | null
+  defaultMaxMemory: number | null
+  defaultMaxCpu: number | null
+  defaultMaxStorage: number | null
 }
 
 export type SettingsMinAggregateOutputType = {
@@ -74,6 +82,10 @@ export type SettingsMinAggregateOutputType = {
   hashApiKeys: boolean | null
   airlinkCloudApiKey: string | null
   airlinkCloudBackupEnabled: boolean | null
+  defaultServerLimit: number | null
+  defaultMaxMemory: number | null
+  defaultMaxCpu: number | null
+  defaultMaxStorage: number | null
 }
 
 export type SettingsMaxAggregateOutputType = {
@@ -106,6 +118,10 @@ export type SettingsMaxAggregateOutputType = {
   hashApiKeys: boolean | null
   airlinkCloudApiKey: string | null
   airlinkCloudBackupEnabled: boolean | null
+  defaultServerLimit: number | null
+  defaultMaxMemory: number | null
+  defaultMaxCpu: number | null
+  defaultMaxStorage: number | null
 }
 
 export type SettingsCountAggregateOutputType = {
@@ -138,6 +154,10 @@ export type SettingsCountAggregateOutputType = {
   hashApiKeys: number
   airlinkCloudApiKey: number
   airlinkCloudBackupEnabled: number
+  defaultServerLimit: number
+  defaultMaxMemory: number
+  defaultMaxCpu: number
+  defaultMaxStorage: number
   _all: number
 }
 
@@ -149,6 +169,10 @@ export type SettingsAvgAggregateInputType = {
   rateLimitRpm?: true
   loginMaxAttempts?: true
   loginLockoutMinutes?: true
+  defaultServerLimit?: true
+  defaultMaxMemory?: true
+  defaultMaxCpu?: true
+  defaultMaxStorage?: true
 }
 
 export type SettingsSumAggregateInputType = {
@@ -158,6 +182,10 @@ export type SettingsSumAggregateInputType = {
   rateLimitRpm?: true
   loginMaxAttempts?: true
   loginLockoutMinutes?: true
+  defaultServerLimit?: true
+  defaultMaxMemory?: true
+  defaultMaxCpu?: true
+  defaultMaxStorage?: true
 }
 
 export type SettingsMinAggregateInputType = {
@@ -190,6 +218,10 @@ export type SettingsMinAggregateInputType = {
   hashApiKeys?: true
   airlinkCloudApiKey?: true
   airlinkCloudBackupEnabled?: true
+  defaultServerLimit?: true
+  defaultMaxMemory?: true
+  defaultMaxCpu?: true
+  defaultMaxStorage?: true
 }
 
 export type SettingsMaxAggregateInputType = {
@@ -222,6 +254,10 @@ export type SettingsMaxAggregateInputType = {
   hashApiKeys?: true
   airlinkCloudApiKey?: true
   airlinkCloudBackupEnabled?: true
+  defaultServerLimit?: true
+  defaultMaxMemory?: true
+  defaultMaxCpu?: true
+  defaultMaxStorage?: true
 }
 
 export type SettingsCountAggregateInputType = {
@@ -254,6 +290,10 @@ export type SettingsCountAggregateInputType = {
   hashApiKeys?: true
   airlinkCloudApiKey?: true
   airlinkCloudBackupEnabled?: true
+  defaultServerLimit?: true
+  defaultMaxMemory?: true
+  defaultMaxCpu?: true
+  defaultMaxStorage?: true
   _all?: true
 }
 
@@ -373,6 +413,10 @@ export type SettingsGroupByOutputType = {
   hashApiKeys: boolean
   airlinkCloudApiKey: string | null
   airlinkCloudBackupEnabled: boolean
+  defaultServerLimit: number
+  defaultMaxMemory: number
+  defaultMaxCpu: number
+  defaultMaxStorage: number
   _count: SettingsCountAggregateOutputType | null
   _avg: SettingsAvgAggregateOutputType | null
   _sum: SettingsSumAggregateOutputType | null
@@ -428,6 +472,10 @@ export type settingsWhereInput = {
   hashApiKeys?: Prisma.BoolFilter<"settings"> | boolean
   airlinkCloudApiKey?: Prisma.StringNullableFilter<"settings"> | string | null
   airlinkCloudBackupEnabled?: Prisma.BoolFilter<"settings"> | boolean
+  defaultServerLimit?: Prisma.IntFilter<"settings"> | number
+  defaultMaxMemory?: Prisma.IntFilter<"settings"> | number
+  defaultMaxCpu?: Prisma.IntFilter<"settings"> | number
+  defaultMaxStorage?: Prisma.IntFilter<"settings"> | number
 }
 
 export type settingsOrderByWithRelationInput = {
@@ -460,6 +508,10 @@ export type settingsOrderByWithRelationInput = {
   hashApiKeys?: Prisma.SortOrder
   airlinkCloudApiKey?: Prisma.SortOrderInput | Prisma.SortOrder
   airlinkCloudBackupEnabled?: Prisma.SortOrder
+  defaultServerLimit?: Prisma.SortOrder
+  defaultMaxMemory?: Prisma.SortOrder
+  defaultMaxCpu?: Prisma.SortOrder
+  defaultMaxStorage?: Prisma.SortOrder
 }
 
 export type settingsWhereUniqueInput = Prisma.AtLeast<{
@@ -495,6 +547,10 @@ export type settingsWhereUniqueInput = Prisma.AtLeast<{
   hashApiKeys?: Prisma.BoolFilter<"settings"> | boolean
   airlinkCloudApiKey?: Prisma.StringNullableFilter<"settings"> | string | null
   airlinkCloudBackupEnabled?: Prisma.BoolFilter<"settings"> | boolean
+  defaultServerLimit?: Prisma.IntFilter<"settings"> | number
+  defaultMaxMemory?: Prisma.IntFilter<"settings"> | number
+  defaultMaxCpu?: Prisma.IntFilter<"settings"> | number
+  defaultMaxStorage?: Prisma.IntFilter<"settings"> | number
 }, "id">
 
 export type settingsOrderByWithAggregationInput = {
@@ -527,6 +583,10 @@ export type settingsOrderByWithAggregationInput = {
   hashApiKeys?: Prisma.SortOrder
   airlinkCloudApiKey?: Prisma.SortOrderInput | Prisma.SortOrder
   airlinkCloudBackupEnabled?: Prisma.SortOrder
+  defaultServerLimit?: Prisma.SortOrder
+  defaultMaxMemory?: Prisma.SortOrder
+  defaultMaxCpu?: Prisma.SortOrder
+  defaultMaxStorage?: Prisma.SortOrder
   _count?: Prisma.settingsCountOrderByAggregateInput
   _avg?: Prisma.settingsAvgOrderByAggregateInput
   _max?: Prisma.settingsMaxOrderByAggregateInput
@@ -567,6 +627,10 @@ export type settingsScalarWhereWithAggregatesInput = {
   hashApiKeys?: Prisma.BoolWithAggregatesFilter<"settings"> | boolean
   airlinkCloudApiKey?: Prisma.StringNullableWithAggregatesFilter<"settings"> | string | null
   airlinkCloudBackupEnabled?: Prisma.BoolWithAggregatesFilter<"settings"> | boolean
+  defaultServerLimit?: Prisma.IntWithAggregatesFilter<"settings"> | number
+  defaultMaxMemory?: Prisma.IntWithAggregatesFilter<"settings"> | number
+  defaultMaxCpu?: Prisma.IntWithAggregatesFilter<"settings"> | number
+  defaultMaxStorage?: Prisma.IntWithAggregatesFilter<"settings"> | number
 }
 
 export type settingsCreateInput = {
@@ -598,6 +662,10 @@ export type settingsCreateInput = {
   hashApiKeys?: boolean
   airlinkCloudApiKey?: string | null
   airlinkCloudBackupEnabled?: boolean
+  defaultServerLimit?: number
+  defaultMaxMemory?: number
+  defaultMaxCpu?: number
+  defaultMaxStorage?: number
 }
 
 export type settingsUncheckedCreateInput = {
@@ -630,6 +698,10 @@ export type settingsUncheckedCreateInput = {
   hashApiKeys?: boolean
   airlinkCloudApiKey?: string | null
   airlinkCloudBackupEnabled?: boolean
+  defaultServerLimit?: number
+  defaultMaxMemory?: number
+  defaultMaxCpu?: number
+  defaultMaxStorage?: number
 }
 
 export type settingsUpdateInput = {
@@ -661,6 +733,10 @@ export type settingsUpdateInput = {
   hashApiKeys?: Prisma.BoolFieldUpdateOperationsInput | boolean
   airlinkCloudApiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   airlinkCloudBackupEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultServerLimit?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultMaxMemory?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultMaxCpu?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultMaxStorage?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type settingsUncheckedUpdateInput = {
@@ -693,6 +769,10 @@ export type settingsUncheckedUpdateInput = {
   hashApiKeys?: Prisma.BoolFieldUpdateOperationsInput | boolean
   airlinkCloudApiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   airlinkCloudBackupEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultServerLimit?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultMaxMemory?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultMaxCpu?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultMaxStorage?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type settingsCreateManyInput = {
@@ -725,6 +805,10 @@ export type settingsCreateManyInput = {
   hashApiKeys?: boolean
   airlinkCloudApiKey?: string | null
   airlinkCloudBackupEnabled?: boolean
+  defaultServerLimit?: number
+  defaultMaxMemory?: number
+  defaultMaxCpu?: number
+  defaultMaxStorage?: number
 }
 
 export type settingsUpdateManyMutationInput = {
@@ -756,6 +840,10 @@ export type settingsUpdateManyMutationInput = {
   hashApiKeys?: Prisma.BoolFieldUpdateOperationsInput | boolean
   airlinkCloudApiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   airlinkCloudBackupEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultServerLimit?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultMaxMemory?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultMaxCpu?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultMaxStorage?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type settingsUncheckedUpdateManyInput = {
@@ -788,6 +876,10 @@ export type settingsUncheckedUpdateManyInput = {
   hashApiKeys?: Prisma.BoolFieldUpdateOperationsInput | boolean
   airlinkCloudApiKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   airlinkCloudBackupEnabled?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  defaultServerLimit?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultMaxMemory?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultMaxCpu?: Prisma.IntFieldUpdateOperationsInput | number
+  defaultMaxStorage?: Prisma.IntFieldUpdateOperationsInput | number
 }
 
 export type settingsCountOrderByAggregateInput = {
@@ -820,6 +912,10 @@ export type settingsCountOrderByAggregateInput = {
   hashApiKeys?: Prisma.SortOrder
   airlinkCloudApiKey?: Prisma.SortOrder
   airlinkCloudBackupEnabled?: Prisma.SortOrder
+  defaultServerLimit?: Prisma.SortOrder
+  defaultMaxMemory?: Prisma.SortOrder
+  defaultMaxCpu?: Prisma.SortOrder
+  defaultMaxStorage?: Prisma.SortOrder
 }
 
 export type settingsAvgOrderByAggregateInput = {
@@ -829,6 +925,10 @@ export type settingsAvgOrderByAggregateInput = {
   rateLimitRpm?: Prisma.SortOrder
   loginMaxAttempts?: Prisma.SortOrder
   loginLockoutMinutes?: Prisma.SortOrder
+  defaultServerLimit?: Prisma.SortOrder
+  defaultMaxMemory?: Prisma.SortOrder
+  defaultMaxCpu?: Prisma.SortOrder
+  defaultMaxStorage?: Prisma.SortOrder
 }
 
 export type settingsMaxOrderByAggregateInput = {
@@ -861,6 +961,10 @@ export type settingsMaxOrderByAggregateInput = {
   hashApiKeys?: Prisma.SortOrder
   airlinkCloudApiKey?: Prisma.SortOrder
   airlinkCloudBackupEnabled?: Prisma.SortOrder
+  defaultServerLimit?: Prisma.SortOrder
+  defaultMaxMemory?: Prisma.SortOrder
+  defaultMaxCpu?: Prisma.SortOrder
+  defaultMaxStorage?: Prisma.SortOrder
 }
 
 export type settingsMinOrderByAggregateInput = {
@@ -893,6 +997,10 @@ export type settingsMinOrderByAggregateInput = {
   hashApiKeys?: Prisma.SortOrder
   airlinkCloudApiKey?: Prisma.SortOrder
   airlinkCloudBackupEnabled?: Prisma.SortOrder
+  defaultServerLimit?: Prisma.SortOrder
+  defaultMaxMemory?: Prisma.SortOrder
+  defaultMaxCpu?: Prisma.SortOrder
+  defaultMaxStorage?: Prisma.SortOrder
 }
 
 export type settingsSumOrderByAggregateInput = {
@@ -902,6 +1010,10 @@ export type settingsSumOrderByAggregateInput = {
   rateLimitRpm?: Prisma.SortOrder
   loginMaxAttempts?: Prisma.SortOrder
   loginLockoutMinutes?: Prisma.SortOrder
+  defaultServerLimit?: Prisma.SortOrder
+  defaultMaxMemory?: Prisma.SortOrder
+  defaultMaxCpu?: Prisma.SortOrder
+  defaultMaxStorage?: Prisma.SortOrder
 }
 
 
@@ -936,6 +1048,10 @@ export type settingsSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   hashApiKeys?: boolean
   airlinkCloudApiKey?: boolean
   airlinkCloudBackupEnabled?: boolean
+  defaultServerLimit?: boolean
+  defaultMaxMemory?: boolean
+  defaultMaxCpu?: boolean
+  defaultMaxStorage?: boolean
 }, ExtArgs["result"]["settings"]>
 
 export type settingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -968,6 +1084,10 @@ export type settingsSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   hashApiKeys?: boolean
   airlinkCloudApiKey?: boolean
   airlinkCloudBackupEnabled?: boolean
+  defaultServerLimit?: boolean
+  defaultMaxMemory?: boolean
+  defaultMaxCpu?: boolean
+  defaultMaxStorage?: boolean
 }, ExtArgs["result"]["settings"]>
 
 export type settingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1000,6 +1120,10 @@ export type settingsSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   hashApiKeys?: boolean
   airlinkCloudApiKey?: boolean
   airlinkCloudBackupEnabled?: boolean
+  defaultServerLimit?: boolean
+  defaultMaxMemory?: boolean
+  defaultMaxCpu?: boolean
+  defaultMaxStorage?: boolean
 }, ExtArgs["result"]["settings"]>
 
 export type settingsSelectScalar = {
@@ -1032,9 +1156,13 @@ export type settingsSelectScalar = {
   hashApiKeys?: boolean
   airlinkCloudApiKey?: boolean
   airlinkCloudBackupEnabled?: boolean
+  defaultServerLimit?: boolean
+  defaultMaxMemory?: boolean
+  defaultMaxCpu?: boolean
+  defaultMaxStorage?: boolean
 }
 
-export type settingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "logo" | "favicon" | "theme" | "lightTheme" | "darkTheme" | "language" | "allowRegistration" | "uploadLimit" | "createdAt" | "updatedAt" | "sftpPort" | "virusTotalApiKey" | "rateLimitEnabled" | "rateLimitRpm" | "bannedIps" | "allowUserCreateServer" | "allowUserDeleteServer" | "loginWallpaper" | "registerWallpaper" | "loginMaxAttempts" | "loginLockoutMinutes" | "enforceDaemonHttps" | "behindReverseProxy" | "hashApiKeys" | "airlinkCloudApiKey" | "airlinkCloudBackupEnabled", ExtArgs["result"]["settings"]>
+export type settingsOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "logo" | "favicon" | "theme" | "lightTheme" | "darkTheme" | "language" | "allowRegistration" | "uploadLimit" | "createdAt" | "updatedAt" | "sftpPort" | "virusTotalApiKey" | "rateLimitEnabled" | "rateLimitRpm" | "bannedIps" | "allowUserCreateServer" | "allowUserDeleteServer" | "loginWallpaper" | "registerWallpaper" | "loginMaxAttempts" | "loginLockoutMinutes" | "enforceDaemonHttps" | "behindReverseProxy" | "hashApiKeys" | "airlinkCloudApiKey" | "airlinkCloudBackupEnabled" | "defaultServerLimit" | "defaultMaxMemory" | "defaultMaxCpu" | "defaultMaxStorage", ExtArgs["result"]["settings"]>
 
 export type $settingsPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "settings"
@@ -1069,6 +1197,10 @@ export type $settingsPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     hashApiKeys: boolean
     airlinkCloudApiKey: string | null
     airlinkCloudBackupEnabled: boolean
+    defaultServerLimit: number
+    defaultMaxMemory: number
+    defaultMaxCpu: number
+    defaultMaxStorage: number
   }, ExtArgs["result"]["settings"]>
   composites: {}
 }
@@ -1521,6 +1653,10 @@ export interface settingsFieldRefs {
   readonly hashApiKeys: Prisma.FieldRef<"settings", 'Boolean'>
   readonly airlinkCloudApiKey: Prisma.FieldRef<"settings", 'String'>
   readonly airlinkCloudBackupEnabled: Prisma.FieldRef<"settings", 'Boolean'>
+  readonly defaultServerLimit: Prisma.FieldRef<"settings", 'Int'>
+  readonly defaultMaxMemory: Prisma.FieldRef<"settings", 'Int'>
+  readonly defaultMaxCpu: Prisma.FieldRef<"settings", 'Int'>
+  readonly defaultMaxStorage: Prisma.FieldRef<"settings", 'Int'>
 }
     
 

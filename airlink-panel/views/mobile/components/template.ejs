@@ -144,6 +144,22 @@ const extraItems = sidebarItems.length > 3 ? sidebarItems.slice(3) : [];
     var wsProtocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     var ws = new WebSocket(wsProtocol + '//' + window.location.host + '/online-check');
     ws.addEventListener('error', function () {});
+    ws.addEventListener('message', function (e) {
+      try {
+        var payload = JSON.parse(e.data);
+        if (payload.event === 'walletUpdated') {
+          var balanceDisplay = document.getElementById('balanceDisplay');
+          if (balanceDisplay) {
+            balanceDisplay.textContent = Number(payload.data.balance).toLocaleString() + ' coins';
+          }
+        }
+        if (payload.event === 'offerCompleted') {
+          if (typeof showToast === 'function') {
+            showToast('Offer completed successfully! +' + payload.data.coins + ' coins', 'success');
+          }
+        }
+      } catch(err) {}
+    });
   });
 })();
 </script>

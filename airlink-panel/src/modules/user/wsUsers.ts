@@ -4,6 +4,8 @@ import prisma from '../../db';
 import { WebSocket } from 'ws';
 import logger from '../../handlers/logger';
 
+import { WebSocketService } from '../../services/WebSocketService';
+
 export const onlineUsers: Set<string> = new Set();
 export const userTimeouts: Map<string, NodeJS.Timeout> = new Map();
 
@@ -28,6 +30,8 @@ const wsUsersModule: Module = {
         ws.close();
         return;
       }
+
+      WebSocketService.register(userId, ws);
 
       try {
         const user = await prisma.users.findUnique({ where: { id: userId } });

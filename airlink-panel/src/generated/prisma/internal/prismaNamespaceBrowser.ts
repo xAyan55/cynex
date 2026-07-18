@@ -91,7 +91,9 @@ export const ModelName = {
   StoragePool: 'StoragePool',
   NetworkPool: 'NetworkPool',
   OperationQueue: 'OperationQueue',
-  NodeCapability: 'NodeCapability'
+  NodeCapability: 'NodeCapability',
+  LinkvertiseSession: 'LinkvertiseSession',
+  LinkvertiseCompletion: 'LinkvertiseCompletion'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -240,7 +242,11 @@ export const SettingsScalarFieldEnum = {
   behindReverseProxy: 'behindReverseProxy',
   hashApiKeys: 'hashApiKeys',
   airlinkCloudApiKey: 'airlinkCloudApiKey',
-  airlinkCloudBackupEnabled: 'airlinkCloudBackupEnabled'
+  airlinkCloudBackupEnabled: 'airlinkCloudBackupEnabled',
+  defaultServerLimit: 'defaultServerLimit',
+  defaultMaxMemory: 'defaultMaxMemory',
+  defaultMaxCpu: 'defaultMaxCpu',
+  defaultMaxStorage: 'defaultMaxStorage'
 } as const
 
 export type SettingsScalarFieldEnum = (typeof SettingsScalarFieldEnum)[keyof typeof SettingsScalarFieldEnum]
@@ -751,6 +757,41 @@ export const NodeCapabilityScalarFieldEnum = {
 } as const
 
 export type NodeCapabilityScalarFieldEnum = (typeof NodeCapabilityScalarFieldEnum)[keyof typeof NodeCapabilityScalarFieldEnum]
+
+
+export const LinkvertiseSessionScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  userId: 'userId',
+  campaign: 'campaign',
+  placement: 'placement',
+  rewardType: 'rewardType',
+  rewardAmount: 'rewardAmount',
+  destination: 'destination',
+  status: 'status',
+  ip: 'ip',
+  userAgent: 'userAgent',
+  retryCount: 'retryCount',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type LinkvertiseSessionScalarFieldEnum = (typeof LinkvertiseSessionScalarFieldEnum)[keyof typeof LinkvertiseSessionScalarFieldEnum]
+
+
+export const LinkvertiseCompletionScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  signature: 'signature',
+  timestamp: 'timestamp',
+  verifiedAt: 'verifiedAt'
+} as const
+
+export type LinkvertiseCompletionScalarFieldEnum = (typeof LinkvertiseCompletionScalarFieldEnum)[keyof typeof LinkvertiseCompletionScalarFieldEnum]
 
 
 export const SortOrder = {

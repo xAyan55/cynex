@@ -1,0 +1,465 @@
+<%- include('../../components/header', { title: 'Linkvertise Dashboard' }) %>
+
+<main class="min-h-screen m-auto bg-mono-bg text-white">
+  <div class="flex min-h-screen">
+    <div class="w-60 h-full"><%- include('../../components/template') %></div>
+    <div id="page-content" class="flex-1 overflow-y-auto pt-16 pb-12">
+
+      <!-- Page Header -->
+      <div class="px-8 pt-5">
+        <div class="flex items-center gap-3 mb-1">
+          <a href="/admin/monetization" class="text-neutral-400 hover:text-white transition text-sm"><%- icon('arrow-left', { class: 'w-4 h-4' }) %></a>
+          <h1 class="text-base font-medium text-white">Linkvertise Dashboard</h1>
+        </div>
+        <p class="mt-0.5 text-sm text-neutral-500 ml-7">Diagnostics, analytics, session inspector, and configuration for the Linkvertise integration.</p>
+      </div>
+
+      <div class="px-8 mt-5">
+
+        <!-- Tab Navigation -->
+        <div class="flex gap-0.5 mb-6 border-b border-neutral-700/40 overflow-x-auto">
+          <button type="button" data-tab="diagnostics" class="lv-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('activity', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Diagnostics</button>
+          <button type="button" data-tab="analytics" class="lv-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('bar-chart-3', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Analytics</button>
+          <button type="button" data-tab="sessions" class="lv-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('list', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Sessions</button>
+          <button type="button" data-tab="config" class="lv-tab-btn px-4 py-2.5 text-sm font-medium transition -mb-px border-b-2 border-transparent hover:text-white text-neutral-400 whitespace-nowrap"><%- icon('settings', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Configuration</button>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- Diagnostics Tab -->
+        <!-- ════════════════════════════════════════ -->
+        <div id="tab-diagnostics" class="lv-tab hidden">
+
+          <!-- Health Status Banner -->
+          <div class="rounded-xl border px-5 py-4 mb-6 <%= diagnostics.status === 'healthy' ? 'bg-emerald-500/5 border-emerald-500/20' : diagnostics.status === 'degraded' ? 'bg-amber-500/5 border-amber-500/20' : 'bg-red-500/5 border-red-500/20' %>">
+            <div class="flex items-center gap-3">
+              <% if (diagnostics.status === 'healthy') { %>
+                <%- icon('check-circle', { class: 'w-6 h-6 text-emerald-400' }) %>
+                <div>
+                  <p class="text-sm font-semibold text-emerald-400">System Healthy</p>
+                  <p class="text-xs text-neutral-400">All diagnostics passed.</p>
+                </div>
+              <% } else if (diagnostics.status === 'degraded') { %>
+                <%- icon('alert-triangle', { class: 'w-6 h-6 text-amber-400' }) %>
+                <div>
+                  <p class="text-sm font-semibold text-amber-400">Degraded</p>
+                  <p class="text-xs text-neutral-400">Some checks failed. Review below.</p>
+                </div>
+              <% } else { %>
+                <%- icon('x-circle', { class: 'w-6 h-6 text-red-400' }) %>
+                <div>
+                  <p class="text-sm font-semibold text-red-400">Unhealthy</p>
+                  <p class="text-xs text-neutral-400">Multiple checks failed. Immediate attention required.</p>
+                </div>
+              <% } %>
+            </div>
+          </div>
+
+          <!-- Diagnostic Checks Grid -->
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mb-6">
+            <% diagnostics.checks.forEach(function(check) { %>
+              <div class="rounded-xl bg-neutral-800/20 border border-white/5 p-4">
+                <div class="flex items-center justify-between mb-2">
+                  <p class="text-xs font-semibold uppercase tracking-wider text-neutral-400"><%= check.name %></p>
+                  <% if (check.passed) { %>
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-emerald-500/10 text-emerald-400 border border-emerald-500/20"><%- icon('check', { class: 'w-3 h-3' }) %> Pass</span>
+                  <% } else { %>
+                    <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-full text-[10px] font-medium bg-red-500/10 text-red-400 border border-red-500/20"><%- icon('x', { class: 'w-3 h-3' }) %> Fail</span>
+                  <% } %>
+                </div>
+                <p class="text-sm text-neutral-300"><%= check.message %></p>
+              </div>
+            <% }) %>
+          </div>
+
+          <!-- Feature Flags -->
+          <h3 class="text-sm font-medium text-white mb-3">Feature Flags</h3>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 mb-6">
+            <% var flags = [
+              { key: 'enableDynamicLinks', label: 'Dynamic Links' },
+              { key: 'enableRewards', label: 'Rewards' },
+              { key: 'enableCallbackProcessing', label: 'Callbacks' },
+              { key: 'enableAnalytics', label: 'Analytics' },
+              { key: 'enableDiagnostics', label: 'Diagnostics' },
+              { key: 'enableTestMode', label: 'Test Mode' },
+              { key: 'enableCsvExport', label: 'CSV Export' },
+            ];
+            flags.forEach(function(flag) {
+              var val = diagnostics.config[flag.key]; %>
+              <div class="flex items-center gap-2.5 rounded-lg bg-neutral-800/20 border border-white/5 px-3 py-2.5">
+                <span class="w-2.5 h-2.5 rounded-full flex-shrink-0 <%= val ? 'bg-emerald-400' : 'bg-neutral-600' %>"></span>
+                <span class="text-xs text-neutral-300"><%= flag.label %></span>
+              </div>
+            <% }) %>
+          </div>
+
+          <!-- Mock Test -->
+          <div class="rounded-xl bg-neutral-800/20 border border-white/5 p-5">
+            <h3 class="text-sm font-medium text-white mb-2">Mock Session Test</h3>
+            <p class="text-xs text-neutral-400 mb-3">Create a test session to verify the full pipeline (token → callback → reward). Requires Test Mode enabled.</p>
+            <button id="btn-mock-test" type="button" class="px-4 py-2 rounded-lg bg-blue-600 hover:bg-blue-500 text-white text-sm font-medium transition">
+              <%- icon('play', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Run Mock Test
+            </button>
+            <p id="mock-result" class="mt-2 text-xs text-neutral-400 hidden"></p>
+          </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- Analytics Tab -->
+        <!-- ════════════════════════════════════════ -->
+        <div id="tab-analytics" class="lv-tab hidden">
+          <div id="analytics-loading" class="flex items-center justify-center py-20">
+            <div class="animate-spin w-6 h-6 border-2 border-white/10 border-t-blue-400 rounded-full"></div>
+            <span class="ml-3 text-sm text-neutral-400">Loading analytics...</span>
+          </div>
+          <div id="analytics-content" class="hidden">
+            <!-- Metric cards row -->
+            <div class="grid grid-cols-2 lg:grid-cols-5 gap-4 mb-6">
+              <div class="rounded-xl bg-neutral-800/20 border border-white/5 px-4 py-3">
+                <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Total Sessions</p>
+                <p id="an-total" class="text-2xl font-bold text-white tabular-nums">0</p>
+              </div>
+              <div class="rounded-xl bg-neutral-800/20 border border-white/5 px-4 py-3">
+                <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Completion Rate</p>
+                <p id="an-completion" class="text-2xl font-bold text-emerald-400 tabular-nums">0%</p>
+              </div>
+              <div class="rounded-xl bg-neutral-800/20 border border-white/5 px-4 py-3">
+                <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Rewarded</p>
+                <p id="an-rewarded" class="text-2xl font-bold text-blue-400 tabular-nums">0</p>
+              </div>
+              <div class="rounded-xl bg-neutral-800/20 border border-white/5 px-4 py-3">
+                <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Total Coins</p>
+                <p id="an-coins" class="text-2xl font-bold text-amber-400 tabular-nums">0</p>
+              </div>
+              <div class="rounded-xl bg-neutral-800/20 border border-white/5 px-4 py-3">
+                <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-1">Avg Time</p>
+                <p id="an-avg-time" class="text-2xl font-bold text-purple-400 tabular-nums">0s</p>
+              </div>
+            </div>
+
+            <!-- Campaign Breakdown -->
+            <h3 class="text-sm font-medium text-white mb-3">Campaign Breakdown</h3>
+            <div id="campaign-breakdown" class="mb-6"></div>
+
+            <!-- Placement Breakdown -->
+            <h3 class="text-sm font-medium text-white mb-3">Placement Breakdown</h3>
+            <div id="placement-breakdown" class="mb-6"></div>
+
+            <!-- Retry Failed -->
+            <div class="rounded-xl bg-neutral-800/20 border border-white/5 p-5">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="text-sm font-medium text-white">Retry Failed Sessions</h3>
+                  <p class="text-xs text-neutral-400 mt-0.5">Re-process sessions that failed during reward distribution.</p>
+                </div>
+                <button id="btn-retry" type="button" class="px-4 py-2 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-sm font-medium transition">
+                  <%- icon('refresh-cw', { class: 'w-4 h-4 inline mr-1.5 -mt-0.5' }) %>Retry Failed
+                </button>
+              </div>
+              <p id="retry-result" class="mt-2 text-xs text-neutral-400 hidden"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- Sessions Tab -->
+        <!-- ════════════════════════════════════════ -->
+        <div id="tab-sessions" class="lv-tab hidden">
+          <!-- Filters -->
+          <div class="flex items-center gap-3 mb-4">
+            <select id="session-status-filter" class="rounded-lg bg-neutral-800 border border-white/10 text-sm text-neutral-300 px-3 py-2">
+              <option value="">All Statuses</option>
+              <option value="CREATED">Created</option>
+              <option value="VISITED">Visited</option>
+              <option value="COMPLETED">Completed</option>
+              <option value="VERIFIED">Verified</option>
+              <option value="PENDING_REWARD">Pending Reward</option>
+              <option value="REWARDED">Rewarded</option>
+              <option value="FAILED">Failed</option>
+              <option value="EXPIRED">Expired</option>
+            </select>
+            <button id="btn-load-sessions" type="button" class="px-3 py-2 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white text-sm transition">
+              <%- icon('search', { class: 'w-4 h-4 inline mr-1 -mt-0.5' }) %>Load
+            </button>
+          </div>
+
+          <!-- Sessions Table -->
+          <div class="overflow-x-auto rounded-xl border border-white/5">
+            <table class="w-full text-sm">
+              <thead class="bg-neutral-800/40">
+                <tr>
+                  <th class="text-left px-4 py-2.5 text-xs font-medium text-neutral-400 uppercase tracking-wider">ID</th>
+                  <th class="text-left px-4 py-2.5 text-xs font-medium text-neutral-400 uppercase tracking-wider">User</th>
+                  <th class="text-left px-4 py-2.5 text-xs font-medium text-neutral-400 uppercase tracking-wider">Campaign</th>
+                  <th class="text-left px-4 py-2.5 text-xs font-medium text-neutral-400 uppercase tracking-wider">Placement</th>
+                  <th class="text-left px-4 py-2.5 text-xs font-medium text-neutral-400 uppercase tracking-wider">Status</th>
+                  <th class="text-left px-4 py-2.5 text-xs font-medium text-neutral-400 uppercase tracking-wider">Reward</th>
+                  <th class="text-left px-4 py-2.5 text-xs font-medium text-neutral-400 uppercase tracking-wider">Created</th>
+                  <th class="text-left px-4 py-2.5 text-xs font-medium text-neutral-400 uppercase tracking-wider">Completed</th>
+                </tr>
+              </thead>
+              <tbody id="sessions-tbody" class="divide-y divide-white/5">
+                <tr><td colspan="8" class="px-4 py-8 text-center text-neutral-500">Click "Load" to fetch sessions.</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Pagination -->
+          <div id="sessions-pagination" class="flex items-center justify-between mt-4 hidden">
+            <p id="sessions-info" class="text-xs text-neutral-400"></p>
+            <div class="flex gap-2">
+              <button id="btn-prev-page" type="button" class="px-3 py-1.5 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white text-xs transition disabled:opacity-40" disabled>Prev</button>
+              <button id="btn-next-page" type="button" class="px-3 py-1.5 rounded-lg bg-neutral-700 hover:bg-neutral-600 text-white text-xs transition disabled:opacity-40" disabled>Next</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- ════════════════════════════════════════ -->
+        <!-- Config Tab -->
+        <!-- ════════════════════════════════════════ -->
+        <div id="tab-config" class="lv-tab hidden">
+          <div class="rounded-xl bg-neutral-800/20 border border-white/5 p-6">
+            <h3 class="text-sm font-medium text-white mb-4">Current Configuration</h3>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div>
+                <label class="block text-xs text-neutral-400 mb-1">Publisher ID</label>
+                <input type="text" readonly value="<%= config.publisherId || '(not set)' %>" class="w-full px-3 py-2 rounded-lg bg-neutral-900 border border-white/10 text-sm text-neutral-300">
+              </div>
+              <div>
+                <label class="block text-xs text-neutral-400 mb-1">Default Destination</label>
+                <input type="text" readonly value="<%= config.defaultDestination || '(not set)' %>" class="w-full px-3 py-2 rounded-lg bg-neutral-900 border border-white/10 text-sm text-neutral-300">
+              </div>
+              <div>
+                <label class="block text-xs text-neutral-400 mb-1">Callback Secret</label>
+                <input type="password" readonly value="<%= config.callbackSecret ? '●'.repeat(Math.min(config.callbackSecret.length, 40)) : '(not set)' %>" class="w-full px-3 py-2 rounded-lg bg-neutral-900 border border-white/10 text-sm text-neutral-300">
+              </div>
+              <div>
+                <label class="block text-xs text-neutral-400 mb-1">Provider Version</label>
+                <input type="text" readonly value="2.0.0" class="w-full px-3 py-2 rounded-lg bg-neutral-900 border border-white/10 text-sm text-neutral-300">
+              </div>
+            </div>
+
+            <h3 class="text-sm font-medium text-white mt-6 mb-3">Reward Rules</h3>
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+              <% if (config.rewardRules) { Object.entries(config.rewardRules).forEach(function([campaign, coins]) { %>
+                <div class="rounded-lg bg-neutral-900 border border-white/10 px-3 py-2.5">
+                  <p class="text-[10px] text-neutral-500 uppercase tracking-wider mb-0.5"><%= campaign %></p>
+                  <p class="text-lg font-bold text-white tabular-nums"><%= coins %> <span class="text-xs text-neutral-400 font-normal">coins</span></p>
+                </div>
+              <% }); } %>
+            </div>
+
+            <div class="mt-6 pt-4 border-t border-white/5">
+              <p class="text-xs text-neutral-500">
+                <%- icon('info', { class: 'w-3.5 h-3.5 inline mr-1 -mt-0.5' }) %>
+                Configuration is managed from the main <a href="/admin/monetization" class="text-blue-400 hover:underline">Monetization Panel</a> under the Providers tab.
+              </p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</main>
+
+<script nonce="<%- nonce %>">
+(function () {
+  // ─── Tab Switcher ───────────────────────────
+  var tabs = document.querySelectorAll('.lv-tab-btn');
+  var panels = document.querySelectorAll('.lv-tab');
+
+  function activateTab(name) {
+    tabs.forEach(function (t) {
+      var isActive = t.getAttribute('data-tab') === name;
+      t.classList.toggle('border-blue-500', isActive);
+      t.classList.toggle('text-white', isActive);
+      t.classList.toggle('border-transparent', !isActive);
+      t.classList.toggle('text-neutral-400', !isActive);
+    });
+    panels.forEach(function (p) {
+      p.classList.toggle('hidden', p.id !== 'tab-' + name);
+    });
+    if (name === 'analytics') loadAnalytics();
+  }
+
+  tabs.forEach(function (t) {
+    t.addEventListener('click', function () {
+      activateTab(t.getAttribute('data-tab'));
+    });
+  });
+
+  activateTab('diagnostics');
+
+  // ─── Mock Test ──────────────────────────────
+  var mockBtn = document.getElementById('btn-mock-test');
+  var mockResult = document.getElementById('mock-result');
+  if (mockBtn) {
+    mockBtn.addEventListener('click', async function () {
+      mockBtn.disabled = true;
+      mockResult.classList.remove('hidden');
+      mockResult.textContent = 'Creating mock session...';
+      try {
+        var res = await fetch('/admin/monetization/linkvertise/mock', { method: 'POST' });
+        var data = await res.json();
+        mockResult.textContent = data.success
+          ? 'Mock session created (ID: ' + data.sessionId + '). Check Sessions tab.'
+          : 'Error: ' + data.error;
+        mockResult.className = 'mt-2 text-xs ' + (data.success ? 'text-emerald-400' : 'text-red-400');
+      } catch (e) {
+        mockResult.textContent = 'Network error.';
+        mockResult.className = 'mt-2 text-xs text-red-400';
+      }
+      mockBtn.disabled = false;
+    });
+  }
+
+  // ─── Analytics ──────────────────────────────
+  var analyticsLoaded = false;
+  async function loadAnalytics() {
+    if (analyticsLoaded) return;
+    try {
+      var res = await fetch('/admin/monetization/linkvertise/analytics?hours=24');
+      var data = await res.json();
+      if (!data.success) return;
+      var a = data.analytics;
+
+      document.getElementById('an-total').textContent = a.totalSessions.toLocaleString();
+      document.getElementById('an-completion').textContent = a.completionRate.toFixed(1) + '%';
+      document.getElementById('an-rewarded').textContent = a.rewardedSessions.toLocaleString();
+      document.getElementById('an-coins').textContent = a.totalCoinsAwarded.toLocaleString();
+      document.getElementById('an-avg-time').textContent = (a.avgCompletionTimeMs / 1000).toFixed(1) + 's';
+
+      // Campaign breakdown
+      var cEl = document.getElementById('campaign-breakdown');
+      var cHtml = '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">';
+      for (var c in a.campaignBreakdown) {
+        var cb = a.campaignBreakdown[c];
+        cHtml += '<div class="rounded-lg bg-neutral-800/20 border border-white/5 px-4 py-3">';
+        cHtml += '<p class="text-xs font-semibold text-white uppercase mb-1">' + c + '</p>';
+        cHtml += '<p class="text-xs text-neutral-400">Total: ' + cb.total + ' · Completed: ' + cb.completed + ' · Rewarded: ' + cb.rewarded + '</p>';
+        cHtml += '<p class="text-xs text-amber-400 mt-0.5">' + cb.coins + ' coins awarded</p>';
+        cHtml += '</div>';
+      }
+      cHtml += '</div>';
+      cEl.innerHTML = cHtml;
+
+      // Placement breakdown
+      var pEl = document.getElementById('placement-breakdown');
+      var pHtml = '<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">';
+      for (var p in a.placementBreakdown) {
+        var pb = a.placementBreakdown[p];
+        pHtml += '<div class="rounded-lg bg-neutral-800/20 border border-white/5 px-4 py-3">';
+        pHtml += '<p class="text-xs font-semibold text-white uppercase mb-1">' + p + '</p>';
+        pHtml += '<p class="text-xs text-neutral-400">Total: ' + pb.total + ' · Completed: ' + pb.completed + ' · Rewarded: ' + pb.rewarded + '</p>';
+        pHtml += '</div>';
+      }
+      pHtml += '</div>';
+      pEl.innerHTML = pHtml;
+
+      document.getElementById('analytics-loading').classList.add('hidden');
+      document.getElementById('analytics-content').classList.remove('hidden');
+      analyticsLoaded = true;
+    } catch (e) {
+      document.getElementById('analytics-loading').innerHTML = '<p class="text-sm text-red-400">Failed to load analytics.</p>';
+    }
+  }
+
+  // ─── Retry Failed ───────────────────────────
+  var retryBtn = document.getElementById('btn-retry');
+  var retryResult = document.getElementById('retry-result');
+  if (retryBtn) {
+    retryBtn.addEventListener('click', async function () {
+      retryBtn.disabled = true;
+      retryResult.classList.remove('hidden');
+      retryResult.textContent = 'Retrying failed sessions...';
+      try {
+        var res = await fetch('/admin/monetization/linkvertise/retry-failed', { method: 'POST' });
+        var data = await res.json();
+        retryResult.textContent = data.success
+          ? 'Retried ' + data.retried + ' sessions successfully.'
+          : 'Error: ' + data.error;
+        retryResult.className = 'mt-2 text-xs ' + (data.success ? 'text-emerald-400' : 'text-red-400');
+      } catch (e) {
+        retryResult.textContent = 'Network error.';
+        retryResult.className = 'mt-2 text-xs text-red-400';
+      }
+      retryBtn.disabled = false;
+    });
+  }
+
+  // ─── Sessions Inspector ─────────────────────
+  var currentPage = 1;
+  var sessionFilter = document.getElementById('session-status-filter');
+  var loadBtn = document.getElementById('btn-load-sessions');
+  var tbody = document.getElementById('sessions-tbody');
+  var pagination = document.getElementById('sessions-pagination');
+  var sessionsInfo = document.getElementById('sessions-info');
+  var prevBtn = document.getElementById('btn-prev-page');
+  var nextBtn = document.getElementById('btn-next-page');
+
+  var STATUS_COLORS = {
+    CREATED: 'bg-blue-500/10 text-blue-400 border-blue-500/20',
+    VISITED: 'bg-cyan-500/10 text-cyan-400 border-cyan-500/20',
+    COMPLETED: 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20',
+    VERIFIED: 'bg-teal-500/10 text-teal-400 border-teal-500/20',
+    PENDING_REWARD: 'bg-amber-500/10 text-amber-400 border-amber-500/20',
+    REWARDED: 'bg-green-500/10 text-green-400 border-green-500/20',
+    FAILED: 'bg-red-500/10 text-red-400 border-red-500/20',
+    EXPIRED: 'bg-neutral-500/10 text-neutral-400 border-neutral-500/20',
+  };
+
+  async function loadSessions(page) {
+    currentPage = page || 1;
+    var status = sessionFilter.value;
+    var url = '/admin/monetization/linkvertise/sessions?page=' + currentPage + '&limit=25';
+    if (status) url += '&status=' + status;
+
+    tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-8 text-center text-neutral-500">Loading...</td></tr>';
+
+    try {
+      var res = await fetch(url);
+      var data = await res.json();
+      if (!data.success) {
+        tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-8 text-center text-red-400">Error loading sessions.</td></tr>';
+        return;
+      }
+
+      if (data.sessions.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-8 text-center text-neutral-500">No sessions found.</td></tr>';
+        pagination.classList.add('hidden');
+        return;
+      }
+
+      var html = '';
+      data.sessions.forEach(function (s) {
+        var statusClass = STATUS_COLORS[s.status] || 'bg-neutral-500/10 text-neutral-400 border-neutral-500/20';
+        html += '<tr class="hover:bg-white/[.02] transition">';
+        html += '<td class="px-4 py-2.5 text-xs text-neutral-300 tabular-nums">' + s.id + '</td>';
+        html += '<td class="px-4 py-2.5 text-xs text-neutral-300">' + (s.user?.username || 'User #' + s.userId) + '</td>';
+        html += '<td class="px-4 py-2.5 text-xs text-neutral-300">' + s.campaign + '</td>';
+        html += '<td class="px-4 py-2.5 text-xs text-neutral-300">' + s.placement + '</td>';
+        html += '<td class="px-4 py-2.5"><span class="inline-flex px-2 py-0.5 rounded-full text-[10px] font-medium border ' + statusClass + '">' + s.status + '</span></td>';
+        html += '<td class="px-4 py-2.5 text-xs text-amber-400 tabular-nums">' + s.rewardAmount + '</td>';
+        html += '<td class="px-4 py-2.5 text-xs text-neutral-400">' + new Date(s.createdAt).toLocaleString() + '</td>';
+        html += '<td class="px-4 py-2.5 text-xs text-neutral-400">' + (s.completedAt ? new Date(s.completedAt).toLocaleString() : '—') + '</td>';
+        html += '</tr>';
+      });
+      tbody.innerHTML = html;
+
+      var pg = data.pagination;
+      pagination.classList.remove('hidden');
+      sessionsInfo.textContent = 'Showing page ' + pg.page + ' of ' + pg.totalPages + ' (' + pg.total + ' total)';
+      prevBtn.disabled = pg.page <= 1;
+      nextBtn.disabled = pg.page >= pg.totalPages;
+    } catch (e) {
+      tbody.innerHTML = '<tr><td colspan="8" class="px-4 py-8 text-center text-red-400">Network error.</td></tr>';
+    }
+  }
+
+  if (loadBtn) loadBtn.addEventListener('click', function () { loadSessions(1); });
+  if (prevBtn) prevBtn.addEventListener('click', function () { loadSessions(currentPage - 1); });
+  if (nextBtn) nextBtn.addEventListener('click', function () { loadSessions(currentPage + 1); });
+})();
+</script>
+
+<%- include('../../components/footer') %>

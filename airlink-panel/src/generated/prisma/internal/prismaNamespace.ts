@@ -424,7 +424,9 @@ export const ModelName = {
   StoragePool: 'StoragePool',
   NetworkPool: 'NetworkPool',
   OperationQueue: 'OperationQueue',
-  NodeCapability: 'NodeCapability'
+  NodeCapability: 'NodeCapability',
+  LinkvertiseSession: 'LinkvertiseSession',
+  LinkvertiseCompletion: 'LinkvertiseCompletion'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -440,7 +442,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "users" | "session" | "server" | "images" | "node" | "settings" | "serverFolder" | "serverFolderMember" | "apiKey" | "loginHistory" | "playerStats" | "addon" | "addonSetting" | "backup" | "sftpCredential" | "wallet" | "walletTransaction" | "userAllocation" | "storeProduct" | "storePurchase" | "coupon" | "couponRedemption" | "config" | "auditLog" | "notification" | "plan" | "offer" | "offerReward" | "earnSession" | "afkSession" | "userStreak" | "monetizationFraudLog" | "providerHealthRecord" | "monetizationSchedulerJob" | "userEarnPreferences" | "resourceProfile" | "imageRegistry" | "storagePool" | "networkPool" | "operationQueue" | "nodeCapability"
+    modelProps: "users" | "session" | "server" | "images" | "node" | "settings" | "serverFolder" | "serverFolderMember" | "apiKey" | "loginHistory" | "playerStats" | "addon" | "addonSetting" | "backup" | "sftpCredential" | "wallet" | "walletTransaction" | "userAllocation" | "storeProduct" | "storePurchase" | "coupon" | "couponRedemption" | "config" | "auditLog" | "notification" | "plan" | "offer" | "offerReward" | "earnSession" | "afkSession" | "userStreak" | "monetizationFraudLog" | "providerHealthRecord" | "monetizationSchedulerJob" | "userEarnPreferences" | "resourceProfile" | "imageRegistry" | "storagePool" | "networkPool" | "operationQueue" | "nodeCapability" | "linkvertiseSession" | "linkvertiseCompletion"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -3478,6 +3480,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    LinkvertiseSession: {
+      payload: Prisma.$LinkvertiseSessionPayload<ExtArgs>
+      fields: Prisma.LinkvertiseSessionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LinkvertiseSessionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseSessionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LinkvertiseSessionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseSessionPayload>
+        }
+        findFirst: {
+          args: Prisma.LinkvertiseSessionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseSessionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LinkvertiseSessionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseSessionPayload>
+        }
+        findMany: {
+          args: Prisma.LinkvertiseSessionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseSessionPayload>[]
+        }
+        create: {
+          args: Prisma.LinkvertiseSessionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseSessionPayload>
+        }
+        createMany: {
+          args: Prisma.LinkvertiseSessionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LinkvertiseSessionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseSessionPayload>[]
+        }
+        delete: {
+          args: Prisma.LinkvertiseSessionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseSessionPayload>
+        }
+        update: {
+          args: Prisma.LinkvertiseSessionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseSessionPayload>
+        }
+        deleteMany: {
+          args: Prisma.LinkvertiseSessionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LinkvertiseSessionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LinkvertiseSessionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseSessionPayload>[]
+        }
+        upsert: {
+          args: Prisma.LinkvertiseSessionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseSessionPayload>
+        }
+        aggregate: {
+          args: Prisma.LinkvertiseSessionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLinkvertiseSession>
+        }
+        groupBy: {
+          args: Prisma.LinkvertiseSessionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LinkvertiseSessionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LinkvertiseSessionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LinkvertiseSessionCountAggregateOutputType> | number
+        }
+      }
+    }
+    LinkvertiseCompletion: {
+      payload: Prisma.$LinkvertiseCompletionPayload<ExtArgs>
+      fields: Prisma.LinkvertiseCompletionFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.LinkvertiseCompletionFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseCompletionPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.LinkvertiseCompletionFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseCompletionPayload>
+        }
+        findFirst: {
+          args: Prisma.LinkvertiseCompletionFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseCompletionPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.LinkvertiseCompletionFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseCompletionPayload>
+        }
+        findMany: {
+          args: Prisma.LinkvertiseCompletionFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseCompletionPayload>[]
+        }
+        create: {
+          args: Prisma.LinkvertiseCompletionCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseCompletionPayload>
+        }
+        createMany: {
+          args: Prisma.LinkvertiseCompletionCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.LinkvertiseCompletionCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseCompletionPayload>[]
+        }
+        delete: {
+          args: Prisma.LinkvertiseCompletionDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseCompletionPayload>
+        }
+        update: {
+          args: Prisma.LinkvertiseCompletionUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseCompletionPayload>
+        }
+        deleteMany: {
+          args: Prisma.LinkvertiseCompletionDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.LinkvertiseCompletionUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.LinkvertiseCompletionUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseCompletionPayload>[]
+        }
+        upsert: {
+          args: Prisma.LinkvertiseCompletionUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$LinkvertiseCompletionPayload>
+        }
+        aggregate: {
+          args: Prisma.LinkvertiseCompletionAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateLinkvertiseCompletion>
+        }
+        groupBy: {
+          args: Prisma.LinkvertiseCompletionGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LinkvertiseCompletionGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.LinkvertiseCompletionCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.LinkvertiseCompletionCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3647,7 +3797,11 @@ export const SettingsScalarFieldEnum = {
   behindReverseProxy: 'behindReverseProxy',
   hashApiKeys: 'hashApiKeys',
   airlinkCloudApiKey: 'airlinkCloudApiKey',
-  airlinkCloudBackupEnabled: 'airlinkCloudBackupEnabled'
+  airlinkCloudBackupEnabled: 'airlinkCloudBackupEnabled',
+  defaultServerLimit: 'defaultServerLimit',
+  defaultMaxMemory: 'defaultMaxMemory',
+  defaultMaxCpu: 'defaultMaxCpu',
+  defaultMaxStorage: 'defaultMaxStorage'
 } as const
 
 export type SettingsScalarFieldEnum = (typeof SettingsScalarFieldEnum)[keyof typeof SettingsScalarFieldEnum]
@@ -4160,6 +4314,41 @@ export const NodeCapabilityScalarFieldEnum = {
 export type NodeCapabilityScalarFieldEnum = (typeof NodeCapabilityScalarFieldEnum)[keyof typeof NodeCapabilityScalarFieldEnum]
 
 
+export const LinkvertiseSessionScalarFieldEnum = {
+  id: 'id',
+  token: 'token',
+  userId: 'userId',
+  campaign: 'campaign',
+  placement: 'placement',
+  rewardType: 'rewardType',
+  rewardAmount: 'rewardAmount',
+  destination: 'destination',
+  status: 'status',
+  ip: 'ip',
+  userAgent: 'userAgent',
+  retryCount: 'retryCount',
+  errorMessage: 'errorMessage',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  completedAt: 'completedAt'
+} as const
+
+export type LinkvertiseSessionScalarFieldEnum = (typeof LinkvertiseSessionScalarFieldEnum)[keyof typeof LinkvertiseSessionScalarFieldEnum]
+
+
+export const LinkvertiseCompletionScalarFieldEnum = {
+  id: 'id',
+  sessionId: 'sessionId',
+  ipAddress: 'ipAddress',
+  userAgent: 'userAgent',
+  signature: 'signature',
+  timestamp: 'timestamp',
+  verifiedAt: 'verifiedAt'
+} as const
+
+export type LinkvertiseCompletionScalarFieldEnum = (typeof LinkvertiseCompletionScalarFieldEnum)[keyof typeof LinkvertiseCompletionScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -4518,6 +4707,8 @@ export type GlobalOmitConfig = {
   networkPool?: Prisma.NetworkPoolOmit
   operationQueue?: Prisma.OperationQueueOmit
   nodeCapability?: Prisma.NodeCapabilityOmit
+  linkvertiseSession?: Prisma.LinkvertiseSessionOmit
+  linkvertiseCompletion?: Prisma.LinkvertiseCompletionOmit
 }
 
 /* Types for Logging */

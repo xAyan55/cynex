@@ -249,3 +249,13 @@ export type OperationQueue = Prisma.OperationQueueModel
  * 
  */
 export type NodeCapability = Prisma.NodeCapabilityModel
+/**
+ * Model LinkvertiseSession
+ * 
+ */
+export type LinkvertiseSession = Prisma.LinkvertiseSessionModel
+/**
+ * Model LinkvertiseCompletion
+ * 
+ */
+export type LinkvertiseCompletion = Prisma.LinkvertiseCompletionModel
