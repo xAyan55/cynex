@@ -9,6 +9,7 @@ import { RewardService } from '../linkvertise/RewardService';
 import { AnalyticsService } from '../linkvertise/AnalyticsService';
 import { DiagnosticsService } from '../linkvertise/DiagnosticsService';
 import { CleanupService } from '../linkvertise/CleanupService';
+import { validateTarget } from '../../../utils/urlSafe';
 import prisma from '../../../db';
 import logger from '../../../handlers/logger';
 
@@ -23,6 +24,7 @@ const DEFAULT_CONFIG: LinkvertiseConfig = {
   allowGuestLinks: false,
   analyticsEnabled: true,
   retryFailures: true,
+  baseUrl: '',
   enableDynamicLinks: true,
   enableRewards: true,
   enableCallbackProcessing: true,
@@ -36,7 +38,7 @@ const DEFAULT_CONFIG: LinkvertiseConfig = {
 export class LinkvertiseProvider implements MonetizationProvider {
   readonly id = 'linkvertise';
   readonly name = 'Linkvertise';
-  readonly version = '2.0.0';
+  readonly version = '2.1.0';
 
   private config: LinkvertiseConfig = { ...DEFAULT_CONFIG };
   private tokenService: TokenService | null = null;
@@ -45,7 +47,7 @@ export class LinkvertiseProvider implements MonetizationProvider {
   private cleanupService: CleanupService | null = null;
 
   async initialize(): Promise<void> {
-    logger.info('[LinkvertiseProvider] Initializing v2.0.0');
+    logger.info('[LinkvertiseProvider] Initializing v2.1.0');
 
     if (this.config.callbackSecret && this.config.callbackSecret.length >= 32) {
       this.tokenService = new TokenService(this.config.callbackSecret);
@@ -70,7 +72,6 @@ export class LinkvertiseProvider implements MonetizationProvider {
   async reloadConfiguration(config: Record<string, any>): Promise<void> {
     this.config = { ...DEFAULT_CONFIG, ...config } as LinkvertiseConfig;
 
-    // Reinitialize services that depend on config
     if (this.config.callbackSecret && this.config.callbackSecret.length >= 32) {
       this.tokenService = new TokenService(this.config.callbackSecret);
       this.callbackService = new CallbackService(this.tokenService);
@@ -81,11 +82,23 @@ export class LinkvertiseProvider implements MonetizationProvider {
   }
 
   async validateConfiguration(config: Record<string, any>): Promise<void> {
-    if (!config.publisherId && !config.userId) {
+    const publisherId = (config.publisherId || '').toString().trim();
+    if (!publisherId) {
       throw new Error('Linkvertise Publisher ID is required.');
     }
-    if (!config.callbackSecret || (config.callbackSecret as string).length < 32) {
-      throw new Error('Callback Secret must be at least 32 characters.');
+    if (!/^\d+$/.test(publisherId)) {
+      throw new Error('Linkvertise Publisher ID must be numeric (digits only).');
+    }
+    if (config.enableDynamicLinks !== false) {
+      if (!config.callbackSecret || (config.callbackSecret as string).length < 32) {
+        throw new Error('Callback Secret must be at least 32 characters when Dynamic Links are enabled.');
+      }
+      if (config.baseUrl) {
+        const baseUrl = (config.baseUrl as string).replace(/\/+$/, '');
+        if (!baseUrl.startsWith('https://') && !baseUrl.startsWith('http://localhost')) {
+          throw new Error('Base URL must use HTTPS (or http://localhost for development).');
+        }
+      }
     }
     if (config.defaultDestination && !config.defaultDestination.startsWith('https://')) {
       throw new Error('Default Destination must use HTTPS.');
@@ -93,20 +106,22 @@ export class LinkvertiseProvider implements MonetizationProvider {
   }
 
   async generateLink(user: any, offer: any, targetUrl: string, options?: any): Promise<string> {
-    if (!this.tokenService) {
-      throw new Error('LinkvertiseProvider not configured: missing callback secret.');
-    }
+    const correlationId = `lv-${Date.now()}-${Math.random().toString(36).substr(2, 6)}`;
 
-    const publisherId = this.config.publisherId;
+    // ── Pre-generation validation ──────────────────────────────────
+    this.assertCanGenerate(targetUrl, correlationId);
+
+    const publisherId = this.config.publisherId.trim();
     const campaign = options?.campaign || 'earn';
     const placement = options?.placement || 'offer_wall';
     const rewardAmount = this.rewardService?.getRewardAmount(campaign) ?? 10;
+    const sessionToken = options?.sessionToken || '';
 
-    // 1. Generate a signed token
-    const token = this.tokenService.generate(user.id, 'COINS', campaign, placement);
+    // 1. Generate a signed token for callback verification
+    const token = this.tokenService!.generate(user.id, 'COINS', campaign, placement);
 
     // 2. Create a session record
-    await prisma.linkvertiseSession.create({
+    const session = await prisma.linkvertiseSession.create({
       data: {
         token,
         userId: user.id,
@@ -121,9 +136,31 @@ export class LinkvertiseProvider implements MonetizationProvider {
 
     // 3. Build the dynamic Linkvertise URL
     const builder = new LinkBuilder(publisherId);
-    const url = builder.buildOffer(token, targetUrl, rewardAmount);
+    builder.setTargetUrl(targetUrl)
+      .setToken(token)
+      .setCampaign(campaign)
+      .setPlacement(placement)
+      .setReward('COINS', rewardAmount);
 
-    logger.info(`[LinkvertiseProvider] Link generated for user=${user.id} campaign=${campaign}`);
+    // Use the baseUrl as the callback target so Linkvertise redirects to our
+    // completion endpoint after the user finishes the ad flow.
+    if (this.config.baseUrl) {
+      builder.setCallbackUrl(this.config.baseUrl.replace(/\/+$/, ''));
+    }
+
+    const url = builder.build();
+
+    // 4. Post-generation URL validation
+    const validation = builder.validateGeneratedUrl(url);
+    if (!validation.valid) {
+      logger.error(`[LINK_BUILD_FAILED] correlationId=${correlationId} errors=${validation.errors.join('; ')}`);
+      throw new Error(`Generated Linkvertise URL is invalid: ${validation.errors.join('; ')}`);
+    }
+
+    // 5. Debug logging
+    logger.info(`[LINK_GENERATED] correlationId=${correlationId} user=${user.id} campaign=${campaign} sessionId=${session.id}`);
+    logger.debug(`[LINK_DEBUG] correlationId=${correlationId} inputUrl=${targetUrl} generatedUrl=${url} publisherId=${publisherId} campaign=${campaign} placement=${placement} token=${token.substr(0, 20)}... callbackUrl=${this.config.baseUrl}`);
+
     return url;
   }
 
@@ -140,12 +177,10 @@ export class LinkvertiseProvider implements MonetizationProvider {
       return false;
     }
 
-    // Process reward if enabled
     if (this.config.enableRewards && this.rewardService && result.sessionId) {
       const rewardResult = await this.rewardService.processReward(result.sessionId);
       if (!rewardResult.success) {
         logger.error(`[LinkvertiseProvider] Reward failed for session=${result.sessionId}: ${rewardResult.error}`);
-        // Callback was valid even if reward failed - it will be retried
       }
     }
 
@@ -161,9 +196,25 @@ export class LinkvertiseProvider implements MonetizationProvider {
       if (!this.tokenService) {
         return { status: 'DEGRADED', responseTime: Date.now() - start, error: 'Callback secret not configured or too short' };
       }
+      if (!this.config.enableDynamicLinks) {
+        return { status: 'DEGRADED', responseTime: Date.now() - start, error: 'Dynamic Links are disabled in configuration' };
+      }
+      if (!this.config.baseUrl) {
+        return { status: 'DEGRADED', responseTime: Date.now() - start, error: 'Base URL not configured — callback flow will not work' };
+      }
 
-      // Quick DB check
       await prisma.linkvertiseSession.count({ take: 1 });
+
+      // Validate the URL format would work
+      const builder = new LinkBuilder(this.config.publisherId);
+      builder.setTargetUrl(this.config.defaultDestination || 'https://example.com')
+        .setToken('test.validation.token')
+        .setCallbackUrl(this.config.baseUrl);
+      const testUrl = builder.build();
+      const urlValidation = builder.validateGeneratedUrl(testUrl);
+      if (!urlValidation.valid) {
+        return { status: 'DEGRADED', responseTime: Date.now() - start, error: `URL generation validation failed: ${urlValidation.errors.join('; ')}` };
+      }
 
       return { status: 'HEALTHY', responseTime: Date.now() - start };
     } catch (err: any) {
@@ -173,10 +224,11 @@ export class LinkvertiseProvider implements MonetizationProvider {
 
   renderConfigurationFields(): Array<{ key: string; label: string; type: string; default?: any }> {
     return [
-      { key: 'publisherId', label: 'Publisher / User ID', type: 'text' },
+      { key: 'publisherId', label: 'Publisher / User ID (numeric)', type: 'text' },
       { key: 'apiKey', label: 'API Key (Optional)', type: 'password' },
       { key: 'callbackSecret', label: 'Callback Secret Key (min 32 chars)', type: 'password' },
-      { key: 'defaultDestination', label: 'Target Redirect URL (HTTPS)', type: 'text' },
+      { key: 'baseUrl', label: 'Application Base URL (for callback redirect, e.g. https://panel.com)', type: 'text' },
+      { key: 'defaultDestination', label: 'Default Fallback Destination (HTTPS)', type: 'text' },
       { key: 'enableDynamicLinks', label: 'Enable Dynamic Links', type: 'toggle', default: true },
       { key: 'enableRewards', label: 'Enable Reward Processing', type: 'toggle', default: true },
       { key: 'enableCallbackProcessing', label: 'Enable Callback Processing', type: 'toggle', default: true },
@@ -206,6 +258,41 @@ export class LinkvertiseProvider implements MonetizationProvider {
     return true;
   }
 
+  // ─── Pre-generation validation ───────────────────────────────
+
+  private assertCanGenerate(targetUrl: string, correlationId: string): void {
+    const errors: string[] = [];
+
+    if (!this.config.enabled) {
+      errors.push('Linkvertise provider is disabled');
+    }
+
+    if (!this.config.publisherId || !this.config.publisherId.trim()) {
+      errors.push('Publisher ID is not configured');
+    } else if (!/^\d+$/.test(this.config.publisherId.trim())) {
+      errors.push(`Publisher ID "${this.config.publisherId}" is not numeric`);
+    }
+
+    if (!this.config.enableDynamicLinks) {
+      errors.push('Dynamic Links are disabled in configuration');
+    }
+
+    if (!this.tokenService) {
+      errors.push('Token service not initialized — callback secret missing or too short');
+    }
+
+    if (!targetUrl) {
+      errors.push('Target URL is empty');
+    } else if (!validateTarget(targetUrl)) {
+      errors.push(`Target URL "${targetUrl}" is not a valid HTTP or HTTPS URL`);
+    }
+
+    if (errors.length > 0) {
+      logger.error(`[LINK_VALIDATION_FAILED] correlationId=${correlationId} errors=${errors.join('; ')} targetUrl=${targetUrl}`);
+      throw new Error(`Cannot generate Linkvertise link: ${errors.join('; ')}`);
+    }
+  }
+
   // ─── Extended API (for admin routes) ────────────────────────────
 
   getConfig(): LinkvertiseConfig {
@@ -226,5 +313,50 @@ export class LinkvertiseProvider implements MonetizationProvider {
 
   async createMockSession(userId: number) {
     return DiagnosticsService.createMockSession(userId, this.config);
+  }
+
+  /**
+   * Generate a test link for diagnostic/validation purposes.
+   * Returns the generated URL and validation results without creating a session.
+   */
+  async generateTestLink(targetUrl?: string): Promise<{
+    url: string;
+    validation: { valid: boolean; errors: string[] };
+    builderValidation: { valid: boolean; errors: string[] };
+    diagnostics: string[];
+  }> {
+    const diagnostics: string[] = [];
+    const testTarget = targetUrl || this.config.defaultDestination || 'https://example.com';
+
+    diagnostics.push(`Publisher ID: ${this.config.publisherId || '(not set)'}`);
+    diagnostics.push(`Dynamic Links: ${this.config.enableDynamicLinks ? 'enabled' : 'disabled'}`);
+    diagnostics.push(`Test target: ${testTarget}`);
+    diagnostics.push(`Base URL: ${this.config.baseUrl || '(not set — callback will not be embedded)'}`);
+
+    const builder = new LinkBuilder(this.config.publisherId || '000000');
+    builder.setTargetUrl(testTarget)
+      .setToken(`test-${Date.now()}`)
+      .setCampaign('test')
+      .setPlacement('diagnostics');
+
+    if (this.config.baseUrl) {
+      builder.setCallbackUrl(this.config.baseUrl);
+      diagnostics.push('Callback URL will be embedded in the r parameter');
+    } else {
+      diagnostics.push('No baseUrl set — token will be appended directly to target URL');
+    }
+
+    const builderValidation = builder.validate();
+    diagnostics.push(`Pre-build validation: ${builderValidation.valid ? 'PASS' : 'FAIL'}`);
+    builderValidation.errors.forEach(e => diagnostics.push(`  - ${e}`));
+
+    const url = builder.build();
+    diagnostics.push(`Generated URL: ${url}`);
+
+    const urlValidation = builder.validateGeneratedUrl(url);
+    diagnostics.push(`Post-build URL validation: ${urlValidation.valid ? 'PASS' : 'FAIL'}`);
+    urlValidation.errors.forEach(e => diagnostics.push(`  - ${e}`));
+
+    return { url, validation: builderValidation, builderValidation: urlValidation, diagnostics };
   }
 }

@@ -2,6 +2,7 @@ import prisma from '../../../db';
 import logger from '../../../handlers/logger';
 import { LinkvertiseConfig } from '../providers/linkvertiseTypes';
 import { AnalyticsService } from './AnalyticsService';
+import { LinkBuilder } from './LinkBuilder';
 
 export interface DiagnosticReport {
   status: 'healthy' | 'degraded' | 'unhealthy';
@@ -18,17 +19,17 @@ export interface DiagnosticCheck {
 }
 
 export class DiagnosticsService {
-  /**
-   * Run all diagnostic checks and produce a report.
-   */
   static async runDiagnostics(config: LinkvertiseConfig): Promise<DiagnosticReport> {
     const checks: DiagnosticCheck[] = [];
 
-    // Check 1: Publisher ID present
+    // Check 1: Publisher ID present and valid format
+    const pubId = (config.publisherId || '').trim();
     checks.push({
       name: 'Publisher ID',
-      passed: !!config.publisherId && config.publisherId.length > 0,
-      message: config.publisherId ? `Set to: ${config.publisherId}` : 'Missing publisher ID',
+      passed: pubId.length > 0 && /^\d+$/.test(pubId),
+      message: pubId
+        ? (/^\d+$/.test(pubId) ? `Numeric ID: ${pubId}` : `Non-numeric value: "${pubId}" — must be digits only`)
+        : 'Missing publisher ID',
     });
 
     // Check 2: Callback secret strength
@@ -40,30 +41,46 @@ export class DiagnosticsService {
         : 'Not configured',
     });
 
-    // Check 3: Default destination is HTTPS
+    // Check 3: Default destination is HTTPS (if set)
     checks.push({
       name: 'Default Destination',
-      passed: config.defaultDestination?.startsWith('https://') ?? false,
+      passed: !config.defaultDestination || config.defaultDestination.startsWith('https://'),
       message: config.defaultDestination
         ? (config.defaultDestination.startsWith('https://') ? 'Using HTTPS' : 'WARNING: Not using HTTPS')
-        : 'Not configured',
+        : 'Not configured (optional)',
     });
 
     // Check 4: Dynamic links enabled
     checks.push({
       name: 'Dynamic Links',
       passed: config.enableDynamicLinks,
-      message: config.enableDynamicLinks ? 'Enabled' : 'Disabled',
+      message: config.enableDynamicLinks ? 'Enabled' : 'Disabled — links cannot be generated',
     });
 
-    // Check 5: Rewards enabled
+    // Check 5: Provider enabled
+    checks.push({
+      name: 'Provider Enabled',
+      passed: config.enabled,
+      message: config.enabled ? 'Enabled' : 'Disabled — link generation is blocked',
+    });
+
+    // Check 6: Base URL configured (needed for callback flow)
+    checks.push({
+      name: 'Base URL',
+      passed: !!config.baseUrl,
+      message: config.baseUrl
+        ? `Set to: ${config.baseUrl}`
+        : 'Not configured — callback flow will not work, tokens will be appended directly to target URLs',
+    });
+
+    // Check 7: Rewards enabled
     checks.push({
       name: 'Reward Processing',
       passed: config.enableRewards,
       message: config.enableRewards ? 'Enabled' : 'Disabled',
     });
 
-    // Check 6: Database connectivity
+    // Check 8: Database connectivity
     let dbCheck = false;
     try {
       await prisma.linkvertiseSession.count();
@@ -77,13 +94,47 @@ export class DiagnosticsService {
       message: dbCheck ? 'Connected' : 'Failed to query LinkvertiseSession table',
     });
 
-    // Check 7: Recent session activity (last hour)
-    let recentActivity = false;
+    // Check 9: Generated URL format validation
+    if (pubId && /^\d+$/.test(pubId) && config.enableDynamicLinks) {
+      try {
+        const builder = new LinkBuilder(pubId);
+        builder.setTargetUrl(config.defaultDestination || 'https://example.com')
+          .setToken('diagnostics.test.token')
+          .setCampaign('test')
+          .setPlacement('diagnostics');
+        if (config.baseUrl) {
+          builder.setCallbackUrl(config.baseUrl);
+        }
+        const testUrl = builder.build();
+        const urlValidation = builder.validateGeneratedUrl(testUrl);
+
+        checks.push({
+          name: 'URL Generation',
+          passed: urlValidation.valid,
+          message: urlValidation.valid
+            ? `Generated valid test URL: ${testUrl.substring(0, 80)}...`
+            : `Validation failed: ${urlValidation.errors.join('; ')}`,
+        });
+      } catch (err: any) {
+        checks.push({
+          name: 'URL Generation',
+          passed: false,
+          message: `Exception during generation: ${err.message}`,
+        });
+      }
+    } else {
+      checks.push({
+        name: 'URL Generation',
+        passed: false,
+        message: 'Skipped — publisher ID is missing, non-numeric, or dynamic links disabled',
+      });
+    }
+
+    // Check 10: Recent session activity (last hour)
     try {
       const recentCount = await prisma.linkvertiseSession.count({
         where: { createdAt: { gte: new Date(Date.now() - 3600_000) } },
       });
-      recentActivity = recentCount > 0;
       checks.push({
         name: 'Recent Activity',
         passed: true,
@@ -97,7 +148,7 @@ export class DiagnosticsService {
       });
     }
 
-    // Check 8: Failed sessions (alert if > 10% in last hour)
+    // Check 11: Failed sessions (alert if > 10% in last hour)
     try {
       const [total, failed] = await Promise.all([
         prisma.linkvertiseSession.count({
@@ -130,7 +181,6 @@ export class DiagnosticsService {
     if (failedChecks.length > 0 && failedChecks.length <= 2) status = 'degraded';
     if (failedChecks.length > 2) status = 'unhealthy';
 
-    // Get analytics
     let analytics = null;
     try {
       analytics = await AnalyticsService.getAnalytics(24);
@@ -156,9 +206,6 @@ export class DiagnosticsService {
     };
   }
 
-  /**
-   * Generate a mock session for testing the full pipeline.
-   */
   static async createMockSession(userId: number, config: LinkvertiseConfig): Promise<number | null> {
     if (!config.enableTestMode) {
       logger.warn('[DIAGNOSTICS] Cannot create mock session: test mode disabled');

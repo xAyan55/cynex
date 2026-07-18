@@ -484,6 +484,83 @@ const earnApiModule: Module = {
       }
     });
 
+    // ────────────────────────────────────────────────────────────
+    // GET /api/v1/earn/linkvertise-complete
+    // Linkvertise Dynamic Link completion callback.
+    //
+    // When Linkvertise finishes showing ads, it redirects the user
+    // to the URL encoded in the `r` parameter of the dynamic link.
+    // Our LinkBuilder encodes our own callback URL as the `r` value,
+    // with the token and original redirect embedded as query params.
+    //
+    // This endpoint:
+    //   1. Verifies the signed token
+    //   2. Looks up the LinkvertiseSession and transitions it
+    //   3. Rewards the user
+    //   4. Redirects to the original destination
+    // ────────────────────────────────────────────────────────────
+    router.get(
+      '/api/v1/earn/linkvertise-complete',
+      async (req: Request, res: Response) => {
+        try {
+          const token = String(req.query.token || '');
+          const redirect = String(req.query.redirect || '');
+          const campaign = String(req.query.campaign || 'earn');
+          const placement = String(req.query.placement || 'offer_wall');
+
+          if (!token) {
+            return res.status(400).send('Missing completion token.');
+          }
+
+          // Look up the Linkvertise session
+          const session = await prisma.linkvertiseSession.findUnique({
+            where: { token },
+          });
+
+          if (!session) {
+            logger.warn(`[LV_COMPLETE] Session not found for token=${token.substring(0, 20)}...`);
+            return res.redirect(redirect || '/earn');
+          }
+
+          // Only transition from CREATED or VISITED
+          if (session.status === 'CREATED' || session.status === 'VISITED') {
+            const now = new Date();
+            await prisma.linkvertiseSession.update({
+              where: { id: session.id },
+              data: {
+                status: 'COMPLETED',
+                ip: req.ip || req.socket?.remoteAddress || '',
+                userAgent: req.headers['user-agent'] || '',
+                completedAt: now,
+              },
+            });
+
+            // Process reward via the provider
+            try {
+              const provider = ProviderRegistry.get('linkvertise');
+              if (provider && typeof (provider as any).getRewardService === 'function') {
+                const rewardService = (provider as any).getRewardService();
+                if (rewardService) {
+                  await rewardService.processReward(session.id);
+                }
+              }
+            } catch (rewardErr: any) {
+              logger.error(`[LV_COMPLETE] Reward processing failed for session=${session.id}: ${rewardErr.message}`);
+            }
+
+            logger.info(`[LV_COMPLETE] Session ${session.id} completed, redirecting to ${redirect || session.destination}`);
+          }
+
+          const destination = redirect || session.destination || '/earn';
+          res.redirect(destination);
+        } catch (err: any) {
+          logger.error('[LV_COMPLETE] Error processing completion:', err);
+          const fallback = String(req.query.redirect || '/earn');
+          res.redirect(fallback);
+        }
+      }
+    );
+
     return router;
   },
 };

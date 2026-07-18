@@ -10,7 +10,10 @@ export interface LinkvertiseConfig {
   allowGuestLinks: boolean;
   analyticsEnabled: boolean;
   retryFailures: boolean;
-  
+
+  // Base URL for our application (used for callback endpoint in dynamic links)
+  baseUrl: string;
+
   // Feature Flags
   enableDynamicLinks: boolean;
   enableRewards: boolean;

@@ -171,6 +171,64 @@ const linkvertiseAdminModule: Module = {
       }
     );
 
+    // ──────────────────────────────────────────
+    // POST /admin/monetization/linkvertise/test-link
+    // Generate a test Linkvertise link and validate it
+    // ──────────────────────────────────────────
+    router.post(
+      '/admin/monetization/linkvertise/test-link',
+      isAuthenticated(true, 'monetization.manage'),
+      async (req: Request, res: Response) => {
+        try {
+          const provider = getProvider();
+          const testTarget = req.body.targetUrl || (provider.getConfig() as any).defaultDestination || 'https://example.com';
+
+          if (typeof (provider as any).generateTestLink === 'function') {
+            const result = await (provider as any).generateTestLink(testTarget);
+            res.json({ success: true, ...result });
+          } else {
+            res.status(400).json({ success: false, error: 'generateTestLink not available on this provider version' });
+          }
+        } catch (err: any) {
+          logger.error('[Admin Linkvertise] Test link error:', err);
+          res.status(500).json({ success: false, error: err.message });
+        }
+      }
+    );
+
+    // ──────────────────────────────────────────
+    // GET /admin/monetization/linkvertise/test-link
+    // Render test link page
+    // ──────────────────────────────────────────
+    router.get(
+      '/admin/monetization/linkvertise/test-link',
+      isAuthenticated(true, 'monetization.view'),
+      async (req: Request, res: Response) => {
+        try {
+          const userId = req.session?.user?.id;
+          const user = await prisma.users.findUnique({ where: { id: userId } });
+          if (!user) return res.redirect('/login');
+
+          const settings = await prisma.settings.findUnique({ where: { id: 1 } });
+          const provider = getProvider();
+          const config = provider.getConfig();
+
+          res.render('desktop/admin/monetization/linkvertise', {
+            user,
+            settings,
+            name: process.env.NAME || 'CynexGP',
+            diagnostics: null,
+            config,
+            testMode: true,
+            req,
+          });
+        } catch (err: any) {
+          logger.error('[Admin Linkvertise] Test link page error:', err);
+          res.status(500).json({ success: false, error: err.message });
+        }
+      }
+    );
+
     return router;
   },
 };
