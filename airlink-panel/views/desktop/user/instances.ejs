@@ -126,14 +126,14 @@
                 <div class="flex items-start justify-between">
                   <div class="min-w-0 flex-1 pr-3">
                     <h3 class="text-sm font-bold text-white truncate"><%= server.name %></h3>
-                    <p class="text-xs text-neutral-400 mt-1 truncate"><%= server.node.name %><%= server.image && server.image.name ? ' &middot; ' + server.image.name : '' %></p>
+                     <p class="text-xs text-neutral-400 mt-1 truncate"><%= server.node ? server.node.name : 'Unknown Node' %><%= server.image && server.image.name ? ' &middot; ' + server.image.name : '' %></p>
                   </div>
                   <%- include('../components/ui/Badge', { status: statusBadge, label: statusLabel }) %>
                 </div>
 
                 <div class="flex items-center gap-2 text-xs text-neutral-400">
                   <%- icon('map-pin', { class: 'w-3.5 h-3.5 text-neutral-500' }) %>
-                  <span class="font-medium"><%= server.node.address %>:<%= server.node.port %></span>
+                  <span class="font-medium"><%= server.node ? server.node.address + ':' + server.node.port : 'Offline' %></span>
                 </div>
 
                 <div class="space-y-3 bg-white/[0.01] p-3.5 rounded-xl border border-white/5">

@@ -6,11 +6,12 @@ import { EventBus, EVENTS } from './EventBus';
 import logger from '../../handlers/logger';
 
 export class AfkService {
-  private static userActiveTabs = new Map<number, string>(); // userId -> websocket/session token lock
+  private static userActiveTabs = new Map<number, { sessionToken: string; lastActive: number }>(); // userId -> websocket/session token lock
 
   static async startSession(userId: number, sessionToken: string, ipAddress?: string, userAgent?: string): Promise<{ success: boolean; sessionId?: number; error?: string }> {
-    // 1. Multi-tab prevention: check if there's already an active tab lock
-    if (this.userActiveTabs.has(userId) && this.userActiveTabs.get(userId) !== sessionToken) {
+    // 1. Multi-tab prevention: check if there's already an active tab lock and if it's still fresh
+    const active = this.userActiveTabs.get(userId);
+    if (active && active.sessionToken !== sessionToken && (Date.now() - active.lastActive) < 75000) {
       return { success: false, error: 'Multiple AFK tabs detected. Earning is active on another page.' };
     }
 
@@ -32,7 +33,7 @@ export class AfkService {
     });
 
     // Set memory lock
-    this.userActiveTabs.set(userId, sessionToken);
+    this.userActiveTabs.set(userId, { sessionToken, lastActive: Date.now() });
 
     await EventBus.publish(EVENTS.AFK_STARTED, { userId, sessionId: session.id });
 
@@ -52,10 +53,13 @@ export class AfkService {
     }
   ): Promise<{ success: boolean; coinsAwarded: number; status: string; error?: string }> {
     // Check lock
-    const activeLock = this.userActiveTabs.get(userId);
-    if (!activeLock || activeLock !== sessionToken) {
+    const active = this.userActiveTabs.get(userId);
+    if (!active || active.sessionToken !== sessionToken) {
       return { success: false, coinsAwarded: 0, status: 'LOCKED', error: 'Lock expired or active on another window.' };
     }
+
+    // Update lastActive timestamp
+    active.lastActive = Date.now();
 
     const session = await prisma.afkSession.findFirst({
       where: { userId, status: SessionStatus.ACTIVE },
@@ -126,8 +130,8 @@ export class AfkService {
   }
 
   static async stopSession(userId: number, sessionToken: string): Promise<{ success: boolean }> {
-    const activeLock = this.userActiveTabs.get(userId);
-    if (activeLock === sessionToken) {
+    const active = this.userActiveTabs.get(userId);
+    if (active && active.sessionToken === sessionToken) {
       this.userActiveTabs.delete(userId);
     }
 

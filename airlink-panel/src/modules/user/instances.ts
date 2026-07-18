@@ -38,7 +38,7 @@ const instancesModule: Module = {
         const nodeStatuses: Record<number, { online: boolean }> = {};
 
         for (const server of servers) {
-          if (!nodeStatuses[server.node.id]) {
+          if (server.node && !nodeStatuses[server.node.id]) {
             try {
               await axios({
                 method: 'GET',
@@ -59,6 +59,18 @@ const instancesModule: Module = {
         const serversWithStats = await Promise.all(
           servers.map(async (server) => {
             try {
+              if (!server.node) {
+                return {
+                  ...server,
+                  status: 'unknown',
+                  ramUsage: '0',
+                  cpuUsage: '0',
+                  ramUsed: '0MB',
+                  diskUsed: '0MB',
+                  nodeOffline: true,
+                };
+              }
+
               if (nodeStatuses[server.node.id] && !nodeStatuses[server.node.id].online) {
                 return {
                   ...server,
