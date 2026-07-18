@@ -86,6 +86,11 @@ export class LinkvertiseProvider implements MonetizationProvider {
 
     this.config = { ...DEFAULT_CONFIG, ...merged } as LinkvertiseConfig;
 
+    // Normalize publisherId to string (form sanitization may convert it to number)
+    if (this.config.publisherId != null) {
+      this.config.publisherId = String(this.config.publisherId);
+    }
+
     if (this.config.callbackSecret && this.config.callbackSecret.length >= 32) {
       this.tokenService = new TokenService(this.config.callbackSecret);
       this.callbackService = new CallbackService(this.tokenService);
@@ -125,7 +130,7 @@ export class LinkvertiseProvider implements MonetizationProvider {
     // ── Pre-generation validation ──────────────────────────────────
     this.assertCanGenerate(targetUrl, correlationId);
 
-    const publisherId = this.config.publisherId.trim();
+    const publisherId = String(this.config.publisherId).trim();
     const campaign = options?.campaign || 'earn';
     const placement = options?.placement || 'offer_wall';
     const rewardAmount = this.rewardService?.getRewardAmount(campaign) ?? 10;
@@ -281,9 +286,10 @@ export class LinkvertiseProvider implements MonetizationProvider {
       errors.push('Linkvertise provider is disabled');
     }
 
-    if (!this.config.publisherId || !this.config.publisherId.trim()) {
+    const pid = String(this.config.publisherId || '').trim();
+    if (!pid) {
       errors.push('Publisher ID is not configured');
-    } else if (!/^\d+$/.test(this.config.publisherId.trim())) {
+    } else if (!/^\d+$/.test(pid)) {
       errors.push(`Publisher ID "${this.config.publisherId}" is not numeric`);
     }
 
