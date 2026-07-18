@@ -155,12 +155,13 @@ function getServerDaemonAuth(server: Pick<ServerPageServer, 'node'>): { username
   };
 }
 
-function getServerStatusInput(server: Pick<ServerPageServer, 'UUID' | 'node'>) {
+function getServerStatusInput(server: Pick<ServerPageServer, 'UUID' | 'node' | 'instanceType'>) {
   return {
     nodeAddress: server.node.address,
     nodePort: server.node.port,
     serverUUID: server.UUID,
     nodeKey: server.node.key,
+    instanceType: server.instanceType,
   };
 }
 
@@ -218,6 +219,8 @@ type ServerRuntimeConfig = Pick<
   | 'Variables'
   | 'dockerImage'
   | 'node'
+  | 'instanceType'
+  | 'osTemplate'
 >;
 
 function buildServerRuntimeEnv(
@@ -241,7 +244,7 @@ function getConfiguredDockerImage(server: Pick<ServerRuntimeConfig, 'dockerImage
 }
 
 async function stopServerContainer(
-  server: Pick<ServerPageServer, 'node' | 'image'>,
+  server: Pick<ServerPageServer, 'node' | 'image' | 'instanceType'>,
   serverId: string,
   stopCommand = server.image?.stop || 'stop',
 ): Promise<void> {
@@ -253,6 +256,7 @@ async function stopServerContainer(
     data: {
       id: serverId,
       stopCmd: stopCommand,
+      instanceType: server.instanceType,
     },
   });
 }
@@ -266,6 +270,23 @@ async function startServerContainer(
     variables?: string | null | ServerVariable[];
   } = {},
 ): Promise<void> {
+  if (server.instanceType === 'LXC') {
+    await axios({
+      method: 'POST',
+      url: getServerDaemonAddress(server, '/container/start'),
+      auth: getServerDaemonAuth(server),
+      headers: { 'Content-Type': 'application/json' },
+      data: {
+        id: serverId,
+        image: server.osTemplate || 'ubuntu/24.04',
+        instanceType: 'LXC',
+        Memory: server.Memory,
+        Cpu: server.Cpu,
+      },
+    });
+    return;
+  }
+
   const dockerImage = options.dockerImage ?? getConfiguredDockerImage(server);
   if (!dockerImage) {
     throw new Error('Docker image not found.');
@@ -284,6 +305,7 @@ async function startServerContainer(
       Cpu: server.Cpu,
       env: buildServerRuntimeEnv(server, options.variables ?? server.Variables),
       StartCommand: options.startCommand ?? server.StartCommand,
+      instanceType: 'MINECRAFT',
     },
   });
 }
@@ -513,6 +535,7 @@ const dashboardModule: Module = {
                 data: {
                   id: String(serverId),
                   stopCmd: server.image?.stop || 'stop',
+                  instanceType: server.instanceType,
                 },
               };
 
@@ -639,9 +662,10 @@ const dashboardModule: Module = {
             return;
           }
 
+          const isLxc = server.instanceType === 'LXC';
           const filesRequest = {
             method: 'GET',
-            url: `${daemonSchemeSync()}://${server.node.address}:${server.node.port}/fs/list?id=${server.UUID}&path=${path}`,
+            url: `${daemonSchemeSync()}://${server.node.address}:${server.node.port}/fs/list?id=${server.UUID}&path=${path}${isLxc ? '&instanceType=LXC' : ''}`,
             auth: {
               username: 'CynexGP',
               password: server.node.key,
@@ -765,11 +789,12 @@ const dashboardModule: Module = {
             return;
           }
 
+          const isLxc = server.instanceType === 'LXC';
           const response = await axios({
             method: 'GET',
             url: `${daemonSchemeSync()}://${server.node.address}:${server.node.port}/fs/file/content`,
             responseType: 'text',
-            params: { id: server.UUID, path: filePath },
+            params: { id: server.UUID, path: filePath, ...(isLxc ? { instanceType: 'LXC' } : {}) },
             auth: {
               username: 'CynexGP',
               password: server.node.key,
@@ -873,6 +898,7 @@ const dashboardModule: Module = {
               id: server.UUID,
               path: filePath,
               content: content,
+              ...(server.instanceType === 'LXC' ? { instanceType: 'LXC' } : {}),
             },
             auth: getServerDaemonAuth(server),
           });
@@ -925,6 +951,7 @@ const dashboardModule: Module = {
               data: {
                 id: server.UUID,
                 path: filePath,
+                ...(server.instanceType === 'LXC' ? { instanceType: 'LXC' } : {}),
               },
               auth: getServerDaemonAuth(server),
               timeout: 10000, // 10 second timeout for large directories
@@ -979,7 +1006,7 @@ const dashboardModule: Module = {
           const response = await axios({
             method: 'GET',
             url: getServerDaemonAddress(server, '/fs/download'),
-            params: { id: server.UUID, path: filePath },
+            params: { id: server.UUID, path: filePath, ...(server.instanceType === 'LXC' ? { instanceType: 'LXC' } : {}) },
             auth: getServerDaemonAuth(server),
             responseType: 'stream',
           });
@@ -1030,6 +1057,7 @@ const dashboardModule: Module = {
               id: serverId,
               path: relativePath,
               zipname: zipName,
+              ...(server.instanceType === 'LXC' ? { instanceType: 'LXC' } : {}),
             },
           });
 
@@ -1084,6 +1112,7 @@ const dashboardModule: Module = {
               id: serverId,
               path: cleanPath,
               zipname: cleanZipName,
+              ...(server.instanceType === 'LXC' ? { instanceType: 'LXC' } : {}),
             },
           };
 
@@ -1142,6 +1171,7 @@ const dashboardModule: Module = {
               id: server.UUID,
               path: 'eula.txt',
               content: 'eula=true',
+              ...(server.instanceType === 'LXC' ? { instanceType: 'LXC' } : {}),
             },
             auth: getServerDaemonAuth(server),
           });
@@ -1337,9 +1367,10 @@ const dashboardModule: Module = {
           }
 
           try {
+            const isLxc = server.instanceType === 'LXC';
             const worldsRequest = {
               method: 'GET',
-              url: `${daemonSchemeSync()}://${server.node.address}:${server.node.port}/fs/list?id=${server.UUID}`,
+              url: `${daemonSchemeSync()}://${server.node.address}:${server.node.port}/fs/list?id=${server.UUID}${isLxc ? '&instanceType=LXC' : ''}`,
               auth: {
                 username: 'CynexGP',
                 password: server.node.key,
@@ -1472,6 +1503,7 @@ const dashboardModule: Module = {
             // intermediate directory creation in afs.rename
             const newPath = newName;
 
+            const isLxc = server.instanceType === 'LXC';
             const renameRequest = {
               method: 'POST',
               url: `${daemonSchemeSync()}://${server.node.address}:${server.node.port}/fs/rename`,
@@ -1485,6 +1517,7 @@ const dashboardModule: Module = {
               data: {
                 id: server.UUID,
                 path: relativePath,
+                ...(isLxc ? { instanceType: 'LXC' } : {}),
                 newName: newName,
                 newPath: newPath,
               },
@@ -1567,6 +1600,7 @@ const dashboardModule: Module = {
               const fileContent = req.file.buffer.toString('base64');
               const fileContentWithMeta = `data:${req.file.mimetype};base64,${fileContent}`;
 
+              const isLxc = server.instanceType === 'LXC';
               const uploadRequest = {
                 method: 'POST',
                 url: `${daemonSchemeSync()}://${server.node.address}:${server.node.port}/fs/upload`,
@@ -1582,6 +1616,7 @@ const dashboardModule: Module = {
                   path: relativePath,
                   fileName: fileName,
                   fileContent: fileContentWithMeta,
+                  ...(isLxc ? { instanceType: 'LXC' } : {}),
                 },
                 maxContentLength: 15 * 1024 * 1024, // 15MB
                 maxBodyLength: 15 * 1024 * 1024, // 15MB
@@ -1598,6 +1633,7 @@ const dashboardModule: Module = {
                 path: response.data.path,
               });
             } else {
+              const isLxc = server.instanceType === 'LXC';
               const createEmptyFileRequest = {
                 method: 'POST',
                 url: `${daemonSchemeSync()}://${server.node.address}:${server.node.port}/fs/create-empty-file`,
@@ -1609,6 +1645,7 @@ const dashboardModule: Module = {
                   id: server.UUID,
                   path: relativePath,
                   fileName: fileName,
+                  ...(isLxc ? { instanceType: 'LXC' } : {}),
                 },
                 timeout: 10000,
               };
@@ -1626,6 +1663,7 @@ const dashboardModule: Module = {
                 const chunkContent = chunk.toString('base64');
                 const chunkContentWithMeta = `data:${req.file.mimetype};base64,${chunkContent}`;
 
+                const isLxc = server.instanceType === 'LXC';
                 const uploadChunkRequest = {
                   method: 'POST',
                   url: `${daemonSchemeSync()}://${server.node.address}:${server.node.port}/fs/append-file`,
@@ -1640,6 +1678,7 @@ const dashboardModule: Module = {
                     fileContent: chunkContentWithMeta,
                     chunkIndex: i,
                     totalChunks: totalChunks,
+                    ...(isLxc ? { instanceType: 'LXC' } : {}),
                   },
                   timeout: 30000, // 30 seconds per chunk
                 };
@@ -1852,7 +1891,7 @@ const dashboardModule: Module = {
                 username: 'CynexGP',
                 password: server.node.key,
               },
-              params: { id: serverId },
+              params: { id: serverId, instanceType: server.instanceType },
             };
 
             const statusResponse = await axios(statusRequest);
@@ -2013,7 +2052,7 @@ const dashboardModule: Module = {
                 username: 'CynexGP',
                 password: server.node.key,
               },
-              params: { id: serverId },
+              params: { id: serverId, instanceType: server.instanceType },
             };
 
             const statusResponse = await axios(statusRequest);
@@ -2177,7 +2216,7 @@ const dashboardModule: Module = {
                 username: 'CynexGP',
                 password: server.node.key,
               },
-              params: { id: serverId },
+              params: { id: serverId, instanceType: server.instanceType },
             };
 
             const statusResponse = await axios(statusRequest);

@@ -64,6 +64,46 @@ export class QueueManager {
 
         if (!server || !server.Queued) return;
 
+        const daemonUrl = `${daemonSchemeSync()}://${server.node.address}:${server.node.port}`;
+
+        // ── LXC / VPS deployment path ──────────────────────────────────
+        if (server.instanceType === 'LXC') {
+          await axios.post(
+            `${daemonUrl}/container/install`,
+            {
+              id: server.UUID,
+              instanceType: 'LXC',
+              image: server.osTemplate || 'ubuntu/24.04',
+              limits: {
+                memory: server.Memory,
+                cpu: server.Cpu,
+                storage: server.Storage,
+                swap: server.swap || 0,
+                bandwidth: server.bandwidth || 0,
+              },
+              network: { type: 'bridged' },
+              storage: { size: server.Storage },
+              cloudInit: server.rootPassword
+                ? { hostname: server.UUID, rootPassword: server.rootPassword }
+                : { hostname: server.UUID },
+              security: { privileged: false },
+              env: {},
+            },
+            {
+              auth: { username: 'CynexGP', password: server.node.key },
+              headers: { 'Content-Type': 'application/json' },
+              timeout: 600000,
+            },
+          );
+
+          await prisma.server.update({
+            where: { id: server.id },
+            data: { Queued: false, Installing: false },
+          });
+          return;
+        }
+
+        // ── Minecraft / Docker deployment path (unchanged) ─────────────
         if (!server.Variables) {
           await prisma.server.update({ where: { id: server.id }, data: { Queued: false } });
           return;
@@ -90,8 +130,6 @@ export class QueueManager {
           acc[curr.env] = curr.value;
           return acc;
         }, {});
-
-        const daemonUrl = `${daemonSchemeSync()}://${server.node.address}:${server.node.port}`;
 
         if (!server.image?.scripts) {
           await prisma.server.update({ where: { id: server.id }, data: { Queued: false } });

@@ -78,7 +78,7 @@ const instancesModule: Module = {
                   username: 'CynexGP',
                   password: server.node.key,
                 },
-                params: { id: server.UUID },
+                params: { id: server.UUID, instanceType: server.instanceType },
                 timeout: 2000,
               });
 

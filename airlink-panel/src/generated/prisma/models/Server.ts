@@ -35,6 +35,8 @@ export type ServerAvgAggregateOutputType = {
   ownerId: number | null
   nodeId: number | null
   imageId: number | null
+  swap: number | null
+  bandwidth: number | null
 }
 
 export type ServerSumAggregateOutputType = {
@@ -46,6 +48,8 @@ export type ServerSumAggregateOutputType = {
   ownerId: number | null
   nodeId: number | null
   imageId: number | null
+  swap: number | null
+  bandwidth: number | null
 }
 
 export type ServerMinAggregateOutputType = {
@@ -70,6 +74,13 @@ export type ServerMinAggregateOutputType = {
   ownerId: number | null
   nodeId: number | null
   imageId: number | null
+  instanceType: $Enums.InstanceType | null
+  swap: number | null
+  bandwidth: number | null
+  ipv4: string | null
+  ipv6: string | null
+  osTemplate: string | null
+  rootPassword: string | null
 }
 
 export type ServerMaxAggregateOutputType = {
@@ -94,6 +105,13 @@ export type ServerMaxAggregateOutputType = {
   ownerId: number | null
   nodeId: number | null
   imageId: number | null
+  instanceType: $Enums.InstanceType | null
+  swap: number | null
+  bandwidth: number | null
+  ipv4: string | null
+  ipv6: string | null
+  osTemplate: string | null
+  rootPassword: string | null
 }
 
 export type ServerCountAggregateOutputType = {
@@ -118,6 +136,13 @@ export type ServerCountAggregateOutputType = {
   ownerId: number
   nodeId: number
   imageId: number
+  instanceType: number
+  swap: number
+  bandwidth: number
+  ipv4: number
+  ipv6: number
+  osTemplate: number
+  rootPassword: number
   _all: number
 }
 
@@ -131,6 +156,8 @@ export type ServerAvgAggregateInputType = {
   ownerId?: true
   nodeId?: true
   imageId?: true
+  swap?: true
+  bandwidth?: true
 }
 
 export type ServerSumAggregateInputType = {
@@ -142,6 +169,8 @@ export type ServerSumAggregateInputType = {
   ownerId?: true
   nodeId?: true
   imageId?: true
+  swap?: true
+  bandwidth?: true
 }
 
 export type ServerMinAggregateInputType = {
@@ -166,6 +195,13 @@ export type ServerMinAggregateInputType = {
   ownerId?: true
   nodeId?: true
   imageId?: true
+  instanceType?: true
+  swap?: true
+  bandwidth?: true
+  ipv4?: true
+  ipv6?: true
+  osTemplate?: true
+  rootPassword?: true
 }
 
 export type ServerMaxAggregateInputType = {
@@ -190,6 +226,13 @@ export type ServerMaxAggregateInputType = {
   ownerId?: true
   nodeId?: true
   imageId?: true
+  instanceType?: true
+  swap?: true
+  bandwidth?: true
+  ipv4?: true
+  ipv6?: true
+  osTemplate?: true
+  rootPassword?: true
 }
 
 export type ServerCountAggregateInputType = {
@@ -214,6 +257,13 @@ export type ServerCountAggregateInputType = {
   ownerId?: true
   nodeId?: true
   imageId?: true
+  instanceType?: true
+  swap?: true
+  bandwidth?: true
+  ipv4?: true
+  ipv6?: true
+  osTemplate?: true
+  rootPassword?: true
   _all?: true
 }
 
@@ -325,6 +375,13 @@ export type ServerGroupByOutputType = {
   ownerId: number
   nodeId: number
   imageId: number
+  instanceType: $Enums.InstanceType
+  swap: number | null
+  bandwidth: number | null
+  ipv4: string | null
+  ipv6: string | null
+  osTemplate: string | null
+  rootPassword: string | null
   _count: ServerCountAggregateOutputType | null
   _avg: ServerAvgAggregateOutputType | null
   _sum: ServerSumAggregateOutputType | null
@@ -372,6 +429,13 @@ export type ServerWhereInput = {
   ownerId?: Prisma.IntFilter<"Server"> | number
   nodeId?: Prisma.IntFilter<"Server"> | number
   imageId?: Prisma.IntFilter<"Server"> | number
+  instanceType?: Prisma.EnumInstanceTypeFilter<"Server"> | $Enums.InstanceType
+  swap?: Prisma.IntNullableFilter<"Server"> | number | null
+  bandwidth?: Prisma.IntNullableFilter<"Server"> | number | null
+  ipv4?: Prisma.StringNullableFilter<"Server"> | string | null
+  ipv6?: Prisma.StringNullableFilter<"Server"> | string | null
+  osTemplate?: Prisma.StringNullableFilter<"Server"> | string | null
+  rootPassword?: Prisma.StringNullableFilter<"Server"> | string | null
   sftpCredential?: Prisma.XOR<Prisma.SftpCredentialNullableScalarRelationFilter, Prisma.SftpCredentialWhereInput> | null
   node?: Prisma.XOR<Prisma.NodeScalarRelationFilter, Prisma.NodeWhereInput>
   owner?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.UsersWhereInput>
@@ -402,6 +466,13 @@ export type ServerOrderByWithRelationInput = {
   ownerId?: Prisma.SortOrder
   nodeId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
+  instanceType?: Prisma.SortOrder
+  swap?: Prisma.SortOrderInput | Prisma.SortOrder
+  bandwidth?: Prisma.SortOrderInput | Prisma.SortOrder
+  ipv4?: Prisma.SortOrderInput | Prisma.SortOrder
+  ipv6?: Prisma.SortOrderInput | Prisma.SortOrder
+  osTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
+  rootPassword?: Prisma.SortOrderInput | Prisma.SortOrder
   sftpCredential?: Prisma.SftpCredentialOrderByWithRelationInput
   node?: Prisma.NodeOrderByWithRelationInput
   owner?: Prisma.UsersOrderByWithRelationInput
@@ -435,6 +506,13 @@ export type ServerWhereUniqueInput = Prisma.AtLeast<{
   ownerId?: Prisma.IntFilter<"Server"> | number
   nodeId?: Prisma.IntFilter<"Server"> | number
   imageId?: Prisma.IntFilter<"Server"> | number
+  instanceType?: Prisma.EnumInstanceTypeFilter<"Server"> | $Enums.InstanceType
+  swap?: Prisma.IntNullableFilter<"Server"> | number | null
+  bandwidth?: Prisma.IntNullableFilter<"Server"> | number | null
+  ipv4?: Prisma.StringNullableFilter<"Server"> | string | null
+  ipv6?: Prisma.StringNullableFilter<"Server"> | string | null
+  osTemplate?: Prisma.StringNullableFilter<"Server"> | string | null
+  rootPassword?: Prisma.StringNullableFilter<"Server"> | string | null
   sftpCredential?: Prisma.XOR<Prisma.SftpCredentialNullableScalarRelationFilter, Prisma.SftpCredentialWhereInput> | null
   node?: Prisma.XOR<Prisma.NodeScalarRelationFilter, Prisma.NodeWhereInput>
   owner?: Prisma.XOR<Prisma.UsersScalarRelationFilter, Prisma.UsersWhereInput>
@@ -465,6 +543,13 @@ export type ServerOrderByWithAggregationInput = {
   ownerId?: Prisma.SortOrder
   nodeId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
+  instanceType?: Prisma.SortOrder
+  swap?: Prisma.SortOrderInput | Prisma.SortOrder
+  bandwidth?: Prisma.SortOrderInput | Prisma.SortOrder
+  ipv4?: Prisma.SortOrderInput | Prisma.SortOrder
+  ipv6?: Prisma.SortOrderInput | Prisma.SortOrder
+  osTemplate?: Prisma.SortOrderInput | Prisma.SortOrder
+  rootPassword?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.ServerCountOrderByAggregateInput
   _avg?: Prisma.ServerAvgOrderByAggregateInput
   _max?: Prisma.ServerMaxOrderByAggregateInput
@@ -497,6 +582,13 @@ export type ServerScalarWhereWithAggregatesInput = {
   ownerId?: Prisma.IntWithAggregatesFilter<"Server"> | number
   nodeId?: Prisma.IntWithAggregatesFilter<"Server"> | number
   imageId?: Prisma.IntWithAggregatesFilter<"Server"> | number
+  instanceType?: Prisma.EnumInstanceTypeWithAggregatesFilter<"Server"> | $Enums.InstanceType
+  swap?: Prisma.IntNullableWithAggregatesFilter<"Server"> | number | null
+  bandwidth?: Prisma.IntNullableWithAggregatesFilter<"Server"> | number | null
+  ipv4?: Prisma.StringNullableWithAggregatesFilter<"Server"> | string | null
+  ipv6?: Prisma.StringNullableWithAggregatesFilter<"Server"> | string | null
+  osTemplate?: Prisma.StringNullableWithAggregatesFilter<"Server"> | string | null
+  rootPassword?: Prisma.StringNullableWithAggregatesFilter<"Server"> | string | null
 }
 
 export type ServerCreateInput = {
@@ -517,6 +609,13 @@ export type ServerCreateInput = {
   Queued?: boolean
   Suspended?: boolean
   version?: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
   sftpCredential?: Prisma.SftpCredentialCreateNestedOneWithoutServerInput
   node: Prisma.NodeCreateNestedOneWithoutServersInput
   owner: Prisma.UsersCreateNestedOneWithoutServersInput
@@ -547,6 +646,13 @@ export type ServerUncheckedCreateInput = {
   ownerId: number
   nodeId: number
   imageId: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
   sftpCredential?: Prisma.SftpCredentialUncheckedCreateNestedOneWithoutServerInput
   backups?: Prisma.BackupUncheckedCreateNestedManyWithoutServerInput
   folder?: Prisma.ServerFolderMemberUncheckedCreateNestedOneWithoutServerInput
@@ -570,6 +676,13 @@ export type ServerUpdateInput = {
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   version?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sftpCredential?: Prisma.SftpCredentialUpdateOneWithoutServerNestedInput
   node?: Prisma.NodeUpdateOneRequiredWithoutServersNestedInput
   owner?: Prisma.UsersUpdateOneRequiredWithoutServersNestedInput
@@ -600,6 +713,13 @@ export type ServerUncheckedUpdateInput = {
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sftpCredential?: Prisma.SftpCredentialUncheckedUpdateOneWithoutServerNestedInput
   backups?: Prisma.BackupUncheckedUpdateManyWithoutServerNestedInput
   folder?: Prisma.ServerFolderMemberUncheckedUpdateOneWithoutServerNestedInput
@@ -627,6 +747,13 @@ export type ServerCreateManyInput = {
   ownerId: number
   nodeId: number
   imageId: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
 }
 
 export type ServerUpdateManyMutationInput = {
@@ -647,6 +774,13 @@ export type ServerUpdateManyMutationInput = {
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   version?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ServerUncheckedUpdateManyInput = {
@@ -671,6 +805,13 @@ export type ServerUncheckedUpdateManyInput = {
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ServerListRelationFilter = {
@@ -705,6 +846,13 @@ export type ServerCountOrderByAggregateInput = {
   ownerId?: Prisma.SortOrder
   nodeId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
+  instanceType?: Prisma.SortOrder
+  swap?: Prisma.SortOrder
+  bandwidth?: Prisma.SortOrder
+  ipv4?: Prisma.SortOrder
+  ipv6?: Prisma.SortOrder
+  osTemplate?: Prisma.SortOrder
+  rootPassword?: Prisma.SortOrder
 }
 
 export type ServerAvgOrderByAggregateInput = {
@@ -716,6 +864,8 @@ export type ServerAvgOrderByAggregateInput = {
   ownerId?: Prisma.SortOrder
   nodeId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
+  swap?: Prisma.SortOrder
+  bandwidth?: Prisma.SortOrder
 }
 
 export type ServerMaxOrderByAggregateInput = {
@@ -740,6 +890,13 @@ export type ServerMaxOrderByAggregateInput = {
   ownerId?: Prisma.SortOrder
   nodeId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
+  instanceType?: Prisma.SortOrder
+  swap?: Prisma.SortOrder
+  bandwidth?: Prisma.SortOrder
+  ipv4?: Prisma.SortOrder
+  ipv6?: Prisma.SortOrder
+  osTemplate?: Prisma.SortOrder
+  rootPassword?: Prisma.SortOrder
 }
 
 export type ServerMinOrderByAggregateInput = {
@@ -764,6 +921,13 @@ export type ServerMinOrderByAggregateInput = {
   ownerId?: Prisma.SortOrder
   nodeId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
+  instanceType?: Prisma.SortOrder
+  swap?: Prisma.SortOrder
+  bandwidth?: Prisma.SortOrder
+  ipv4?: Prisma.SortOrder
+  ipv6?: Prisma.SortOrder
+  osTemplate?: Prisma.SortOrder
+  rootPassword?: Prisma.SortOrder
 }
 
 export type ServerSumOrderByAggregateInput = {
@@ -775,6 +939,8 @@ export type ServerSumOrderByAggregateInput = {
   ownerId?: Prisma.SortOrder
   nodeId?: Prisma.SortOrder
   imageId?: Prisma.SortOrder
+  swap?: Prisma.SortOrder
+  bandwidth?: Prisma.SortOrder
 }
 
 export type ServerScalarRelationFilter = {
@@ -822,6 +988,18 @@ export type ServerUncheckedUpdateManyWithoutOwnerNestedInput = {
   update?: Prisma.ServerUpdateWithWhereUniqueWithoutOwnerInput | Prisma.ServerUpdateWithWhereUniqueWithoutOwnerInput[]
   updateMany?: Prisma.ServerUpdateManyWithWhereWithoutOwnerInput | Prisma.ServerUpdateManyWithWhereWithoutOwnerInput[]
   deleteMany?: Prisma.ServerScalarWhereInput | Prisma.ServerScalarWhereInput[]
+}
+
+export type EnumInstanceTypeFieldUpdateOperationsInput = {
+  set?: $Enums.InstanceType
+}
+
+export type NullableIntFieldUpdateOperationsInput = {
+  set?: number | null
+  increment?: number
+  decrement?: number
+  multiply?: number
+  divide?: number
 }
 
 export type ServerCreateNestedManyWithoutImageInput = {
@@ -968,6 +1146,13 @@ export type ServerCreateWithoutOwnerInput = {
   Queued?: boolean
   Suspended?: boolean
   version?: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
   sftpCredential?: Prisma.SftpCredentialCreateNestedOneWithoutServerInput
   node: Prisma.NodeCreateNestedOneWithoutServersInput
   image: Prisma.ImagesCreateNestedOneWithoutServersInput
@@ -996,6 +1181,13 @@ export type ServerUncheckedCreateWithoutOwnerInput = {
   version?: number
   nodeId: number
   imageId: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
   sftpCredential?: Prisma.SftpCredentialUncheckedCreateNestedOneWithoutServerInput
   backups?: Prisma.BackupUncheckedCreateNestedManyWithoutServerInput
   folder?: Prisma.ServerFolderMemberUncheckedCreateNestedOneWithoutServerInput
@@ -1051,6 +1243,13 @@ export type ServerScalarWhereInput = {
   ownerId?: Prisma.IntFilter<"Server"> | number
   nodeId?: Prisma.IntFilter<"Server"> | number
   imageId?: Prisma.IntFilter<"Server"> | number
+  instanceType?: Prisma.EnumInstanceTypeFilter<"Server"> | $Enums.InstanceType
+  swap?: Prisma.IntNullableFilter<"Server"> | number | null
+  bandwidth?: Prisma.IntNullableFilter<"Server"> | number | null
+  ipv4?: Prisma.StringNullableFilter<"Server"> | string | null
+  ipv6?: Prisma.StringNullableFilter<"Server"> | string | null
+  osTemplate?: Prisma.StringNullableFilter<"Server"> | string | null
+  rootPassword?: Prisma.StringNullableFilter<"Server"> | string | null
 }
 
 export type ServerCreateWithoutImageInput = {
@@ -1071,6 +1270,13 @@ export type ServerCreateWithoutImageInput = {
   Queued?: boolean
   Suspended?: boolean
   version?: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
   sftpCredential?: Prisma.SftpCredentialCreateNestedOneWithoutServerInput
   node: Prisma.NodeCreateNestedOneWithoutServersInput
   owner: Prisma.UsersCreateNestedOneWithoutServersInput
@@ -1099,6 +1305,13 @@ export type ServerUncheckedCreateWithoutImageInput = {
   version?: number
   ownerId: number
   nodeId: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
   sftpCredential?: Prisma.SftpCredentialUncheckedCreateNestedOneWithoutServerInput
   backups?: Prisma.BackupUncheckedCreateNestedManyWithoutServerInput
   folder?: Prisma.ServerFolderMemberUncheckedCreateNestedOneWithoutServerInput
@@ -1147,6 +1360,13 @@ export type ServerCreateWithoutNodeInput = {
   Queued?: boolean
   Suspended?: boolean
   version?: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
   sftpCredential?: Prisma.SftpCredentialCreateNestedOneWithoutServerInput
   owner: Prisma.UsersCreateNestedOneWithoutServersInput
   image: Prisma.ImagesCreateNestedOneWithoutServersInput
@@ -1175,6 +1395,13 @@ export type ServerUncheckedCreateWithoutNodeInput = {
   version?: number
   ownerId: number
   imageId: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
   sftpCredential?: Prisma.SftpCredentialUncheckedCreateNestedOneWithoutServerInput
   backups?: Prisma.BackupUncheckedCreateNestedManyWithoutServerInput
   folder?: Prisma.ServerFolderMemberUncheckedCreateNestedOneWithoutServerInput
@@ -1223,6 +1450,13 @@ export type ServerCreateWithoutFolderInput = {
   Queued?: boolean
   Suspended?: boolean
   version?: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
   sftpCredential?: Prisma.SftpCredentialCreateNestedOneWithoutServerInput
   node: Prisma.NodeCreateNestedOneWithoutServersInput
   owner: Prisma.UsersCreateNestedOneWithoutServersInput
@@ -1252,6 +1486,13 @@ export type ServerUncheckedCreateWithoutFolderInput = {
   ownerId: number
   nodeId: number
   imageId: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
   sftpCredential?: Prisma.SftpCredentialUncheckedCreateNestedOneWithoutServerInput
   backups?: Prisma.BackupUncheckedCreateNestedManyWithoutServerInput
 }
@@ -1290,6 +1531,13 @@ export type ServerUpdateWithoutFolderInput = {
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   version?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sftpCredential?: Prisma.SftpCredentialUpdateOneWithoutServerNestedInput
   node?: Prisma.NodeUpdateOneRequiredWithoutServersNestedInput
   owner?: Prisma.UsersUpdateOneRequiredWithoutServersNestedInput
@@ -1319,6 +1567,13 @@ export type ServerUncheckedUpdateWithoutFolderInput = {
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sftpCredential?: Prisma.SftpCredentialUncheckedUpdateOneWithoutServerNestedInput
   backups?: Prisma.BackupUncheckedUpdateManyWithoutServerNestedInput
 }
@@ -1341,6 +1596,13 @@ export type ServerCreateWithoutBackupsInput = {
   Queued?: boolean
   Suspended?: boolean
   version?: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
   sftpCredential?: Prisma.SftpCredentialCreateNestedOneWithoutServerInput
   node: Prisma.NodeCreateNestedOneWithoutServersInput
   owner: Prisma.UsersCreateNestedOneWithoutServersInput
@@ -1370,6 +1632,13 @@ export type ServerUncheckedCreateWithoutBackupsInput = {
   ownerId: number
   nodeId: number
   imageId: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
   sftpCredential?: Prisma.SftpCredentialUncheckedCreateNestedOneWithoutServerInput
   folder?: Prisma.ServerFolderMemberUncheckedCreateNestedOneWithoutServerInput
 }
@@ -1408,6 +1677,13 @@ export type ServerUpdateWithoutBackupsInput = {
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   version?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sftpCredential?: Prisma.SftpCredentialUpdateOneWithoutServerNestedInput
   node?: Prisma.NodeUpdateOneRequiredWithoutServersNestedInput
   owner?: Prisma.UsersUpdateOneRequiredWithoutServersNestedInput
@@ -1437,6 +1713,13 @@ export type ServerUncheckedUpdateWithoutBackupsInput = {
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sftpCredential?: Prisma.SftpCredentialUncheckedUpdateOneWithoutServerNestedInput
   folder?: Prisma.ServerFolderMemberUncheckedUpdateOneWithoutServerNestedInput
 }
@@ -1459,6 +1742,13 @@ export type ServerCreateWithoutSftpCredentialInput = {
   Queued?: boolean
   Suspended?: boolean
   version?: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
   node: Prisma.NodeCreateNestedOneWithoutServersInput
   owner: Prisma.UsersCreateNestedOneWithoutServersInput
   image: Prisma.ImagesCreateNestedOneWithoutServersInput
@@ -1488,6 +1778,13 @@ export type ServerUncheckedCreateWithoutSftpCredentialInput = {
   ownerId: number
   nodeId: number
   imageId: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
   backups?: Prisma.BackupUncheckedCreateNestedManyWithoutServerInput
   folder?: Prisma.ServerFolderMemberUncheckedCreateNestedOneWithoutServerInput
 }
@@ -1526,6 +1823,13 @@ export type ServerUpdateWithoutSftpCredentialInput = {
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   version?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   node?: Prisma.NodeUpdateOneRequiredWithoutServersNestedInput
   owner?: Prisma.UsersUpdateOneRequiredWithoutServersNestedInput
   image?: Prisma.ImagesUpdateOneRequiredWithoutServersNestedInput
@@ -1555,6 +1859,13 @@ export type ServerUncheckedUpdateWithoutSftpCredentialInput = {
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   backups?: Prisma.BackupUncheckedUpdateManyWithoutServerNestedInput
   folder?: Prisma.ServerFolderMemberUncheckedUpdateOneWithoutServerNestedInput
 }
@@ -1580,6 +1891,13 @@ export type ServerCreateManyOwnerInput = {
   version?: number
   nodeId: number
   imageId: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
 }
 
 export type ServerUpdateWithoutOwnerInput = {
@@ -1600,6 +1918,13 @@ export type ServerUpdateWithoutOwnerInput = {
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   version?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sftpCredential?: Prisma.SftpCredentialUpdateOneWithoutServerNestedInput
   node?: Prisma.NodeUpdateOneRequiredWithoutServersNestedInput
   image?: Prisma.ImagesUpdateOneRequiredWithoutServersNestedInput
@@ -1628,6 +1953,13 @@ export type ServerUncheckedUpdateWithoutOwnerInput = {
   version?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sftpCredential?: Prisma.SftpCredentialUncheckedUpdateOneWithoutServerNestedInput
   backups?: Prisma.BackupUncheckedUpdateManyWithoutServerNestedInput
   folder?: Prisma.ServerFolderMemberUncheckedUpdateOneWithoutServerNestedInput
@@ -1654,6 +1986,13 @@ export type ServerUncheckedUpdateManyWithoutOwnerInput = {
   version?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ServerCreateManyImageInput = {
@@ -1677,6 +2016,13 @@ export type ServerCreateManyImageInput = {
   version?: number
   ownerId: number
   nodeId: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
 }
 
 export type ServerUpdateWithoutImageInput = {
@@ -1697,6 +2043,13 @@ export type ServerUpdateWithoutImageInput = {
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   version?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sftpCredential?: Prisma.SftpCredentialUpdateOneWithoutServerNestedInput
   node?: Prisma.NodeUpdateOneRequiredWithoutServersNestedInput
   owner?: Prisma.UsersUpdateOneRequiredWithoutServersNestedInput
@@ -1725,6 +2078,13 @@ export type ServerUncheckedUpdateWithoutImageInput = {
   version?: Prisma.IntFieldUpdateOperationsInput | number
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sftpCredential?: Prisma.SftpCredentialUncheckedUpdateOneWithoutServerNestedInput
   backups?: Prisma.BackupUncheckedUpdateManyWithoutServerNestedInput
   folder?: Prisma.ServerFolderMemberUncheckedUpdateOneWithoutServerNestedInput
@@ -1751,6 +2111,13 @@ export type ServerUncheckedUpdateManyWithoutImageInput = {
   version?: Prisma.IntFieldUpdateOperationsInput | number
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   nodeId?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type ServerCreateManyNodeInput = {
@@ -1774,6 +2141,13 @@ export type ServerCreateManyNodeInput = {
   version?: number
   ownerId: number
   imageId: number
+  instanceType?: $Enums.InstanceType
+  swap?: number | null
+  bandwidth?: number | null
+  ipv4?: string | null
+  ipv6?: string | null
+  osTemplate?: string | null
+  rootPassword?: string | null
 }
 
 export type ServerUpdateWithoutNodeInput = {
@@ -1794,6 +2168,13 @@ export type ServerUpdateWithoutNodeInput = {
   Queued?: Prisma.BoolFieldUpdateOperationsInput | boolean
   Suspended?: Prisma.BoolFieldUpdateOperationsInput | boolean
   version?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sftpCredential?: Prisma.SftpCredentialUpdateOneWithoutServerNestedInput
   owner?: Prisma.UsersUpdateOneRequiredWithoutServersNestedInput
   image?: Prisma.ImagesUpdateOneRequiredWithoutServersNestedInput
@@ -1822,6 +2203,13 @@ export type ServerUncheckedUpdateWithoutNodeInput = {
   version?: Prisma.IntFieldUpdateOperationsInput | number
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   sftpCredential?: Prisma.SftpCredentialUncheckedUpdateOneWithoutServerNestedInput
   backups?: Prisma.BackupUncheckedUpdateManyWithoutServerNestedInput
   folder?: Prisma.ServerFolderMemberUncheckedUpdateOneWithoutServerNestedInput
@@ -1848,6 +2236,13 @@ export type ServerUncheckedUpdateManyWithoutNodeInput = {
   version?: Prisma.IntFieldUpdateOperationsInput | number
   ownerId?: Prisma.IntFieldUpdateOperationsInput | number
   imageId?: Prisma.IntFieldUpdateOperationsInput | number
+  instanceType?: Prisma.EnumInstanceTypeFieldUpdateOperationsInput | $Enums.InstanceType
+  swap?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  bandwidth?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
+  ipv4?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  ipv6?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  osTemplate?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  rootPassword?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -1903,6 +2298,13 @@ export type ServerSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   ownerId?: boolean
   nodeId?: boolean
   imageId?: boolean
+  instanceType?: boolean
+  swap?: boolean
+  bandwidth?: boolean
+  ipv4?: boolean
+  ipv6?: boolean
+  osTemplate?: boolean
+  rootPassword?: boolean
   sftpCredential?: boolean | Prisma.Server$sftpCredentialArgs<ExtArgs>
   node?: boolean | Prisma.NodeDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.UsersDefaultArgs<ExtArgs>
@@ -1934,6 +2336,13 @@ export type ServerSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   ownerId?: boolean
   nodeId?: boolean
   imageId?: boolean
+  instanceType?: boolean
+  swap?: boolean
+  bandwidth?: boolean
+  ipv4?: boolean
+  ipv6?: boolean
+  osTemplate?: boolean
+  rootPassword?: boolean
   node?: boolean | Prisma.NodeDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.UsersDefaultArgs<ExtArgs>
   image?: boolean | Prisma.ImagesDefaultArgs<ExtArgs>
@@ -1961,6 +2370,13 @@ export type ServerSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   ownerId?: boolean
   nodeId?: boolean
   imageId?: boolean
+  instanceType?: boolean
+  swap?: boolean
+  bandwidth?: boolean
+  ipv4?: boolean
+  ipv6?: boolean
+  osTemplate?: boolean
+  rootPassword?: boolean
   node?: boolean | Prisma.NodeDefaultArgs<ExtArgs>
   owner?: boolean | Prisma.UsersDefaultArgs<ExtArgs>
   image?: boolean | Prisma.ImagesDefaultArgs<ExtArgs>
@@ -1988,9 +2404,16 @@ export type ServerSelectScalar = {
   ownerId?: boolean
   nodeId?: boolean
   imageId?: boolean
+  instanceType?: boolean
+  swap?: boolean
+  bandwidth?: boolean
+  ipv4?: boolean
+  ipv6?: boolean
+  osTemplate?: boolean
+  rootPassword?: boolean
 }
 
-export type ServerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "UUID" | "name" | "description" | "createdAt" | "expiresAt" | "Ports" | "Memory" | "Cpu" | "Storage" | "Variables" | "StartCommand" | "dockerImage" | "allowStartupEdit" | "Installing" | "Queued" | "Suspended" | "version" | "ownerId" | "nodeId" | "imageId", ExtArgs["result"]["server"]>
+export type ServerOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "UUID" | "name" | "description" | "createdAt" | "expiresAt" | "Ports" | "Memory" | "Cpu" | "Storage" | "Variables" | "StartCommand" | "dockerImage" | "allowStartupEdit" | "Installing" | "Queued" | "Suspended" | "version" | "ownerId" | "nodeId" | "imageId" | "instanceType" | "swap" | "bandwidth" | "ipv4" | "ipv6" | "osTemplate" | "rootPassword", ExtArgs["result"]["server"]>
 export type ServerInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sftpCredential?: boolean | Prisma.Server$sftpCredentialArgs<ExtArgs>
   node?: boolean | Prisma.NodeDefaultArgs<ExtArgs>
@@ -2043,6 +2466,13 @@ export type $ServerPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     ownerId: number
     nodeId: number
     imageId: number
+    instanceType: $Enums.InstanceType
+    swap: number | null
+    bandwidth: number | null
+    ipv4: string | null
+    ipv6: string | null
+    osTemplate: string | null
+    rootPassword: string | null
   }, ExtArgs["result"]["server"]>
   composites: {}
 }
@@ -2493,6 +2923,13 @@ export interface ServerFieldRefs {
   readonly ownerId: Prisma.FieldRef<"Server", 'Int'>
   readonly nodeId: Prisma.FieldRef<"Server", 'Int'>
   readonly imageId: Prisma.FieldRef<"Server", 'Int'>
+  readonly instanceType: Prisma.FieldRef<"Server", 'InstanceType'>
+  readonly swap: Prisma.FieldRef<"Server", 'Int'>
+  readonly bandwidth: Prisma.FieldRef<"Server", 'Int'>
+  readonly ipv4: Prisma.FieldRef<"Server", 'String'>
+  readonly ipv6: Prisma.FieldRef<"Server", 'String'>
+  readonly osTemplate: Prisma.FieldRef<"Server", 'String'>
+  readonly rootPassword: Prisma.FieldRef<"Server", 'String'>
 }
     
 

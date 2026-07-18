@@ -227,6 +227,7 @@ const adminModule: Module = {
                 data: {
                   id: String(server.UUID),
                   stopCmd: server.image?.stop || 'stop',
+                  instanceType: server.instanceType,
                 },
               };
 
@@ -299,9 +300,53 @@ const adminModule: Module = {
           variables,
           ownerId,
           allowStartupEdit,
+          instanceType,
+          osTemplate,
+          swap,
+          bandwidth,
+          rootPassword,
         } = req.body;
 
         const userId = +ownerId;
+
+        // ── LXC / VPS creation path ──────────────────────────────────────
+        if (instanceType === 'LXC') {
+          if (!name || !nodeId || !Memory || !Cpu || !Storage || !userId) {
+            res.status(400).send('Missing required fields for VPS creation');
+            return;
+          }
+
+          try {
+            const { ServerProvisioner } = await import('../../services/ServerProvisioner');
+            const server = await ServerProvisioner.provisionServer(userId, {
+              name,
+              description,
+              nodeId: parseInt(nodeId),
+              imageId: imageId ? parseInt(imageId) : 1,
+              dockerImage: '',
+              memory: parseInt(Memory),
+              cpu: parseInt(Cpu),
+              storage: parseInt(Storage),
+              instanceType: 'LXC',
+              osTemplate: osTemplate || 'ubuntu/24.04',
+              swap: swap ? parseInt(swap) : undefined,
+              bandwidth: bandwidth ? parseInt(bandwidth) : undefined,
+              rootPassword: rootPassword || undefined,
+            });
+
+            if (allowStartupEdit === 'true') {
+              await prisma.$executeRaw`UPDATE "Server" SET "allowStartupEdit" = true WHERE "id" = ${server.id}`;
+            }
+
+            res.status(200).send('VPS instance created successfully');
+          } catch (error: unknown) {
+            logger.error('Error creating LXC VPS:', error);
+            res.status(500).send('Error creating VPS instance');
+          }
+          return;
+        }
+
+        // ── Minecraft / Docker creation path (unchanged) ─────────────────
         if (
           !name ||
           !description ||

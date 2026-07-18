@@ -18,6 +18,70 @@
       <div id="nodeForm" class="mt-6 px-8 w-full">
         <div class="bg-neutral-50 dark:bg-neutral-800/20 rounded-xl p-5 border border-neutral-200 dark:border-white/5">
           <form id="createServerForm" method="POST" action="/admin/servers/create">
+            <!-- Instance Type Toggle -->
+            <h2 class="text-neutral-700 dark:text-neutral-300 text-lg font-semibold mb-4">Instance Type</h2>
+            <input type="hidden" id="instanceType" name="instanceType" value="MINECRAFT">
+            <div class="flex gap-3 mb-6">
+              <button type="button" id="btnMinecraft" onclick="setInstanceType('MINECRAFT')"
+                class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 border-blue-500 bg-blue-500/10 text-blue-600 dark:text-blue-400 font-medium text-sm transition-all">
+                <%- icon('gamepad-2', { size: 16, class: 'shrink-0' }) %>
+                Minecraft Server
+              </button>
+              <button type="button" id="btnLXC" onclick="setInstanceType('LXC')"
+                class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 border-neutral-200 dark:border-white/10 text-neutral-500 font-medium text-sm transition-all hover:border-purple-400 hover:text-purple-400">
+                <%- icon('monitor', { size: 16, class: 'shrink-0' }) %>
+                LXC VPS Instance
+              </button>
+            </div>
+
+            <!-- LXC-specific fields (hidden by default) -->
+            <div id="lxcFields" class="hidden mb-6">
+              <h2 class="text-neutral-700 dark:text-neutral-300 text-lg font-semibold mb-4">VPS Configuration</h2>
+              <div class="grid grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label class="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-400 text-sm tracking-tight mb-2">
+                    <%- icon('hard-drive', { size: 14, class: 'shrink-0' }) %>
+                    OS Template:</label>
+                  <select id="osTemplate" name="osTemplate" class="hidden">
+                    <option value="ubuntu/24.04" selected>Ubuntu 24.04</option>
+                    <option value="ubuntu/22.04">Ubuntu 22.04</option>
+                    <option value="debian/12">Debian 12</option>
+                    <option value="debian/11">Debian 11</option>
+                    <option value="almalinux/9">AlmaLinux 9</option>
+                    <option value="rockylinux/9">Rocky Linux 9</option>
+                    <option value="fedora/40">Fedora 40</option>
+                    <option value="archlinux/current">Arch Linux</option>
+                    <option value="alpine/3.20">Alpine 3.20</option>
+                  </select>
+                  <div class="custom-select mt-2 mb-4" data-for="osTemplate"></div>
+                </div>
+                <div>
+                  <label class="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-400 text-sm tracking-tight mb-2">
+                    <%- icon('key', { size: 14, class: 'shrink-0' }) %>
+                    Root Password:</label>
+                  <input id="rootPassword" name="rootPassword" type="password" autocomplete="new-password"
+                    class="rounded-xl focus:ring focus:ring-neutral-800/10 focus:border-neutral-800/20 text-neutral-800 dark:text-white text-sm mt-2 mb-4 w-full hover:bg-white/5 px-4 py-2 bg-neutral-400/10 dark:bg-neutral-600/20 placeholder:text-neutral-950/50 dark:placeholder:text-white/20 border border-neutral-800/10 dark:border-white/5"
+                    placeholder="Leave blank for auto-generated">
+                </div>
+                <div>
+                  <label class="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-400 text-sm tracking-tight mb-2">
+                    <%- icon('arrow-left-right', { size: 14, class: 'shrink-0' }) %>
+                    Swap (MB):</label>
+                  <input id="swap" name="swap" type="number" min="0" value="512"
+                    class="rounded-xl focus:ring focus:ring-neutral-800/10 focus:border-neutral-800/20 text-neutral-800 dark:text-white text-sm mt-2 mb-4 w-full hover:bg-white/5 px-4 py-2 bg-neutral-400/10 dark:bg-neutral-600/20 placeholder:text-neutral-950/50 dark:placeholder:text-white/20 border border-neutral-800/10 dark:border-white/5"
+                    placeholder="512">
+                </div>
+                <div>
+                  <label class="flex items-center gap-1.5 text-neutral-700 dark:text-neutral-400 text-sm tracking-tight mb-2">
+                    <%- icon('wifi', { size: 14, class: 'shrink-0' }) %>
+                    Bandwidth (Mbps):</label>
+                  <input id="bandwidth" name="bandwidth" type="number" min="0" value="0"
+                    class="rounded-xl focus:ring focus:ring-neutral-800/10 focus:border-neutral-800/20 text-neutral-800 dark:text-white text-sm mt-2 mb-4 w-full hover:bg-white/5 px-4 py-2 bg-neutral-400/10 dark:bg-neutral-600/20 placeholder:text-neutral-950/50 dark:placeholder:text-white/20 border border-neutral-800/10 dark:border-white/5"
+                    placeholder="0 = unlimited">
+                </div>
+              </div>
+            </div>
+
             <!-- General Category -->
             <h2 class="text-neutral-700 dark:text-neutral-300 text-lg font-semibold mb-4">General</h2>
             <div class="grid grid-cols-2 gap-4 mb-6">

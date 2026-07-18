@@ -121,8 +121,32 @@ const userCreateServerModule: Module = {
           return res.status(403).json({ error: `You have reached your server limit of ${serverLimit}.` });
         }
 
-        const { name, description, nodeId, imageId, dockerImage, Memory, Cpu, Storage } = req.body;
+        const { name, description, nodeId, imageId, dockerImage, Memory, Cpu, Storage, instanceType, osTemplate, rootPassword } = req.body;
 
+        // ── LXC / VPS creation path ──────────────────────────────────────
+        if (instanceType === 'LXC') {
+          if (!name) {
+            return res.status(400).json({ error: 'Missing required fields.' });
+          }
+
+          const server = await ServerProvisioner.provisionServer(userId, {
+            name,
+            description,
+            nodeId: nodeId ? parseInt(nodeId) : undefined,
+            imageId: imageId ? parseInt(imageId) : 1,
+            dockerImage: '',
+            memory: Memory ? parseInt(Memory) : undefined,
+            cpu: Cpu ? parseInt(Cpu) : undefined,
+            storage: Storage ? parseInt(Storage) : undefined,
+            instanceType: 'LXC',
+            osTemplate: osTemplate || 'ubuntu/24.04',
+            rootPassword: rootPassword || undefined,
+          });
+
+          return res.status(200).json({ success: true, serverUUID: server.UUID });
+        }
+
+        // ── Minecraft / Docker creation path (unchanged) ─────────────────
         if (!name || !imageId || !dockerImage) {
           return res.status(400).json({ error: 'Missing required fields.' });
         }
@@ -171,7 +195,7 @@ const userCreateServerModule: Module = {
             await axios.delete(`${daemonSchemeSync()}://${server.node.address}:${server.node.port}/container`, {
               auth: { username: 'CynexGP', password: server.node.key },
               headers: { 'Content-Type': 'application/json' },
-              data: { id: server.UUID },
+              data: { id: server.UUID, instanceType: server.instanceType },
             });
           } catch (err: any) {
             const isGone =

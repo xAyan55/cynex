@@ -8,6 +8,10 @@ import { checkRateLimit } from './security/rateLimit';
 import { validateContainerId } from './validation';
 import type { WsData } from './ws/server';
 import { buildWsData, openConnections, wsClose, wsMessage, wsOpen } from './ws/server';
+import { DriverRegistry } from './virtualization/DriverRegistry';
+import { DockerDriver } from './virtualization/drivers/DockerDriver';
+import { IncusDriver } from './virtualization/drivers/IncusDriver';
+
 
 function isPrivateIp(ip: string): boolean {
   return (
@@ -76,6 +80,11 @@ try {
 } catch (err) {
   logger.error('docker is not ready, so container actions are paused for now', err as Error);
 }
+
+// Register virtualization drivers
+DriverRegistry.register('minecraft', new DockerDriver());
+DriverRegistry.register('lxc', new IncusDriver());
+
 initStatsCollection();
 
 const tls =

@@ -219,3 +219,33 @@ export type MonetizationSchedulerJob = Prisma.MonetizationSchedulerJobModel
  * 
  */
 export type UserEarnPreferences = Prisma.UserEarnPreferencesModel
+/**
+ * Model ResourceProfile
+ * 
+ */
+export type ResourceProfile = Prisma.ResourceProfileModel
+/**
+ * Model ImageRegistry
+ * 
+ */
+export type ImageRegistry = Prisma.ImageRegistryModel
+/**
+ * Model StoragePool
+ * 
+ */
+export type StoragePool = Prisma.StoragePoolModel
+/**
+ * Model NetworkPool
+ * 
+ */
+export type NetworkPool = Prisma.NetworkPoolModel
+/**
+ * Model OperationQueue
+ * 
+ */
+export type OperationQueue = Prisma.OperationQueueModel
+/**
+ * Model NodeCapability
+ * 
+ */
+export type NodeCapability = Prisma.NodeCapabilityModel

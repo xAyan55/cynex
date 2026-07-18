@@ -18,6 +18,8 @@ import { copyIntoVolume, downloadToVolume } from '../handlers/fs';
 import { getServerState, setServerState } from '../handlers/installState';
 import logger from '../logger';
 import { validateContainerId } from '../validation';
+import { DriverRegistry } from '../virtualization/DriverRegistry';
+
 
 function json(data: unknown, status = 200): Response {
   return new Response(JSON.stringify(data), {
@@ -80,6 +82,12 @@ export async function handleContainerInstall(req: Request): Promise<Response> {
     image?: string;
     scripts?: unknown[];
     env?: Record<string, string>;
+    instanceType?: string;
+    limits?: any;
+    network?: any;
+    storage?: any;
+    cloudInit?: any;
+    security?: any;
   };
   try {
     body = (await req.json()) as typeof body;
@@ -87,13 +95,38 @@ export async function handleContainerInstall(req: Request): Promise<Response> {
     return json({ error: 'invalid json body' }, 400);
   }
 
-  const { id, image, scripts, env } = body;
+  const { id, image, scripts, env, instanceType } = body;
   if (!id) return json({ error: 'container ID is required' }, 400);
   if (!validateContainerId(id)) return json({ error: 'invalid container ID' }, 400);
 
   const envVars: Record<string, string> = typeof env === 'object' && env !== null ? { ...env } : {};
 
   await setServerState(id, 'installing');
+
+  if (instanceType === 'LXC') {
+    (async () => {
+      try {
+        const driver = DriverRegistry.get('lxc');
+        const config = {
+          id,
+          hostname: id,
+          image: image || 'ubuntu/24.04',
+          limits: body.limits || { memory: 1024, cpu: 100, storage: 5120 },
+          network: body.network || { type: 'bridged' },
+          storage: body.storage || { size: 5120 },
+          cloudInit: body.cloudInit,
+          security: body.security || { privileged: false },
+          env: envVars,
+        };
+        await driver.create(id, config);
+        await setServerState(id, 'installed');
+      } catch (err) {
+        logger.error('error during async LXC container install', err);
+        await setServerState(id, 'failed');
+      }
+    })();
+    return json({ message: 'install started' });
+  }
 
   // fire-and-forget — response returned immediately, panel polls /container/status/:id
   (async () => {
@@ -210,6 +243,7 @@ export async function handleContainerStart(req: Request): Promise<Response> {
     Memory?: number;
     Cpu?: number;
     StartCommand?: string;
+    instanceType?: string;
   };
   try {
     body = (await req.json()) as typeof body;
@@ -217,9 +251,20 @@ export async function handleContainerStart(req: Request): Promise<Response> {
     return json({ error: 'invalid json body' }, 400);
   }
 
-  const { id, image, ports, env, Memory, Cpu, StartCommand } = body;
+  const { id, image, ports, env, Memory, Cpu, StartCommand, instanceType } = body;
   if (!id || !image) return json({ error: 'container ID and image are required' }, 400);
   if (!validateContainerId(id)) return json({ error: 'invalid container ID' }, 400);
+
+  if (instanceType === 'LXC') {
+    try {
+      const driver = DriverRegistry.get('lxc');
+      await driver.start(id);
+      return json({ message: `LXC container ${id} started successfully` });
+    } catch (error) {
+      logger.error('error starting LXC container', error);
+      return json({ error: `failed to start LXC container ${id}` }, 500);
+    }
+  }
 
   const envVars: Record<string, string> = typeof env === 'object' && env !== null ? { ...env } : {};
 
@@ -250,7 +295,7 @@ export async function handleContainerStart(req: Request): Promise<Response> {
 }
 
 export async function handleContainerStop(req: Request): Promise<Response> {
-  let body: { id?: string; stopCmd?: string };
+  let body: { id?: string; stopCmd?: string; instanceType?: string };
   try {
     body = (await req.json()) as typeof body;
   } catch {
@@ -258,6 +303,17 @@ export async function handleContainerStop(req: Request): Promise<Response> {
   }
   if (!body.id) return json({ error: 'container ID is required' }, 400);
   if (!validateContainerId(body.id)) return json({ error: 'invalid container ID' }, 400);
+
+  if (body.instanceType === 'LXC') {
+    try {
+      const driver = DriverRegistry.get('lxc');
+      await driver.stop(body.id);
+      return json({ message: `LXC container ${body.id} stopped successfully` });
+    } catch (err) {
+      logger.error('error stopping LXC container', err);
+      return json({ error: `failed to stop LXC container ${body.id}` }, 500);
+    }
+  }
 
   try {
     await stopContainer(body.id, body.stopCmd);
@@ -270,13 +326,24 @@ export async function handleContainerStop(req: Request): Promise<Response> {
 
 export async function handleContainerKill(req: Request): Promise<Response> {
   // DELETE with JSON body — intentional, the panel sends it this way
-  let body: { id?: string };
+  let body: { id?: string; instanceType?: string };
   try {
     body = (await req.json()) as typeof body;
   } catch {
     return json({ error: 'invalid json body' }, 400);
   }
   if (!body.id || !validateContainerId(body.id)) return json({ error: 'valid container ID required' }, 400);
+
+  if (body.instanceType === 'LXC') {
+    try {
+      const driver = DriverRegistry.get('lxc');
+      await driver.destroy(body.id);
+      return json({ message: `LXC container ${body.id} killed` });
+    } catch (err) {
+      logger.error('error killing LXC container', err);
+      return json({ error: `failed to kill LXC container ${body.id}` }, 500);
+    }
+  }
 
   try {
     await killContainer(body.id);
@@ -322,13 +389,24 @@ export async function handleContainerCommand(req: Request): Promise<Response> {
 }
 
 export async function handleContainerDelete(req: Request): Promise<Response> {
-  let body: { id?: string };
+  let body: { id?: string; instanceType?: string };
   try {
     body = (await req.json()) as typeof body;
   } catch {
     return json({ error: 'invalid json body' }, 400);
   }
   if (!body.id || !validateContainerId(body.id)) return json({ error: 'valid container ID required' }, 400);
+
+  if (body.instanceType === 'LXC') {
+    try {
+      const driver = DriverRegistry.get('lxc');
+      await driver.destroy(body.id);
+      return json({ message: `LXC container ${body.id} deleted` });
+    } catch (err) {
+      logger.error('error deleting LXC container', err);
+      return json({ error: `failed to delete LXC container ${body.id}` }, 500);
+    }
+  }
 
   try {
     await deleteContainerAndVolume(body.id);
@@ -341,8 +419,24 @@ export async function handleContainerDelete(req: Request): Promise<Response> {
 
 export async function handleContainerStatus(req: Request): Promise<Response> {
   const id = new URL(req.url).searchParams.get('id');
+  const instanceType = new URL(req.url).searchParams.get('instanceType');
   if (!id) return json({ error: 'container ID is required' }, 400);
   if (!validateContainerId(id)) return json({ error: 'invalid container ID' }, 400);
+
+  if (instanceType === 'LXC') {
+    try {
+      const driver = DriverRegistry.get('lxc');
+      const metrics = await driver.getMetrics(id);
+      return json({
+        running: metrics.running,
+        exists: true,
+        status: metrics.running ? 'running' : 'stopped',
+        source: 'incus',
+      });
+    } catch {
+      return json({ running: false, exists: false });
+    }
+  }
 
   try {
     const knownRunning = isContainerRunning(id);
@@ -372,8 +466,30 @@ export async function handleContainerStatus(req: Request): Promise<Response> {
 
 export async function handleContainerStats(req: Request): Promise<Response> {
   const id = new URL(req.url).searchParams.get('id');
+  const instanceType = new URL(req.url).searchParams.get('instanceType');
   if (!id) return json({ error: 'container ID is required' }, 400);
   if (!validateContainerId(id)) return json({ error: 'invalid container ID' }, 400);
+
+  if (instanceType === 'LXC') {
+    try {
+      const driver = DriverRegistry.get('lxc');
+      const metrics = await driver.getMetrics(id);
+      return json({
+        running: metrics.running,
+        exists: true,
+        memory: {
+          usage: metrics.memoryUsageBytes,
+          limit: metrics.memoryLimitBytes,
+          percentage: metrics.memoryLimitBytes > 0 ? (metrics.memoryUsageBytes / metrics.memoryLimitBytes) * 100 : 0,
+        },
+        cpu: { percentage: metrics.cpuPercentage },
+        storage: { usage: metrics.storageUsageBytes / 1024 / 1024 },
+      });
+    } catch (err) {
+      logger.error('error getting LXC container stats', err);
+      return json({ error: `failed to get stats for LXC container ${id}` }, 500);
+    }
+  }
 
   try {
     const stats = await getContainerStats(id);

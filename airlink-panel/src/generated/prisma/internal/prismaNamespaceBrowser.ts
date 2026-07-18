@@ -85,7 +85,13 @@ export const ModelName = {
   MonetizationFraudLog: 'MonetizationFraudLog',
   ProviderHealthRecord: 'ProviderHealthRecord',
   MonetizationSchedulerJob: 'MonetizationSchedulerJob',
-  UserEarnPreferences: 'UserEarnPreferences'
+  UserEarnPreferences: 'UserEarnPreferences',
+  ResourceProfile: 'ResourceProfile',
+  ImageRegistry: 'ImageRegistry',
+  StoragePool: 'StoragePool',
+  NetworkPool: 'NetworkPool',
+  OperationQueue: 'OperationQueue',
+  NodeCapability: 'NodeCapability'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -152,7 +158,14 @@ export const ServerScalarFieldEnum = {
   version: 'version',
   ownerId: 'ownerId',
   nodeId: 'nodeId',
-  imageId: 'imageId'
+  imageId: 'imageId',
+  instanceType: 'instanceType',
+  swap: 'swap',
+  bandwidth: 'bandwidth',
+  ipv4: 'ipv4',
+  ipv6: 'ipv6',
+  osTemplate: 'osTemplate',
+  rootPassword: 'rootPassword'
 } as const
 
 export type ServerScalarFieldEnum = (typeof ServerScalarFieldEnum)[keyof typeof ServerScalarFieldEnum]
@@ -649,6 +662,95 @@ export const UserEarnPreferencesScalarFieldEnum = {
 } as const
 
 export type UserEarnPreferencesScalarFieldEnum = (typeof UserEarnPreferencesScalarFieldEnum)[keyof typeof UserEarnPreferencesScalarFieldEnum]
+
+
+export const ResourceProfileScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  description: 'description',
+  memory: 'memory',
+  cpu: 'cpu',
+  storage: 'storage',
+  swap: 'swap',
+  bandwidth: 'bandwidth'
+} as const
+
+export type ResourceProfileScalarFieldEnum = (typeof ResourceProfileScalarFieldEnum)[keyof typeof ResourceProfileScalarFieldEnum]
+
+
+export const ImageRegistryScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  distribution: 'distribution',
+  release: 'release',
+  architecture: 'architecture',
+  cloudImage: 'cloudImage',
+  url: 'url',
+  checksum: 'checksum',
+  minDisk: 'minDisk',
+  minRam: 'minRam',
+  enabled: 'enabled',
+  deprecated: 'deprecated'
+} as const
+
+export type ImageRegistryScalarFieldEnum = (typeof ImageRegistryScalarFieldEnum)[keyof typeof ImageRegistryScalarFieldEnum]
+
+
+export const StoragePoolScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  driver: 'driver',
+  source: 'source',
+  capacity: 'capacity',
+  nodeId: 'nodeId'
+} as const
+
+export type StoragePoolScalarFieldEnum = (typeof StoragePoolScalarFieldEnum)[keyof typeof StoragePoolScalarFieldEnum]
+
+
+export const NetworkPoolScalarFieldEnum = {
+  id: 'id',
+  name: 'name',
+  subnet: 'subnet',
+  gateway: 'gateway',
+  bridge: 'bridge',
+  type: 'type',
+  ips: 'ips',
+  nodeId: 'nodeId'
+} as const
+
+export type NetworkPoolScalarFieldEnum = (typeof NetworkPoolScalarFieldEnum)[keyof typeof NetworkPoolScalarFieldEnum]
+
+
+export const OperationQueueScalarFieldEnum = {
+  id: 'id',
+  uuid: 'uuid',
+  action: 'action',
+  status: 'status',
+  payload: 'payload',
+  result: 'result',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  serverUUID: 'serverUUID'
+} as const
+
+export type OperationQueueScalarFieldEnum = (typeof OperationQueueScalarFieldEnum)[keyof typeof OperationQueueScalarFieldEnum]
+
+
+export const NodeCapabilityScalarFieldEnum = {
+  id: 'id',
+  nodeId: 'nodeId',
+  dockerInstalled: 'dockerInstalled',
+  dockerVersion: 'dockerVersion',
+  lxcInstalled: 'lxcInstalled',
+  lxcVersion: 'lxcVersion',
+  lxdVersion: 'lxdVersion',
+  cgroupVersion: 'cgroupVersion',
+  storageDriver: 'storageDriver',
+  features: 'features'
+} as const
+
+export type NodeCapabilityScalarFieldEnum = (typeof NodeCapabilityScalarFieldEnum)[keyof typeof NodeCapabilityScalarFieldEnum]
 
 
 export const SortOrder = {

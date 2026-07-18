@@ -4,7 +4,7 @@ import { NodeAllocator } from './NodeAllocator';
 import { QueueManager } from './QueueManager';
 import { ResourceService } from './ResourceService';
 import { ConfigService } from './config/ConfigService';
-import { AllocationType } from '../generated/prisma/client';
+import { AllocationType, InstanceType } from '../generated/prisma/client';
 import {
   getUsedExternalPorts,
   parseImagePortRequirements,
@@ -29,6 +29,11 @@ export interface ProvisionOptions {
   memory?: number;
   cpu?: number;
   storage?: number;
+  instanceType?: 'MINECRAFT' | 'LXC';
+  osTemplate?: string;
+  swap?: number;
+  bandwidth?: number;
+  rootPassword?: string;
 }
 
 export class ServerProvisioner {
@@ -65,6 +70,35 @@ export class ServerProvisioner {
       throw new Error('No suitable node available for deployment.');
     }
 
+    // ── LXC / VPS provisioning path ──────────────────────────────────────
+    if (options.instanceType === 'LXC') {
+      const server = await prisma.server.create({
+        data: {
+          name: options.name.trim(),
+          description: options.description?.trim() || null,
+          ownerId: user.id,
+          nodeId: node.id,
+          imageId: options.imageId,
+          instanceType: InstanceType.LXC,
+          Ports: '[]',
+          Memory: memory,
+          Cpu: cpu,
+          Storage: storage,
+          swap: options.swap ?? null,
+          bandwidth: options.bandwidth ?? null,
+          osTemplate: options.osTemplate ?? 'ubuntu/24.04',
+          rootPassword: options.rootPassword ?? null,
+          Installing: true,
+          Queued: true,
+        },
+      });
+
+      logger.info(`ServerProvisioner: Queued LXC VPS ${server.UUID} for installation.`);
+      QueueManager.triggerDeployment(server.UUID, []);
+      return server;
+    }
+
+    // ── Minecraft / Docker provisioning path (unchanged) ────────────────
     // 3. Resolve Ports
     const image = await prisma.images.findUnique({ where: { id: options.imageId } });
     if (!image) throw new Error('Selected server software image was not found.');
