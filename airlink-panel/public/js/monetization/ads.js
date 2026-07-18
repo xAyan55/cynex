@@ -30,6 +30,68 @@
   /* ── Ad queue (all atOptions-based formats) ────────────── */
   /* Process one container at a time so window.atOptions is  */
   /* correct for each invoke.js (avoids overwrite bug).      */
+
+  /**
+   * After invoke.js creates an iframe inside the container,
+   * watch for load errors and hide the container if the ad
+   * was blocked (e.g. by Adsterra domain validation, CSP,
+   * or ad-blocker).
+   */
+  function watchContainerForBlockedAd(container) {
+    // Give invoke.js a moment to inject its iframe
+    setTimeout(function() {
+      var iframe = container.querySelector('iframe');
+      if (!iframe) {
+        // invoke.js didn't create an iframe — remove container
+        log('No iframe created for ' + (container.getAttribute('data-cynex-placement') || '?'));
+        removeContainer(container);
+        return;
+      }
+
+      // Check if the iframe has zero dimensions (another blocked signal)
+      function checkIframe() {
+        try {
+          var rect = iframe.getBoundingClientRect();
+          if (rect.width === 0 && rect.height === 0) {
+            log('Zero-size iframe detected, removing');
+            removeContainer(container);
+            return;
+          }
+        } catch (e) { /* cross-origin — expected */ }
+
+        // Try to detect the Chrome "This content is blocked" page
+        // by checking if the iframe body is essentially empty / error page
+        try {
+          var doc = iframe.contentDocument || iframe.contentWindow.document;
+          if (doc && doc.body) {
+            var text = doc.body.textContent || '';
+            if (text.indexOf('content is blocked') !== -1 || text.indexOf('ERR_BLOCKED') !== -1) {
+              log('Blocked content detected in iframe, removing');
+              removeContainer(container);
+            }
+          }
+        } catch (e) {
+          // Cross-origin — can't inspect. That's fine — means it loaded from
+          // Adsterra's domain which is normal successful behavior.
+        }
+      }
+
+      // Check after the iframe has had time to load
+      iframe.addEventListener('load', function() {
+        setTimeout(checkIframe, 500);
+      });
+
+      // Also check on error
+      iframe.addEventListener('error', function() {
+        log('Iframe error event, removing');
+        removeContainer(container);
+      });
+
+      // Fallback: check after a generous timeout in case load event already fired
+      setTimeout(checkIframe, 3000);
+    }, 1000);
+  }
+
   function processAdQueue() {
     var container = document.querySelector(
       '[data-cynex-format]:not([data-cynex-done])' +
@@ -57,7 +119,7 @@
 
     var s = document.createElement('script');
     s.src = 'https://www.highperformanceformat.com/' + encodeURIComponent(zoneId) + '/invoke.js';
-    s.onload  = processAdQueue;
+    s.onload  = function() { watchContainerForBlockedAd(container); processAdQueue(); };
     s.onerror = function() { log('Script error for ' + format); removeContainer(container); processAdQueue(); };
     container.appendChild(s);
   }

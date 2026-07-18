@@ -201,6 +201,14 @@ app.use((req: Request, res: Response, next: NextFunction) => {
     'https://*.popadscdn.com',
     'https://*.popads.net',
     'https://*.exclickads.com',
+    // Additional Adsterra CDN/serving domains commonly observed in production
+    'https://*.effectivegate.com',
+    'https://*.profitablegatecpm.com',
+    'https://*.adssterrajs.com',
+    'https://*.highperformancecpmgate.com',
+    'https://*.highperformancegate.com',
+    'https://*.outstandingnetwork.com',
+    'https://*.highcpmgate.com',
   ];
   const cdnScripts = [
     'https://cdn.jsdelivr.net',
@@ -270,18 +278,24 @@ app.use((req: Request, res: Response, next: NextFunction) => {
             ...cdnScripts,
           ],
 
-          // Workers — needed if Adsterra scripts use Service Workers or Web Workers
-          workerSrc: ['\'self\'', ...adsterraDomains],
+          // Workers — needed if Adsterra scripts use Service Workers or Web Workers.
+          // Ad networks use many rotating CDN/serving domains that can't be
+          // individually allowlisted, so we allow all HTTPS worker origins.
+          workerSrc: ['\'self\'', 'blob:', 'https:', ...adsterraDomains],
 
-          // Frames — needed for Adsterra banner/native/popunder iframes
-          frameSrc: ['\'self\'', ...cdnFrames],
+          // Frames — needed for Adsterra banner/native/popunder iframes.
+          // Adsterra serves ad content from many unpredictable rotating domains
+          // (effectivegate.com, profitablegatecpm.com, etc.) beyond the known
+          // adsterraDomains list. Allowing 'https:' is the standard approach for
+          // ad network integration (same as imgSrc below).
+          frameSrc: ['\'self\'', 'https:', ...cdnFrames],
 
           // child-src is the CSP Level 2 predecessor of frame-src + worker-src.
           // Some legacy browsers (Chrome < 40, Safari < 10) use child-src
           // instead of frame-src for iframe navigations. Setting both ensures
           // Adsterra iframes are never blocked by a legacy fallback to
           // default-src 'self'.
-          childSrc: ['\'self\'', ...cdnFrames],
+          childSrc: ['\'self\'', 'https:', ...cdnFrames],
 
           // Inline event handlers (onclick, onchange, etc.) cannot carry nonces.
           // 'unsafe-inline' here is scoped only to attributes, not to <script>
@@ -302,9 +316,12 @@ app.use((req: Request, res: Response, next: NextFunction) => {
           imgSrc: ['\'self\'', 'data:', 'blob:', 'https:'],
 
           // WebSocket connections for the server console + same-origin API calls.
+          // Ad network scripts also make tracking/serving requests to rotating
+          // domains, so we allow all HTTPS connect origins.
           connectSrc: [
             '\'self\'',
             ...(isHttps ? ['wss:'] : ['ws:', 'wss:']),
+            'https:',
             ...adsterraDomains,
           ],
 
