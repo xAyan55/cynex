@@ -221,6 +221,10 @@ model settings {
   hashApiKeys               Boolean  @default(false)
   airlinkCloudApiKey        String?
   airlinkCloudBackupEnabled Boolean  @default(false)
+  defaultServerLimit        Int      @default(0)
+  defaultMaxMemory          Int      @default(512)
+  defaultMaxCpu             Int      @default(100)
+  defaultMaxStorage         Int      @default(5120)
 }
 
 model ServerFolder {
