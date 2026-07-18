@@ -79,9 +79,18 @@ export interface MonetizationConfig {
   
   // Linkvertise
   linkvertiseEnabled: boolean;
-  linkvertiseUserId: string;
+  linkvertisePublisherId: string;
   linkvertiseApiKey: string;
   linkvertiseCallbackSecret: string;
+  linkvertiseBaseUrl: string;
+  linkvertiseDefaultDestination: string;
+  linkvertiseEnableDynamicLinks: boolean;
+  linkvertiseEnableRewards: boolean;
+  linkvertiseEnableCallbackProcessing: boolean;
+  linkvertiseEnableAnalytics: boolean;
+  linkvertiseEnableDiagnostics: boolean;
+  linkvertiseEnableTestMode: boolean;
+  linkvertiseEnableCsvExport: boolean;
   coinsPerLinkCompletion: number;
   minTimeBetweenLinks: number;  // seconds
   maxDailyLinks: number;
@@ -228,9 +237,18 @@ export const defaultValues: Record<string, Record<string, unknown>> = {
     
     // Linkvertise
     linkvertiseEnabled: true,
-    linkvertiseUserId: '209302',
+    linkvertisePublisherId: '209302',
     linkvertiseApiKey: '',
     linkvertiseCallbackSecret: 'my_secret',
+    linkvertiseBaseUrl: '',
+    linkvertiseDefaultDestination: '',
+    linkvertiseEnableDynamicLinks: true,
+    linkvertiseEnableRewards: true,
+    linkvertiseEnableCallbackProcessing: true,
+    linkvertiseEnableAnalytics: true,
+    linkvertiseEnableDiagnostics: true,
+    linkvertiseEnableTestMode: false,
+    linkvertiseEnableCsvExport: false,
     coinsPerLinkCompletion: 15,
     minTimeBetweenLinks: 60,
     maxDailyLinks: 10,

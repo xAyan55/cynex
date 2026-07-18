@@ -70,7 +70,21 @@ export class LinkvertiseProvider implements MonetizationProvider {
   }
 
   async reloadConfiguration(config: Record<string, any>): Promise<void> {
-    this.config = { ...DEFAULT_CONFIG, ...config } as LinkvertiseConfig;
+    const merged: Record<string, any> = {};
+
+    // Extract linkvertise-prefixed keys (MonetizationConfig format) and strip prefix
+    for (const [key, value] of Object.entries(config)) {
+      if (key.toLowerCase().startsWith('linkvertise')) {
+        const stripped = key.slice('linkvertise'.length);
+        const unprefixed = stripped.charAt(0).toLowerCase() + stripped.slice(1);
+        merged[unprefixed] = value;
+      } else {
+        // Pass through unprefixed keys (for test-route direct config)
+        merged[key] = value;
+      }
+    }
+
+    this.config = { ...DEFAULT_CONFIG, ...merged } as LinkvertiseConfig;
 
     if (this.config.callbackSecret && this.config.callbackSecret.length >= 32) {
       this.tokenService = new TokenService(this.config.callbackSecret);

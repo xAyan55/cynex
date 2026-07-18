@@ -172,7 +172,17 @@ const monetizationAdminModule: Module = {
           // Trigger configuration reload for registry providers with full configuration
           const fullConfig = await ConfigService.monetization();
           for (const provider of ProviderRegistry.getAll()) {
-            await provider.reloadConfiguration(fullConfig);
+            // Strip the provider prefix from keys (e.g. linkvertisePublisherId -> publisherId)
+            const providerConfig: Record<string, any> = {};
+            const prefix = provider.id;
+            for (const [key, value] of Object.entries(fullConfig)) {
+              if (key.toLowerCase().startsWith(prefix)) {
+                const stripped = key.slice(prefix.length);
+                const unprefixed = stripped.charAt(0).toLowerCase() + stripped.slice(1);
+                providerConfig[unprefixed] = value;
+              }
+            }
+            await provider.reloadConfiguration(providerConfig);
           }
 
           invalidateMonetizationConfigCache();
