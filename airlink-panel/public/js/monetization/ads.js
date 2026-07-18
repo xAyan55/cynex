@@ -204,12 +204,18 @@
   window.__cynexTriggerPopunder = triggerPopunder;
 
   document.addEventListener('click', function(e) {
+    triggerPopunder();
     var smartlink = e.target.closest('.cynex-ad-smartlink');
     if (smartlink) {
       log('Smartlink clicked');
-      triggerPopunder();
     }
   });
+
+  // Optional: auto-trigger on a timer if configured (some browsers may block this)
+  setTimeout(function() {
+    log('Auto-triggering popunder via timer');
+    triggerPopunder();
+  }, 10000); // 10 second timer
 
   if (debug) {
     console.log('[CynexAds] Ready. Call __cynexReloadAds() to re-scan. Use ?cynex_ad_debug=1 for debug.');

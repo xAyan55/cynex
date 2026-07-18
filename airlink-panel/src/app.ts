@@ -275,6 +275,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
             '\'self\'',
             `'nonce-${nonce}'`,
             '\'strict-dynamic\'',
+            '\'unsafe-eval\'',
             ...cdnScripts,
           ],
 
