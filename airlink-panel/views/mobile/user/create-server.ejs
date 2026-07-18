@@ -90,7 +90,7 @@
       <!-- Node & Image -->
       <div class="bg-white dark:bg-neutral-800/20 rounded-2xl border border-neutral-200 dark:border-white/5 overflow-hidden">
         <div class="px-4 py-3 border-b border-neutral-100 dark:border-white/5">
-          <p class="text-sm font-semibold text-neutral-800 dark:text-white">Node & image</p>
+          <p class="text-sm font-semibold text-neutral-800 dark:text-white">Node & environment</p>
         </div>
         <div class="p-4 space-y-4">
           <div>
@@ -103,25 +103,58 @@
             </select>
           </div>
           <div>
-            <label class="form-label">Image</label>
-            <select id="imageId" class="form-input" style="appearance:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='2'%3E%3Cpath d='M19 9l-7 7-7-7'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;background-size:14px;padding-right:36px;">
-              <option value="">Select an image</option>
-              <% images.forEach(image => { %>
-              <option value="<%= image.id %>" data-docker="<%= image.dockerImages %>" data-port-requirements='<%= image.portRequirements || "[]" %>'><%= image.name %></option>
-              <% }); %>
+            <label class="form-label">Instance Type</label>
+            <select id="instanceType" class="form-input" style="appearance:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='2'%3E%3Cpath d='M19 9l-7 7-7-7'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;background-size:14px;padding-right:36px;" onchange="toggleInstanceType(this.value)">
+              <option value="MINECRAFT" selected>Minecraft Server</option>
+              <option value="LXC">VPS LXC Container</option>
             </select>
           </div>
-          <div>
-            <label class="form-label">Docker variant</label>
-            <select id="dockerImage" disabled class="form-input" style="appearance:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='2'%3E%3Cpath d='M19 9l-7 7-7-7'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;background-size:14px;padding-right:36px;">
-              <option value="">Select image first</option>
-            </select>
+
+          <!-- Minecraft Specific Fields -->
+          <div id="minecraftFields" class="space-y-4">
+            <div>
+              <label class="form-label">Image</label>
+              <select id="imageId" class="form-input" style="appearance:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='2'%3E%3Cpath d='M19 9l-7 7-7-7'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;background-size:14px;padding-right:36px;">
+                <option value="">Select an image</option>
+                <% images.forEach(image => { %>
+                <option value="<%= image.id %>" data-docker="<%= image.dockerImages %>" data-port-requirements='<%= image.portRequirements || "[]" %>'><%= image.name %></option>
+                <% }); %>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Docker variant</label>
+              <select id="dockerImage" disabled class="form-input" style="appearance:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='2'%3E%3Cpath d='M19 9l-7 7-7-7'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;background-size:14px;padding-right:36px;">
+                <option value="">Select image first</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Ports</label>
+              <button type="button" id="assignPortsBtn" class="form-input text-left">
+                <span id="assignPortsLabel">Assign ports</span>
+              </button>
+            </div>
           </div>
-          <div>
-            <label class="form-label">Ports</label>
-            <button type="button" id="assignPortsBtn" class="form-input text-left">
-              <span id="assignPortsLabel">Assign ports</span>
-            </button>
+
+          <!-- LXC Specific Fields -->
+          <div id="lxcFields" class="space-y-4 hidden">
+            <div>
+              <label class="form-label">OS Template</label>
+              <select id="osTemplate" class="form-input" style="appearance:none;-webkit-appearance:none;background-image:url(\"data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23a3a3a3' stroke-width='2'%3E%3Cpath d='M19 9l-7 7-7-7'/%3E%3C/svg%3E\");background-repeat:no-repeat;background-position:right 12px center;background-size:14px;padding-right:36px;">
+                <option value="ubuntu/24.04" selected>Ubuntu 24.04</option>
+                <option value="ubuntu/22.04">Ubuntu 22.04</option>
+                <option value="debian/12">Debian 12</option>
+                <option value="debian/11">Debian 11</option>
+                <option value="almalinux/9">AlmaLinux 9</option>
+                <option value="rockylinux/9">Rocky Linux 9</option>
+                <option value="fedora/40">Fedora 40</option>
+                <option value="archlinux/current">Arch Linux</option>
+                <option value="alpine/3.20">Alpine 3.20</option>
+              </select>
+            </div>
+            <div>
+              <label class="form-label">Root Password</label>
+              <input id="rootPassword" type="password" placeholder="Leave empty for auto-generated" class="form-input">
+            </div>
           </div>
         </div>
       </div>
@@ -300,6 +333,18 @@
   confirmCancel.addEventListener('click', () => { overlay.classList.remove('open'); if (confirmResolve) confirmResolve(false); });
   overlay.addEventListener('click', e => { if (e.target === overlay) { overlay.classList.remove('open'); if (confirmResolve) confirmResolve(false); } });
 
+  window.toggleInstanceType = function(val) {
+    const minecraftFields = document.getElementById('minecraftFields');
+    const lxcFields = document.getElementById('lxcFields');
+    if (val === 'MINECRAFT') {
+      minecraftFields.classList.remove('hidden');
+      lxcFields.classList.add('hidden');
+    } else {
+      minecraftFields.classList.add('hidden');
+      lxcFields.classList.remove('hidden');
+    }
+  };
+
   /* Create */
   document.getElementById('createBtn').addEventListener('click', async function () {
     const errBox  = document.getElementById('errorMsg');
@@ -309,16 +354,30 @@
     const name        = document.getElementById('serverName').value.trim();
     const description = document.getElementById('serverDescription').value.trim();
     const nodeId      = document.getElementById('nodeId').value;
-    const imageId     = document.getElementById('imageId').value;
-    const dockerImage = document.getElementById('dockerImage').value;
+    const instanceType = document.getElementById('instanceType').value;
     const Memory      = parseInt(document.getElementById('Memory').value);
     const Cpu         = parseInt(document.getElementById('Cpu').value);
     const Storage     = parseInt(document.getElementById('Storage').value);
 
     if (!name)        { errText.textContent = 'Server name is required.'; errBox.classList.remove('hidden'); return; }
     if (!nodeId)      { errText.textContent = 'Select a node.';           errBox.classList.remove('hidden'); return; }
-    if (!imageId)     { errText.textContent = 'Select an image.';         errBox.classList.remove('hidden'); return; }
-    if (!dockerImage) { errText.textContent = 'Select a docker variant.'; errBox.classList.remove('hidden'); return; }
+
+    const payload = { name, description, nodeId, Memory, Cpu, Storage, instanceType };
+
+    if (instanceType === 'MINECRAFT') {
+      const imageId     = document.getElementById('imageId').value;
+      const dockerImage = document.getElementById('dockerImage').value;
+      if (!imageId)     { errText.textContent = 'Select an image.';         errBox.classList.remove('hidden'); return; }
+      if (!dockerImage) { errText.textContent = 'Select a docker variant.'; errBox.classList.remove('hidden'); return; }
+      payload.imageId = imageId;
+      payload.dockerImage = dockerImage;
+    } else {
+      const osTemplate   = document.getElementById('osTemplate').value;
+      const rootPassword = document.getElementById('rootPassword').value.trim();
+      if (!osTemplate)   { errText.textContent = 'Select an OS Template.';   errBox.classList.remove('hidden'); return; }
+      payload.osTemplate = osTemplate;
+      payload.rootPassword = rootPassword;
+    }
 
     const ok = await showConfirm('Create server?', `"${name}" will be created and queued for installation.`);
     if (!ok) return;
@@ -331,7 +390,7 @@
       const r = await fetch('/create-server', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description, nodeId, imageId, dockerImage, Memory, Cpu, Storage }),
+        body: JSON.stringify(payload),
       });
       const d = await r.json();
       if (d.success) {

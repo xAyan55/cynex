@@ -65,6 +65,9 @@
             <p class="text-sm text-neutral-400 mt-1">View and manage all of your server instances across every node.</p>
           </div>
           <div class="flex items-center gap-3 w-full sm:w-auto">
+            <% if (settings.allowUserCreateServer) { %>
+              <a href="/create-server" class="px-4 py-2.5 rounded-xl text-sm font-bold bg-white text-black hover:bg-neutral-200 transition shrink-0">Create Server</a>
+            <% } %>
             <div class="relative flex-1 sm:flex-none">
               <svg class="w-4 h-4 text-neutral-400 absolute left-3 top-1/2 -translate-y-1/2" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z"/></svg>
               <input id="searchInput" type="text" placeholder="Search servers..."

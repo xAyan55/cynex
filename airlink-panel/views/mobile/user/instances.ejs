@@ -10,9 +10,14 @@
         <h1 class="text-base font-medium text-neutral-800 dark:text-white">Instances</h1>
         <p class="text-xs text-neutral-500 mt-0.5">Manage your servers and resources.</p>
       </div>
-      <div class="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5">
-        <%- icon('server', { class: 'w-3.5 h-3.5 text-neutral-400' }) %>
-        <span class="text-xs font-bold text-neutral-800 dark:text-white"><%= servers ? servers.length : 0 %></span>
+      <div class="flex items-center gap-2">
+        <% if (settings && settings.allowUserCreateServer) { %>
+          <a href="/create-server" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-white text-black hover:bg-neutral-200 transition shrink-0">Create</a>
+        <% } %>
+        <div class="flex items-center gap-1.5 bg-white/5 border border-white/10 rounded-xl px-3 py-1.5">
+          <%- icon('server', { class: 'w-3.5 h-3.5 text-neutral-400' }) %>
+          <span class="text-xs font-bold text-neutral-800 dark:text-white"><%= servers ? servers.length : 0 %></span>
+        </div>
       </div>
     </div>
 

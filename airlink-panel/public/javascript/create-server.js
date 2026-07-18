@@ -203,8 +203,7 @@
     const name        = document.getElementById('serverName').value.trim();
     const description = document.getElementById('serverDescription').value.trim();
     const nodeId      = document.getElementById('nodeId').value;
-    const imageId     = document.getElementById('imageId').value;
-    const dockerImage = document.getElementById('dockerImage').value;
+    const instanceType = document.getElementById('instanceType').value;
     const Memory      = parseInt(document.getElementById('Memory').value);
     const Cpu         = parseInt(document.getElementById('Cpu').value);
     const Storage     = parseInt(document.getElementById('Storage').value);
@@ -220,15 +219,34 @@
       errBox.classList.remove('hidden');
       return;
     }
-    if (!imageId) {
-      errText.textContent = 'Select an image.';
-      errBox.classList.remove('hidden');
-      return;
-    }
-    if (!dockerImage) {
-      errText.textContent = 'Select a docker variant.';
-      errBox.classList.remove('hidden');
-      return;
+
+    const payload = { name, description, nodeId, Memory, Cpu, Storage, instanceType };
+
+    if (instanceType === 'MINECRAFT') {
+      const imageId     = document.getElementById('imageId').value;
+      const dockerImage = document.getElementById('dockerImage').value;
+      if (!imageId) {
+        errText.textContent = 'Select an image.';
+        errBox.classList.remove('hidden');
+        return;
+      }
+      if (!dockerImage) {
+        errText.textContent = 'Select a docker variant.';
+        errBox.classList.remove('hidden');
+        return;
+      }
+      payload.imageId = imageId;
+      payload.dockerImage = dockerImage;
+    } else {
+      const osTemplate   = document.getElementById('osTemplate').value;
+      const rootPassword = document.getElementById('rootPassword').value.trim();
+      if (!osTemplate) {
+        errText.textContent = 'Select an OS Template.';
+        errBox.classList.remove('hidden');
+        return;
+      }
+      payload.osTemplate = osTemplate;
+      payload.rootPassword = rootPassword;
     }
 
     const ok = await showConfirm(
@@ -245,7 +263,7 @@
       const r = await fetch('/create-server', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, description, nodeId, imageId, dockerImage, Memory, Cpu, Storage }),
+        body: JSON.stringify(payload),
       });
       const d = await r.json();
       if (d.success) {

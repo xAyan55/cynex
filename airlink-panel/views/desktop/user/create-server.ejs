@@ -104,11 +104,27 @@
         <div class="wizard-pane space-y-6" data-step="1">
           <%- include('../components/ui/Card', { hover: false, class: 'p-6 border border-white/5 space-y-6' }) %>
             <div>
-              <h2 class="text-base font-bold text-white">Choose Server Software</h2>
-              <p class="text-xs text-neutral-400 mt-0.5">Select a software jar package and matching Docker runtime environment.</p>
+              <h2 class="text-base font-bold text-white">Choose Instance Type & Software</h2>
+              <p class="text-xs text-neutral-400 mt-0.5">Select the environment type and runtime template for your new deployment.</p>
+            </div>
+
+            <!-- Instance Type Toggle Buttons -->
+            <input type="hidden" id="instanceType" name="instanceType" value="MINECRAFT">
+            <div class="flex gap-4">
+              <button type="button" id="btnMinecraft" onclick="setInstanceType('MINECRAFT')"
+                class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 border-brand-green bg-brand-green/10 text-brand-green font-bold text-sm transition-all duration-200 cursor-pointer">
+                <%- icon('gamepad-2', { class: 'w-4 h-4 shrink-0' }) %>
+                Minecraft Server
+              </button>
+              <button type="button" id="btnLXC" onclick="setInstanceType('LXC')"
+                class="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-neutral-400 font-bold text-sm transition-all duration-200 cursor-pointer hover:border-white/20 hover:text-white">
+                <%- icon('monitor', { class: 'w-4 h-4 shrink-0' }) %>
+                VPS LXC Container
+              </button>
             </div>
             
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
+            <!-- Minecraft Specific Software Fields -->
+            <div id="minecraftFields" class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2">
               <div class="space-y-2">
                 <label class="form-label">Software Image</label>
                 <select id="imageId" class="hidden">
@@ -126,6 +142,30 @@
                   <option value="" disabled selected>Select software first</option>
                 </select>
                 <div class="custom-select" data-for="dockerImage"></div>
+              </div>
+            </div>
+
+            <!-- LXC Specific VPS Fields -->
+            <div id="lxcFields" class="grid grid-cols-1 md:grid-cols-2 gap-6 pt-2 hidden">
+              <div class="space-y-2">
+                <label class="form-label">OS Template</label>
+                <select id="osTemplate" class="hidden">
+                  <option value="ubuntu/24.04" selected>Ubuntu 24.04</option>
+                  <option value="ubuntu/22.04">Ubuntu 22.04</option>
+                  <option value="debian/12">Debian 12</option>
+                  <option value="debian/11">Debian 11</option>
+                  <option value="almalinux/9">AlmaLinux 9</option>
+                  <option value="rockylinux/9">Rocky Linux 9</option>
+                  <option value="fedora/40">Fedora 40</option>
+                  <option value="archlinux/current">Arch Linux</option>
+                  <option value="alpine/3.20">Alpine 3.20</option>
+                </select>
+                <div class="custom-select" data-for="osTemplate"></div>
+              </div>
+
+              <div class="space-y-2">
+                <label class="form-label">Root Password</label>
+                <input id="rootPassword" type="password" placeholder="Leave empty for auto-generated" class="form-input">
               </div>
             </div>
 
@@ -226,7 +266,7 @@
             </div>
 
             <!-- Custom Port requirements indicator -->
-            <div class="pt-2">
+            <div id="portRequirementsContainer" class="pt-2">
               <label class="form-label">Port Requirements</label>
               <button type="button" id="assignPortsBtn" class="cs-trigger bg-white/5 border border-white/10 hover:bg-white/10">
                 <span id="assignPortsLabel">Inspect required ports</span>
@@ -352,16 +392,50 @@
 <script nonce="<%- nonce %>">
   let activeWizardStep = 1;
 
+  window.setInstanceType = function(type) {
+    document.getElementById('instanceType').value = type;
+    const btnMinecraft = document.getElementById('btnMinecraft');
+    const btnLXC = document.getElementById('btnLXC');
+    const minecraftFields = document.getElementById('minecraftFields');
+    const lxcFields = document.getElementById('lxcFields');
+    const portRequirementsContainer = document.getElementById('portRequirementsContainer');
+
+    if (type === 'MINECRAFT') {
+      btnMinecraft.className = "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 border-brand-green bg-brand-green/10 text-brand-green font-bold text-sm transition-all duration-200 cursor-pointer";
+      btnLXC.className = "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-neutral-400 font-bold text-sm transition-all duration-200 cursor-pointer hover:border-white/20 hover:text-white";
+      minecraftFields.classList.remove('hidden');
+      lxcFields.classList.add('hidden');
+      if (portRequirementsContainer) portRequirementsContainer.classList.remove('hidden');
+    } else {
+      btnMinecraft.className = "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border border-white/10 bg-white/5 text-neutral-400 font-bold text-sm transition-all duration-200 cursor-pointer hover:border-white/20 hover:text-white";
+      btnLXC.className = "flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-xl border-2 border-brand-green bg-brand-green/10 text-brand-green font-bold text-sm transition-all duration-200 cursor-pointer";
+      minecraftFields.classList.add('hidden');
+      lxcFields.classList.remove('hidden');
+      if (portRequirementsContainer) portRequirementsContainer.classList.add('hidden');
+    }
+  };
+
   function nextStep(step) {
     // Basic validation before shifting step
     if (step === 2) {
-      const img = document.getElementById('imageId').value;
-      const variant = document.getElementById('dockerImage').value;
-      if (!img || !variant) {
-        if (typeof showToast === 'function') {
-          showToast('Please select software image and version first.', 'error');
+      const type = document.getElementById('instanceType').value;
+      if (type === 'MINECRAFT') {
+        const img = document.getElementById('imageId').value;
+        const variant = document.getElementById('dockerImage').value;
+        if (!img || !variant) {
+          if (typeof showToast === 'function') {
+            showToast('Please select software image and version first.', 'error');
+          }
+          return;
         }
-        return;
+      } else {
+        const os = document.getElementById('osTemplate').value;
+        if (!os) {
+          if (typeof showToast === 'function') {
+            showToast('Please select OS Template first.', 'error');
+          }
+          return;
+        }
       }
     }
     
