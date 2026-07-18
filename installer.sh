@@ -108,11 +108,11 @@ _NI_SPIN_CHARS=('-' '\' '|' '/')
 
 ni_header() {
     printf "\n"
-    printf "    _    ___ ____  _     ___ _   _ _  __\n"
-    printf "   / \\  |_ _|  _ \\| |   |_ _| \\ | | |/ /\n"
-    printf "  / _ \\  | || |_) | |    | ||  \\| | ' / \n"
-    printf " / ___ \\ | ||  _ <| |___ | || |\\  | . \\ \n"
-    printf "/_/   \\_\\___|_| \\_\\_____|___|_| \\_|_|\\_\\\\\n"
+    printf "  ____ _   _ _   _ _______  __\n"
+    printf " / ___| \ | | \ | | ____\ \/ /\n"
+    printf "| |   |  \| |  \| |  _|  \  / \n"
+    printf "| |___| |\  | |\  | |___ /  \ \n"
+    printf " \____|_| \_|_| \_|_____/_/\_\\\n"
     printf "\n"
     printf "  ${BOLD}CynexGP Installer${RESET} ${C_GRAY}v${VERSION}${RESET}  ${C_GRAY}%s${RESET}\n\n" "$(date '+%Y-%m-%d %H:%M:%S')"
 }
@@ -281,11 +281,11 @@ read_key() {
 _INSTALLING=0
 
 _BANNER=(
-    "    _    ___ ____  _     ___ _   _ _  __"
-    "   / \\  |_ _|  _ \\| |   |_ _| \\ | | |/ /"
-    "  / _ \\  | || |_) | |    | ||  \\| | ' / "
-    " / ___ \\ | ||  _ <| |___ | || |\\  | . \\ "
-    "/_/   \\_\\___|_| \\_\\_____|___|_| \\_|_|\\_\\\\"
+    "  ____ _   _ _   _ _______  __"
+    " / ___| \ | | \ | | ____\ \/ /"
+    "| |   |  \| |  \| |  _|  \  / "
+    "| |___| |\  | |\  | |___ /  \ "
+    " \____|_| \_|_| \_|_____/_/\_\\"
     ""
     "  GNU General Public License v2 -- All Rights Reserved"
 )
@@ -1150,51 +1150,54 @@ DAEMON_ARCH=""
 phase_daemon_download() {
     detect_platform
 
-    echo "Fetching latest daemon release info..."
-    local tag_url
-    tag_url=$(curl -sIL -o /dev/null -w '%{url_effective}' "https://github.com/xAyan55/cynex/releases/latest" 2>/dev/null)
-    local tag="${tag_url##*/}"
-    local asset_url=""
-
-    if [[ -n "$tag" ]] && [[ "$tag" != "latest" ]] && [[ "$tag_url" == *"github.com/xAyan55/cynex"* ]]; then
-        log "Latest CynexGP daemon release tag: $tag"
-        asset_url="https://github.com/xAyan55/cynex/releases/download/${tag}/cynexgpd-${DAEMON_PLATFORM}-${DAEMON_ARCH}-${tag}.zip"
-    else
-        log "WARN: CynexGP repository has no releases yet. Falling back to Airlink daemon releases."
-        tag_url=$(curl -sIL -o /dev/null -w '%{url_effective}' "https://github.com/airlinklabs/daemon/releases/latest" 2>/dev/null)
-        tag="${tag_url##*/}"
-        
-        if [[ -z "$tag" ]] || [[ "$tag" == "latest" ]] || [[ "$tag_url" != *"github.com/airlinklabs/daemon"* ]]; then
-            tag="v1.2.4"
-            log "Warning: Redirection failed. Using hardcoded stable version fallback: $tag"
-        fi
-        log "Latest Airlink daemon release tag: $tag"
-        asset_url="https://github.com/airlinklabs/daemon/releases/download/${tag}/airlinkd-${DAEMON_PLATFORM}-${DAEMON_ARCH}-${tag}.zip"
+    # Install Bun if not already present
+    if ! command -v bun &>/dev/null; then
+        echo "Installing Bun..."
+        log "Installing Bun for building daemon..."
+        curl -fsSL https://bun.sh/install | bash || die "Failed to install Bun"
+        export BUN_INSTALL="$HOME/.bun"
+        export PATH="$BUN_INSTALL/bin:$PATH"
     fi
 
-    log "Downloading daemon binary: $asset_url"
-    echo "Downloading daemon ${tag} for ${DAEMON_PLATFORM}-${DAEMON_ARCH}..."
+    # Ensure path is updated for root/sudo environment
+    if [[ -d "/root/.bun/bin" ]]; then
+        export PATH="/root/.bun/bin:$PATH"
+    fi
 
+    if ! command -v bun &>/dev/null; then
+        die "Bun is required to build the daemon but could not be found in PATH."
+    fi
+
+    echo "Cloning repository to build daemon..."
+    log "Cloning CynexGP repository..."
     local tmpdir; tmpdir=$(mktemp -d /tmp/al-daemon-XXXXXX)
-    local zipfile="${tmpdir}/cynexgpd.zip"
+    git clone --depth 1 "${PANEL_REPO}" "${tmpdir}/cynex" || die "Failed to clone repository"
 
-    curl -fsSL --max-time 120 --progress-bar -o "$zipfile" "$asset_url" \
-        || die "Failed to download daemon binary"
+    echo "Installing dependencies and compiling daemon..."
+    log "Building daemon from source..."
+    cd "${tmpdir}/cynex/airlink-daemon" || die "Daemon directory missing in cloned repo"
+    
+    bun install || die "Failed to install daemon dependencies"
+    
+    local bun_target=""
+    case "${DAEMON_PLATFORM}-${DAEMON_ARCH}" in
+        linux-x64)   bun_target="bun-linux-x64" ;;
+        linux-arm64) bun_target="bun-linux-arm64" ;;
+        macos-x64)   bun_target="bun-darwin-x64" ;;
+        macos-arm64) bun_target="bun-darwin-arm64" ;;
+        *)           bun_target="bun-linux-x64" ;;
+    esac
 
-    echo "Extracting..."
-    unzip -o -q "$zipfile" -d "$tmpdir" \
-        || die "Failed to unzip daemon binary"
-
-    # the binary inside is always named cynexgpd
-    [[ -f "${tmpdir}/cynexgpd" ]] \
-        || die "Binary 'cynexgpd' not found inside zip (contents: $(ls "$tmpdir"))"
+    bun build --compile --target "$bun_target" src/app.ts --outfile dist/cynexgpd || die "Failed to compile daemon binary"
 
     mkdir -p /etc/daemon
-    cp "${tmpdir}/cynexgpd" /etc/daemon/cynexgpd
+    cp dist/cynexgpd /etc/daemon/cynexgpd
     chmod +x /etc/daemon/cynexgpd
+    
+    cd /
     rm -rf "$tmpdir"
 
-    log "OK: cynexgpd binary installed to /etc/daemon/cynexgpd"
+    log "OK: cynexgpd binary compiled and installed to /etc/daemon/cynexgpd"
 
     # write .env if not already present
     if [[ ! -f /etc/daemon/.env ]]; then
